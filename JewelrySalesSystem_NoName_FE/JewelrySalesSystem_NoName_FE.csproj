@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>8fe8d5f6-d1b2-4601-a543-124c479586a4</UserSecretsId>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\pagesForm\charts\chartjs.html" />
+    <Content Include="Pages\pagesForm\forms\basic_elements.html" />
+    <Content Include="Pages\pagesForm\icons\font-awesome.html" />
+    <Content Include="Pages\pagesForm\samples\blank-page.html" />
+    <Content Include="Pages\pagesForm\samples\error-404.html" />
+    <Content Include="Pages\pagesForm\samples\error-500.html" />
+    <Content Include="Pages\pagesForm\samples\login.html" />
+    <Content Include="Pages\pagesForm\samples\register.html" />
+    <Content Include="Pages\pagesForm\tables\basic-table.html" />
+    <Content Include="Pages\pagesForm\ui-features\buttons.html" />
+    <Content Include="Pages\pagesForm\ui-features\dropdowns.html" />
+    <Content Include="Pages\pagesForm\ui-features\typography.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Manager\Discount\" />
+    <Folder Include="Pages\Manager\Policy\" />
+    <Folder Include="Pages\Manager\Promotion\" />
+    <Folder Include="Pages\Staff\PurchaseProduct\" />
+    <Folder Include="Pages\Staff\Order\" />
+  </ItemGroup>
+
+</Project>

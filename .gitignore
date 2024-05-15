@@ -1,0 +1,9 @@
+
+*.v2
+*.vsidx
+*.bin
+*.cache
+*.props
+*.eot
+*.lock
+/JewelrySalesSystem_NoName_FE/.vs/JewelrySalesSystem_NoName_FE
