@@ -5,6 +5,16 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JewelrySalesSystem_NoName_FE", "JewelrySalesSystem_NoName_FE.csproj", "{14E786F2-4559-4F23-B941-62AF31C810E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JewelrySalesSystem_NoName_BE", "..\JewelrySalesSystem_NoName_BE\JewelrySalesSystem_NoName_BE.csproj", "{088EBD8F-4EB7-4B7A-866C-CFFE4BDE007B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSS_BusinessObjects", "..\JSS_BusinessObjects\JSS_BusinessObjects.csproj", "{F101D70F-7101-4931-A848-A6F2C8358DD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSS_DataAccessObjects", "..\JSS_DataAccessObjects\JSS_DataAccessObjects.csproj", "{2CABE771-215D-4A33-8138-A85FB1214C35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSS_Repositories", "..\JSS_Repositories\JSS_Repositories.csproj", "{D3491909-4A1F-459F-B1E7-95FBE3FBFB72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSS_Service", "..\JSS_Service\JSS_Service.csproj", "{A9648342-9916-4609-BCD3-2C6AE2CF69E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{14E786F2-4559-4F23-B941-62AF31C810E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14E786F2-4559-4F23-B941-62AF31C810E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14E786F2-4559-4F23-B941-62AF31C810E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{088EBD8F-4EB7-4B7A-866C-CFFE4BDE007B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088EBD8F-4EB7-4B7A-866C-CFFE4BDE007B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088EBD8F-4EB7-4B7A-866C-CFFE4BDE007B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{088EBD8F-4EB7-4B7A-866C-CFFE4BDE007B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F101D70F-7101-4931-A848-A6F2C8358DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F101D70F-7101-4931-A848-A6F2C8358DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F101D70F-7101-4931-A848-A6F2C8358DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F101D70F-7101-4931-A848-A6F2C8358DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CABE771-215D-4A33-8138-A85FB1214C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CABE771-215D-4A33-8138-A85FB1214C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CABE771-215D-4A33-8138-A85FB1214C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CABE771-215D-4A33-8138-A85FB1214C35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3491909-4A1F-459F-B1E7-95FBE3FBFB72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3491909-4A1F-459F-B1E7-95FBE3FBFB72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3491909-4A1F-459F-B1E7-95FBE3FBFB72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3491909-4A1F-459F-B1E7-95FBE3FBFB72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9648342-9916-4609-BCD3-2C6AE2CF69E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9648342-9916-4609-BCD3-2C6AE2CF69E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9648342-9916-4609-BCD3-2C6AE2CF69E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9648342-9916-4609-BCD3-2C6AE2CF69E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
