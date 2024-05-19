@@ -7,3 +7,9 @@
 *.eot
 *.lock
 /JewelrySalesSystem_NoName_FE/.vs/JewelrySalesSystem_NoName_FE
+*.pdb
+/JewelrySalesSystem_NoName_FE/bin
+/JewelrySalesSystem_NoName_FE/bin
+*.pdb
+*.pdb
+*.exe

@@ -33,7 +33,6 @@
     <Folder Include="Pages\Manager\Policy\" />
     <Folder Include="Pages\Manager\Promotion\" />
     <Folder Include="Pages\Staff\PurchaseProduct\" />
-    <Folder Include="Pages\Staff\Order\" />
   </ItemGroup>
 
 </Project>
