@@ -13,3 +13,12 @@
 *.pdb
 *.pdb
 *.exe
+*.json
+*.pdb
+*.exe
+*.dll
+*.pdb
+*.json
+*.json
+/JewelrySalesSystem_NoName_FE/obj/Debug
+*.dll

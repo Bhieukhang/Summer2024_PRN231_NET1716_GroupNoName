@@ -13,5 +13,7 @@ public partial class Stall
 
     public Guid StaffId { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual Account Staff { get; set; } = null!;
 }

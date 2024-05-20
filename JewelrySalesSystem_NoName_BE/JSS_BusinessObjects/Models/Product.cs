@@ -31,6 +31,8 @@ public partial class Product
 
     public Guid? ProductMaterialId { get; set; }
 
+    public string? Code { get; set; }
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
@@ -38,6 +40,4 @@ public partial class Product
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
 
     public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
-
-    public virtual ICollection<Warranty> Warranties { get; } = new List<Warranty>();
 }

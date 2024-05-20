@@ -11,5 +11,7 @@ public partial class ConditionWarranty
 
     public DateTime? InsDate { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual ICollection<Warranty> Warranties { get; } = new List<Warranty>();
 }

@@ -19,6 +19,8 @@ public partial class Membership
 
     public double? UsedMoney { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual ICollection<Program> Programs { get; } = new List<Program>();
 
     public virtual Account User { get; set; } = null!;

@@ -15,5 +15,7 @@ public partial class Material
 
     public Guid ProductMaterialId { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
 }
