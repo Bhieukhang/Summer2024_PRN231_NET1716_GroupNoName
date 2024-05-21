@@ -47,7 +47,6 @@ namespace JSS_Services.Implement
                 ExpirationDate = DateTime.Now,
                 Period = newData.Period,
                 Deflag = true,
-                ProductId = newData.ProductId,
                 OrderDetailId = null,
                 ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
                 Status = "Active"

@@ -22,18 +22,20 @@ namespace JewelrySalesSystem_NoName_BE
 
         public static IServiceCollection AddDatabase(this IServiceCollection services)
         {
-            // IConfiguration configuration = new ConfigurationBuilder()
-            //     .AddEnvironmentVariables(EnvironmentVariableConstant.Prefix).Build();
             services.AddDbContext<JewelrySalesSystemContext>(options =>
-                options.UseSqlServer(CreateConnectionString()));
+                options.UseSqlServer(GetConnectionString()));
             return services;
         }
 
-        private static string CreateConnectionString()
+        private static string GetConnectionString()
         {
-            string connectionString =
-                $"Server=(local);Database=JewelrySalesSystem;User Id=sa;Password=12345;Encrypt=True;TrustServerCertificate=True";
-            return connectionString;
+            IConfigurationRoot config = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", true, true)
+                        .Build();
+            var strConn = config["ConnectionStrings:DefaultConnection"];
+
+            return strConn;
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)
@@ -53,7 +55,7 @@ namespace JewelrySalesSystem_NoName_BE
         //    {
         //        options.TokenValidationParameters = new TokenValidationParameters()
         //        {
-        //            ValidIssuer = "HOP",
+        //            ValidIssuer = "JewerlySalesSystem",
         //            ValidateIssuer = true,
         //            ValidateAudience = false,
         //            ValidateIssuerSigningKey = true,
