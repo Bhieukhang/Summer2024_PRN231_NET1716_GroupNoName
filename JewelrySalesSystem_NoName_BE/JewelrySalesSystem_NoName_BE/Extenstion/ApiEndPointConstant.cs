@@ -1,4 +1,6 @@
-﻿namespace JewelrySalesSystem_NoName_BE.Extenstion
+﻿using Microsoft.AspNetCore.OpenApi;
+using Microsoft.AspNetCore.Http.HttpResults;
+namespace JewelrySalesSystem_NoName_BE.Extenstion
 {
     public static class ApiEndPointConstant
     {
@@ -25,6 +27,27 @@
         {
             public const string AccountEndpoint = ApiEndpoint + "/Account";
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
+        }
+        public static class Category
+        {
+            public const string CategoryEndpoint = ApiEndpoint + "/Category";
+            public const string CategoryByIdEndpoint = CategoryEndpoint + "/id";
+        }
+
+        public static class Product
+        {
+            public const string ProductEndpoint = ApiEndpoint + "/Product";
+            public const string ProductByIdEndpoint = ProductEndpoint + "/id";
+        }
+        public static class Material
+        {
+            public const string MaterialEndpoint = ApiEndpoint + "/Material";
+            public const string MaterialByIdEndpoint = MaterialEndpoint + "/id";
+        }
+        public static class ProductMaterial
+        {
+            public const string ProductMaterialEndpoint = ApiEndpoint + "/ProductMaterial";
+            public const string ProductMaterialByIdEndpoint = ProductMaterialEndpoint + "/id";
         }
     }
 }

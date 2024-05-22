@@ -17,6 +17,86 @@
             <param name="id">The ID of the stall to retrieve.</param>
             <returns>The stall with the specified ID.</returns>
         </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.CategoryController.GetAllCategoriesAsync">
+            <summary>
+            Get all categories.
+            </summary>
+            <returns>List of categories.</returns> 
+            GET : api/Category
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.CategoryController.GetCategoryByIdAsync(System.Guid)">
+            <summary>
+            Get a category by its ID.
+            </summary>
+            <param name="id">The ID of the category to retrieve.</param>
+            <returns>The category with the specified ID.</returns>
+            GET : api/Category
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.CategoryController.CreateCategoryAsync(JSS_BusinessObjects.Payload.Request.CategoryRequest)">
+            <summary>
+            Create a new category.
+            </summary>
+            <param name="category">The category to create.</param>
+            <returns>The created category.</returns>
+            POST : api/Category
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.CategoryController.UpdateCategoryAsync(System.Guid,JSS_BusinessObjects.Models.Category)">
+            <summary>
+            Update a category by its ID.
+            </summary>
+            <param name="id">The ID of the category to update.</param>
+            <param name="category">The updated category data.</param>
+            <returns>The updated category.</returns>
+            POST : api/Category
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.CategoryController.DeleteCategoryAsync(System.Guid)">
+            <summary>
+            Delete a category by its ID.
+            </summary>
+            <param name="id">The ID of the category to delete.</param>
+            <returns>A response indicating the result of the delete operation.</returns>
+            POST : api/Category
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.MaterialController.GetAllMaterialsAsync">
+            <summary>
+            Get all materials.
+            </summary>
+            <returns>List of materials.</returns>
+            GET : api/Material
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.MaterialController.GetMaterialByIdAsync(System.Guid)">
+            <summary>
+            Get a material by its ID.
+            </summary>
+            <param name="id">The ID of the material to retrieve.</param>
+            <returns>The material with the specified ID.</returns>
+            GET : api/Material
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.MaterialController.CreateMaterialAsync(JSS_BusinessObjects.Payload.Request.MaterialRequest)">
+            <summary>
+            Create a new material.
+            </summary>
+            <param name="material">The material to create.</param>
+            <returns>The created material.</returns>
+            POST : api/Material
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.MaterialController.UpdateMaterialAsync(System.Guid,JSS_BusinessObjects.Models.Material)">
+            <summary>
+            Update a material by its ID.
+            </summary>
+            <param name="id">The ID of the material to update.</param>
+            <param name="material">The updated material data.</param>
+            <returns>The updated material.</returns>
+            POST : api/Material
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.MaterialController.DeleteMaterialAsync(System.Guid)">
+            <summary>
+            Delete a material by its ID.
+            </summary>
+            <param name="id">The ID of the material to delete.</param>
+            <returns>A response indicating the result of the delete operation.</returns>
+            POST : api/Material
+        </member>
         <member name="M:JewelrySalesSystem_NoName_BE.Controllers.StallController.GetAllStallsAsync">
             <summary>
             Get all stalls.

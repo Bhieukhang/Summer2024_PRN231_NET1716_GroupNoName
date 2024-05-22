@@ -39,6 +39,6 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public virtual OrderDetail? OrderDetail { get; set; }
 
-        public virtual Product Product { get; set; } = null!;
+        public virtual ICollection<Product> Products { get; } = new List<Product>();
     }
 }

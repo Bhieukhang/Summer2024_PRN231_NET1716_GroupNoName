@@ -3,6 +3,8 @@ using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.Text.Json.Serialization;
+using JewelrySalesSystem_NoName_BE.Controllers;
+
 
 try
 {

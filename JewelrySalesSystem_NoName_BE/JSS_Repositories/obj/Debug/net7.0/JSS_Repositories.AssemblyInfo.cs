@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JSS_Repositories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+79f0e243e7e59599bfcb7168c86b1e49a4c2e344")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b66cc0e15f18100240262f93754816f69c3e0978")]
 [assembly: System.Reflection.AssemblyProductAttribute("JSS_Repositories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JSS_Repositories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
