@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JewelrySalesSystem_NoName_BE</name>
+    </assembly>
+    <members>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.AccountController.GetAllAccountsAsync">
+            <summary>
+            Get all accounts.
+            </summary>
+            <returns>List of accounts.</returns>
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.AccountController.GetAccountByIdAsync(System.Guid)">
+            <summary>
+            Get a account by its ID.
+            </summary>
+            <param name="id">The ID of the stall to retrieve.</param>
+            <returns>The stall with the specified ID.</returns>
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.StallController.GetAllStallsAsync">
+            <summary>
+            Get all stalls.
+            </summary>
+            <returns>List of stalls.</returns>
+        </member>
+        <member name="M:JewelrySalesSystem_NoName_BE.Controllers.StallController.GetStallByIdAsync(System.Guid)">
+            <summary>
+            Get a stall by its ID.
+            </summary>
+            <param name="id">The ID of the stall to retrieve.</param>
+            <returns>The stall with the specified ID.</returns>
+        </member>
+        <member name="M:JewelrySalesSysmte_NoName_BE.Controllers.WarrantyController.GetWarranties(System.Int32,System.Int32)">
+            <summary>
+            List of warranty.
+            </summary>
+            <returns>List of warranty.</returns>
+        </member>
+        <member name="M:JewelrySalesSysmte_NoName_BE.Controllers.WarrantyController.GetWarrantytDetail(System.Guid)">
+            <summary>
+            Get detail of warranty.
+            </summary>
+            <returns>IWarranty detail</returns>
+        </member>
+        <member name="M:JewelrySalesSysmte_NoName_BE.Controllers.WarrantyController.CreateWarranty(JSS_BusinessObjects.Payload.Request.WarrantyRequest)">
+            <summary>
+            Create new warranty.
+            </summary>
+            <returns>Warraty item</returns>
+        </member>
+        <member name="M:JewelrySalesSysmte_NoName_BE.ExpressionExtensions.AndAlso``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Creates a lambda expression that represents a conditional AND operation
+            </summary>
+            <param name="left">An expression to set the left property of the binary expression</param>
+            <param name="right">An expression to set the right property of the binary expression</param>
+            <returns>A binary expression that has the node type property equal to AndAlso, 
+            and the left and right properties set to the specified values</returns>
+        </member>
+        <member name="M:JewelrySalesSysmte_NoName_BE.ExpressionExtensions.OrElse``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Creates a lambda expression that represents a conditional OR operation
+            </summary>
+            <param name="left">An expression to set the left property of the binary expression</param>
+            <param name="right">An expression to set the right property of the binary expression</param>
+            <returns>A binary expression that has the node type property equal to OrElse, 
+            and the left and right properties set to the specified values</returns>
+        </member>
+    </members>
+</doc>

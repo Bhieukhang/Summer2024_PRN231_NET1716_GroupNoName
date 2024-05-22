@@ -22,6 +22,22 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
 
     #region Gett Async
+    public virtual async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (include != null)
+            query = include(query);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        if (orderBy != null)
+            return await orderBy(query).AsNoTracking().FirstOrDefaultAsync();
+
+        return await query.AsNoTracking().FirstOrDefaultAsync();
+    }
+
 
     public virtual async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
