@@ -9,7 +9,6 @@ using System.Drawing;
 
 namespace JewelrySalesSysmte_NoName_BE.Controllers
 {
-    [Route("api/warranty")]
     [ApiController]
     public class WarrantyController : ControllerBase
     {
@@ -20,6 +19,15 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
             _service = service;
         }
 
+
+        //[HttpGet(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
+        //[ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> GetWarranties(int page, int size)
+        //{
+        //    var warranty = await _service.GetWarranties(page, size);
+        //    return Ok(warranty);
+        //}
+
         #region GetWarranty
         /// <summary>
         /// List of warranty.
@@ -28,10 +36,10 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         // GET: api/warranty
         #endregion
         [HttpGet(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
-        [ProducesResponseType(typeof(IPaginate<WarrantyResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetWarranties(int page, int size)
+        [ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetWarrantiesNo()
         {
-            var warranty = await _service.GetWarranties(page, size);
+            var warranty = await _service.GetWarrantiesNo(1, 10);
             return Ok(warranty);
         }
 

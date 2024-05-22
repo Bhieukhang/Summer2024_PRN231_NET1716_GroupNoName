@@ -48,12 +48,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlclxQcm9kdWN0c1xMaXN0UHJvZHVjdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/Manager/Warranty/ListWarranty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlclxXYXJyYW50eVxMaXN0V2FycmFudHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/pagesForm/List/Form.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNccGFnZXNGb3JtXExpc3RcRm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/pagesForm/List/List.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNccGFnZXNGb3JtXExpc3RcTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/pagesForm/List/MultiStep.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNccGFnZXNGb3JtXExpc3RcTXVsdGlTdGVwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/Shared/_Footer.cshtml]
@@ -74,6 +82,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/Staff/Orders/CreateOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZcT3JkZXJzXENyZWF0ZU9yZGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Demo/PRN231/Summer2024_PRN231_NET1716_GroupNoName/JewelrySalesSystem_NoName_FE/Pages/_ViewImports.cshtml]
