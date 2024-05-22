@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace JSS_Repositories;
@@ -65,6 +66,8 @@ public interface IGenericRepository<T> : IDisposable where T : class
 
     void DeleteAsync(T entity);
     void DeleteRangeAsync(IEnumerable<T> entities);
+    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 
+    // Task<IEnumerable<Stall>> GetAllAsync();
 }
 

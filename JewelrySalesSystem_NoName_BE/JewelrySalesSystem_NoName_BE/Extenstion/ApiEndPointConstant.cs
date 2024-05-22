@@ -15,5 +15,16 @@
             public const string WarrantyEndpoint = ApiEndpoint + "/warranty";
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/id";
         }
+
+        public static class Stall  
+        {
+            public const string StallEndpoint = ApiEndpoint + "/Stall";
+            public const string StallByIdEndpoint = StallEndpoint + "/id";
+        }
+        public static class Account
+        {
+            public const string AccountEndpoint = ApiEndpoint + "/Account";
+            public const string AccountByIdEndpoint = AccountEndpoint + "/id";
+        }
     }
 }
