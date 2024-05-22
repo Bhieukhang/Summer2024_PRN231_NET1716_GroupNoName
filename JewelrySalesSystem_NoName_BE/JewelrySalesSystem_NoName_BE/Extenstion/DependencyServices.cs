@@ -41,6 +41,8 @@ namespace JewelrySalesSystem_NoName_BE
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             // Ví dụ với AddScoped:
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IStallService, StallService>();
             services.AddScoped<IWarrantyService, WarrantyService>();
             return services;
         }

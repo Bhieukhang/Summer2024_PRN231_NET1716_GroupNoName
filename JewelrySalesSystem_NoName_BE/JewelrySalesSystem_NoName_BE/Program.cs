@@ -21,6 +21,8 @@ try
         x.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
+    var configuration = builder.Configuration;
+
     builder.Services.AddDatabase();
     builder.Services.AddUnitOfWork();
     builder.Services.AddServices();
