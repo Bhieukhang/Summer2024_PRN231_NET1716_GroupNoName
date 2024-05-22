@@ -6,6 +6,9 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using JSS_Repositories;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace JewelrySalesSystem_NoName_BE
 {
@@ -42,30 +45,43 @@ namespace JewelrySalesSystem_NoName_BE
         {
             // Ví dụ với AddScoped:
             services.AddScoped<IWarrantyService, WarrantyService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
 
-        //public static IServiceCollection AddJwtValidation(this IServiceCollection services)
-        //{
-        //    services.AddAuthentication(options =>
-        //    {
-        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    }).AddJwtBearer(options =>
-        //    {
-        //        options.TokenValidationParameters = new TokenValidationParameters()
-        //        {
-        //            ValidIssuer = "JewerlySalesSystem",
-        //            ValidateIssuer = true,
-        //            ValidateAudience = false,
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey =
-        //                new SymmetricSecurityKey(
-        //                    Encoding.UTF8.GetBytes("HOP"))
-        //        };
-        //    });
-        //    return services;
-        //}
+        public static IServiceCollection AddJwtValidation(this IServiceCollection services)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //   .AddJwtBearer(options =>
+            //   {
+            //   options.TokenValidationParameters = new TokenValidationParameters
+            //   {
+            //       ValidateIssuerSigningKey = true,
+            //       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+            //       ValidateIssuer = false,
+            //       ValidateAudience = false,
+            //       ValidateLifetime = true,
+            //       ClockSkew = TimeSpan.Zero
+            //    };
+            //});
+            return services;
+        }
 
         public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
         {
@@ -91,7 +107,7 @@ namespace JewelrySalesSystem_NoName_BE
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
-            
+
                 options.IncludeXmlComments(xmlPath);
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
