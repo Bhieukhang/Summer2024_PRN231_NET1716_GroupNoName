@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
@@ -6,9 +7,11 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -22,20 +25,39 @@ namespace JSS_Services.Implement
         {
         }
 
-        public Task<WarrantyResponse> GetWarrantyDetail(Guid id)
+        public async Task<WarrantyResponse> GetWarrantyDetail(Guid id)
         {
-            throw new NotImplementedException();
+            var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
+                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
+                                                    x.ConditionWarranty.Id),
+                    predicate:
+                    Guid.Empty.Equals(id)
+                        ? x => true
+                        : x => (x.Id.Equals(id)));
+            return warrantyDetail;
         }
 
         public async Task<IPaginate<WarrantyResponse>> GetWarranties(int page, int size)
         {
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
-                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate),
+                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.ConditionWarrantyId),
                 page: page,
                 size: size
                 );
             return ListWarranties;
+        }
+
+        public async Task<IEnumerable<WarrantyResponse>> GetWarrantiesNo(int page, int size)
+        {
+            IPaginate<WarrantyResponse> ListWarranties =
+            await _unitOfWork.GetRepository<Warranty>().GetList(
+                include: x => x.Include(x => x.ConditionWarranty),
+                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.ConditionWarranty.Id),
+                page: page,
+                size: size
+            );
+            return ListWarranties.Items;
         }
 
         public async Task<WarrantyResponse> CreateWarranty(WarrantyRequest newData)
@@ -50,11 +72,11 @@ namespace JSS_Services.Implement
                 OrderDetailId = null,
                 ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
                 Status = "Active"
-            };   
+            };
             await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
-            return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate);
+            return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.ConditionWarrantyId);
         }
     }
 }

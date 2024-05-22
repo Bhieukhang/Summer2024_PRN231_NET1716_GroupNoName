@@ -1,0 +1,63 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.ListWarrantyModel
+@{
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Danh sách điều kiện bảo hành </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @*Thêm nút add*@
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Products/AddProduct">
+                            <span class="menu-title"></span>
+                            <button type="button" class="btn btn-gradient-primary btn-fw">Thêm điều kiện</button>
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Ngày mua </th>
+                                <th> Ngày hết hạn </th>
+                                <th> Giai đoạn </th>
+                                <th> Điền kiện </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var warranty in Model.WarrantyList)
+                            {
+                                <tr>
+                                    <td> @warranty.DateOfPurchase?.ToString("yyyy-MM-dd") </td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%"
+                                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                    <td> @warranty.ExpirationDate?.ToString("yyyy-MM-dd") </td>
+                                    <td> @warranty.Period </td>
+                                    <td> @warranty.ConditionWarranty</td>
+                                    <td>
+                                        <a class="nav-link" href="../index.html">
+                                            <i class="fa fa-eye menu-icon"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
