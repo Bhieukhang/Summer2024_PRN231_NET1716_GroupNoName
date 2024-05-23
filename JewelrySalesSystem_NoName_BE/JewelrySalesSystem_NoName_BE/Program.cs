@@ -1,7 +1,12 @@
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
+using JSS_Services.Implement;
+using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 try
@@ -29,6 +34,19 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();
     builder.Services.AddSingletonJson();
+    // Add JWT Authentication Middleware - This code will intercept HTTP request and validate the JWT.
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+        opt => {
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes("noname")),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        }
+      );
 
     var app = builder.Build();
 
@@ -39,6 +57,17 @@ try
 
     app.UseCors(CorsConstant.PolicyName);
     //app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
+    app.Use(async (context, next) =>
+    {
+        await next();
+        if (context.Response.StatusCode == (int)System.Net.HttpStatusCode.Unauthorized)
+        {
+            await context.Response.WriteAsync("Token Validation Has Failed. Request Access Denied");
+        }
+    });
+
+    //need to sperate middleware for each api
     app.UseAuthentication();
     app.UseAuthorization();
 
