@@ -30,6 +30,7 @@ try
     builder.Services.AddServices();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();
+    builder.Services.AddSingletonJson();
 
     var app = builder.Build();
 

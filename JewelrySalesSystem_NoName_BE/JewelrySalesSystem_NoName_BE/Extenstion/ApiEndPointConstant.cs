@@ -15,6 +15,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         public static class Warranty
         {
             public const string WarrantyEndpoint = ApiEndpoint + "/warranty";
+            public const string WarrantyEndpointNo = ApiEndpoint + "/warrantyno";
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/id";
         }
 

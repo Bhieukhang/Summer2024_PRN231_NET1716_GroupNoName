@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using JSS_Repositories;
 using System.Reflection;
+using JSS_BusinessObjects.Helper;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_BE
 {
@@ -20,6 +22,11 @@ namespace JewelrySalesSystem_NoName_BE
             return services;
         }
 
+        public static IServiceCollection AddSingletonJson(this IServiceCollection services)
+        {
+            services.AddSingleton<JsonSerializerSettings>(JsonSerializationHelper.GetNewtonsoftJsonSerializerSettings());
+            return services;
+        }
         public static IServiceCollection AddDatabase(this IServiceCollection services)
         {
             services.AddDbContext<JewelrySalesSystemContext>(options =>
@@ -97,7 +104,7 @@ namespace JewelrySalesSystem_NoName_BE
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
-            
+
                 options.IncludeXmlComments(xmlPath);
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
