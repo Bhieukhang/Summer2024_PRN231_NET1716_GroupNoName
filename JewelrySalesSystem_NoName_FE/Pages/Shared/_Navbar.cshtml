@@ -41,7 +41,7 @@
                         <i class="mdi mdi-cached me-2 text-success"></i> Hoạt động
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="~/Auth/Login">
+                    <a class="dropdown-item" href="#" onclick="logout(event)">
                         <i class="mdi mdi-logout me-2 text-primary"></i> Thoát
                     </a>
                 </div>
@@ -152,3 +152,30 @@
         </ul>
     </div>
 </nav>
+
+<script>
+    async function logout(event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch('https://localhost:7160/api/v1/Logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('Token')}` // Hoặc sử dụng localStorage nếu bạn lưu token ở đó
+                }
+            });
+
+            if (response.ok) {
+                // Xóa token khỏi sessionStorage hoặc localStorage
+                sessionStorage.removeItem('Token');
+                // Chuyển hướng đến trang đăng nhập hoặc trang chủ
+                window.location.href = '/Auth/Login';
+            } else {
+                console.error('Logout failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>
