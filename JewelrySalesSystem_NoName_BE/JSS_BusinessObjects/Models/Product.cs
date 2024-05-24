@@ -11,29 +11,33 @@ public partial class Product
 
     public string? Description { get; set; }
 
-    public double? CaptitalPrice { get; set; }
+    public double? ImportPrice { get; set; }
 
     public double? Size { get; set; }
 
-    public double? Price { get; set; }
+    public double? TotalPrice { get; set; }
 
     public DateTime? InsDate { get; set; }
 
     public bool? Deflag { get; set; }
 
-    public Guid CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
 
     public DateTime? UpsDate { get; set; }
 
     public int? Quantity { get; set; }
 
-    public double? Accessory { get; set; }
+    public double? ProcessPrice { get; set; }
 
     public Guid? ProductMaterialId { get; set; }
 
+    public Guid? AccessoryId { get; set; }
+
     public string? Code { get; set; }
 
-    public virtual Category Category { get; set; } = null!;
+    public virtual Accessory? Accessory { get; set; }
+
+    public virtual Category? Category { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 

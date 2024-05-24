@@ -35,14 +35,12 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 InsDate = DateTime.Now,
-                MaterialName = newData.MaterialName,
-                Weight = newData.Weight,
-                Deflag = true, 
+                MaterialName = newData.MaterialName
             };
             await _unitOfWork.GetRepository<Material>().InsertAsync(mate);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
-            return new MaterialResponse(mate.Id, mate.MaterialName, mate.Weight);
+            return new MaterialResponse(mate.Id, mate.MaterialName);
         }
 
         public async Task<Material> UpdateMaterialAsync(Guid id, Material updatedData)

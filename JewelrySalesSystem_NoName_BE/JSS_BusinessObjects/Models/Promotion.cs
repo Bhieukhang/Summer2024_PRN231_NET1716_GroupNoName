@@ -21,7 +21,9 @@ public partial class Promotion
 
     public DateTime? UpsDate { get; set; }
 
-    public bool? Deflag { get; set; }
+    public DateTime? StartDate { get; set; }
+
+    public DateTime? EndDate { get; set; }
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 

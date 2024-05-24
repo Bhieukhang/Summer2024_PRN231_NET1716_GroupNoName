@@ -13,6 +13,8 @@ public partial class Program
 
     public DateTime? InsDate { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual Membership Membership { get; set; } = null!;
 
     public virtual Promotion Promotion { get; set; } = null!;

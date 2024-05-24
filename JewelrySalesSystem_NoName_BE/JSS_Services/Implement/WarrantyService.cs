@@ -62,21 +62,22 @@ namespace JSS_Services.Implement
 
         public async Task<WarrantyResponse> CreateWarranty(WarrantyRequest newData)
         {
-            Warranty war = new Warranty()
-            {
-                Id = Guid.NewGuid(),
-                DateOfPurchase = DateTime.Now,
-                ExpirationDate = DateTime.Now,
-                Period = newData.Period,
-                Deflag = true,
-                OrderDetailId = null,
-                ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
-                Status = "Active"
-            };
-            await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (isSuccessful == false) return null;
-            return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.ConditionWarrantyId);
+            //Warranty war = new Warranty()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    DateOfPurchase = DateTime.Now,
+            //    ExpirationDate = DateTime.Now,
+            //    Period = newData.Period,
+            //    Deflag = true,
+            //    OrderDetailId = null,
+            //    ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
+            //    Status = "Active"
+            //};
+            //await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
+            //bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            //if (isSuccessful == false) return null;
+            //return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.ConditionWarrantyId);
+            return null;
         }
     }
 }

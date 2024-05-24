@@ -9,24 +9,18 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class MaterialResponse
     {
-        public MaterialResponse(Guid id, string? materialName, double? weight)
+        public MaterialResponse(Guid id, string? materialName)
         {
             Id = id;
             MaterialName = materialName;
-            Weight = weight;
         }
-
         public Guid Id { get; set; }
 
         public string? MaterialName { get; set; }
 
-        public double? Weight { get; set; }
-
         public DateTime? InsDate { get; set; }
 
         public Guid ProductMaterialId { get; set; }
-
-        public bool? Deflag { get; set; }
 
         public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
     }

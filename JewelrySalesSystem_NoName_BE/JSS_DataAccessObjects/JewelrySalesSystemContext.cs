@@ -16,6 +16,10 @@ public partial class JewelrySalesSystemContext : DbContext
     {
     }
 
+    public virtual DbSet<Accessory> Accessories { get; set; }
+
+    public virtual DbSet<AccessoryMaterial> AccessoryMaterials { get; set; }
+
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
@@ -50,12 +54,43 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Warranty> Warranties { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=(local);Database=JewelrySalesSystem;User Id=sa;Password=12345;Encrypt=True;TrustServerCertificate=True");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=(local);Database=JewelrySalesSystem;User Id=sa;Password=12345;Encrypt=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Accessory>(entity =>
+        {
+            entity.ToTable("Accessory");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.AccessoryName).HasMaxLength(30);
+            entity.Property(e => e.Description).HasMaxLength(30);
+            entity.Property(e => e.InsDate).HasColumnType("datetime");
+            entity.Property(e => e.UpsDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Accessories)
+                .HasForeignKey(d => d.CategoryId)
+                .HasConstraintName("FK_Accessory_Category");
+        });
+
+        modelBuilder.Entity<AccessoryMaterial>(entity =>
+        {
+            entity.ToTable("AccessoryMaterial");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.InsDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Accessory).WithMany(p => p.AccessoryMaterials)
+                .HasForeignKey(d => d.AccessoryId)
+                .HasConstraintName("FK_AccessoryMaterial_Accessory");
+
+            entity.HasOne(d => d.Material).WithMany(p => p.AccessoryMaterials)
+                .HasForeignKey(d => d.MaterialId)
+                .HasConstraintName("FK_AccessoryMaterial_Material");
+        });
+
         modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_User");
@@ -63,14 +98,11 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Account");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.Dob)
                 .HasColumnType("date")
                 .HasColumnName("DOB");
             entity.Property(e => e.FullName).HasMaxLength(50);
-            entity.Property(e => e.ImgUrl)
-                .HasMaxLength(50)
-                .HasColumnName("ImgURL");
+            entity.Property(e => e.ImgUrl).HasColumnName("ImgURL");
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(50);
             entity.Property(e => e.Phone)
@@ -90,7 +122,6 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Type).HasMaxLength(50);
         });
@@ -108,7 +139,6 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Discount");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description).HasMaxLength(50);
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
@@ -120,7 +150,7 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.MaterialName).HasMaxLength(50);
+            entity.Property(e => e.MaterialName).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Membership>(entity =>
@@ -128,7 +158,7 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Membership");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(100);
 
             entity.HasOne(d => d.User).WithMany(p => p.Memberships)
                 .HasForeignKey(d => d.UserId)
@@ -142,7 +172,6 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.Type).HasMaxLength(50);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
@@ -152,7 +181,6 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.HasOne(d => d.Discount).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.DiscountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Order_Discount");
 
             entity.HasOne(d => d.Promotion).WithMany(p => p.Orders)
@@ -165,9 +193,7 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("OrderDetail");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Discount).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
@@ -185,18 +211,17 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Code)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.Description).HasMaxLength(50);
+            entity.Property(e => e.Code).HasMaxLength(10);
             entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.ProductName).HasMaxLength(50);
+            entity.Property(e => e.ProductName).HasMaxLength(100);
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Accessory).WithMany(p => p.Products)
+                .HasForeignKey(d => d.AccessoryId)
+                .HasConstraintName("FK_Product_Accessory");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Product_Category");
         });
 
@@ -257,9 +282,9 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Promotion");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description).HasMaxLength(50);
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.PromotionName).HasMaxLength(50);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Type).HasMaxLength(50);
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
         });
@@ -294,6 +319,7 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Transaction_Order");
         });
 
@@ -314,6 +340,7 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.HasOne(d => d.OrderDetail).WithMany(p => p.Warranties)
                 .HasForeignKey(d => d.OrderDetailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Warranty_Order");
         });
 
