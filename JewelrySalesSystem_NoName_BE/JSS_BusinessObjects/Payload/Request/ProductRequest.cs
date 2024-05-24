@@ -9,8 +9,6 @@ namespace JSS_BusinessObjects.Payload.Request
 {
     public class ProductRequest
     {
-        public Guid Id { get; set; }
-
         public string? ProductName { get; set; }
 
         public string? Description { get; set; }
