@@ -26,7 +26,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("https://localhost:44318/api/authentication/login", LoginRequest);
+                var response = await _httpClient.PostAsJsonAsync("https://localhost:7160/api/v1/Login", LoginRequest);
                 if (response.IsSuccessStatusCode)
                 {
                     var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
@@ -40,11 +40,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                         return RedirectToPage("/Index");
                     }
 
-                    Message = loginResponse.Message;
+                    Message = "Sign in failed. Please try again!";
                 }
                 else
                 {
-                    Message = "??ng nh?p th?t b?i. Vui lòng th? l?i.";
+                    Message = "Sign in failed. Please try again!";
                 }
             }
             catch (HttpRequestException ex)

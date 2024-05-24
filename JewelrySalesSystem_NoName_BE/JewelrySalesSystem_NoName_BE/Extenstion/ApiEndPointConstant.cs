@@ -12,6 +12,16 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         public const string ApiVersion = "/v1";
         public const string ApiEndpoint = RootEndPoint + ApiVersion;
 
+        public static class Login
+        {
+            public const string LoginEndpoint = ApiEndpoint + "/Login";
+        }
+
+        public static class Logout
+        {
+            public const string LogoutEndpoint = ApiEndpoint + "/Logout";
+        }
+
         public static class Warranty
         {
             public const string WarrantyEndpoint = ApiEndpoint + "/warranty";
