@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -18,9 +18,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Th?i gian session t?n t?i
-    options.Cookie.HttpOnly = true; // Ch? cho ph�p truy c?p session th�ng qua HTTP
-    options.Cookie.IsEssential = true; // ??m b?o cookie session lu�n ???c l?u tr?
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.Cookie.HttpOnly = true; // Cho cho phép truy cập session thông qua HTTP
+    options.Cookie.IsEssential = true; 
 });
 var app = builder.Build();
 

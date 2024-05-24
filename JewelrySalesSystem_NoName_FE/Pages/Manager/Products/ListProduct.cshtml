@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Product.ListProductModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListProductModel
 @{
 }
 <div class="main-panel">
@@ -25,15 +25,31 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th> Sản phẩm </th>
-                                <th> Loại </th>
-                                <th> Giá nhập </th>
-                                <th> Giá bán </th>
-                                <th> Ngày nhập </th>
+                                <th>Product Name</th>
+                                <th>Description</th>
+                                <th>Import Price</th>
+                                <th>Size</th>
+                                <th>Total Price</th>
+                                <th>Quantity</th>
+                                <th>Category</th>
+                                <th>Accessory</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            @foreach (var item in Model.productList)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.ImportPrice</td>
+                                    <td>@item.Size</td>
+                                    <td>@item.TotalPrice</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Category</td>
+                                    <td>@item.Accessory</td>
+                                </tr>
+                            }
+                            @* <tr>
                                 <td class="py-1">
                                     <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
                                 </td>
@@ -165,7 +181,7 @@
                                         <i class="fa fa-eye menu-icon"></i>
                                     </a>
                                 </td>
-                            </tr>
+                            </tr> *@
                         </tbody>
                     </table>
                 </div>
