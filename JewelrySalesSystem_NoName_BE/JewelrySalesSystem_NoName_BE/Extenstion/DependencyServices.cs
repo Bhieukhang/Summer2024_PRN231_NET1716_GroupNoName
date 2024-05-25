@@ -61,6 +61,7 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMembershipService, MembershipService>();
             services.AddScoped<IOrderService, OrdersService>();
+            services.AddScoped<IConditionWarrantyServicecs, ConditionWarrantyService>();
             return services;
         }
 

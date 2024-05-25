@@ -21,6 +21,8 @@ namespace JSS_Services.Implement
 
         public async Task<OrderResponse> CreateOrder(OrderRequest newData)
         {
+            List<OrderDetail> listOrderDetail = new List<OrderDetail>();
+            double? totalPrice = 0;
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
@@ -32,7 +34,26 @@ namespace JSS_Services.Implement
                 TotalPrice = newData.TotalPrice,
                 MaterialProcessPrice = newData.MaterialProcessPrice,
             };
+            foreach (var orderDetail in newData.Details)
+            {
+                OrderDetail detail = new OrderDetail()
+                {
+                    Id = Guid.NewGuid(),
+                    Amount = orderDetail.Amount,
+                    Quantity = orderDetail.Quantity,
+                    Discount = 0,
+                    TotalPrice = orderDetail.Amount * orderDetail.Quantity,
+                    OrderId = order.Id,
+                    ProductId = orderDetail.ProductId,
+                    InsDate = DateTime.Now
+                };
+                totalPrice += detail.TotalPrice;
+                listOrderDetail.Add(detail);
+                await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
+            }
+            order.TotalPrice = totalPrice;
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
+
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,

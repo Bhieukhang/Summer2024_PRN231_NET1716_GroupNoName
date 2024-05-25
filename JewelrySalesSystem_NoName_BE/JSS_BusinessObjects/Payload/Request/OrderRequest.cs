@@ -18,5 +18,6 @@ namespace JSS_BusinessObjects.Payload.Request
         public double? TotalPrice { get; set; }
 
         public double? MaterialProcessPrice { get; set; }
+        public List<OrderDetailRequest> Details { get; set; }
     }
 }

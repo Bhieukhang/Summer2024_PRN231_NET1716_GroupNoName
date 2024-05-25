@@ -69,3 +69,6 @@ git rm -r --cached JewelrySalesSystem_NoName_FE/obj/Debug
 git rm -r --cached JewelrySalesSystem_NoName_FE/bin
 git rm -r --cached JewelrySalesSystem_NoName_FE/.vs
 git config advice.addIgnoredFile false
+git rm -r --cached JewelrySalesSystem_NoName_BE/obj/Debug
+git rm -r --cached JewelrySalesSystem_NoName_BE/bin
+git rm -r --cached JewelrySalesSystem_NoName_BE/.vs

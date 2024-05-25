@@ -66,6 +66,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string MembershipByIdEndpoint = MembershipEndpoint + "/{id}";
             public const string MembershipExpired = MembershipEndpoint + "/expired";
             public const string MembershipByName = MembershipEndpoint + "/{name}";
+            public const string MembershipUserMoney = MembershipEndpoint + "/userMoney";
         }
 
         public static class Order
@@ -73,6 +74,12 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string OrderEndpoint = ApiEndpoint + "/order";
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
+        }
+
+        public static class ConditionWarranty
+        {
+            public const string ConditionWarrantyEndpoint = ApiEndpoint + "/condition";
+            public const string ConditionWarrantyByIdEndpoint = ConditionWarrantyEndpoint + "/{id}";
         }
     }
 }

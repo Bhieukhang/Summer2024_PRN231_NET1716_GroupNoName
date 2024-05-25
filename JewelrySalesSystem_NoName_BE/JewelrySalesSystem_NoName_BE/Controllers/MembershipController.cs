@@ -62,5 +62,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var list = await _service.GetMembershipByName(name);
             return Ok(list);
         }
+
+        [HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]
+        public async Task<IActionResult> UpdateUserMoneyByUserId([FromQuery]Guid userId, double userMoney)
+        {
+            var membership = await _service.UpdateUserMoney(userId, userMoney);
+            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }
