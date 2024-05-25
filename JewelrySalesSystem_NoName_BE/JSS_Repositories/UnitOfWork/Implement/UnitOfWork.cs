@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using JSS_Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace JSS_Repositories;
 
