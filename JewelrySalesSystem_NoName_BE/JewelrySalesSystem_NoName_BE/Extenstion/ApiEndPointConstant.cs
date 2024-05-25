@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/{id}";
         }
 
-        public static class Stall  
+        public static class Stall
         {
             public const string StallEndpoint = ApiEndpoint + "/Stall";
             public const string StallByIdEndpoint = StallEndpoint + "/{id}";
@@ -60,12 +60,13 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string ProductMaterialEndpoint = ApiEndpoint + "/ProductMaterial";
             public const string ProductMaterialByIdEndpoint = ProductMaterialEndpoint + "/id";
 
-        public static class Membership
-        {
-            public const string MembershipEndpoint = ApiEndpoint + "/membership";
-            public const string MembershipByIdEndpoint = MembershipEndpoint + "/{id}";
-            public const string MembershipExpired = MembershipEndpoint + "/expired";
-            public const string MembershipByName = MembershipEndpoint + "/{name}";
+            public static class Membership
+            {
+                public const string MembershipEndpoint = ApiEndpoint + "/membership";
+                public const string MembershipByIdEndpoint = MembershipEndpoint + "/{id}";
+                public const string MembershipExpired = MembershipEndpoint + "/expired";
+                public const string MembershipByName = MembershipEndpoint + "/{name}";
+            }
         }
     }
 }
