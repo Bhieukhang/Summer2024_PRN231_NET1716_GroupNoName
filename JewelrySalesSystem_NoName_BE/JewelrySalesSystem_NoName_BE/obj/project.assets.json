@@ -669,6 +669,25 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.19": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0"
+        },
+        "compile": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.JsonPatch/7.0.0": {
         "type": "package",
         "dependencies": {
@@ -2804,7 +2823,7 @@
           }
         }
       },
-      "System.IdentityModel.Tokens.Jwt/6.21.0": {
+      "System.IdentityModel.Tokens.Jwt/6.35.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
@@ -4859,6 +4878,21 @@
         "lib/netstandard1.0/zh-Hant/Humanizer.resources.dll",
         "lib/netstandard2.0/zh-Hant/Humanizer.resources.dll",
         "logo.png"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.19": {
+      "sha512": "XhSkl7oCDyGSW3kbJAsPeOIdX7ofwuOFLkcw2HiTwDr70hE0NGCQCF/QOy3qemX/6rVA1ZEEkIKxHLm1ElaeOA==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.19",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
+        "microsoft.aspnetcore.authentication.jwtbearer.7.0.19.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
     "Microsoft.AspNetCore.JsonPatch/7.0.0": {
@@ -8835,8 +8869,8 @@
         "system.globalization.extensions.nuspec"
       ]
     },
-    "System.IdentityModel.Tokens.Jwt/6.21.0": {
-      "sha512": "JRD8AuypBE+2zYxT3dMJomQVsPYsCqlyZhWel3J1d5nzQokSRyTueF+Q4ID3Jcu6zSZKuzOdJ1MLTkbQsDqcvQ==",
+    "System.IdentityModel.Tokens.Jwt/6.35.0": {
+      "sha512": "yxGIQd3BFK7F6S62/7RdZk3C/mfwyVxvh6ngd1VYMBmbJ1YZZA9+Ku6suylVtso0FjI0wbElpJ0d27CdsyLpBQ==",
       "type": "package",
       "path": "system.identitymodel.tokens.jwt/6.35.0",
       "files": [
@@ -11893,23 +11927,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DELL\\.nuget\\packages\\": {},
+    "C:\\Users\\THUAN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE.csproj",
+      "projectUniqueName": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE.csproj",
       "projectName": "JewelrySalesSystem_NoName_BE",
-      "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE.csproj",
-      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\obj\\",
+      "projectPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE.csproj",
+      "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+      "outputPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -11918,23 +11952,24 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
-              "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
+            "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+              "projectPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
             },
-            "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
-              "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj"
+            "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
+              "projectPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj"
             },
-            "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
-              "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj"
+            "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
+              "projectPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj"
             },
-            "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj": {
-              "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj"
+            "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj": {
+              "projectPath": "D:\\FPT\\PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj"
             }
           }
         }
@@ -11943,6 +11978,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -11993,7 +12033,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

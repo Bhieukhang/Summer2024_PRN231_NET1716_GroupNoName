@@ -14,6 +14,6 @@ namespace JSS_Services.Interface
     {
         Task<IEnumerable<Stall>> GetAllStallsAsync();
         Task<Stall> GetStallByIdAsync(Guid id);
-
+        public Task<IPaginate<StallResponse>> GetListStallAsync(int page, int size);
     }
 }

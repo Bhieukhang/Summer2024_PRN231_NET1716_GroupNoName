@@ -109,6 +109,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
         return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);
     }
+    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
+    {
+        if (predicate != null)
+        {
+            return await _dbSet.CountAsync(predicate);
+        }
+        return await _dbSet.CountAsync();
+    }
 
     #endregion
 
@@ -147,6 +155,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _dbSet.RemoveRange(entities);
     }
+
+   
 
     #endregion
 }
