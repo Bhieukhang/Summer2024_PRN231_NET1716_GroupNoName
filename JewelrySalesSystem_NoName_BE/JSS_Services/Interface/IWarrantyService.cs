@@ -14,7 +14,7 @@ namespace JSS_Services.Interface
     {
         public Task<WarrantyResponse> GetWarrantyDetail(Guid id);
         public Task<IPaginate<WarrantyResponse>> GetWarranties(int page, int size);
-        public Task<IEnumerable<WarrantyResponse>> GetWarrantiesNo(int page, int size);
+        public Task<IPaginate<WarrantyResponse>> GetWarrantiesNo(int page, int size);
         public Task<WarrantyResponse> CreateWarranty(WarrantyRequest newData);
 
     }
