@@ -10,6 +10,7 @@
 
         public const string WarrantyList =  url + "/api/v1/warranty";
         public const string MembershipList = url + "/api/v1/membership";
+        public const string Promotion = url + "/api/v1/promotion";
 
         //account
         public const string AccountList = url + "/api/v1/Account";
