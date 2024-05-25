@@ -11,9 +11,9 @@ public partial class OrderDetail
 
     public int? Quantity { get; set; }
 
-    public decimal? Discount { get; set; }
+    public double? Discount { get; set; }
 
-    public decimal? TotalPrice { get; set; }
+    public double? TotalPrice { get; set; }
 
     public Guid OrderId { get; set; }
 

@@ -36,7 +36,7 @@ namespace JSS_Services.Implement
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
-                                     order.MaterialProcessPrice, order.Status, order.Discount, order.Promotion);
+                                     order.MaterialProcessPrice, order.Discount, order.Promotion);
         }
     }
 }

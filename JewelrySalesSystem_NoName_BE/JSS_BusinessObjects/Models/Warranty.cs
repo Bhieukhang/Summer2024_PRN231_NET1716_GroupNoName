@@ -15,7 +15,7 @@ public partial class Warranty
 
     public bool? Deflag { get; set; }
 
-    public Guid? OrderDetailId { get; set; }
+    public Guid OrderDetailId { get; set; }
 
     public string? Phone { get; set; }
 
@@ -25,5 +25,5 @@ public partial class Warranty
 
     public virtual ConditionWarranty ConditionWarranty { get; set; } = null!;
 
-    public virtual OrderDetail? OrderDetail { get; set; }
+    public virtual OrderDetail OrderDetail { get; set; } = null!;
 }

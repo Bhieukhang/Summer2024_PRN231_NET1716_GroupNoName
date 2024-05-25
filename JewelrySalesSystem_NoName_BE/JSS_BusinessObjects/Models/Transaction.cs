@@ -7,7 +7,7 @@ public partial class Transaction
 {
     public Guid Id { get; set; }
 
-    public Guid? OrderId { get; set; }
+    public Guid OrderId { get; set; }
 
     public string? Description { get; set; }
 
@@ -15,5 +15,5 @@ public partial class Transaction
 
     public double? TotalPrice { get; set; }
 
-    public virtual Order? Order { get; set; }
+    public virtual Order Order { get; set; } = null!;
 }
