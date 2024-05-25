@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj": {}
+    "D:\\FPT\\PRN231\\PRN231_Projects\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj": {
+    "D:\\FPT\\PRN231\\PRN231_Projects\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj",
+        "projectUniqueName": "D:\\FPT\\PRN231\\PRN231_Projects\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj",
         "projectName": "JewelrySalesSystem_NoName_FE",
-        "projectPath": "D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\obj\\",
+        "projectPath": "D:\\FPT\\PRN231\\PRN231_Projects\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\JewelrySalesSystem_NoName_FE.csproj",
+        "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+        "outputPath": "D:\\FPT\\PRN231\\PRN231_Projects\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_FE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -77,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
