@@ -50,6 +50,12 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string ProductEndpoint = ApiEndpoint + "/Product";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
         }
+
+        public static class Promotion
+        {
+            public const string PromotionEndpoint = ApiEndpoint + "/Promotion";
+            public const string PromotionByIdEndpoint = PromotionEndpoint + "/id";
+        }
         public static class Material
         {
             public const string MaterialEndpoint = ApiEndpoint + "/Material";
