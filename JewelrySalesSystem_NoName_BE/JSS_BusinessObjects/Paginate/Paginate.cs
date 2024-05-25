@@ -1,4 +1,6 @@
-﻿namespace JSS_BusinessObjects;
+﻿using Newtonsoft.Json;
+
+namespace JSS_BusinessObjects;
 
 public class Paginate<TResult> : IPaginate<TResult>
 {
@@ -6,7 +8,7 @@ public class Paginate<TResult> : IPaginate<TResult>
 	public int Page { get; set; }
 	public int Total { get; set; }
 	public int TotalPages { get; set; }
-	public IList<TResult> Items { get; set; }
+    public IList<TResult> Items { get; set; }
 
 	public Paginate(IEnumerable<TResult> source, int page, int size, int firstPage)
 	{

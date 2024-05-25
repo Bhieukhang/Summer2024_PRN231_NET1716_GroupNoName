@@ -1,4 +1,6 @@
-﻿namespace JSS_BusinessObjects;
+﻿using Newtonsoft.Json;
+
+namespace JSS_BusinessObjects;
 
 public interface IPaginate<TResult>
 {
@@ -6,5 +8,5 @@ public interface IPaginate<TResult>
 	int Page { get; }
 	int Total { get; }
 	int TotalPages { get; }
-	IList<TResult> Items { get; }
+    IList<TResult> Items { get; }
 }

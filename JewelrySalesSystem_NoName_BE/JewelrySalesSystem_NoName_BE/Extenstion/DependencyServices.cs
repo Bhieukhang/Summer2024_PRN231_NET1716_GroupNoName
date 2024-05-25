@@ -51,30 +51,9 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IStallService, StallService>();
             services.AddScoped<IWarrantyService, WarrantyService>();
+            services.AddScoped<IMembershipService, MembershipService>();
             return services;
         }
-
-        //public static IServiceCollection AddJwtValidation(this IServiceCollection services)
-        //{
-        //    services.AddAuthentication(options =>
-        //    {
-        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    }).AddJwtBearer(options =>
-        //    {
-        //        options.TokenValidationParameters = new TokenValidationParameters()
-        //        {
-        //            ValidIssuer = "JewerlySalesSystem",
-        //            ValidateIssuer = true,
-        //            ValidateAudience = false,
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey =
-        //                new SymmetricSecurityKey(
-        //                    Encoding.UTF8.GetBytes("HOP"))
-        //        };
-        //    });
-        //    return services;
-        //}
 
         public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
         {
