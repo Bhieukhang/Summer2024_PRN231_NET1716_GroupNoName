@@ -57,7 +57,7 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         /// Create new warranty.
         /// </summary>
         /// <returns>Warraty item</returns>
-        // GET: api/warranty
+        // POST: api/v1/warranty
         #endregion
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
         public async Task<ActionResult> CreateWarranty(WarrantyRequest warranty)
