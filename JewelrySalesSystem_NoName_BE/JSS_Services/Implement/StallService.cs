@@ -1,4 +1,6 @@
-﻿using JSS_BusinessObjects.Models;
+﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
@@ -18,7 +20,15 @@ namespace JSS_Services.Implement
         public StallService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<StallService> logger) : base(unitOfWork, logger)
         {
         }
-
+        public async Task<IPaginate<StallResponse>> GetListStallAsync(int page, int size)
+        {
+            IPaginate<StallResponse> listStall = await _unitOfWork.GetRepository<Stall>().GetList(
+                selector: x => new StallResponse(x.Id, x.Name, x.Number, x.StaffId ,x.Deflag),
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size); ;
+            return listStall;
+        }
         public async Task<IEnumerable<Stall>> GetAllStallsAsync()
         {
             try

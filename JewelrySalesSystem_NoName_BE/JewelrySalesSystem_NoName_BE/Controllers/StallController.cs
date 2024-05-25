@@ -5,6 +5,8 @@ using JSS_Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using JSS_BusinessObjects.Models;
+using JSS_Services.Implement;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -18,7 +20,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             _stallService = stallService;
         }
-
         #region GetStall
         /// <summary>
         /// Get all stalls.
@@ -27,9 +28,11 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // GET: api/Stall
         #endregion
         [HttpGet(ApiEndPointConstant.Stall.StallEndpoint)]
-        public async Task<ActionResult<IEnumerable<Stall>>> GetAllStallsAsync()
+        [ProducesResponseType(typeof(StallResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetListStallAsync(int page, int size)
         {
-            var stalls = await _stallService.GetAllStallsAsync();
+            var list = await _stallService.GetListStallAsync(page, size);
+            var stalls = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(stalls);
         }
 

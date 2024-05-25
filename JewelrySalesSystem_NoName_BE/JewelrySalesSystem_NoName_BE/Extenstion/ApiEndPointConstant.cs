@@ -37,6 +37,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         public static class Account
         {
             public const string AccountEndpoint = ApiEndpoint + "/Account";
+            public const string AccountByRoleIdEndpoint = ApiEndpoint + "/AccountByRole";
+            public const string TotalAccountEndpoint = ApiEndpoint + "/Account/Total-account";
+            public const string ActiveAccountEndpoint = ApiEndpoint + "/Account/Active-account";
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
         }
         public static class Category

@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Admin\Account\" />
     <Folder Include="Pages\Manager\Discount\" />
     <Folder Include="Pages\Manager\Policy\" />
     <Folder Include="Pages\Manager\Promotion\" />
