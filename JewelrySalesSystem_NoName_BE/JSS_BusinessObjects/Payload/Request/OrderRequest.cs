@@ -13,7 +13,7 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public Guid? PromotionId { get; set; }
 
-        public Guid DiscountId { get; set; }
+        public Guid? DiscountId { get; set; }
 
         public double? TotalPrice { get; set; }
 
