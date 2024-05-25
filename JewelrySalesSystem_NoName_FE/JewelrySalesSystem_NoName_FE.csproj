@@ -32,7 +32,6 @@
   <ItemGroup>
     <Folder Include="Pages\Manager\Discount\" />
     <Folder Include="Pages\Manager\Policy\" />
-    <Folder Include="Pages\Manager\Promotion\" />
     <Folder Include="Pages\Staff\PurchaseProduct\" />
   </ItemGroup>
 
