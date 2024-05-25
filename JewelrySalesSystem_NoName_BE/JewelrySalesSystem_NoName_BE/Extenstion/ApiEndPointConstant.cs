@@ -35,5 +35,12 @@
             public const string MembershipExpired = MembershipEndpoint + "/expired";
             public const string MembershipByName = MembershipEndpoint + "/{name}";
         }
+
+        public static class Order
+        {
+            public const string OrderEndpoint = ApiEndpoint + "/order";
+            public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
+            public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
+        }
     }
 }

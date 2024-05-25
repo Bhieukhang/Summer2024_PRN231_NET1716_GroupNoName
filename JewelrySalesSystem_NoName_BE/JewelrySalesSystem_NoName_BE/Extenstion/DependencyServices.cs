@@ -52,6 +52,7 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<IStallService, StallService>();
             services.AddScoped<IWarrantyService, WarrantyService>();
             services.AddScoped<IMembershipService, MembershipService>();
+            services.AddScoped<IOrderService, OrdersService>();
             return services;
         }
 
@@ -105,29 +106,6 @@ namespace JewelrySalesSystem_NoName_BE
             });
             return services;
         }
-
-        //public static IServiceCollection AddAuthentication(this IServiceCollection services)
-        //{
-        //    _ = services.AddAuthentication(options =>
-        //    {
-        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    })
-        //            .AddJwtBearer(options =>
-        //            {
-        //                options.RequireHttpsMetadata = false;
-        //                options.SaveToken = true;
-        //                options.TokenValidationParameters = new TokenValidationParameters
-        //                {
-        //                    ValidateIssuer = false,
-        //                    ValidateAudience = false,
-        //                    ValidateIssuerSigningKey = true,
-        //                    IssuerSigningKey =
-        //                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AppSettings:SecretKey"]))
-        //                };
-        //            });
-        //    return services;
-        //}
     }
 }
 
