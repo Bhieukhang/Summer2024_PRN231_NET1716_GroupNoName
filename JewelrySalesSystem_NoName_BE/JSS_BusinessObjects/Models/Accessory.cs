@@ -31,6 +31,8 @@ public partial class Accessory
 
     public Guid? AccessoryMaterialId { get; set; }
 
+    public string? ImgAccessory { get; set; }
+
     public virtual ICollection<AccessoryMaterial> AccessoryMaterials { get; } = new List<AccessoryMaterial>();
 
     public virtual Category? Category { get; set; }

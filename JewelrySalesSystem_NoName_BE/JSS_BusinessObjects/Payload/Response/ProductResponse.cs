@@ -9,12 +9,13 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class ProductResponse
     {
-        public ProductResponse(Guid id, string? productName, string? description, double? size, 
+        public ProductResponse(Guid id, string? imgProduct,string? productName, string? description, double? size, 
             double? totalPrice, int? quantity, Guid? accessoryId,Guid? productMaterialId, string? code)
         {
             Id = id;
             ProductName = productName;
             Description = description;
+            ImgProduct = imgProduct;
             Size = size;
             TotalPrice = totalPrice;
             Quantity = quantity;
@@ -51,6 +52,7 @@ namespace JSS_BusinessObjects.Payload.Response
         public Guid? AccessoryId { get; set; }
 
         public string? Code { get; set; }
+        public string? ImgProduct { get; set; }
 
         public virtual Accessory? Accessory { get; set; }
 

@@ -34,6 +34,7 @@ namespace JSS_BusinessObjects.Payload.Request
         public Guid? ProductMaterialId { get; set; }
 
         public string? Code { get; set; }
+        public string? ImgProduct { get; set; }
 
         public virtual Category Category { get; set; } = null!;
 
