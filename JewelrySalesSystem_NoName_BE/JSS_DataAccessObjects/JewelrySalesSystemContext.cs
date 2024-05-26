@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using JSS_BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
+using JSS_BusinessObjects.Models;
 
 namespace JSS_DataAccessObjects;
 

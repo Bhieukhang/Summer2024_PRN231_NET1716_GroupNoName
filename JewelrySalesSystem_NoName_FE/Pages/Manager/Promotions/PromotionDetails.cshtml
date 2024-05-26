@@ -1,0 +1,85 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions.PromotionDetailsModel
+@{
+    var promotion = Model?.Promotion;
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Thông tin khuyến mãi</h4>
+
+                @if (Model?.Promotion != null)
+                {
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Name: </span>
+                            <span> @promotion?.PromotionName</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-tag me-1"></i> Type: </span>
+                            <span><span class="badge badge-info">@promotion?.Type</span></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Description: </span>
+                            <span>@promotion?.Description</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-archive me-1"></i> Product Quantity: </span>
+                            <span>@promotion?.ProductQuantity</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-percent me-1"></i> Percentage: </span>
+                            <span><span>@promotion?.Percentage</span>%</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Ins Date - Ups Date: </span>
+                            <span>@promotion?.InsDate - @promotion?.UpsDate</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-calendar-check me-1"></i> Start Date - End Date: </span>
+                            <span>@promotion?.StartDate - @promotion?.EndDate</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 d-flex flex-row justify-content-start">
+                            <a href="ListPromotion" class="btn btn-secondary me-3">
+
+                                <i class="bi bi-arrow-left"></i>
+                                <span>Trở về</span>
+                            </a>
+                            <a href="#" class="btn btn-primary ">
+                                <i class="bi bi-pencil"></i>
+                                <span>Chỉnh sửa</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>Khuyến mãi bạn tìm không tồn tại.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

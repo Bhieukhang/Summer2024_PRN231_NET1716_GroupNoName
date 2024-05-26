@@ -8,7 +8,7 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class MembershipResponse
     {
-        public MembershipResponse(Guid id, string? name, int? level, int? point, int? redeemPoint, Guid userId, double? userMoney) 
+        public MembershipResponse(Guid id, string? name, int? level, int? point, int? redeemPoint, Guid userId, double? userMoney, bool? deflag) 
         {
             Id = id;
             Name = name;
@@ -17,6 +17,7 @@ namespace JSS_BusinessObjects.Payload.Response
             RedeemPoint = redeemPoint;
             UserId = userId;
             UsedMoney = userMoney;
+            Deflag = deflag;
         }
         public Guid Id { get; set; }
 

@@ -1,6 +1,8 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.ListWarrantyModel
 @{
+    int totalItems = Model.TotalItems;
+    int totalPages = Model.TotalPages;
 }
 
 <div class="main-panel">
@@ -38,12 +40,6 @@
                             {
                                 <tr>
                                     <td> @warranty.DateOfPurchase?.ToString("yyyy-MM-dd") </td>
-                                    <td>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%"
-                                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </td>
                                     <td> @warranty.ExpirationDate?.ToString("yyyy-MM-dd") </td>
                                     <td> @warranty.Period </td>
                                     <td> @warranty.ConditionWarranty</td>
@@ -56,6 +52,22 @@
                             }
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example" style="padding-top:50px">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-page="./ListWarranty" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(Model.Page == i ? "active" : "")">
+                                    <a class="page-link" asp-page="./ListWarranty" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-page="./ListWarranty" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

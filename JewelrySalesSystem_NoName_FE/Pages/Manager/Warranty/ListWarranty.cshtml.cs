@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using JewelrySalesSystem_NoName_FE.Ultils;
+using System.Drawing;
+using JewelrySalesSystem_NoName_FE.DTOs.Membership;
+using JewelrySalesSystem_NoName_FE.DTOs;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 {
@@ -24,21 +28,29 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         }
 
         public IList<WarrantyDTO> WarrantyList { get; set; } = new List<WarrantyDTO>();
+        public int Page { get; set; }
+        public int Size { get; set; }
+        public int TotalItems { get; set; }
+        public int TotalPages { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? page, int? size)
         {
-            var apiUrl = "https://localhost:44318/api/v1/warranty";
+            Page = page ?? 1;
+            Size = size ?? 10;
 
+            var url = $"{ApiPath.WarrantyList}?page={Page}&size={Size}";
             try
             {
                 var client = _httpClientFactory.CreateClient();
-                var response = await client.GetStringAsync(apiUrl);
-                WarrantyList = JsonConvert.DeserializeObject<List<WarrantyDTO>>(response);
+                var response = await client.GetStringAsync(url);
+
+                var paginateResult = JsonConvert.DeserializeObject<Paginate<WarrantyDTO>>(response);
+                WarrantyList = paginateResult.Items;
+                TotalItems = paginateResult.Total;
+                TotalPages = paginateResult.TotalPages;
             }
             catch (Exception ex)
             {
-                // Log the exception and handle it appropriately
-                // For now, just set WarrantyList to an empty list
                 WarrantyList = new List<WarrantyDTO>();
             }
         }

@@ -1,14 +1,10 @@
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
-using JSS_Services.Implement;
-using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using JewelrySalesSystem_NoName_BE.Controllers;
 
 
 try

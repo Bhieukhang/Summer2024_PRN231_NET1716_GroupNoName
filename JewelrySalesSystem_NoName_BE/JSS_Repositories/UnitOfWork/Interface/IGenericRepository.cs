@@ -69,5 +69,6 @@ public interface IGenericRepository<T> : IDisposable where T : class
     Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 
     // Task<IEnumerable<Stall>> GetAllAsync();
+    Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);
 }
 
