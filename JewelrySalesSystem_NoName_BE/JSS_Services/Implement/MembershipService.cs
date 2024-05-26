@@ -40,6 +40,28 @@ namespace JSS_Services.Implement
             return listMembershipExpired;
         }
 
+        public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
+        {
+            var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
+            var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id ==  id);
+            if (member == null)
+            {
+                return null;
+            }
+            MembershipResponse membershipResponse = new MembershipResponse()
+            {
+                Id = member.Id,
+                Name = member.Name,
+                Level = member.Level,
+                Point = member.Point,
+                RedeemPoint = member.RedeemPoint,
+                UserId = member.UserId,
+                UsedMoney = member.UsedMoney,
+                Deflag = member.Deflag
+            };
+            return new ProfileResponse(user.Phone, user.Dob, user.Address, user.ImgUrl, membershipResponse);
+        }
+
         public async Task<MembershipResponse> GetMembershipByName(string name)
         {
             var queryMembership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.Name.Equals(name));

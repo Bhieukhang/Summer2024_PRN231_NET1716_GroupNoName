@@ -39,14 +39,69 @@
                             @foreach (var warranty in Model.WarrantyList)
                             {
                                 <tr>
-                                    <td> @warranty.DateOfPurchase?.ToString("yyyy-MM-dd") </td>
-                                    <td> @warranty.ExpirationDate?.ToString("yyyy-MM-dd") </td>
+                                    <td> @warranty.DateOfPurchase?.ToString("dd-MM-yyyy") </td>
+                                    <td> @warranty.ExpirationDate?.ToString("dd-MM-yyyy") </td>
                                     <td> @warranty.Period </td>
-                                    <td> @warranty.ConditionWarranty</td>
+                                    <td> @warranty.ConditionWarranty.Condition</td>
                                     <td>
-                                        <a class="nav-link" href="../index.html">
-                                            <i class="fa fa-eye menu-icon"></i>
-                                        </a>
+                                        <i class="fa fa-eye menu-icon" data-toggle="modal" data-target="#warranty"></i>
+                                        <div class="col-sm-10">
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="warranty">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        @*                                                         <div class="col-md-6 grid-margin stretch-card"> *@
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h4 class="card-title">Điều kiện bảo hành</h4>
+                                                                <div class="form-group row">
+                                                                    <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Ngày mua</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Username" value="@warranty.DateOfPurchase?.ToString("dd-MM-yyyy")" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Ngày hết hạn</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" value="@warranty.ExpirationDate?.ToString(" dd-MM-yyyy")" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="exampleInputMobile" class="col-sm-3 col-form-label">Giai đoạn</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="exampleInputMobile" placeholder="Mobile number" value="@warranty.Period tháng" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Trạng thái</label>
+                                                                    @if (warranty.Status.Equals("Active"))
+                                                                    {
+                                                                        <div class="col-sm-9">
+                                                                            <label class="badge badge-success">@warranty.Status</label>
+                                                                        </div>
+                                                                    } else
+                                                                    {
+                                                                        <div class="col-sm-9">
+                                                                            <label class="badge badge-danger">@warranty.Status</label>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Password" value="@warranty.ConditionWarranty.Condition" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @*  </div> *@
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -60,7 +115,7 @@
                             @for (var i = 1; i <= Model.TotalPages; i++)
                             {
                                 <li class="page-item @(Model.Page == i ? "active" : "")">
-                                    <a class="page-link" asp-page="./ListWarranty" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                    <a class="page-link" asp-page="./ListWarranty" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">

@@ -1,0 +1,43 @@
+﻿@model JewelrySalesSystem_NoName_FE.DTOs.Account.ProfileDTO
+
+<div>
+    <div class="form-group row">
+        <img src="@Model.ImgUrl" class="me-2" alt="@Model.Membership.Name">
+    </div>
+    <div class="form-group row">
+        <label for="memberName" class="col-sm-3 col-form-label">Thành viên</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberName" value="@Model.Membership.Name" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="memberPhone" class="col-sm-3 col-form-label">Số điện thoại</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberPhone" value="@Model.Phone" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="memberDob" class="col-sm-3 col-form-label">Ngày sinh</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberDob" value="@Model.Dob.ToString("dd-MM-yyyy")" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="memberAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberAddress" value="@Model.Address" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="memberLevel" class="col-sm-3 col-form-label">Mức độ</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberLevel" value="@Model.Membership.Level" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="memberUserMoney" class="col-sm-3 col-form-label">Tiêu dùng</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="memberUserMoney" value="@Model.Membership.UserMoney" readonly>
+        </div>
+    </div>
+</div>
