@@ -13,6 +13,7 @@ namespace JSS_Services.Interface
         public Task<IPaginate<MembershipResponse>> GetListMembership(int page, int size);
         public Task<IPaginate<MembershipResponse>> GetListMembershipExpired(int page, int size);
         public Task<MembershipResponse> GetMembershipByName(string name);
+        public Task<ProfileResponse> GetProfileMembershipById(Guid id);
 
         public Task<MembershipResponse> UpdateUserMoney(Guid userId, double userMoney);
     }

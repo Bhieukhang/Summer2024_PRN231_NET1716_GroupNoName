@@ -33,10 +33,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         public int TotalItems { get; set; }
         public int TotalPages { get; set; }
 
-        public async Task OnGetAsync(int? page, int? size)
+        public async Task OnGetAsync(int? currentPage)
         {
-            Page = page ?? 1;
-            Size = size ?? 10;
+            Page = currentPage ?? 1;
+            Size = 10;
 
             var url = $"{ApiPath.WarrantyList}?page={Page}&size={Size}";
             try
