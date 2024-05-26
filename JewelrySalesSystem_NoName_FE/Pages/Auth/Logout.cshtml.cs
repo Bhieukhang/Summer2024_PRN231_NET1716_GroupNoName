@@ -16,7 +16,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
         {
             try
             {
-                var response = await _httpClient.PostAsync("https://localhost:7160/api/v1/Logout", null);
+                var response = await _httpClient.PostAsync("https://localhost:44318/api/v1/Logout", null);
                 if (response.IsSuccessStatusCode)
                 {
                     // Xóa token kh?i session ho?c cookie

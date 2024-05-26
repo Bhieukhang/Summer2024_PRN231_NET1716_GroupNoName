@@ -2,6 +2,7 @@
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -26,16 +27,21 @@ namespace JSS_Services.Implement
 
         public async Task<Account> GetAccountByPhone(string phone, string password)
         {
-            var account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(predicate: x =>
-                x.Phone.Equals(phone) && x.Password.Equals(password));
+            var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(predicate: x =>
+                x.Phone.Equals(phone) && x.Password.Equals(password), include: q => q.Include(x => x.Role));
+
+            if (account == null)
+            {
+                throw new UnauthorizedAccessException("Invalid phone or password.");
+            }
             return account;
         }
 
         public async Task<string> LoginAsync(string phone, string password)
         {
             var accountRepository = _unitOfWork.GetRepository<Account>();
-            var account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(predicate: x =>
-                x.Phone.Equals(phone) && x.Password.Equals(password));
+            var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(predicate: x =>
+                x.Phone.Equals(phone) && x.Password.Equals(password), include: q => q.Include(x => x.Role));
 
             if (account == null)
             {
@@ -47,15 +53,21 @@ namespace JSS_Services.Implement
 
         private string GenerateJwtToken(Account account)
         {
+            if (account == null)
+            {
+                throw new ArgumentNullException(nameof(account), "Account cannot be null");
+            }
+
             var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
                     new Claim(ClaimTypes.Name, account.FullName ?? ""),
                     new Claim(ClaimTypes.MobilePhone, account.Phone ?? ""),
-                    new Claim(ClaimTypes.Role, account.RoleId.ToString())
+                    new Claim(ClaimTypes.Role, account.Role.RoleName)
                 };
 
-            var keyString = "Tokenspodpsjohinidbfjhbvkfdjhagvakfd&*¨T&(SFGD&(¨SFD(&VY&(6dfsutf7f6dod8g-f&TG08t¨&*ts&¨*dt&sfg(öd&astdecatechlabs";
+            var keyString = "buoihieukhangdeptraibuoihieukhangdeptraibuoihieukhangdeptraibuoihieukhangdeptrai";
+            //var keyString = "Tokenspodpsjohinidbfjhbvkfdjhagvakfd&*¨T&(SFGD&(¨SFD(&VY&(6dfsutf7f6dod8g-f&TG08t¨&*ts&¨*dt&sfg(öd&astdecatechlabs";
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(keyString));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var expires = DateTime.Now.AddDays(30);
