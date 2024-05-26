@@ -139,6 +139,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public void UpdateAsync(T entity)
     {
         _dbSet.Update(entity);
+        _dbContext.Entry(entity).State = EntityState.Modified;
     }
 
     public void UpdateRange(IEnumerable<T> entities)

@@ -11,8 +11,8 @@ namespace JSS_Services.Interface
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(Guid id);
-        Task<Product> CreateProductAsync(Product newData);
-        Task<Product> UpdateProductAsync(Guid id, Product updatedData);
+        Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName);
+        Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName);
         Task<bool> DeleteProductAsync(Guid id);
     }
 }

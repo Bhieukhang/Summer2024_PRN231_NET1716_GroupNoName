@@ -1,7 +1,10 @@
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -11,6 +14,12 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
     builder.Logging.ClearProviders();
+
+    FirebaseApp.Create(new AppOptions()
+    {
+        Credential = GoogleCredential.FromFile("D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
+    }); 
+
     // Add services to the container.
     builder.Services.AddCors(options =>
     {

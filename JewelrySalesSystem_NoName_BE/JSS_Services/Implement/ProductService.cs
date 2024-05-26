@@ -1,4 +1,5 @@
-﻿using JSS_BusinessObjects.Models;
+﻿using Firebase.Storage;
+using JSS_BusinessObjects.Models;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
@@ -13,6 +14,7 @@ namespace JSS_Services.Implement
 {
     public class ProductService : BaseService<ProductService>, IProductService
     {
+        private readonly string _bucket = "jssimage-253a4.appspot.com";
         public ProductService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<ProductService> logger) : base(unitOfWork, logger)
         {
         }
@@ -27,24 +29,59 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<Product> CreateProductAsync(Product newData)
+        public async Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName)
         {
+            var imageUrl = await UploadImageToFirebase(imageStream, imageName);
             newData.Id = Guid.NewGuid();
+            newData.ImgProduct = imageUrl;
+            newData.InsDate = DateTime.Now;
             await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) return null;
             return newData;
         }
 
-        public async Task<Product> UpdateProductAsync(Guid id, Product updatedData)
+        public async Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName)
         {
-            var existingProduct = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
-            if (existingProduct == null) return null;
+            try
+            {
+                var existingProduct = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
+                if (existingProduct == null) return null;
 
-            _unitOfWork.GetRepository<Product>().UpdateAsync(updatedData);
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) return null;
-            return updatedData;
+                existingProduct.ProductName = updatedData.ProductName ?? existingProduct.ProductName;
+                existingProduct.Description = updatedData.Description ?? existingProduct.Description;
+                existingProduct.ImportPrice = updatedData.ImportPrice ?? existingProduct.ImportPrice;
+                existingProduct.Size = updatedData.Size ?? existingProduct.Size;
+                existingProduct.TotalPrice = updatedData.TotalPrice ?? existingProduct.TotalPrice;
+                existingProduct.Quantity = updatedData.Quantity ?? existingProduct.Quantity;
+                existingProduct.ProcessPrice = updatedData.ProcessPrice ?? existingProduct.ProcessPrice;
+                existingProduct.Code = updatedData.Code ?? existingProduct.Code;
+                existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
+                existingProduct.ProductMaterialId = updatedData.ProductMaterialId ?? existingProduct.ProductMaterialId;
+                existingProduct.AccessoryId = updatedData.AccessoryId ?? existingProduct.AccessoryId;
+
+
+                if (imageStream != null)
+                {
+                    var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+                    updatedData.ImgProduct = imageUrl;
+                }
+
+                updatedData.UpsDate = DateTime.Now;
+                _unitOfWork.GetRepository<Product>().UpdateAsync(updatedData);
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful) return null;
+                return updatedData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the product");
+                if (ex.InnerException != null)
+                {
+                    _logger.LogError(ex.InnerException, "Inner exception details");
+                }
+                throw;
+            }
         }
 
         public async Task<bool> DeleteProductAsync(Guid id)
@@ -54,6 +91,18 @@ namespace JSS_Services.Implement
 
             _unitOfWork.GetRepository<Product>().DeleteAsync(existingProduct);
             return await _unitOfWork.CommitAsync() > 0;
+        }
+        private async Task<string> UploadImageToFirebase(Stream imageStream, string imageName)
+        {
+            var storage = new FirebaseStorage(_bucket);
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageName);
+
+            var uploadTask = storage
+                .Child("uploads")
+                .Child(uniqueFileName)
+                .PutAsync(imageStream);
+
+            return await uploadTask;
         }
     }
 }
