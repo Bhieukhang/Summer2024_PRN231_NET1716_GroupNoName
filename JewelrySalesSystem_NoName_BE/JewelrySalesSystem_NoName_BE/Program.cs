@@ -2,6 +2,8 @@ using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -39,12 +41,19 @@ try
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("noname")),
+                .GetBytes("tokengroupnonametokengroupnonametokengroupnonametokengroupnonametokengroupnoname")),
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
         }
       );
+
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+        options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
+        options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
+    });
 
     var app = builder.Build();
 
@@ -52,6 +61,7 @@ try
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseMiddleware<AuthorizationHandlingMiddleware>();
 
     app.UseCors(CorsConstant.PolicyName);
     //app.UseHttpsRedirection();

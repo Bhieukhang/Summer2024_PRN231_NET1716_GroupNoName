@@ -26,7 +26,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("https://localhost:7160/api/v1/Login", LoginRequest);
+                var response = await _httpClient.PostAsJsonAsync("https://localhost:44318/api/v1/Login", LoginRequest);
                 if (response.IsSuccessStatusCode)
                 {
                     var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();

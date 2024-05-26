@@ -34,6 +34,7 @@ public partial class Product
     public Guid? AccessoryId { get; set; }
 
     public string? Code { get; set; }
+    public string? ImgProduct { get; set; }
 
     public virtual Accessory? Accessory { get; set; }
 
