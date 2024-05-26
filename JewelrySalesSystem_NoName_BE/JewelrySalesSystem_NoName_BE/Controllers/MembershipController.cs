@@ -4,6 +4,7 @@ using JSS_Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -61,6 +62,22 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             var list = await _service.GetMembershipByName(name);
             return Ok(list);
+        }
+
+        #region GetProfileMembershipById
+        /// <summary>
+        /// Get membership by UserId
+        /// </summary>
+        /// <returns>Membership by name.</returns>
+        // GET: api/v1/membership/{name}
+        #endregion
+        [HttpGet(ApiEndPointConstant.Membership.MembershipByUserIdEndpoint)]
+        [ProducesResponseType(typeof(ProfileResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProfileMembershipByUserId([FromQuery]Guid id)
+        {
+            var member = await _service.GetProfileMembershipById(id);
+            var result = JsonConvert.SerializeObject(member, Formatting.Indented);
+            return Ok(result);
         }
 
         [HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]

@@ -41,7 +41,7 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();
