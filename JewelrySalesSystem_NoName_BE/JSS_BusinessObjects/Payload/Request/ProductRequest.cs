@@ -26,6 +26,7 @@ namespace JSS_BusinessObjects.Payload.Request
         public Guid CategoryId { get; set; }
 
         public int? Quantity { get; set; }
+        public double? ProcessPrice { get; set; }
         public Guid? AccessoryId { get; set; }
 
         public Guid? ProductMaterialId { get; set; }
