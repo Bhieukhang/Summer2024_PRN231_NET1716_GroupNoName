@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Linq.Expressions;
 using JSS_BusinessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -157,7 +158,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.RemoveRange(entities);
     }
 
-   
+
 
     #endregion
 }

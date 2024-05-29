@@ -18,7 +18,12 @@
         //Promotion
         public const string Promotion = url + "/api/v1/promotion";
 
+        //Category
+        public const string CategoryList = url + "/api/v1/Category";
 
+
+        //Product
+        public const string ProductList = url + "/api/v1/Product";
 
         //account
         public const string AccountList = url + "/api/v1/Account";

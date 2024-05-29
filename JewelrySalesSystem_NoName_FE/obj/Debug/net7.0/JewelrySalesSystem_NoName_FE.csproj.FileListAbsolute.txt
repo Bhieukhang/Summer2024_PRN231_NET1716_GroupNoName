@@ -29,3 +29,7 @@ D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj
 D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.pdb
 D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.genruntimeconfig.cache
 D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\ref\JewelrySalesSystem_NoName_FE.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.csproj.AssemblyReference.cache
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelryS.730B641E.Up2Date
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Firebase.Storage.dll

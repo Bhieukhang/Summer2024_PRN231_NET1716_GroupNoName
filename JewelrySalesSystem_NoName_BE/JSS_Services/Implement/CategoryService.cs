@@ -24,7 +24,7 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Category>().GetListAsync();
         }
 
-        public async Task<Category> GetCategoryByIdAsync(Guid id)
+        public async Task<Category> GetCategoryByIdAsync(Guid? id)
         {
             return await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(a => a.Id == id);
         }

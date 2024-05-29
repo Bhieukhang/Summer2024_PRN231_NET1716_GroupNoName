@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Models;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace JSS_Services.Implement
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return await _unitOfWork.GetRepository<Product>().GetListAsync();
+            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
         }
 
         public async Task<Product> GetProductByIdAsync(Guid id)
@@ -31,14 +32,40 @@ namespace JSS_Services.Implement
 
         public async Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName)
         {
-            var imageUrl = await UploadImageToFirebase(imageStream, imageName);
-            newData.Id = Guid.NewGuid();
-            newData.ImgProduct = imageUrl;
-            newData.InsDate = DateTime.Now;
-            await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful) return null;
-            return newData;
+            //var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+            //newData.Id = Guid.NewGuid();
+            //newData.ImgProduct = imageUrl;
+            //newData.InsDate = DateTime.Now;
+            //await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
+            //bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            //if (!isSuccessful) return null;
+            //return newData;
+            try
+            {
+                var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+                if (string.IsNullOrEmpty(imageUrl))
+                {
+                    throw new Exception("Image upload failed, URL is empty.");
+                }
+
+                newData.Id = Guid.NewGuid();
+                newData.ImgProduct = imageUrl;
+                newData.InsDate = DateTime.Now;
+
+                await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception("Commit failed, no rows affected.");
+                }
+
+                return newData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the product.");
+                return null;
+            }
         }
 
         public async Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName)

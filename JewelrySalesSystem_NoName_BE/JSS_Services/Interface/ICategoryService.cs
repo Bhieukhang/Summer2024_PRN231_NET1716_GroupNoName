@@ -12,7 +12,7 @@ namespace JSS_Services.Interface
     public interface ICategoryService
     {
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(Guid id);
+        Task<Category> GetCategoryByIdAsync(Guid? id);
         Task<CategoryResponse> CreateCategoryAsync(CategoryRequest newData);
         Task<Category> UpdateCategoryAsync(Guid id, Category updatedData);
         Task<bool> DeleteCategoryAsync(Guid id);

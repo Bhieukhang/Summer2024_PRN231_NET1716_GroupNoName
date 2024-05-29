@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
-namespace JewelrySalesSystem_NoName_FE;
+namespace JewelrySalesSystem_NoName_FE.DTOs.Product;
 
-public partial class Product
+public partial class ProductDTO
 {
     public Guid Id { get; set; }
+    public string? ImgProduct {  get; set; }
 
     public string? ProductName { get; set; }
 
@@ -35,7 +37,5 @@ public partial class Product
 
     public string? Code { get; set; }
 
-    public string Accessory { get; set; }
-
-    public string Category { get; set; }
+    public CategoryDTO Category { get; set; } 
 }

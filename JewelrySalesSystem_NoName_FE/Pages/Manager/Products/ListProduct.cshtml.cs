@@ -1,4 +1,7 @@
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
+using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -18,23 +21,26 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IList<Product> productList { get; set; } = new List<Product>();
+        public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
 
         public async Task OnGetAsync()
         {
-            var apiUrl = "https://localhost:44318/api/v1/Product";
+            await LoadProductListAsync();
+        }
 
+        private async Task LoadProductListAsync()
+        {
+            var apiUrl = $"{ApiPath.ProductList}";
             try
             {
                 var client = _httpClientFactory.CreateClient();
                 var response = await client.GetStringAsync(apiUrl);
-                productList = JsonConvert.DeserializeObject<List<Product>>(response);
+                productList = JsonConvert.DeserializeObject<List<ProductDTO>>(response);
+                var categories = await ApiClient.GetAsync<List<CategoryDTO>>(ApiPath.CategoryList);
             }
             catch (Exception ex)
             {
-                // Log the exception and handle it appropriately
-                // For now, just set WarrantyList to an empty list
-                productList = new List<Product>();
+                productList = new List<ProductDTO>();
             }
         }
     }

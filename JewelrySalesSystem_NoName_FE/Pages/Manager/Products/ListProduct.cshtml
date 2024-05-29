@@ -5,7 +5,7 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title"> Danh sách sản phẩm </h3>
+            <h3 class="page-title"> LIST OF JEWELRY </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     @*Thêm nút add*@
@@ -25,28 +25,30 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Image</th>
+                                <th>Code</th>
                                 <th>Product Name</th>
-                                <th>Description</th>
-                                <th>Import Price</th>
                                 <th>Size</th>
-                                <th>Total Price</th>
                                 <th>Quantity</th>
+                                <th>Total Price</th>
                                 <th>Category</th>
-                                <th>Accessory</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.productList)
                             {
                                 <tr>
+                                    <td><img src="@item.ImgProduct"/></td>
+                                    <td>@item.Code</td>
                                     <td>@item.ProductName</td>
-                                    <td>@item.Description</td>
-                                    <td>@item.ImportPrice</td>
                                     <td>@item.Size</td>
-                                    <td>@item.TotalPrice</td>
                                     <td>@item.Quantity</td>
-                                    <td>@item.Category</td>
-                                    <td>@item.Accessory</td>
+                                    <td>@item.TotalPrice</td>
+                                    <td>@item.Category?.Name</td>
+                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id" class="btn btn-gradient-primary btn-fw">Detail</a></td>
+                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-primary btn-fw">Edit</a></td>
                                 </tr>
                             }
                             @* <tr>
