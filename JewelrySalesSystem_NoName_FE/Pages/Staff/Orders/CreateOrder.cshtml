@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Orders.CreateOrderModel
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.CreateOrderModel
 @{
 }
 <body>
@@ -14,89 +14,54 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Trang sức</h4>
-                            <form class="forms-sample">
-                                <div class="form-group">
-                                    <label for="exampleInputName1">Mã barcode</label>
-                                    <input type="text" class="form-control" id="Code">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail3">Sản phẩm</label>
-                                    <input type="text" class="form-control" id="product">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword4">Giá</label>
-                                    <input type="number" class="form-control" id="price">
+                            <form class="forms-sample" method="post" asp-page-handler="Order">
+                                <div id="product-list">
+                                    @for (int i = 0; i < Model.Order.Details.Count; i++)
+                                    {
+                                        <div class="product-item">
+                                            <div class="form-group">
+                                                <label asp-for="Order.Details[i].ProductId">Mã barcode</label>
+                                                <input type="text" class="form-control" asp-for="Order.Details[i].ProductId">
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Order.Details[i].ProductName">Sản phẩm</label>
+                                                <input type="text" class="form-control" asp-for="Order.Details[i].ProductName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Order.Details[i].Amount">Giá</label>
+                                                <input type="number" class="form-control" asp-for="Order.Details[i].Amount">
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Order.Details[i].Quantity">Số lượng</label>
+                                                <input type="number" class="form-control" asp-for="Order.Details[i].Quantity" min="1">
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                                 <div class="col-12 grid-margin">
                                     <div class="card">
-                                        @*                                        <div class="card-body">*@
                                         <div class="form-group row">
-                                            <label class="col-sm-1 col-form-label">Số lượng</label>
-                                            <div class="col-sm-7 d-flex align-items-center">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <button type="button" class="btn btn-secondary" onclick="changeQuantity(-1)">-</button>
-                                                    </div>
-                                                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1">
-                                                    <div class="input-group-append">
-                                                        <button type="button" class="btn btn-secondary" onclick="changeQuantity(1)">+</button>
-                                                    </div>
+                                            <button type="button" class="btn btn-light" onclick="addProduct()">Thêm sản phẩm</button>
+                                            <div class="form-group row">
+                                                <label for="promotion" class="col-sm-2 col-form-label">Khuyến mãi</label>
+                                                <div class="col-sm-9">
+                                                    <button type="button" class="btn btn-primary btn-view-details">Khuyến mãi</button>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3 d-flex align-items-center">
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#promotion">Khuyến mãi</button>
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="promotion">
-                                                    <div class="modal-dialog modal-xl">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Khuyến mãi</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">Danh sách khuyến mãi</div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                                                <button type="button" class="btn btn-primary">Lưu</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div class="form-group row">
+                                                <label for="discount" class="col-sm-2 col-form-label">Chiết khấu</label>
+                                                <div class="col-sm-9">
+                                                    <button type="button" class="btn btn-primary btn-view-discount" data-toggle="modal" data-target="#discount">Thêm chiết khấu</button>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="discount" class="col-sm-1 col-form-label">Chiết khấu</label>
-                                            <div class="col-sm-10">
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#discount">Thêm chiết khấu</button>
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="discount">
-                                                    <div class="modal-dialog modal-xl">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Thêm chiết khấu</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">Yêu cầu chiết khấu</div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                                                                <button type="button" class="btn btn-primary">Lưu</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <button type="submit" class="btn btn-gradient-primary me-2">Tạo hóa đơn</button>
+                                                    <button class="btn btn-light">Hủy</button>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <button type="submit" class="btn btn-gradient-primary me-2">Tạo hóa đơn</button>
-                                                <button class="btn btn-light">Hủy</button>
                                             </div>
                                         </div>
                                     </div>
-                                    @*                                    </div>*@
                                 </div>
                             </form>
                         </div>
@@ -106,3 +71,105 @@
         </div>
     </div>
 </body>
+
+@* Modal Promotion List *@
+<div class="modal fade" id="promotionChoice" tabindex="-1" role="dialog" aria-labelledby="promotionChoiceLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promotionChoiceLabel">Thông tin khuyến mãi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung chi tiết sẽ được tải vào đây bằng AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Discount -->
+<div class="modal fade" id="discount">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm chiết khấu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Yêu cầu chiết khấu</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var productIndex = @Model.Order.Details.Count;
+
+        function addProduct() {
+            var newProductHtml = `
+                        <div class="product-item">
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
+                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
+                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__Amount">Giá</label>
+                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
+                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1">
+                            </div>
+                        </div>`;
+
+            $('#product-list').append(newProductHtml);
+            productIndex++;
+        }
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $('.btn-view-details').click(function () {
+            $.ajax({
+                url: '@Url.Page("./CreateOrder", new { handler = "Promotion" })',
+                type: 'GET',
+                success: function (data) {
+                    $('#promotionChoice .modal-body').html(data);
+                    $('#promotionChoice').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
+                }
+            });
+        });
+        $('.btn-view-discount').click(function () {
+            $.ajax({
+                url: '@Url.Page("./CreateOrder", new { handler = "Discount" })',
+                type: 'GET',
+                success: function (data) {
+                    $('#discount .modal-body').html(data);
+                    $('#discount').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
+                }
+            });
+        });
+    });
+</script>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>

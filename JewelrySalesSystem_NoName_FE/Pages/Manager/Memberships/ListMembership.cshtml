@@ -3,10 +3,47 @@
 @{
     int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
+    int totalActiveMembership = Model.TotalActiveMembership;
+    int totalUnMembership = Model.TotalUnMembership;
 }
 
 <div class="main-panel">
     <div class="content-wrapper">
+        <div class="row">
+            <div class="col-sm-4 stretch-card grid-margin">
+                <div class="card bg-info bg-gradient card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng tài khoản  <i class="fa fa-user-o mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalItems</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 stretch-card grid-margin">
+                <div class="card bg-gradient-success card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tài khoản đang hoạt động <i class="fa handshake-o fa-handshake-o mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalActiveMembership<h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 stretch-card grid-margin">
+                <div class="card bg-gradient-danger card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tài khoản ngừng hoạt động <i class="fa fa-ban mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalUnMembership<h2>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="page-header">
             <h3 class="page-title">Danh sách thành viên</h3>
             <nav aria-label="breadcrumb">

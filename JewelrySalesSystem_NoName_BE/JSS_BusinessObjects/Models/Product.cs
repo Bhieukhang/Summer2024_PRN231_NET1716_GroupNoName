@@ -36,8 +36,6 @@ public partial class Product
     public string? Code { get; set; }
     public string? ImgProduct { get; set; }
 
-    public string? ImgProduct { get; set; }
-
     public virtual Accessory? Accessory { get; set; }
 
     public virtual Category? Category { get; set; }

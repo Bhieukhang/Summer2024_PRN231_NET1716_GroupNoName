@@ -8,17 +8,16 @@
         public const string port = "44318";
         public const string url = host + port;
 
-        //Warranty
-        public const string WarrantyList =  url + "/api/v1/warranty";
 
         //Membership
         public const string MembershipList = url + "/api/v1/membership";
         public const string MembershipProfile = url + "/api/v1/membership/userId";
+        public const string MembershipTotal = url + "/api/v1/membership/total";
+        public const string MembershipActive = url + "/api/v1/membership/active";
+        public const string MembershipUnActive = url + "/api/v1/membership/unavailable";    
 
         //Promotion
         public const string Promotion = url + "/api/v1/promotion";
-
-
 
         //account
         public const string AccountList = url + "/api/v1/Account";
@@ -30,5 +29,14 @@
 
         //stall
         public const string StallList = url + "/api/v1/Stall";
+
+        //Order
+        public const string OrderCreate = url + "/api/v1/order";
+
+        //Warranty
+        public const string WarrantyList = url + "/api/v1/warranty";
+
+        //ConditionWarranty
+        public const string ConditionWarrantyList = url + "/api/v1/condition";
     }
 }

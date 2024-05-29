@@ -62,7 +62,6 @@ bld/
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
-/JewelrySalesSystem_NoName_BE/JewelrySalesSystem_NoName_BE
 
 
 git rm -r --cached JewelrySalesSystem_NoName_FE/obj/Debug
