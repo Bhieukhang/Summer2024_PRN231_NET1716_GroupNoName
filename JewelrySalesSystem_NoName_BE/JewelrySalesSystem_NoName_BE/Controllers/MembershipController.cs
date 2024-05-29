@@ -80,10 +80,62 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(result);
         }
 
+        #region UpdateUserMoneyByUserId
+        /// <summary>
+        /// Update UserMoney By UserId
+        /// </summary>
+        /// <returns>Level user money for membership.</returns>
+        // GET: api/v1/membership/userMoney
+        #endregion
         [HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]
         public async Task<IActionResult> UpdateUserMoneyByUserId([FromQuery]Guid userId, double userMoney)
         {
             var membership = await _service.UpdateUserMoney(userId, userMoney);
+            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region GetTotalMembership
+        /// <summary>
+        /// Get total membership
+        /// </summary>
+        /// <returns>Total membership.</returns>
+        // GET: api/v1/membership/userMoney
+        #endregion
+        [HttpGet(ApiEndPointConstant.Membership.MembershipTotal)]
+        public async Task<IActionResult> GetTotalMembership()
+        {
+            var membership = await _service.GetTotalMembershipCountAsync();
+            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region GetActiveMembership
+        /// <summary>
+        /// Get Active Membership
+        /// </summary>
+        /// <returns>Get active membership.</returns>
+        // GET: api/v1/membership/userMoney
+        #endregion
+        [HttpGet(ApiEndPointConstant.Membership.MembershipActive)]
+        public async Task<IActionResult> GetActiveMembership()
+        {
+            var membership = await _service.GetActiveMembershipCountAsync();
+            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region GetUnMembership
+        /// <summary>
+        /// Get un active Membership
+        /// </summary>
+        /// <returns>Get  inactive membership.</returns>
+        // GET: api/v1/membership/userMoney
+        #endregion
+        [HttpGet(ApiEndPointConstant.Membership.MembershipUnActive)]
+        public async Task<IActionResult> GetUnMembership()
+        {
+            var membership = await _service.GetUnavailableMembership();
             var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
             return Ok(result);
         }
