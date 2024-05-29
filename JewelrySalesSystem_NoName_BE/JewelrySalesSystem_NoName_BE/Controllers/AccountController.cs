@@ -6,6 +6,9 @@ using JSS_Services.Implement;
 using JSS_BusinessObjects.Models;
 using JewelrySalesSystem_NoName_BE.Extenstion;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using JSS_BusinessObjects.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -144,6 +147,48 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             var createdAccount = await _accountService.CreateAccountAsync(account);
             return CreatedAtAction(nameof(GetAccountByIdAsync), new { id = createdAccount.Id }, createdAccount);
+        }
+
+        #region AccountProfile
+        /// <summary>
+        /// Profile account.
+        /// </summary>
+        /// <param name="profile">The account object with the data.</param>
+        /// <returns>Profile.</returns>
+        #endregion
+        [Authorize]
+        [HttpGet(ApiEndPointConstant.Account.AccountProfileEndpoint)]
+        public async Task<IActionResult> GetAccountProfile()
+        {
+            var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (accountId == null)
+            {
+                return Unauthorized();
+            }
+
+            var accountProfile = await _accountService.GetAccountByIdAsync(Guid.Parse(accountId));
+            return Ok(accountProfile);
+        }
+
+        #region UpdateProfile
+        /// <summary>
+        /// Update profile.
+        /// </summary>
+        /// <param name="profile">Update Profile data.</param>
+        /// <returns>Profile.</returns>
+        #endregion
+        [Authorize]
+        [HttpPut(ApiEndPointConstant.Account.AccountProfileUpdateEndpoint)]
+        public async Task<IActionResult> UpdateAccountProfile([FromBody] UpdateProfileDto updateProfileDto)
+        {
+            var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (accountId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _accountService.UpdateProfileAsync(Guid.Parse(accountId), updateProfileDto);
+            return NoContent();
         }
     }
 }

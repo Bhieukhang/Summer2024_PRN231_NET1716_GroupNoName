@@ -8,6 +8,12 @@
         public const string port = "44318";
         public const string url = host + port;
 
+        //Authentication
+        public const string Login = url + "/api/v1/Login";
+        public const string Logout = url + "/api/v1/Logout";
+        public const string Profile = url + "/api/v1/Account/Profile";
+        public const string ProfileUpdate = url + "/api/v1/Account/Profile/Update";
+
         //Warranty
         public const string WarrantyList =  url + "/api/v1/warranty";
 

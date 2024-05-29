@@ -1,0 +1,36 @@
+﻿@page "/profile"
+@model JewelrySalesSystem_NoName_FE.Pages.Auth.ProfileModel
+@{
+}
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@* @Model.accountProfile.ImgUrl *@" class="card-img-top" alt="Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.accountProfile.FullName</h5>
+                    <p class="card-text">@Model.accountProfile.Phone</p>
+                    <a asp-page="UpdateProfile" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>Profile</h2>
+            <dl class="row">
+                <dt class="col-sm-3">Full Name</dt>
+                <dd class="col-sm-9">@Model.accountProfile.FullName</dd>
+
+                <dt class="col-sm-3">Date of Birth</dt>
+                <dd class="col-sm-9">@Model.accountProfile.Dob.ToString(/* "yyyy-MM-dd" */)</dd>
+
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">@Model.accountProfile.Address</dd>
+
+                <dt class="col-sm-3">Role Id</dt>
+                <dd class="col-sm-9">@Model.accountProfile.RoleId</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+</body>
