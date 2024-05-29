@@ -14,6 +14,9 @@
         //Membership
         public const string MembershipList = url + "/api/v1/membership";
         public const string MembershipProfile = url + "/api/v1/membership/userId";
+        public const string MembershipTotal = url + "/api/v1/membership/total";
+        public const string MembershipActive = url + "/api/v1/membership/active";
+        public const string MembershipUnActive = url + "/api/v1/membership/unavailable";    
 
         //Promotion
         public const string Promotion = url + "/api/v1/promotion";
@@ -35,5 +38,8 @@
 
         //stall
         public const string StallList = url + "/api/v1/Stall";
+
+        //Order
+        public const string OrderCreate = url + "/api/v1/order";
     }
 }

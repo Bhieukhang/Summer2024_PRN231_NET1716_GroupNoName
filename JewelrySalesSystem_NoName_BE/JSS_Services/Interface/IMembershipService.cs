@@ -16,5 +16,9 @@ namespace JSS_Services.Interface
         public Task<ProfileResponse> GetProfileMembershipById(Guid id);
 
         public Task<MembershipResponse> UpdateUserMoney(Guid userId, double userMoney);
+
+        public Task<int> GetTotalMembershipCountAsync();
+        public Task<int> GetActiveMembershipCountAsync();
+        public Task<int> GetUnavailableMembership();
     }
 }

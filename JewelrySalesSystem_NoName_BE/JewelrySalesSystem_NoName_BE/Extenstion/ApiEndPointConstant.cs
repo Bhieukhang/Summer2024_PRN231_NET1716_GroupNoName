@@ -77,6 +77,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string MembershipExpired = MembershipEndpoint + "/expired";
             public const string MembershipByName = MembershipEndpoint + "/{name}";
             public const string MembershipUserMoney = MembershipEndpoint + "/userMoney";
+            public const string MembershipTotal = MembershipEndpoint + "/total";
+            public const string MembershipActive = MembershipEndpoint + "/active";
+            public const string MembershipUnActive = MembershipEndpoint + "/unavailable";
         }
 
         public static class Order
