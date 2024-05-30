@@ -19,7 +19,7 @@ try
 
     FirebaseApp.Create(new AppOptions()
     {
-        Credential = GoogleCredential.FromFile("D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
+        Credential = GoogleCredential.FromFile("D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
     }); 
 
     // Add services to the container.

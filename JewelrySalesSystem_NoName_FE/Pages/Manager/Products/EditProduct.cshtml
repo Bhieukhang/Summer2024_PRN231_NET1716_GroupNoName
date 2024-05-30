@@ -17,44 +17,78 @@
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Sản phẩm</h4>
-                        <form class="forms-sample">
+                        <h4 class="card-title">UPDATE JEWELRY</h4>
+                        <form class="forms-sample" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="exampleInputName1">Tên</label>
-                                <input type="text" class="form-control" id="exampleInputName1" placeholder="Name">
+                                <label asp-for="Product.ProductName" class="control-label">Name</label>
+                                <input asp-for="Product.ProductName" class="form-control" placeholder="Name" />
+                                <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword4">Mô tả</label>
-                                <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                <label asp-for="Product.Description" class="control-label"></label>
+                                <input asp-for="Product.Description" class="form-control" placeholder="Enter the description" />
+                                <span asp-validation-for="Product.Description" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label for="exampleSelectGender">Loại</label>
-                                <select class="form-select" id="exampleSelectGender">
-                                    <option>Nhẫn</option>
-                                    <option>Vòng tay</option>
-                                    <option>Thêm</option>
+                                <label asp-for="Image" class="control-label">Image Product</label>
+                                @if (!string.IsNullOrEmpty(Model.Product.ImgProduct))
+                                {
+                                    <div>
+                                        <img src="@Model.Product.ImgProduct" alt="Product Image" style="max-width: 200px; max-height: 200px;" />
+                                    </div>
+                                }
+                                <input type="file" asp-for="Image" class="form-control-file" />
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.ImportPrice" class="control-label">Import Price</label>
+                                <input asp-for="Product.ImportPrice" class="form-control" placeholder="Enter the Import Price" />
+                                <span asp-validation-for="Product.ImportPrice" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.Size" class="control-label"></label>
+                                <input asp-for="Product.Size" class="form-control" placeholder="Enter the suitable size" />
+                                <span asp-validation-for="Product.Size" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.TotalPrice" class="control-label">Total Price</label>
+                                <input asp-for="Product.TotalPrice" class="form-control" placeholder="The Total Price equals to Import Price plus Process Price plus % ImportPrice" />
+                                <span asp-validation-for="Product.TotalPrice" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.Quantity" class="control-label"></label>
+                                <input asp-for="Product.Quantity" class="form-control" />
+                                <span asp-validation-for="Product.Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.ProcessPrice" class="control-label">Process Price</label>
+                                <input asp-for="Product.ProcessPrice" class="form-control" placeholder="Enter the Process Price If Have" />
+                                <span asp-validation-for="Product.ProcessPrice" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.Code" class="control-label"></label>
+                                <input asp-for="Product.Code" class="form-control" />
+                                <span asp-validation-for="Product.Code" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Product.CategoryId" class="control-label">Category</label>
+                                <select asp-for="Product.CategoryId" class="form-control" asp-items="@(new SelectList(Model.CategoryList, "Id", "Name"))">
+                                    <option value="">Select Category</option>
                                 </select>
+                                <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label>Hình ảnh</label>
-                                <input type="file" name="img[]" class="file-upload-default">
-                                <div class="input-group col-xs-12">
-                                    <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                    <span class="input-group-append">
-                                        <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
-                                    </span>
-                                </div>
+                                <label asp-for="Product.DeflagChecked" class="control-label">Deflag</label>
+                                <input type="checkbox" asp-for="Product.DeflagChecked"/>
+                                <span asp-validation-for="Product.DeflagChecked" class="text-danger"></span>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputCity1">Giá nhập</label>
-                                <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleTextarea1">Giá bán</label>
-                                <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
-                            </div>
-                            <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
-                            <button class="btn btn-light">Hủy</button>
+                            @* <div class="form-group">
+                            <label asp-for="Product.ProductMaterialId" class="control-label"></label>
+                            <input asp-for="Product.ProductMaterialId" class="form-control" />
+                            <span asp-validation-for="Product.ProductMaterialId" class="text-danger"></span>
+                            </div> *@
+                            <button type="submit" class="btn btn-gradient-primary me-2">Update</button>
+                            <a asp-page="./ListProduct" class="btn btn-light">Cancel</a>
                         </form>
                     </div>
                 </div>

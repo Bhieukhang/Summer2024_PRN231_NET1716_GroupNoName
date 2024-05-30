@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelrySalesSystem_NoName_FE.DTOs.Product;
 
@@ -37,5 +38,12 @@ public partial class ProductDTO
 
     public string? Code { get; set; }
 
-    public CategoryDTO Category { get; set; } 
+    public CategoryDTO Category { get; set; }
+
+    [NotMapped] 
+    public bool DeflagChecked
+    {
+        get => Deflag.GetValueOrDefault();
+        set => Deflag = value;
+    }
 }

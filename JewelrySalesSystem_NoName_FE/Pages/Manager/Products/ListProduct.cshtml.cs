@@ -20,12 +20,41 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
-
+        [BindProperty]
+        public string SearchCode { get; set; }
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+        public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
 
         public async Task OnGetAsync()
         {
             await LoadProductListAsync();
+        }
+        public async Task OnPostSearchAsync()
+        {
+            if (string.IsNullOrEmpty(SearchCode))
+            {
+                ModelState.AddModelError(string.Empty, "Please enter a product code to search.");
+                await LoadProductListAsync();
+                return;
+            }
+
+            var client = _httpClientFactory.CreateClient();
+            var apiUrl = $"{ApiPath.ProductList}/code?code={SearchCode}";
+            var response = await client.GetAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                var product = JsonConvert.DeserializeObject<ProductDTO>(jsonResponse);
+                productList = new List<ProductDTO> { product };
+                var cate = JsonConvert.DeserializeObject<CategoryDTO>(jsonResponse);
+                cateList = new List<CategoryDTO> { cate };
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Product not found.");
+                productList = new List<ProductDTO>();
+            }
         }
 
         private async Task LoadProductListAsync()
@@ -37,6 +66,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var response = await client.GetStringAsync(apiUrl);
                 productList = JsonConvert.DeserializeObject<List<ProductDTO>>(response);
                 var categories = await ApiClient.GetAsync<List<CategoryDTO>>(ApiPath.CategoryList);
+                cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(response);
             }
             catch (Exception ex)
             {

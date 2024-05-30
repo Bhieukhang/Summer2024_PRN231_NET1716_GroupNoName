@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 {
     internal class ProductRequest
@@ -18,5 +20,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public string Code { get; set; }
         public string ImgProduct { get; set; }
         public CategoryDTO? Category { get; set; }
+
+        [NotMapped] 
+        public bool DeflagChecked
+        {
+            get => Deflag.GetValueOrDefault();
+            set => Deflag = value;
+        }
     }
 }

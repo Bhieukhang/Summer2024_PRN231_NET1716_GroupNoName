@@ -4,6 +4,15 @@
 }
 <div class="main-panel">
     <div class="content-wrapper">
+        <h4 class="card-title">Search Jewelry</h4>
+        <form method="post" asp-page-handler="Search">
+            <br/>
+            <div class="form-group">
+                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Enter the product's code"/>
+                <span asp-validation-for="SearchCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
         <div class="page-header">
             <h3 class="page-title"> LIST OF JEWELRY </h3>
             <nav aria-label="breadcrumb">
