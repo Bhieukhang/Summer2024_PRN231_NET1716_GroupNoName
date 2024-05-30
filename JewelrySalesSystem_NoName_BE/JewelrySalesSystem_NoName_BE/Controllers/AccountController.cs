@@ -190,5 +190,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             await _accountService.UpdateProfileAsync(Guid.Parse(accountId), updateProfileDto);
             return NoContent();
         }
+
+        #region SearchAccounts
+        /// <summary>
+        /// Search accounts by name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>List of accounts that match the search criteria.</returns>
+        // GET: api/Account/Search
+        #endregion
+        [HttpGet(ApiEndPointConstant.Account.SearchAccountEndpoint)]
+        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchAccountsAsync(string name)
+        {
+            var accounts = await _accountService.SearchAccountsByNameAsync(name);
+            return Ok(accounts);
+        }
     }
 }

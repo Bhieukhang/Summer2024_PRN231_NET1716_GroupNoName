@@ -166,5 +166,15 @@ namespace JSS_Services.Implement
                 throw;
             }
         }
+
+        public async Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name)
+        {
+            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accounts = await accountRepository.GetListAsync(
+                predicate: x => x.FullName.Contains(name),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate)
+            );
+            return accounts;
+        }
     }
 }

@@ -22,5 +22,6 @@ namespace JSS_Services.Interface
 
         public Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size);
         Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto);
+        Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name);
     }
 }
