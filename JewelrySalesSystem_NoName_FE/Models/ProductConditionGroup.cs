@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
 
 namespace JewelrySalesSystem_NoName_FE;
 
@@ -13,7 +14,7 @@ public partial class ProductConditionGroup
 
     public Guid PromotionId { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual ProductDTO Product { get; set; } = null!;
 
     public virtual Promotion Promotion { get; set; } = null!;
 }

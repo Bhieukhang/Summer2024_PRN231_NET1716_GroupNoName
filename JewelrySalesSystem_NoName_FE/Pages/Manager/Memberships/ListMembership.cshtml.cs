@@ -32,12 +32,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
 
         [BindProperty]
         public Guid UserId { get; set; }
+        public int TotalActiveMembership {  get; set; }
+        public int TotalUnMembership {  get; set; }
+
         public async Task OnGetAsync(int? currentPage)
         {
             Page = currentPage ?? 1;
             Size = 4;
             Console.WriteLine($"Page: {Page}, Size: {Size}");
             var url = $"{ApiPath.MembershipList}?page={Page}&size={Size}";
+            var urlTotalActiveMembership = $"{ApiPath.MembershipActive}";
+            var urlTotalUnActiveMembership = $"{ApiPath.MembershipUnActive}";
             try
             {
                 var client = _httpClientFactory.CreateClient();
@@ -47,6 +52,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
                 ListMembership = paginateResult.Items;
                 TotalItems = paginateResult.Total;
                 TotalPages = paginateResult.TotalPages;
+                TotalActiveMembership = await client.GetFromJsonAsync<int>(urlTotalActiveMembership);
+                TotalUnMembership = await client.GetFromJsonAsync<int>(urlTotalUnActiveMembership);
             }
             catch (Exception ex)
             {

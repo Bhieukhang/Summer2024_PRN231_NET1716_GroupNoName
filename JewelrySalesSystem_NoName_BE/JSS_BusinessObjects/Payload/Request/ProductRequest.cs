@@ -23,7 +23,7 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public bool? Deflag { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
 
         public int? Quantity { get; set; }
         public double? ProcessPrice { get; set; }
