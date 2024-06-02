@@ -2,11 +2,15 @@
 {
     public class OrderDTO
     {
+        public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
         public Guid PromotionId { get; set; }
         public Guid DiscountId { get; set; }
         public double TotalPrice { get; set; }
         public double MaterialProccessPrice { get; set; }
+        public string? Type { get; set; }
+
+        public DateTime? InsDate { get; set; }
         public List<OrderDetailDTO> Details { get; set; } = new List<OrderDetailDTO>();
     }
 

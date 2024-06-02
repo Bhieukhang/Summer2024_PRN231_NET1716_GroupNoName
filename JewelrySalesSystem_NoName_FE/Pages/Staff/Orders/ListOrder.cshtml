@@ -1,0 +1,92 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.ListOrderModel
+@{
+    ViewData["Title"] = "Search Jewelry Orders";
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tìm kiếm đơn hàng Jewelry</h4>
+                        <form method="get" asp-page-handler="Search" class="forms-sample">
+                            <div class="form-group row">
+                                <label for="searchCode" class="col-sm-2 col-form-label">Mã đơn hàng</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="searchCode" name="SearchCode" class="form-control" placeholder="Nhập mã đơn hàng" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Order List</h4>
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Total Price</th>
+                                    <th>Material Process Price</th>
+                                    <th>Customer ID</th>
+                                    <th>Promotion ID</th>
+                                    <th>Discount ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.OrderList)
+                                {
+                                    <tr>
+                                        <td>@order.TotalPrice</td>
+                                        <td>@order.MaterialProcessPrice</td>
+                                        <td>@order.CustomerId</td>
+                                        <td>@order.PromotionId</td>
+                                        <td>@order.DiscountId</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                endDate: '0d', // Disable future dates
+                autoclose: true
+            }).on('changeDate', function (selected) {
+                var startDate = new Date(selected.date.valueOf());
+                $('#endDate').datepicker('setStartDate', startDate);
+            });
+
+            $('#startDate').datepicker()
+                .on('changeDate', function (selected) {
+                    var startDate = new Date(selected.date.valueOf());
+                    $('#endDate').datepicker('setStartDate', startDate);
+                });
+
+            $('#endDate').datepicker()
+                .on('changeDate', function (selected) {
+                    var endDate = new Date(selected.date.valueOf());
+                    $('#startDate').datepicker('setEndDate', endDate);
+                });
+        });
+    </script>
+}
