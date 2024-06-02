@@ -14,9 +14,6 @@
         public const string Profile = url + "/api/v1/Account/Profile";
         public const string ProfileUpdate = url + "/api/v1/Account/Profile/Update";
 
-        //Warranty
-        public const string WarrantyList =  url + "/api/v1/warranty";
-
         //Membership
         public const string MembershipList = url + "/api/v1/membership";
         public const string MembershipProfile = url + "/api/v1/membership/userId";

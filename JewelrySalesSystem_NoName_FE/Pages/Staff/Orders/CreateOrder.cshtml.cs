@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 using JewelrySalesSystem_NoName_FE.DTOs.Orders;
-using JewelrySalesSystem_NoName_FE.DTOs.Products;
 using System.Text;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
