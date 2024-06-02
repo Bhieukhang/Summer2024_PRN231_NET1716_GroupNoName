@@ -47,7 +47,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <summary>
         /// Get order by id .
         /// </summary>
-        /// <returns>Order item in stall.</returns>
+        /// <returns>Order item in .</returns>
         // GET: api/v1/Order
         #endregion
         [HttpGet(ApiEndPointConstant.Order.OrderByIdEndpoint)]
