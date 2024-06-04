@@ -88,7 +88,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                     Success = false
                 });
             }
-
             return Ok(new ApiResponse
             {
                 Message = "Create success",
