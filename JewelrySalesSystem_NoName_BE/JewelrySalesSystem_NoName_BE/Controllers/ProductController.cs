@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -29,6 +31,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of products.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
@@ -44,6 +47,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductByIdEndpoint)]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
@@ -101,6 +105,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created product.</returns>
         /// POST : api/Product
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
         //public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest, [FromForm] IFormFile file)
         //{
@@ -202,6 +207,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated product.</returns>
         /// PUT : api/Product
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {
@@ -269,7 +275,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="id">The ID of the product to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Product
-
+        [Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)
     {

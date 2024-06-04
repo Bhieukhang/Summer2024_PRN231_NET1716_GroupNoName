@@ -3,6 +3,7 @@ using JSS_BusinessObjects;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using System.Drawing;
 namespace JewelrySalesSysmte_NoName_BE.Controllers
 {
     [ApiController]
+    [Authorize]
     public class WarrantyController : ControllerBase
     {
         private readonly IWarrantyService _service;
@@ -28,6 +30,7 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         /// <returns>List of warranty.</returns>
         // GET: api/warranty
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
         [ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetWarrantiesNo(int page, int size)
@@ -44,6 +47,7 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         /// <returns>IWarranty detail</returns>
         // GET: api/warranty
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Warranty.WarrantyByIdEndpoint)]
         public async Task<ActionResult> GetWarrantytDetail(Guid id)
         {
@@ -59,6 +63,7 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         /// <returns>Warraty item</returns>
         // POST: api/v1/warranty
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
         public async Task<ActionResult> CreateWarranty(WarrantyRequest warranty)
         {

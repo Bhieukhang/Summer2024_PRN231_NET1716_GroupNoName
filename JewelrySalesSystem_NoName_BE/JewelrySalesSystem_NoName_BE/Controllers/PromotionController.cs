@@ -1,12 +1,14 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Models;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
@@ -23,6 +25,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of promotions.</returns>
         /// GET : api/Promotion
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Promotion.PromotionEndpoint)]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotionsAsync()
         {
@@ -38,6 +41,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The promotion with the specified ID.</returns>
         /// GET : api/Promotion
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Promotion.PromotionByIdEndpoint)]
         public async Task<ActionResult<Promotion>> GetPromotionByIdAsync(Guid id)
         {

@@ -19,7 +19,7 @@ try
 
     FirebaseApp.Create(new AppOptions()
     {
-        Credential = GoogleCredential.FromFile("D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
+        Credential = GoogleCredential.FromFile("D:\\GitHub\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
     }); 
 
     // Add services to the container.
@@ -43,26 +43,27 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();
     builder.Services.AddSingletonJson();
+    builder.Services.AddJwtValidation(configuration);
     // Add JWT Authentication Middleware - This code will intercept HTTP request and validate the JWT.
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-        opt => {
-            opt.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("tokengroupnonametokengroupnonametokengroupnonametokengroupnonametokengroupnoname")),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        }
-      );
+    //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    //    opt => {
+    //        opt.TokenValidationParameters = new TokenValidationParameters
+    //        {
+    //            ValidateIssuerSigningKey = true,
+    //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+    //            .GetBytes("tokengroupnonametokengroupnonametokengroupnonametokengroupnonametokengroupnoname")),
+    //            ValidateIssuer = false,
+    //            ValidateAudience = false
+    //        };
+    //    }
+    //  );
 
-    builder.Services.AddAuthorization(options =>
-    {
-        options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
-        options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
-    });
+    //builder.Services.AddAuthorization(options =>
+    //{
+    //    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    //    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
+    //    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
+    //});
 
     var app = builder.Build();
 
