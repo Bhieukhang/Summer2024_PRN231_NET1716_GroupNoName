@@ -22,7 +22,7 @@
         public const string MembershipUnActive = url + "/api/v1/membership/unavailable";    
 
         //Promotion
-        public const string Promotion = url + "/api/v1/promotion";
+        public const string Promotion = url + "/api/v1/Promotion";
 
         //Category
         public const string CategoryList = url + "/api/v1/Category";
@@ -44,6 +44,8 @@
 
         //Order
         public const string OrderCreate = url + "/api/v1/order";
+        public const string OrderByID = url + "/api/v1/order";
+
 
         //Warranty
         public const string WarrantyList = url + "/api/v1/warranty";

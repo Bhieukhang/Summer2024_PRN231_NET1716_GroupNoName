@@ -73,5 +73,38 @@ namespace JSS_Services.Implement
 
             return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.Discount, o.Promotion));
         }
+        public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
+        {
+            try
+            {
+                var orderRepository = _unitOfWork.GetRepository<Order>();
+                var order = await orderRepository.FirstOrDefaultAsync(a => a.Id == id);
+
+                if (order == null)
+                {
+                    return null;
+                }
+
+                var orderResponse = new OrderResponse(
+                    order.Id,
+                    order.CustomerId,
+                    order.Type,
+                    order.InsDate,
+                    order.TotalPrice,
+                    order.MaterialProcessPrice,
+                    order.Discount,
+                    order.Promotion
+                );
+
+                return orderResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting the order by ID");
+                throw;
+            }
+        }
+
+
     }
 }

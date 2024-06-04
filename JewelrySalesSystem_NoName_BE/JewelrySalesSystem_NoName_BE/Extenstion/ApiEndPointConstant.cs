@@ -92,6 +92,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
             public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
+            public const string OrderByIdEndpoint = OrderEndpoint + "/id";
         }
 
         public static class ConditionWarranty
