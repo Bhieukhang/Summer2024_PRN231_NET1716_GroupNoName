@@ -70,6 +70,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public string DiscountId { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal MaterialProcessPrice { get; set; }
+        public string? Type { get; set; }
+
+        public DateTime? InsDate { get; set; }
+        public Guid Id { get; set; }
         public List<OrderDetailDTO> Details { get; set; } = new List<OrderDetailDTO>();
     }
 

@@ -1,4 +1,5 @@
-﻿using JSS_BusinessObjects.Payload.Request;
+﻿using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,8 @@ namespace JSS_Services.Interface
     {
         public Task<OrderResponse> CreateOrder(OrderRequest newData);
         Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/);
+
+        public Task<OrderResponse> GetOrderByIdAsync(Guid id);
+
     }
 }
