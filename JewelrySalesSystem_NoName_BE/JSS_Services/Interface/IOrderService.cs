@@ -11,5 +11,10 @@ namespace JSS_Services.Interface
     public interface IOrderService
     {
         public Task<OrderResponse> CreateOrder(OrderRequest newData);
+        Task<bool> CheckPromotion(Guid PromotionId, List<OrderDetailRequest> listProducts);
+        Task<double> CalculateTotalPriceByPromotion(Guid PromotionId, double price);
+        Task<int> GetTotalOrdersByDay(DateTime date);
+        Task<int> GetTotalOrdersByMonth(int year, int month);
+        Task<int> GetTotalOrdersByYear(int year);
     }
 }

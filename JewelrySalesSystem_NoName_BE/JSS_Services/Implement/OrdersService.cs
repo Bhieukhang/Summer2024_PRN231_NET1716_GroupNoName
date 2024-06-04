@@ -1,9 +1,11 @@
-﻿using JSS_BusinessObjects.Models;
+﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,13 +23,20 @@ namespace JSS_Services.Implement
 
         public async Task<OrderResponse> CreateOrder(OrderRequest newData)
         {
+            List<OrderDetailRequest> productList = newData.Details;
+            bool isCheckPromotion = false;
+            if (newData.PromotionId.HasValue)
+            {
+                isCheckPromotion = await CheckPromotion(newData.PromotionId.Value, productList);
+            }
+            //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
                 CustomerId = newData.CustomerId,
-                PromotionId = newData.PromotionId,
+                PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
                 DiscountId = newData.DiscountId,
@@ -51,13 +60,85 @@ namespace JSS_Services.Implement
                 listOrderDetail.Add(detail);
                 await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
             }
+            if (isCheckPromotion)
+            {
+                //Caculate total price by promotion
+                totalPrice = await CalculateTotalPriceByPromotion((Guid)newData.PromotionId, (double)totalPrice);
+                order.PromotionId = newData.PromotionId;
+            }
             order.TotalPrice = totalPrice;
+            //Save order
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
-                                     order.MaterialProcessPrice, order.Discount, order.Promotion);
+                                     order.MaterialProcessPrice, order.DiscountId, order.PromotionId);
         }
+
+        //Check product in promotion
+        public async Task<bool> CheckPromotion(Guid PromotionId, List<OrderDetailRequest> listProducts)
+        {
+            List<ProductConditionGroup> listProductConditionGroup = new List<ProductConditionGroup>();
+            int countProduct = 0;
+            //Case: Expiring promotion
+            var promotion = await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(p => p.Id == PromotionId && p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now,
+                                                                         include: p => p.Include(p => p.ProductConditionGroups));
+            if (promotion == null) return false;                                                            
+            foreach (var itemProduct in listProducts)
+            {
+                foreach (var product in promotion.ProductConditionGroups)
+                {
+                    if (itemProduct.ProductId == product.ProductId)
+                    {
+                        countProduct++;
+                    }
+                }
+            }
+            if (countProduct == promotion.ProductQuantity)
+            {
+                return true;
+            }
+            else if (countProduct == 0) return false;
+            else
+            {
+                throw new AppConstant.MessageError((int)AppConstant.ErrCode.Internal_Server_Error, AppConstant.ErrMessage.PromotionIllegal);
+                return false;
+            }
+        }
+
+        public async Task<double> CalculateTotalPriceByPromotion(Guid PromotionId, double price)
+        {
+            var promotion = await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(x => x.Id == PromotionId);
+
+            int p = (int)promotion.Percentage;
+            double per = (double)promotion.Percentage / 100.0;
+            double descreadPrice = price * per;
+            double TotalPrice = price - descreadPrice;
+            return TotalPrice;
+        }
+
+        public async Task<int> GetTotalOrdersByDay(DateTime date)
+        {
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Date == date.Date);
+
+            return totalOrders;
+        }
+
+        public async Task<int> GetTotalOrdersByMonth(int month, int year)
+        {
+            var repository = _unitOfWork.GetRepository<Order>();
+            var totalOrders = await repository.CountAsync(o => o.InsDate.HasValue && o.InsDate.Value.Month == month && o.InsDate.Value.Year == year);
+            return totalOrders;
+        }
+
+        public async Task<int> GetTotalOrdersByYear(int year)
+        {
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
+            return totalOrders;
+        }
+
     }
 }

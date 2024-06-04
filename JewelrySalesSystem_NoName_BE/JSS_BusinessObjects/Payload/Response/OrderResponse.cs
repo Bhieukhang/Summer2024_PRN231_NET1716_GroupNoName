@@ -10,7 +10,7 @@ namespace JSS_BusinessObjects.Payload.Response
     public class OrderResponse
     {
         public OrderResponse(Guid id, Guid customerId, string? type, DateTime? insDate, double? totalPrice,
-            double? materialProcessPrice, Discount? discount, Promotion? promotion)
+            double? materialProcessPrice, Guid? discount, Guid? promotion)
         {
             Id = id;
             CustomerId = customerId;
@@ -33,8 +33,8 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public double? MaterialProcessPrice { get; set; }
 
-        public virtual Discount? Discount { get; set; } = null!;
+        public virtual Guid? Discount { get; set; } = null!;
 
-        public virtual Promotion? Promotion { get; set; }
+        public virtual Guid? Promotion { get; set; }
     }
 }

@@ -41,5 +41,62 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(result);
 
         }
+
+        #region PostCheckProduct
+        /// <summary>
+        /// Check product in list group promotion
+        /// </summary>
+        /// <returns>True or false.</returns>
+        // POST: api/v1/order/check
+        #endregion
+        [HttpPost(ApiEndPointConstant.Order.OrderCheckPromotionEndpoint)]
+        public async Task<bool> PostCheckProduct([FromBody] OrderRequest orderData)
+        {
+            List<OrderDetailRequest> productList = orderData.Details;
+            var isCheck = await _service.CheckPromotion(orderData.PromotionId.Value, productList);
+            return isCheck;
+        }
+
+        #region StaticOrder
+        /// <summary>
+        /// Statics order in day
+        /// </summary>
+        /// <returns>Amount order in day</returns>
+        // POST: api/v1/order/static
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderStatic)]
+        public async Task<ActionResult> StaticOrderByDay([FromQuery] DateTime time)
+        {
+            var result = await _service.GetTotalOrdersByDay(time);
+            return Ok(result);
+        }
+
+        #region StaticOrderByMonth
+        /// <summary>
+        /// Statics order in month and year.
+        /// </summary>
+        /// <returns>Amount order in month.</returns>
+        // POST: api/v1/order/static/month
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderStaticMonth)]
+        public async Task<ActionResult> StaticOrderByMonth([FromQuery] int month, int year)
+        {
+            var result = await _service.GetTotalOrdersByMonth(month, year);
+            return Ok(result);
+        }
+
+        #region StaticOrderByYear
+        /// <summary>
+        /// Statics order in year
+        /// </summary>
+        /// <returns>Amount order in year <returns>
+        // POST: api/v1/order/static/year
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderStaticYear)]
+        public async Task<ActionResult> StaticOrderByYear([FromQuery] int year)
+        {
+            var result = await _service.GetTotalOrdersByYear(year);
+            return Ok(result);
+        }
     }
 }
