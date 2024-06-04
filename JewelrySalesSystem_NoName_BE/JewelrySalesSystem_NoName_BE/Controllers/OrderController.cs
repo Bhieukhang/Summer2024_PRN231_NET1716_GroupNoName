@@ -64,5 +64,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(orders);
         }
 
+        #region GetOrderByIdAsync
+        /// <summary>
+        /// Get order by id .
+        /// </summary>
+        /// <returns>Order item in .</returns>
+        // GET: api/v1/Order
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderByIdEndpoint)]
+        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        public async Task<ActionResult> GetOrderByIdAsync(Guid id)
+        {
+
+            var result = await _service.GetOrderByIdAsync(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+
+        }
     }
 }

@@ -5,7 +5,7 @@
 
         public ApiPath() { }
         public const string host = "https://localhost:";
-        public const string port = "44318";
+        public const string port = "7160";
         public const string url = host + port;
 
         //Authentication
@@ -47,6 +47,8 @@
 
         //Order
         public const string OrderCreate = url + "/api/v1/order";
+        public const string OrderByID = url + "/api/v1/order";
+
 
         //Warranty
         public const string WarrantyList = url + "/api/v1/warranty";
