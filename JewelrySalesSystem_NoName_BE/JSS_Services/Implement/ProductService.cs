@@ -45,14 +45,6 @@ namespace JSS_Services.Implement
 
         public async Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName)
         {
-            //var imageUrl = await UploadImageToFirebase(imageStream, imageName);
-            //newData.Id = Guid.NewGuid();
-            //newData.ImgProduct = imageUrl;
-            //newData.InsDate = DateTime.Now;
-            //await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
-            //bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            //if (!isSuccessful) return null;
-            //return newData;
             try
             {
                 var imageUrl = await UploadImageToFirebase(imageStream, imageName);
@@ -98,7 +90,6 @@ namespace JSS_Services.Implement
                 existingProduct.Code = updatedData.Code ?? existingProduct.Code;
                 existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
                 existingProduct.ProductMaterialId = updatedData.ProductMaterialId ?? existingProduct.ProductMaterialId;
-                existingProduct.AccessoryId = updatedData.AccessoryId ?? existingProduct.AccessoryId;
 
                 if (imageStream != null)
                 {

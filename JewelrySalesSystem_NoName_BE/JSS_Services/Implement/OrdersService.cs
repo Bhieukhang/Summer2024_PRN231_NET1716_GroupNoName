@@ -82,12 +82,12 @@ namespace JSS_Services.Implement
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
                 predicate: o => (!customerId.HasValue || o.CustomerId == customerId) &&
                                 (!startDate.HasValue || o.InsDate >= startDate)
-                                //(!endDate.HasValue || o.InsDate <= endDate)
-                //include: source => source.Include(o => o.Discount)
-                //                         .Include(o => o.Promotion)
+            //(!endDate.HasValue || o.InsDate <= endDate)
+            //include: source => source.Include(o => o.Discount)
+            //                         .Include(o => o.Promotion)
             );
 
-            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.Discount, o.Promotion));
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.DiscountId, o.PromotionId));
         }
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
         {
@@ -108,8 +108,8 @@ namespace JSS_Services.Implement
                     order.InsDate,
                     order.TotalPrice,
                     order.MaterialProcessPrice,
-                    order.Discount,
-                    order.Promotion
+                    order.DiscountId,
+                    order.PromotionId
                 );
 
                 return orderResponse;
@@ -129,7 +129,7 @@ namespace JSS_Services.Implement
             //Case: Expiring promotion
             var promotion = await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(p => p.Id == PromotionId && p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now,
                                                                          include: p => p.Include(p => p.ProductConditionGroups));
-            if (promotion == null) return false;                                                            
+            if (promotion == null) return false;
             foreach (var itemProduct in listProducts)
             {
                 foreach (var product in promotion.ProductConditionGroups)

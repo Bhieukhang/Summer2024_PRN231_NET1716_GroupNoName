@@ -80,7 +80,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 UpsDate = DateTime.Now,
                 StartDate = promotionRequest.StartDate,
                 EndDate = promotionRequest.EndDate,
-                Deflag = promotionRequest.Deflag,
             };
 
             var createdPromotion = await _promotionService.CreatePromotionAsync(promotion);
@@ -135,7 +134,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 UpsDate = DateTime.Now,
                 StartDate = promotionRequest.StartDate,
                 EndDate = promotionRequest.EndDate,
-                Deflag = promotionRequest.Deflag,
             };
 
             var updatedPromotion = await _promotionService.UpdatePromotionAsync(promotion);
