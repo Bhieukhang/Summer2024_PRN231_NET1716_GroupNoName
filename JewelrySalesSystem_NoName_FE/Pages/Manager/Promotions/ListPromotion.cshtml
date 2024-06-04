@@ -17,95 +17,132 @@
 }
 <div class="main-panel">
     <div class="content-wrapper">
+        <div class="row mb-3">
+            <div class="col-sm-12 col-lg-6">
+                <h4 class="card-title">Danh sách khuyến mãi</h4>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <a class="nav-link text-end" href="~/Manager/Promotions/AddPromotion">
+                    <span class="menu-title"></span>
+                    <span class="btn btn-gradient-primary btn-fw">Thêm khuyến mãi</span>
+                </a>
+            </div>
+        </div>
+        <form method="get" id="form-search">
+            <div class="form-group">
+                <label asp-for="Search" class="control-label">Search</label>
+              <div class="row">
+                    <div class="col-sm-12 col-lg-10">
+                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Enter key word to search" />
+                    </div>
+                    <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
+                        <button class="btn btn-secondary" type="submit">Search</button>
+                    </div>
+              </div>
+            </div>
+            <input type="hidden" asp-for="CurrentPage" />
+            <input type="hidden" asp-for="PageSize" />
+        </form>
+        <div class="card">
+            <div class="card-body">
 
-        <div class="row">
-
-            <div class="col-12 grid-margin">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Danh sách khuyến mãi</h4>
-
-                        @if (totalRecord > 0)
-                        {
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th> STT </th>
-                                            <th> Name </th>
-                                            <th> Type </th>
-                                            <th> Description </th>
-                                            <th> Product Quantity </th>
-                                            <th> Percentage </th>
-                                            <th> Ins Date - Ups Date </th>
-                                            <th> Start Date - End Date </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var promotion in Model.Promotions)
-                                        {
-                                            <tr>
-                                                <td>@(count++)</td>
-                                                <td title="@promotion.PromotionName" data-bs-toggle="tooltip" data-bs-placement="top">
-                                                    <a href="PromotionDetails?promotionId=@promotion.Id"> @promotion.PromotionName</a>
-                                                </td>
-                                                <td><span class="badge badge-info">@promotion.Type</span></td>
-                                                <td>@promotion.Description</td>
-                                                <td>@promotion.ProductQuantity</td>
-                                                <td><span>@promotion.Percentage</span>%</td>
-                                                <td>@promotion.InsDate - @promotion.UpsDate</td>
-                                                <td>@promotion.StartDate - @promotion.EndDate</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <div class="row d-flex justify-content-center align-content-center mt-3">
-                                <div class="col">
-                                    <span>Hiện thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> khuyễn mãi</span>
-                                </div>
-
-                                @if (totalPages > 1)
+                @if (totalRecord > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th> STT </th>
+                                    <th> Name </th>
+                                    <th> Deflag </th>
+                                    <th> Type </th>
+                                    <th> Description </th>
+                                    <th> Product Quantity </th>
+                                    <th> Percentage </th>
+                                    <th> Ins Date - Ups Date </th>
+                                    <th> Start Date - End Date </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var promotion in Model.Promotions)
                                 {
-                                    <ul class="pagination justify-content-end col">
-                                        <li class="page-item @((currentPage == 1) ? "disabled" : "")">
-                                            <a class="page-link" href="?currentPage=@(currentPage-1)" tabindex="-1" aria-disabled="true">Trước</a>
-                                        </li>
-
-                                        @if (currentPage > 3)
-                                        {
-                                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                                        }
-
-                                        @for (int pageIndex = startPage; pageIndex <= endPage; pageIndex++)
-                                        {
-                                            <li class="page-item @(pageIndex == currentPage ? "active" : "")">
-                                                <a class="page-link" href="?currentPage=@pageIndex">@pageIndex</a>
-                                            </li>
-                                        }
-
-                                        @if (currentPage < Math.Ceiling(totalRecord / 10.0) - 2)
-                                        {
-                                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                                        }
-
-                                        <li class="page-item @((currentPage == totalPages) ? "disabled" : "")">
-                                            <a class="page-link" href="?currentPage=@(currentPage+1)">Tiếp</a>
-                                        </li>
-                                    </ul>
-
+                                    <tr>
+                                        <td>@(count++)</td>
+                                        <td title="@promotion.PromotionName" data-bs-toggle="tooltip" data-bs-placement="top">
+                                            <a href="PromotionDetails?promotionId=@promotion.Id"> @promotion.PromotionName</a>
+                                        </td>
+                                        <td>@(promotion.Deflag == true ? "On" : "Off")</td>
+                                        <td><span class="badge badge-info">@promotion.Type</span></td>
+                                        <td>@promotion.Description</td>
+                                        <td>@promotion.ProductQuantity</td>
+                                        <td><span>@promotion.Percentage</span>%</td>
+                                        <td>@promotion.InsDate - @promotion.UpsDate</td>
+                                        <td>@promotion.StartDate - @promotion.EndDate</td>
+                                    </tr>
                                 }
-                            </div>
-                        }
-                        else
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row d-flex justify-content-center align-content-center mt-3">
+                        <div class="col">
+                            <span>Hiện thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> khuyễn mãi</span>
+                        </div>
+
+                        @if (totalPages > 1)
                         {
-                            <div>Không tìm thấy khuyến mãi nào.</div>
+                            <ul class="pagination justify-content-end col">
+                                <li class="page-item @((currentPage == 1) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage-1)" tabindex="-1" aria-disabled="true">Trước</a>
+                                </li>
+
+                                @if (currentPage > 3)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                @for (int pageIndex = startPage; pageIndex <= endPage; pageIndex++)
+                                {
+                                    <li class="page-item @(pageIndex == currentPage ? "active" : "")">
+                                        <a class="page-link" href="?currentPage=@pageIndex">@pageIndex</a>
+                                    </li>
+                                }
+
+                                @if (currentPage < Math.Ceiling(totalRecord / 10.0) - 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                <li class="page-item @((currentPage == totalPages) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage+1)">Tiếp</a>
+                                </li>
+                            </ul>
+
                         }
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div>Không tìm thấy khuyến mãi nào.</div>
+                }
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const inputSearch = document.getElementById('input-search');
+    const formSearch = document.getElementById('form-search');
+    var timeout = setTimeout(function () { }, 0);
+    window.addEventListener("load", (event) => {
+        const end = inputSearch.value.length;
+        inputSearch.setSelectionRange(end, end);
+        // 👇 scroll to the bottom if a textarea has long text
+        inputSearch.focus()
+    });
+    inputSearch.addEventListener('keypress', () => {
+        clearTimeout(timeout); 
+        timeout = setTimeout(function () { formSearch.submit(); }, 3000)
+    });
+</script>
 

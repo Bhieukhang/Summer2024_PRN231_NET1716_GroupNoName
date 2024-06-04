@@ -18,6 +18,13 @@
                             <span class="fw-bold"><i class="bi bi-feather me-1"></i> Name: </span>
                             <span> @promotion?.PromotionName</span>
                         </div>
+                    </div> <div class="row mb-3">
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-power me-1"></i> Deflag: </span>
+                            <span>
+                                @(promotion?.Deflag == true ? "On" : "Off")
+                            </span>
+                        </div>
                     </div>
                     <div class="row mb-3">
                         <div>
@@ -67,7 +74,7 @@
                                 <i class="bi bi-arrow-left"></i>
                                 <span>Trở về</span>
                             </a>
-                            <a href="#" class="btn btn-primary ">
+                            <a href="EditPromotion?promotionId=@promotion?.Id" class="btn btn-primary ">
                                 <i class="bi bi-pencil"></i>
                                 <span>Chỉnh sửa</span>
                             </a>

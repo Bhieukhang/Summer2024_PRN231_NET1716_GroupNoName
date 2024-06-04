@@ -30,7 +30,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         [HttpGet(ApiEndPointConstant.Promotion.PromotionEndpoint)]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotionsAsync(string? search)
         {
-            var promotions = await _promotionService.GetAllPromotionsAsync(search??"");
+            var promotions = await _promotionService.GetAllPromotionsAsync(search ?? "");
             return Ok(promotions);
         }
 
@@ -110,7 +110,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         public async Task<IActionResult> UpdatePromotion([FromBody] PromotionRequest promotionRequest)
         {
 
-            var existingPromotion = await _promotionService.GetPromotionByIdAsync(promotionRequest.Id??new Guid());
+            var existingPromotion = await _promotionService.GetPromotionByIdAsync(promotionRequest.Id ?? new Guid());
             if (existingPromotion == null)
             {
                 return Ok(new ApiResponse
