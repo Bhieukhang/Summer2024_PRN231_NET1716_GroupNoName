@@ -5,8 +5,6 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
@@ -19,7 +17,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
-            _categoryService=categoryService;
+            _categoryService = categoryService;
         }
 
         #region GetAllProducts
@@ -103,48 +101,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
-        //public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest, [FromForm] IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //        return BadRequest("No file uploaded.");
-
-        //    using (var stream = file.OpenReadStream())
-        //    {
-        //        var product = new Product
-        //        {   
-        //            Code = productRequest.Code,
-        //            ProductName = productRequest.ProductName,
-        //            Description = productRequest.Description,
-        //            Deflag = productRequest.Deflag,
-        //            CategoryId = productRequest.CategoryId,
-        //            ImgProduct = productRequest.ImgProduct,
-        //            ImportPrice = productRequest.ImportPrice,
-        //            Size = productRequest.Size,
-        //            Quantity = productRequest.Quantity,
-        //            InsDate = productRequest.InsDate,
-        //            ProductMaterialId = productRequest.ProductMaterialId,
-        //        };
-
-        //        var createdProduct = await _productService.CreateProductAsync(product, stream, file.FileName);
-        //        if (createdProduct == null)
-        //        {
-        //            return StatusCode(500, "An error occurred while creating the product.");
-        //        }
-
-        //        return Ok(new ProductResponse(
-        //            createdProduct.Id,
-        //            createdProduct.ImgProduct,
-        //            createdProduct.ProductName,
-        //            createdProduct.Description,
-        //            createdProduct.Size,
-        //            createdProduct.TotalPrice,
-        //            createdProduct.Quantity,
-        //            createdProduct.AccessoryId,
-        //            createdProduct.ProductMaterialId,
-        //            createdProduct.Code
-        //        ));
-        //    }
-        //}
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
             if (string.IsNullOrEmpty(productRequest.ImgProduct))

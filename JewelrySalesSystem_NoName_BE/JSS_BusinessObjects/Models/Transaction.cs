@@ -15,5 +15,7 @@ public partial class Transaction
 
     public double? TotalPrice { get; set; }
 
+    public DateTime? InsDate { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 }

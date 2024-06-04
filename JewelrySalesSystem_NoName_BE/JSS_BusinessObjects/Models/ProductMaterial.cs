@@ -13,6 +13,8 @@ public partial class ProductMaterial
 
     public DateTime? InsDate { get; set; }
 
+    public int? Quantity { get; set; }
+
     public virtual Material? Material { get; set; }
 
     public virtual Product? Product { get; set; }

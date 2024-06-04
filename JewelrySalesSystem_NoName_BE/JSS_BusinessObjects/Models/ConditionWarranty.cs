@@ -13,5 +13,7 @@ public partial class ConditionWarranty
 
     public bool? Deflag { get; set; }
 
+    public string? Type { get; set; }
+
     public virtual ICollection<Warranty> Warranties { get; } = new List<Warranty>();
 }

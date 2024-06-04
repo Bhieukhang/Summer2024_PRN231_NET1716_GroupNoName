@@ -54,19 +54,17 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public Guid? ProductMaterialId { get; set; }
 
-        public Guid? AccessoryId { get; set; }
-
         public string? Code { get; set; }
+
         public string? ImgProduct { get; set; }
 
-        public virtual Accessory? Accessory { get; set; }
-
         public virtual Category? Category { get; set; }
+
+        public virtual ProductMaterial? ProductMaterial { get; set; }   
 
         //public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
         //public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
-
-        public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
+        public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
     }
 }

@@ -23,6 +23,8 @@ public partial class Warranty
 
     public string? Status { get; set; }
 
+    public string? Note { get; set; }
+
     public virtual ConditionWarranty ConditionWarranty { get; set; } = null!;
 
     public virtual OrderDetail OrderDetail { get; set; } = null!;
