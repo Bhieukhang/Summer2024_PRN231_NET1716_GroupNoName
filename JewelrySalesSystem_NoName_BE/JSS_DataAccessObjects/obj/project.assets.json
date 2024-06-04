@@ -6982,24 +6982,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\THUAN\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
       "projectName": "JSS_DataAccessObjects",
-      "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
-      "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
-      "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7007,15 +7002,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
-              "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
+            "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+              "projectPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
             }
           }
         }
@@ -7050,7 +7044,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }
