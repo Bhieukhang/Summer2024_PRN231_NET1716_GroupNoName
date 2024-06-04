@@ -93,6 +93,14 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
             public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
             public const string OrderByIdEndpoint = OrderEndpoint + "/id";
+            public const string OrderCheckPromotionEndpoint = ApiEndpoint + "/check";
+            public const string OrderStatic = ApiEndpoint + "/static";
+            public const string OrderStaticMonth = ApiEndpoint + "/static/month";
+            public const string OrderStaticYear = ApiEndpoint + "/static/year";
+        }
+        public static class Discount
+        {
+            public const string DiscountConfirmEndpoint = ApiEndpoint + "/confirm";
         }
 
         public static class ConditionWarranty

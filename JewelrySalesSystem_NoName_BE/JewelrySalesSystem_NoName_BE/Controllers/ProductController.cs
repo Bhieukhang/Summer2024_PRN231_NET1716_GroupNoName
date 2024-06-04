@@ -89,7 +89,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Quantity = product.Quantity,
                 ImgProduct = product.ImgProduct,
                 CategoryId = product.CategoryId,
-                AccessoryId = product.AccessoryId,
                 ProductMaterialId = product.ProductMaterialId,
                 Category = product.Category,
             };

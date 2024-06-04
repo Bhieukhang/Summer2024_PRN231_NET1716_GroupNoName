@@ -84,6 +84,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
 
             return Ok(result);
+        } 
 
         #region PostCheckProduct
         /// <summary>
