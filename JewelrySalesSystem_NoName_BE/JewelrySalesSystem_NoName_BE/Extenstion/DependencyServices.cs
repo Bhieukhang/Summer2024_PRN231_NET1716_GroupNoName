@@ -16,7 +16,7 @@ namespace JewelrySalesSystem_NoName_BE
 {
     public static class DependencyServices
     {
-        public static IConfiguration Configuration { get; }
+        //public static IConfiguration Configuration { get; }
 
 
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
@@ -66,7 +66,7 @@ namespace JewelrySalesSystem_NoName_BE
             return services;
         }
 
-        public static IServiceCollection AddJwtValidation(this IServiceCollection services)
+        public static IServiceCollection AddJwtValidation(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
             {
@@ -76,12 +76,24 @@ namespace JewelrySalesSystem_NoName_BE
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
+                    ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                            Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

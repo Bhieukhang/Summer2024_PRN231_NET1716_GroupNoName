@@ -6,11 +6,15 @@ using JSS_Services.Implement;
 using JSS_BusinessObjects.Models;
 using JewelrySalesSystem_NoName_BE.Extenstion;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using JSS_BusinessObjects.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -26,7 +30,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
-        // [HttpGet]
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Account.AccountEndpoint)]
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListAccountAsync(int page, int size)
@@ -43,6 +47,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accountsByRoleId.</returns>
         // GET: api/Account
         #endregion
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Account.AccountByRoleIdEndpoint)] 
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
@@ -59,6 +64,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Account.TotalAccountEndpoint)]
         public async Task<ActionResult<int>> GetTotalAccountCount()
         {
@@ -73,6 +79,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Account.ActiveAccountEndpoint)]
         public async Task<ActionResult<int>> GetActiveAccountCount()
         {
@@ -89,6 +96,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // GET: api/Account/{id}
         #endregion
         // [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Account.AccountByIdEndpoint)]
         public async Task<ActionResult<Account>> GetAccountByIdAsync(Guid id)
         {
@@ -112,6 +120,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // PUT: api/Account/{id}
         #endregion
         //  [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         [HttpPut(ApiEndPointConstant.Account.AccountByIdEndpoint)]
         public async Task<ActionResult<Account>> UpdateAccountAsync(Guid id, [FromBody] Account account)
         {
@@ -139,11 +148,71 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // POST: api/Account
         #endregion
         //[HttpPost]
+        [Authorize(Roles = "Admin")]
         [HttpPost(ApiEndPointConstant.Account.AccountEndpoint)]
         public async Task<ActionResult<Account>> CreateAccountAsync(Account account)
         {
             var createdAccount = await _accountService.CreateAccountAsync(account);
             return CreatedAtAction(nameof(GetAccountByIdAsync), new { id = createdAccount.Id }, createdAccount);
+        }
+
+        #region AccountProfile
+        /// <summary>
+        /// Profile account.
+        /// </summary>
+        /// <param name="profile">The account object with the data.</param>
+        /// <returns>Profile.</returns>
+        #endregion
+        [Authorize]
+        [HttpGet(ApiEndPointConstant.Account.AccountProfileEndpoint)]
+        public async Task<IActionResult> GetAccountProfile()
+        {
+            var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (accountId == null)
+            {
+                return Unauthorized();
+            }
+
+            var accountProfile = await _accountService.GetAccountByIdAsync(Guid.Parse(accountId));
+            return Ok(accountProfile);
+        }
+
+        #region UpdateProfile
+        /// <summary>
+        /// Update profile.
+        /// </summary>
+        /// <param name="profile">Update Profile data.</param>
+        /// <returns>Profile.</returns>
+        #endregion
+        [Authorize]
+        [HttpPut(ApiEndPointConstant.Account.AccountProfileUpdateEndpoint)]
+        public async Task<IActionResult> UpdateAccountProfile([FromBody] UpdateProfileDto updateProfileDto)
+        {
+            var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (accountId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _accountService.UpdateProfileAsync(Guid.Parse(accountId), updateProfileDto);
+            return NoContent();
+        }
+
+        #region SearchAccounts
+        /// <summary>
+        /// Search accounts by name.
+        /// </summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>List of accounts that match the search criteria.</returns>
+        // GET: api/Account/Search
+        #endregion
+        [Authorize(Roles = "Admin")]
+        [HttpGet(ApiEndPointConstant.Account.SearchAccountEndpoint)]
+        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchAccountsAsync(string name)
+        {
+            var accounts = await _accountService.SearchAccountsByNameAsync(name);
+            return Ok(accounts);
         }
     }
 }

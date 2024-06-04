@@ -31,13 +31,13 @@ public partial class Product
 
     public Guid? ProductMaterialId { get; set; }
 
-    public Guid? AccessoryId { get; set; }
-
     public string? Code { get; set; }
+
     public string? ImgProduct { get; set; }
-    public virtual Accessory? Accessory { get; set; }
 
     public virtual Category? Category { get; set; }
+
+    public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 

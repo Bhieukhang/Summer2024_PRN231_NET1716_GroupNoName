@@ -21,7 +21,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             _httpContextAccessor = httpContextAccessor;
         }
         [BindProperty]
-        public string SearchCode { get; set; }
+        public string? SearchCode { get; set; }
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
 
@@ -33,7 +33,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         {
             if (string.IsNullOrEmpty(SearchCode))
             {
-                ModelState.AddModelError(string.Empty, "Please enter a product code to search.");
+                //ModelState.AddModelError(string.Empty, "Please enter a product code to search.");
                 await LoadProductListAsync();
                 return;
             }
@@ -45,10 +45,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             if (response.IsSuccessStatusCode)
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
+
                 var product = JsonConvert.DeserializeObject<ProductDTO>(jsonResponse);
                 productList = new List<ProductDTO> { product };
-                var cate = JsonConvert.DeserializeObject<CategoryDTO>(jsonResponse);
-                cateList = new List<CategoryDTO> { cate };
+
+                var categories = await ApiClient.GetAsync<List<CategoryDTO>>(ApiPath.CategoryList);
             }
             else
             {
@@ -66,7 +67,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var response = await client.GetStringAsync(apiUrl);
                 productList = JsonConvert.DeserializeObject<List<ProductDTO>>(response);
                 var categories = await ApiClient.GetAsync<List<CategoryDTO>>(ApiPath.CategoryList);
-                cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(response);
             }
             catch (Exception ex)
             {

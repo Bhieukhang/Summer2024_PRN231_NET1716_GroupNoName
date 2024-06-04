@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,6 +61,18 @@ namespace JSS_Services.Implement
                                      order.MaterialProcessPrice, order.Discount, order.Promotion);
         }
 
+        public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/)
+        {
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
+                predicate: o => (!customerId.HasValue || o.CustomerId == customerId) &&
+                                (!startDate.HasValue || o.InsDate >= startDate)
+                                //(!endDate.HasValue || o.InsDate <= endDate)
+                //include: source => source.Include(o => o.Discount)
+                //                         .Include(o => o.Promotion)
+            );
+
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.Discount, o.Promotion));
+        }
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
         {
             try

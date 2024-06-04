@@ -3,14 +3,14 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -19,7 +19,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
-            _categoryService=categoryService;
+            _categoryService = categoryService;
         }
 
         #region GetAllProducts
@@ -29,6 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of products.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
@@ -44,6 +45,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductByIdEndpoint)]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
@@ -88,7 +90,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 ImgProduct = product.ImgProduct,
                 CategoryId = product.CategoryId,
                 AccessoryId = product.AccessoryId,
-                ProductMaterialId = product.ProductMaterialId
+                ProductMaterialId = product.ProductMaterialId,
+                Category = product.Category,
             };
             return Ok(searchproduct);
         }
@@ -101,49 +104,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created product.</returns>
         /// POST : api/Product
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
-        //public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest, [FromForm] IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //        return BadRequest("No file uploaded.");
-
-        //    using (var stream = file.OpenReadStream())
-        //    {
-        //        var product = new Product
-        //        {   
-        //            Code = productRequest.Code,
-        //            ProductName = productRequest.ProductName,
-        //            Description = productRequest.Description,
-        //            Deflag = productRequest.Deflag,
-        //            CategoryId = productRequest.CategoryId,
-        //            ImgProduct = productRequest.ImgProduct,
-        //            ImportPrice = productRequest.ImportPrice,
-        //            Size = productRequest.Size,
-        //            Quantity = productRequest.Quantity,
-        //            InsDate = productRequest.InsDate,
-        //            ProductMaterialId = productRequest.ProductMaterialId,
-        //        };
-
-        //        var createdProduct = await _productService.CreateProductAsync(product, stream, file.FileName);
-        //        if (createdProduct == null)
-        //        {
-        //            return StatusCode(500, "An error occurred while creating the product.");
-        //        }
-
-        //        return Ok(new ProductResponse(
-        //            createdProduct.Id,
-        //            createdProduct.ImgProduct,
-        //            createdProduct.ProductName,
-        //            createdProduct.Description,
-        //            createdProduct.Size,
-        //            createdProduct.TotalPrice,
-        //            createdProduct.Quantity,
-        //            createdProduct.AccessoryId,
-        //            createdProduct.ProductMaterialId,
-        //            createdProduct.Code
-        //        ));
-        //    }
-        //}
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
             if (string.IsNullOrEmpty(productRequest.ImgProduct))
@@ -186,9 +148,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.Size,
                 createdProduct.TotalPrice,
                 createdProduct.Quantity,
-                createdProduct.AccessoryId,
+                createdProduct.CategoryId,
                 createdProduct.ProductMaterialId,
-                createdProduct.Code
+                createdProduct.Code,
+                createdProduct.ImportPrice,
+                createdProduct.InsDate,
+                createdProduct.ProcessPrice,
+                createdProduct.Deflag
             ));
         }
 
@@ -200,12 +166,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="id">The ID of the product to update.</param>
         /// <param name="product">The updated product data.</param>
         /// <returns>The updated product.</returns>
-        /// PUT : api/Product
+        /// PUT : api/Product/id
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {
-
             Stream stream = null;
             if (!string.IsNullOrEmpty(productRequest.ImgProduct))
             {
@@ -256,9 +222,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.Size,
                 updatedProduct.TotalPrice,
                 updatedProduct.Quantity,
-                updatedProduct.AccessoryId,
+                updatedProduct.CategoryId,
                 updatedProduct.ProductMaterialId,
-                updatedProduct.Code
+                updatedProduct.Code,
+                updatedProduct.ImportPrice,
+                updatedProduct.InsDate,
+                updatedProduct.ProcessPrice,
+                updatedProduct.Deflag
             ));
         }
 
@@ -269,7 +239,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="id">The ID of the product to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Product
-
+        [Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)
     {

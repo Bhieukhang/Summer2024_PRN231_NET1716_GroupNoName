@@ -45,9 +45,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(Guid id)
         {
-            var apiUrl = $"{ApiPath.ProductList}/id?id={Product.Id}";
+            var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
+            //var apiUrl = $"https://localhost:44318/api/v1/Product/id?id=2AD3052B-45E9-4B62-9617-B7332396880A";
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
             try
@@ -67,7 +68,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     using (var stream = new MemoryStream())
                     {
                         Image.CopyTo(stream);
-                        stream.Seek(0, SeekOrigin.Begin); 
+                        stream.Seek(0, SeekOrigin.Begin);
                         var uploadTask = storage.Child("uploads").Child(uniqueFileName).PutAsync(stream);
                         Product.ImgProduct = await uploadTask;
 
@@ -78,7 +79,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 var productRequest = new ProductRequest
                 {
-                    
                     ProductName = Product.ProductName,
                     Description = Product.Description,
                     TotalPrice = Product.TotalPrice,
@@ -101,6 +101,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.IsSuccessStatusCode)
                 {
+                    TempData["SuccessMessage"] = "The Jewelry is updated successfully !";
                     return RedirectToPage("./ListProduct");
                 }
                 else

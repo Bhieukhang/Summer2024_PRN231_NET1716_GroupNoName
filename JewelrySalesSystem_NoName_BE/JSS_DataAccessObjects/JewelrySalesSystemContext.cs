@@ -16,15 +16,13 @@ public partial class JewelrySalesSystemContext : DbContext
     {
     }
 
-    public virtual DbSet<Accessory> Accessories { get; set; }
-
-    public virtual DbSet<AccessoryMaterial> AccessoryMaterials { get; set; }
-
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<ConditionWarranty> ConditionWarranties { get; set; }
+
+    public virtual DbSet<Diamond> Diamonds { get; set; }
 
     public virtual DbSet<Discount> Discounts { get; set; }
 
@@ -54,39 +52,12 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Warranty> Warranties { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=(local);Database=JewelrySalesSystem;User Id=sa;Password=12345;Encrypt=True;TrustServerCertificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Accessory>(entity =>
-        {
-            entity.ToTable("Accessory");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.AccessoryName).HasMaxLength(30);
-            entity.Property(e => e.Description).HasMaxLength(30);
-            entity.Property(e => e.InsDate).HasColumnType("datetime");
-            entity.Property(e => e.UpsDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Category).WithMany(p => p.Accessories)
-                .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK_Accessory_Category");
-        });
-
-        modelBuilder.Entity<AccessoryMaterial>(entity =>
-        {
-            entity.ToTable("AccessoryMaterial");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.InsDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Accessory).WithMany(p => p.AccessoryMaterials)
-                .HasForeignKey(d => d.AccessoryId)
-                .HasConstraintName("FK_AccessoryMaterial_Accessory");
-
-            entity.HasOne(d => d.Material).WithMany(p => p.AccessoryMaterials)
-                .HasForeignKey(d => d.MaterialId)
-                .HasConstraintName("FK_AccessoryMaterial_Material");
-        });
-
         modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_User");
@@ -130,6 +101,22 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.InsDate).HasColumnType("datetime");
         });
 
+        modelBuilder.Entity<Diamond>(entity =>
+        {
+            entity.ToTable("Diamond");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Clarity).HasMaxLength(50);
+            entity.Property(e => e.Color).HasMaxLength(50);
+            entity.Property(e => e.Cut).HasMaxLength(50);
+            entity.Property(e => e.DiamondName).HasMaxLength(100);
+
+            entity.HasOne(d => d.Jewelry).WithMany(p => p.Diamonds)
+                .HasForeignKey(d => d.JewelryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Diamond_Product");
+        });
+
         modelBuilder.Entity<Discount>(entity =>
         {
             entity.ToTable("Discount");
@@ -138,6 +125,10 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Membership).WithMany(p => p.Discounts)
+                .HasForeignKey(d => d.MembershipId)
+                .HasConstraintName("FK_Discount_Membership");
         });
 
         modelBuilder.Entity<Material>(entity =>
@@ -211,10 +202,6 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.ProductName).HasMaxLength(100);
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Accessory).WithMany(p => p.Products)
-                .HasForeignKey(d => d.AccessoryId)
-                .HasConstraintName("FK_Product_Accessory");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
@@ -312,6 +299,7 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Currency).HasMaxLength(50);
+            entity.Property(e => e.InsDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.OrderId)

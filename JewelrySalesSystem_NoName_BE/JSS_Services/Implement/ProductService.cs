@@ -33,7 +33,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Code == code);
+                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Code == code, include: s => s.Include(p => p.Category));
                 return product;
             }
             catch (Exception ex)
@@ -104,7 +104,8 @@ namespace JSS_Services.Implement
                 {
                     var imageUrl = await UploadImageToFirebase(imageStream, imageName);
                     existingProduct.ImgProduct = imageUrl;
-                } else if (imageStream == null)
+                }
+                else if (imageStream == null)
                 {
                     updatedData.ImgProduct = existingProduct.ImgProduct;
                 }

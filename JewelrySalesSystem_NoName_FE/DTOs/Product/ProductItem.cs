@@ -1,4 +1,4 @@
-﻿namespace JewelrySalesSystem_NoName_FE.DTOs.Products
+﻿namespace JewelrySalesSystem_NoName_FE.DTOs.Product
 {
     public class ProductItem
     {

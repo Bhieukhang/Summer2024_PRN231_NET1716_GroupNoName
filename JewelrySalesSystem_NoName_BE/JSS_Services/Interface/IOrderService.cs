@@ -12,6 +12,7 @@ namespace JSS_Services.Interface
     public interface IOrderService
     {
         public Task<OrderResponse> CreateOrder(OrderRequest newData);
+        Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/);
 
         public Task<OrderResponse> GetOrderByIdAsync(Guid id);
 

@@ -15,7 +15,5 @@ public partial class Category
 
     public double? PricePressure { get; set; }
 
-    public virtual ICollection<Accessory> Accessories { get; } = new List<Accessory>();
-
     public virtual ICollection<Product> Products { get; } = new List<Product>();
 }

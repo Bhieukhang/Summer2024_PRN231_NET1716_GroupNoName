@@ -21,6 +21,8 @@ public partial class Membership
 
     public bool? Deflag { get; set; }
 
+    public virtual ICollection<Discount> Discounts { get; } = new List<Discount>();
+
     public virtual ICollection<Program> Programs { get; } = new List<Program>();
 
     public virtual Account User { get; set; } = null!;
