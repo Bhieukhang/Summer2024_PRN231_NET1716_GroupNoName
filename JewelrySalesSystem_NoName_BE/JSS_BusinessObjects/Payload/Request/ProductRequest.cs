@@ -9,6 +9,7 @@ namespace JSS_BusinessObjects.Payload.Request
 {
     public class ProductRequest
     {
+        public Guid Id { get; set; }
         public string? ProductName { get; set; }
 
         public string? Description { get; set; }
@@ -23,7 +24,7 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public bool? Deflag { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
 
         public int? Quantity { get; set; }
         public double? ProcessPrice { get; set; }

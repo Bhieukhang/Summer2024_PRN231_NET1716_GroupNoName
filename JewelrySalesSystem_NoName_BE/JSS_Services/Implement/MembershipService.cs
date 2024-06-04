@@ -85,5 +85,22 @@ namespace JSS_Services.Implement
             return new MembershipResponse(membership.Id, membership.Name, membership.Level, membership.Point,
                                           membership.RedeemPoint, membership.UserId, membership.UsedMoney, membership.Deflag);
         }
+
+        public async Task<int> GetTotalMembershipCountAsync()
+        {
+            var total = _unitOfWork.GetRepository<Membership>();
+            return await total.CountAsync();
+        }
+        public async Task<int> GetActiveMembershipCountAsync()
+        {
+            var activeMembership = _unitOfWork.GetRepository<Membership>();
+            return await activeMembership.CountAsync(a => a.Deflag == true);
+        }
+
+        public async Task<int> GetUnavailableMembership()
+        {
+            var unMembership = await _unitOfWork.GetRepository<Membership>().CountAsync(m => m.Deflag == false);
+            return unMembership;
+        }
     }
 }

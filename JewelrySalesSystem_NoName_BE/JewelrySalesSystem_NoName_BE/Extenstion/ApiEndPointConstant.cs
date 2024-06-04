@@ -41,6 +41,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string TotalAccountEndpoint = ApiEndpoint + "/Account/Total-account";
             public const string ActiveAccountEndpoint = ApiEndpoint + "/Account/Active-account";
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
+            public const string AccountProfileEndpoint = AccountEndpoint + "/Profile";
+            public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
+            public const string SearchAccountEndpoint = ApiEndpoint + "/Account/Search";
         }
         public static class Category
         {
@@ -52,6 +55,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         {
             public const string ProductEndpoint = ApiEndpoint + "/Product";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
+            public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
         }
 
         public static class Promotion
@@ -77,6 +81,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string MembershipExpired = MembershipEndpoint + "/expired";
             public const string MembershipByName = MembershipEndpoint + "/{name}";
             public const string MembershipUserMoney = MembershipEndpoint + "/userMoney";
+            public const string MembershipTotal = MembershipEndpoint + "/total";
+            public const string MembershipActive = MembershipEndpoint + "/active";
+            public const string MembershipUnActive = MembershipEndpoint + "/unavailable";
         }
 
         public static class Order
@@ -84,6 +91,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string OrderEndpoint = ApiEndpoint + "/order";
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
+            public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
         }
 
         public static class ConditionWarranty

@@ -9,19 +9,24 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class ProductResponse
     {
-        public ProductResponse(Guid id, string? imgProduct,string? productName, string? description, double? size, 
-            double? totalPrice, int? quantity, Guid? accessoryId,Guid? productMaterialId, string? code)
-        {
+        public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
+            double? totalPrice, int? quantity, Guid? categoryId, Guid? productMaterialId, string? code,
+            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag)
+        { 
             Id = id;
+            ImgProduct = imgProduct;
             ProductName = productName;
             Description = description;
-            ImgProduct = imgProduct;
             Size = size;
             TotalPrice = totalPrice;
             Quantity = quantity;
-            AccessoryId = accessoryId;
+            CategoryId = categoryId;
             ProductMaterialId = productMaterialId;
             Code = code;
+            ImportPrice = importPrice;
+            InsDate = insDate;
+            ProcessPrice = processPrice;
+            Deflag = deflag;
         }
         public Guid Id { get; set; }
 
@@ -37,11 +42,11 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public DateTime? InsDate { get; set; }
 
-        //public bool? Deflag { get; set; }
+        public bool? Deflag { get; set; }
 
         public Guid? CategoryId { get; set; }
 
-        //public DateTime? UpsDate { get; set; }
+        public DateTime? UpsDate { get; set; }
 
         public int? Quantity { get; set; }
 

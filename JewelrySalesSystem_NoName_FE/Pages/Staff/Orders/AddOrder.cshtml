@@ -1,0 +1,77 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.AddOrderModel
+@{
+}
+<h2>Create Order</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="CustomerId">Customer ID</label>
+        <input type="text" class="form-control" id="CustomerId" asp-for="Order.CustomerId">
+    </div>
+    <div class="form-group">
+        <label for="PromotionId">Promotion ID</label>
+        <input type="text" class="form-control" id="PromotionId" asp-for="Order.PromotionId">
+    </div>
+    <div class="form-group">
+        <label for="DiscountId">Discount ID</label>
+        <input type="text" class="form-control" id="DiscountId" asp-for="Order.DiscountId">
+    </div>
+    <div id="product-list">
+        @for (int i = 0; i < Model.Order.Details.Count; i++)
+        {
+            <div class="product-item">
+                <div class="form-group">
+                    <label asp-for="Order.Details[i].ProductId">Mã barcode</label>
+                    <input type="text" class="form-control" asp-for="Order.Details[i].ProductId">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.Details[i].ProductName">Sản phẩm</label>
+                    <input type="text" class="form-control" asp-for="Order.Details[i].ProductName">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.Details[i].Amount">Giá</label>
+                    <input type="number" class="form-control" asp-for="Order.Details[i].Amount">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.Details[i].Quantity">Số lượng</label>
+                    <input type="number" class="form-control" asp-for="Order.Details[i].Quantity" min="1">
+                </div>
+            </div>
+        }
+    </div>
+    <button type="button" class="btn btn-light" onclick="addProduct()">Thêm sản phẩm</button>
+    <button type="submit" class="btn btn-gradient-primary me-2">Tạo hóa đơn</button>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var productIndex = @Model.Order.Details.Count;
+
+        function addProduct() {
+            var newProductHtml = `
+                                            <div class="product-item">
+                                                <div class="form-group">
+                                                    <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
+                                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
+                                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Order_Details_${productIndex}__Amount">Giá</label>
+                                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
+                                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1">
+                                                </div>
+                                            </div>`;
+
+            $('#product-list').append(newProductHtml);
+            productIndex++;
+        }
+    </script>
+}

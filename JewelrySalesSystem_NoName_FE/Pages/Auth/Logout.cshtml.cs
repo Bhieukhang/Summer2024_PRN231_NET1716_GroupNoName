@@ -1,3 +1,4 @@
+using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -16,7 +17,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
         {
             try
             {
-                var response = await _httpClient.PostAsync("https://localhost:44318/api/v1/Logout", null);
+                var url = $"{ApiPath.Logout}";
+                var response = await _httpClient.PostAsync(url, null);
                 if (response.IsSuccessStatusCode)
                 {
                     // Xóa token kh?i session ho?c cookie

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
 
-namespace  JewelrySalesSystem_NoName_FE;
+namespace JewelrySalesSystem_NoName_FE;
 
-public partial class Category
+public partial class CategoryDTO
 {
     public Guid Id { get; set; }
 
@@ -17,5 +18,5 @@ public partial class Category
 
     public virtual ICollection<Accessory> Accessories { get; } = new List<Accessory>();
 
-    public virtual ICollection<Product> Products { get; } = new List<Product>();
+    public virtual ICollection<ProductDTO> Products { get; } = new List<ProductDTO>();
 }

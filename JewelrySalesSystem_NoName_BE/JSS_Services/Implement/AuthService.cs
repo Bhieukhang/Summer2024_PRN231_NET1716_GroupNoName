@@ -66,7 +66,7 @@ namespace JSS_Services.Implement
                     new Claim(ClaimTypes.Role, account.Role.RoleName)
                 };
 
-            var keyString = "buoihieukhangdeptraibuoihieukhangdeptraibuoihieukhangdeptraibuoihieukhangdeptrai";
+            var keyString = "tokengroupnonametokengroupnonametokengroupnonametokengroupnonametokengroupnoname";
             //var keyString = "Tokenspodpsjohinidbfjhbvkfdjhagvakfd&*¨T&(SFGD&(¨SFD(&VY&(6dfsutf7f6dod8g-f&TG08t¨&*ts&¨*dt&sfg(öd&astdecatechlabs";
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(keyString));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

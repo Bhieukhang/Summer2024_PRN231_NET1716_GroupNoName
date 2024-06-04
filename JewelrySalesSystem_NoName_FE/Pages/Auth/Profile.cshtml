@@ -1,0 +1,84 @@
+﻿@page "/profile"
+@model JewelrySalesSystem_NoName_FE.Pages.Auth.ProfileModel
+@{
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="row no-gutters">
+            <div class="col-md-4 text-center">
+                <img src="@Model.accountProfile.ImgUrl" class="img-fluid rounded-circle mt-4" alt="Profile Image" style="max-width: 150px;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">@Model.accountProfile.FullName</h3>
+                    <p class="card-text">@Model.accountProfile.Phone</p>
+                    <a asp-page="UpdateProfile" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title">Profile</h4>
+            <div class="form-group row mt-3">
+                <label for="memberName" class="col-sm-3 col-form-label">Full Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="memberName" value="@Model.accountProfile.FullName" readonly>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="memberDob" class="col-sm-3 col-form-label">Date of Birth</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="memberDob" value="@Model.accountProfile.Dob?.ToString("yyyy-MM-dd")" readonly>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="memberAddress" class="col-sm-3 col-form-label">Address</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="memberAddress" value="@Model.accountProfile.Address" readonly>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="memberRoleId" class="col-sm-3 col-form-label">Role Id</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="memberRoleId" value="@Model.accountProfile.RoleId" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@Model.accountProfile.ImgUrl" class="card-img-top" alt="Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.accountProfile.FullName</h5>
+                    <p class="card-text">@Model.accountProfile.Phone</p>
+                    <a asp-page="UpdateProfile" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>Profile</h2>
+            <dl class="row">
+                <dt class="col-sm-3">Full Name</dt>
+                <dd class="col-sm-9">@Model.accountProfile.FullName</dd>
+
+                <dt class="col-sm-3">Date of Birth</dt>
+                <dd class="col-sm-9">@Model.accountProfile.Dob.ToString(/* "yyyy-MM-dd" */)</dd>
+
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">@Model.accountProfile.Address</dd>
+
+                <dt class="col-sm-3">Role Id</dt>
+                <dd class="col-sm-9">@Model.accountProfile.RoleId</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+</body> *@

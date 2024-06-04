@@ -1,9 +1,11 @@
 ﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -69,7 +71,11 @@ namespace JSS_Services.Implement
             try
             {
                 var accountRepository = _unitOfWork.GetRepository<Account>();
-                var account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
+                var account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
+                if (account == null)
+                {
+                    throw new KeyNotFoundException("Account not found");
+                }
                 return account;
             }
             catch (Exception ex)
@@ -106,7 +112,7 @@ namespace JSS_Services.Implement
             try
             {
                 var accountRepository = _unitOfWork.GetRepository<Account>();
-                var _account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
+                var _account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
 
                 if (_account == null)
                 {
@@ -133,7 +139,42 @@ namespace JSS_Services.Implement
             }
         }
 
-       
+        public async Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto)
+        {
+            try
+            {
+                var accountProfile = _unitOfWork.GetRepository<Account>();
+                var account = await accountProfile.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
 
+                if (account == null)
+                {
+                    throw new KeyNotFoundException("Account not found");
+                }
+
+                account.FullName = updateProfileDto.FullName;
+                account.Dob = updateProfileDto.Dob;
+                account.Address = updateProfileDto.Address;
+                account.ImgUrl = updateProfileDto.ImgUrl;
+                account.UpsDate = DateTime.UtcNow;
+
+                accountProfile.UpdateAsync(account);
+                await _unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating account profile");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name)
+        {
+            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accounts = await accountRepository.GetListAsync(
+                predicate: x => x.FullName.Contains(name),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate)
+            );
+            return accounts;
+        }
     }
 }

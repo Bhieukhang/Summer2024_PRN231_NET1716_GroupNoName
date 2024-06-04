@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Product;
 
 namespace JewelrySalesSystem_NoName_FE;
 
@@ -33,7 +32,7 @@ public partial class Accessory
 
     public virtual ICollection<AccessoryMaterial> AccessoryMaterials { get; } = new List<AccessoryMaterial>();
 
-    public virtual Category? Category { get; set; }
+    public CategoryDTO? Category { get; set; }
 
-    public virtual ICollection<Product> Products { get; } = new List<Product>();
+    public virtual ICollection<ProductDTO> Products { get; } = new List<ProductDTO>();
 }

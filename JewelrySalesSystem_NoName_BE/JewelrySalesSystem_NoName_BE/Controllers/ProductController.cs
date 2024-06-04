@@ -14,10 +14,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService=categoryService;
         }
 
         #region GetAllProducts
@@ -53,6 +55,44 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(product);
         }
 
+        #region SearchProductByCode
+        /// <summary>
+        /// Search a product by its code.
+        /// </summary>
+        /// <param name="code">The code of the product to search.</param>
+        /// <returns>The product with the specified code.</returns>
+        /// GET : api/Product/search
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByCodeEndpoint)]
+        public async Task<ActionResult<Product>> SearchProductByCode(string code)
+        {
+            var product = await _productService.GetProductByCodeAsync(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var searchproduct = new Product
+            {
+                Id = product.Id,
+                ProductName = product.ProductName,
+                Description = product.Description,
+                Code = product.Code,
+                Deflag = product.Deflag,
+                ImportPrice = product.ImportPrice,
+                InsDate = product.InsDate,
+                ProcessPrice = product.ProcessPrice,
+                TotalPrice = product.TotalPrice,
+                Size = product.Size,
+                Quantity = product.Quantity,
+                ImgProduct = product.ImgProduct,
+                CategoryId = product.CategoryId,
+                AccessoryId = product.AccessoryId,
+                ProductMaterialId = product.ProductMaterialId,
+                Category = product.Category,
+            };
+            return Ok(searchproduct);
+        }
 
         #region CreateProduct
         /// <summary>
@@ -63,48 +103,98 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest, IFormFile file)
+        //public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest, [FromForm] IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //        return BadRequest("No file uploaded.");
+
+        //    using (var stream = file.OpenReadStream())
+        //    {
+        //        var product = new Product
+        //        {   
+        //            Code = productRequest.Code,
+        //            ProductName = productRequest.ProductName,
+        //            Description = productRequest.Description,
+        //            Deflag = productRequest.Deflag,
+        //            CategoryId = productRequest.CategoryId,
+        //            ImgProduct = productRequest.ImgProduct,
+        //            ImportPrice = productRequest.ImportPrice,
+        //            Size = productRequest.Size,
+        //            Quantity = productRequest.Quantity,
+        //            InsDate = productRequest.InsDate,
+        //            ProductMaterialId = productRequest.ProductMaterialId,
+        //        };
+
+        //        var createdProduct = await _productService.CreateProductAsync(product, stream, file.FileName);
+        //        if (createdProduct == null)
+        //        {
+        //            return StatusCode(500, "An error occurred while creating the product.");
+        //        }
+
+        //        return Ok(new ProductResponse(
+        //            createdProduct.Id,
+        //            createdProduct.ImgProduct,
+        //            createdProduct.ProductName,
+        //            createdProduct.Description,
+        //            createdProduct.Size,
+        //            createdProduct.TotalPrice,
+        //            createdProduct.Quantity,
+        //            createdProduct.AccessoryId,
+        //            createdProduct.ProductMaterialId,
+        //            createdProduct.Code
+        //        ));
+        //    }
+        //}
+        public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
+            if (string.IsNullOrEmpty(productRequest.ImgProduct))
+                return BadRequest("No image uploaded.");
 
-            using (var stream = file.OpenReadStream())
+            var stream = new MemoryStream(Convert.FromBase64String(productRequest.ImgProduct));
+            var category = await _categoryService.GetCategoryByIdAsync(productRequest.CategoryId);
+            if (category == null)
             {
-                var product = new Product
-                {   
-                    Code = productRequest.Code,
-                    ProductName = productRequest.ProductName,
-                    Description = productRequest.Description,
-                    Deflag = productRequest.Deflag,
-                    CategoryId = productRequest.CategoryId,
-                    ImgProduct = productRequest.ImgProduct,
-                    ImportPrice = productRequest.ImportPrice,
-                    Size = productRequest.Size,
-                    Quantity = productRequest.Quantity,
-                    InsDate = productRequest.InsDate,
-                    ProductMaterialId = productRequest.ProductMaterialId,
-                    // Map other properties from productRequest to product
-                };
-
-                var createdProduct = await _productService.CreateProductAsync(product, stream, file.FileName);
-                if (createdProduct == null)
-                {
-                    return StatusCode(500, "An error occurred while creating the product.");
-                }
-
-                return Ok(new ProductResponse(
-                    createdProduct.Id,
-                    createdProduct.ImgProduct,
-                    createdProduct.ProductName,
-                    createdProduct.Description,
-                    createdProduct.Size,
-                    createdProduct.TotalPrice,
-                    createdProduct.Quantity,
-                    createdProduct.AccessoryId,
-                    createdProduct.ProductMaterialId,
-                    createdProduct.Code
-                ));
+                return NotFound("Category not found.");
             }
+            var product = new Product
+            {
+                Code = productRequest.Code,
+                ProductName = productRequest.ProductName,
+                Description = productRequest.Description,
+                Deflag = productRequest.Deflag,
+                CategoryId = productRequest.CategoryId,
+                TotalPrice = productRequest.TotalPrice,
+                ProcessPrice = productRequest.ProcessPrice,
+                ImgProduct = productRequest.ImgProduct,
+                ImportPrice = productRequest.ImportPrice,
+                Size = productRequest.Size,
+                Quantity = productRequest.Quantity,
+                InsDate = productRequest.InsDate,
+                ProductMaterialId = productRequest.ProductMaterialId
+            };
+
+            var createdProduct = await _productService.CreateProductAsync(product, stream, "uploadedFileName");
+            if (createdProduct == null)
+            {
+                return StatusCode(500, "An error occurred while creating the product.");
+            }
+
+            return Ok(new ProductResponse(
+                createdProduct.Id,
+                createdProduct.ImgProduct,
+                createdProduct.ProductName,
+                createdProduct.Description,
+                createdProduct.Size,
+                createdProduct.TotalPrice,
+                createdProduct.Quantity,
+                createdProduct.CategoryId,
+                createdProduct.ProductMaterialId,
+                createdProduct.Code,
+                createdProduct.ImportPrice,
+                createdProduct.InsDate,
+                createdProduct.ProcessPrice,
+                createdProduct.Deflag
+            ));
         }
 
 
@@ -115,51 +205,70 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="id">The ID of the product to update.</param>
         /// <param name="product">The updated product data.</param>
         /// <returns>The updated product.</returns>
-        /// POST : api/Product
+        /// PUT : api/Product/id
         #endregion
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromForm] ProductRequest productRequest, IFormFile file)
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {
-            using (var stream = file?.OpenReadStream())
+            Stream stream = null;
+            if (!string.IsNullOrEmpty(productRequest.ImgProduct))
             {
-                var product = new Product
-                {
-                    Id = id,
-                    Code = productRequest.Code,
-                    ProductName = productRequest.ProductName,
-                    Description = productRequest.Description,
-                    Deflag = productRequest.Deflag,
-                    CategoryId = productRequest.CategoryId,
-                    ImgProduct = productRequest.ImgProduct,
-                    ImportPrice = productRequest.ImportPrice,
-                    Size = productRequest.Size,
-                    Quantity = productRequest.Quantity,
-                    InsDate = productRequest.InsDate,
-                    ProductMaterialId = productRequest.ProductMaterialId,
-                    // Map other properties from productRequest to product
-                };
-
-                var updatedProduct = await _productService.UpdateProductAsync(id, product, stream, file?.FileName);
-                if (updatedProduct == null)
-                {
-                    return StatusCode(500, "An error occurred while updating the product.");
-                }
-
-                return Ok(new ProductResponse(
-                    updatedProduct.Id,
-                    updatedProduct.ImgProduct,
-                    updatedProduct.ProductName,
-                    updatedProduct.Description,
-                    updatedProduct.Size,
-                    updatedProduct.TotalPrice,
-                    updatedProduct.Quantity,
-                    updatedProduct.AccessoryId,
-                    updatedProduct.ProductMaterialId,
-                    updatedProduct.Code
-                ));
+                stream = new MemoryStream(Convert.FromBase64String(productRequest.ImgProduct));
             }
-        }
+            var existingProduct = await _productService.GetProductByIdAsync(id);
+            if (existingProduct == null)
+            {
+                return NotFound("Product not found.");
+            }
 
+            if (productRequest.CategoryId != Guid.Empty && productRequest.CategoryId != existingProduct.CategoryId)
+            {
+                var category = await _categoryService.GetCategoryByIdAsync(productRequest.CategoryId);
+                if (category == null)
+                {
+                    productRequest.CategoryId = existingProduct.CategoryId;
+                }
+            }
+
+            var product = new Product
+            {
+                ProductName = productRequest.ProductName,
+                Description = productRequest.Description,
+                Deflag = productRequest.Deflag,
+                CategoryId = productRequest.CategoryId,
+                TotalPrice = productRequest.TotalPrice,
+                ProcessPrice = productRequest.ProcessPrice,
+                ImgProduct = productRequest.ImgProduct,
+                ImportPrice = productRequest.ImportPrice,
+                Size = productRequest.Size,
+                Quantity = productRequest.Quantity,
+                InsDate = productRequest.InsDate,
+                ProductMaterialId = productRequest.ProductMaterialId
+            };
+
+            var updatedProduct = await _productService.UpdateProductAsync(id, product, stream, "uploadedFileName");
+            if (updatedProduct == null)
+            {
+                return StatusCode(500, "An error occurred while updating the product.");
+            }
+
+            return Ok(new ProductResponse(
+                updatedProduct.Id,
+                updatedProduct.ImgProduct,
+                updatedProduct.ProductName,
+                updatedProduct.Description,
+                updatedProduct.Size,
+                updatedProduct.TotalPrice,
+                updatedProduct.Quantity,
+                updatedProduct.CategoryId,
+                updatedProduct.ProductMaterialId,
+                updatedProduct.Code,
+                updatedProduct.ImportPrice,
+                updatedProduct.InsDate,
+                updatedProduct.ProcessPrice,
+                updatedProduct.Deflag
+            ));
+        }
 
         #region DeleteProduct
         /// <summary>
@@ -167,18 +276,18 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// </summary>
         /// <param name="id">The ID of the product to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
-        /// POST : api/Product
+        /// DELETE : api/Product/id
 
-        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
-        public async Task<IActionResult> DeleteProductAsync(Guid id)
+        [HttpDelete(ApiEndPointConstant.Product.ProductByIdEndpoint)]
+    public async Task<IActionResult> DeleteProductAsync(Guid id)
+    {
+        var result = await _productService.DeleteProductAsync(id);
+        if (!result)
         {
-            var result = await _productService.DeleteProductAsync(id);
-            if (!result)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            return NotFound();
         }
-        #endregion
+        return NoContent();
     }
+    #endregion
+}
 }
