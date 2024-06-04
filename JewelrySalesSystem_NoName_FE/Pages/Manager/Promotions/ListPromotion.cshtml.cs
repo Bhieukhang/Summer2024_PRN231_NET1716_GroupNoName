@@ -11,14 +11,16 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         public int CurrentPage { get; private set; } = 1;
         public int PageSize { get; private set; } = 5;
         public int TotalRecord { get; private set; } = 0;
+        public string? Search { get; private set; } = string.Empty;
 
-        public async Task OnGet(int? currentPage, int? pageSize)
+        public async Task OnGet(int? currentPage, int? pageSize, string? search)
         {
             try
             {
                 CurrentPage = currentPage ?? 1;
                 PageSize = pageSize ?? 5;
-                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>(ApiPath.Promotion);
+                Search = search;
+                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}");
 
                 // Calculate pages
                 TotalRecord = promotions.Count;

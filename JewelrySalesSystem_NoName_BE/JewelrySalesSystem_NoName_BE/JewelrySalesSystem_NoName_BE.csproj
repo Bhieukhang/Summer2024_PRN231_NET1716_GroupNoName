@@ -28,4 +28,10 @@
 		<ProjectReference Include="..\JSS_Services\JSS_Services.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
 </Project>
