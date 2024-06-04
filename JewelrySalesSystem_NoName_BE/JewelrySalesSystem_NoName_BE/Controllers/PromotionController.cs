@@ -28,9 +28,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// GET : api/Promotion
         #endregion
         [HttpGet(ApiEndPointConstant.Promotion.PromotionEndpoint)]
-        public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotionsAsync()
+        public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotionsAsync(string? search)
         {
-            var promotions = await _promotionService.GetAllPromotionsAsync();
+            var promotions = await _promotionService.GetAllPromotionsAsync(search??"");
             return Ok(promotions);
         }
 

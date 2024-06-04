@@ -13,9 +13,10 @@ namespace JSS_Services.Implement
         {
         }
 
-        public async Task<IEnumerable<Promotion>> GetAllPromotionsAsync()
+        public async Task<IEnumerable<Promotion>> GetAllPromotionsAsync(string search)
         {
-            return await _unitOfWork.GetRepository<Promotion>().GetListAsync();
+            var a = await _unitOfWork.GetRepository<Promotion>().GetListAsync();
+            return a.Where(i => (i.PromotionName??"").Contains(search)).ToList();
         }
 
         public async Task<Promotion> GetPromotionByIdAsync(Guid id)
