@@ -8,6 +8,7 @@ namespace JSS_BusinessObjects.Payload.Request
 {
     public class PromotionRequest
     {
+        public Guid? Id { get; set; }
         public string? PromotionName { get; set; }
 
         public string? Type { get; set; }

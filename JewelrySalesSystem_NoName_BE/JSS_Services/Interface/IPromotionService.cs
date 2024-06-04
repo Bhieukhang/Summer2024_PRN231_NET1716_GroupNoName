@@ -7,6 +7,6 @@ namespace JSS_Services.Interface
         Task<IEnumerable<Promotion>> GetAllPromotionsAsync();
         Task<Promotion> CreatePromotionAsync(Promotion newData);
         Task<Promotion> GetPromotionByIdAsync(Guid id);
-        Task<Promotion> UpdatePromotionAsync(Guid id, Promotion updatedData);
+        Task<Promotion> UpdatePromotionAsync(Promotion updatedData);
     }
 }

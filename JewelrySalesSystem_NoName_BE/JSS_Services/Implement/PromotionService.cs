@@ -43,7 +43,7 @@ namespace JSS_Services.Implement
             }
         }
 
-        public async Task<Promotion> UpdatePromotionAsync(Guid id, Promotion updatedData)
+        public async Task<Promotion> UpdatePromotionAsync(Promotion updatedData)
         {
             try
             {

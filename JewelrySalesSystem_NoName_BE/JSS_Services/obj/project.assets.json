@@ -7025,11 +7025,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
       "projectName": "JSS_Services",
-      "projectPath": "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
+      "projectPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7046,11 +7046,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
+            "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+              "projectPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
             },
-            "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj"
+            "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
+              "projectPath": "C:\\Users\\Admin\\Downloads\\BAO_PRN231_V1\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj"
             }
           }
         }

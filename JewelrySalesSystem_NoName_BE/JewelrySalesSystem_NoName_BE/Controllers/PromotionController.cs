@@ -107,10 +107,10 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// PUT : api/Promotion
         #endregion
         [HttpPut((ApiEndPointConstant.Promotion.PromotionEndpoint))]
-        public async Task<IActionResult> UpdatePromotion(Guid id, [FromBody] PromotionRequest promotionRequest)
+        public async Task<IActionResult> UpdatePromotion([FromBody] PromotionRequest promotionRequest)
         {
 
-            var existingPromotion = await _promotionService.GetPromotionByIdAsync(id);
+            var existingPromotion = await _promotionService.GetPromotionByIdAsync(promotionRequest.Id??new Guid());
             if (existingPromotion == null)
             {
                 return Ok(new ApiResponse
@@ -136,7 +136,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Deflag = promotionRequest.Deflag,
             };
 
-            var updatedPromotion = await _promotionService.UpdatePromotionAsync(id, promotion);
+            var updatedPromotion = await _promotionService.UpdatePromotionAsync(promotion);
             if (updatedPromotion == null)
             {
                 return Ok(new ApiResponse
