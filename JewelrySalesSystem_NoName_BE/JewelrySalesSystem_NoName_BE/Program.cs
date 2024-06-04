@@ -4,9 +4,6 @@ using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder.Extensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -17,9 +14,12 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Logging.ClearProviders();
 
+   var currentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+
     FirebaseApp.Create(new AppOptions()
     {
-        Credential = GoogleCredential.FromFile("C:\\Users\\Admin\\Downloads\\Bao_PRN231\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JewelrySalesSystem_NoName_BE\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
+       
+        Credential = GoogleCredential.FromFile($"{currentDirectory}\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
     }); 
 
     // Add services to the container.

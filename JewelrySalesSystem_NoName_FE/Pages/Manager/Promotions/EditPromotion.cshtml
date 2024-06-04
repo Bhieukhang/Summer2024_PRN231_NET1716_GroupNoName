@@ -1,0 +1,89 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions.EditPromotionModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        @if (Model.EditPromotionRequest != null)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Chỉnh sửa khuyến mãi</h4>
+                    <form class="forms-sample" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input asp-for="EditPromotionRequest.Id" class="form-control" type="hidden" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.PromotionName" class="control-label">PromotionName</label>
+                            <input asp-for="EditPromotionRequest.PromotionName" class="form-control" placeholder="Promotion Name" />
+                            <span asp-validation-for="EditPromotionRequest.PromotionName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.PromotionName" class="control-label">PromotionName</label>
+                            <input asp-for="EditPromotionRequest.PromotionName" class="form-control" placeholder="Promotion Name" />
+                            <span asp-validation-for="EditPromotionRequest.PromotionName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.Type" class="control-label">Type</label>
+                            <input asp-for="EditPromotionRequest.Type" class="form-control" placeholder="Enter Type" />
+                            <span asp-validation-for="EditPromotionRequest.Type" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.Description" class="control-label">Description</label>
+                            <input asp-for="EditPromotionRequest.Description" class="form-control" placeholder="Enter Description" />
+                            <span asp-validation-for="EditPromotionRequest.Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.ProductQuantity" class="control-label">Product Quantity</label>
+                            <input asp-for="EditPromotionRequest.ProductQuantity" type="number" max="99999" class="form-control" placeholder="Enter Product Quantity" />
+                            <span asp-validation-for="EditPromotionRequest.ProductQuantity" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.Percentage" class="control-label">Percentage</label>
+                            <input asp-for="EditPromotionRequest.Percentage" type="number" max="100" class="form-control" placeholder="Enter Percentage" />
+                            <span asp-validation-for="EditPromotionRequest.Percentage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.StartDate" class="control-label">Start Date</label>
+                            <input asp-for="EditPromotionRequest.StartDate" type="datetime-local" class="form-control" placeholder="Enter Start Date" />
+                            <span asp-validation-for="EditPromotionRequest.StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.EndDate" class="control-label">End Date</label>
+                            <input asp-for="EditPromotionRequest.EndDate" type="datetime-local" class="form-control" placeholder="Enter End Date" />
+                            <span asp-validation-for="EditPromotionRequest.EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EditPromotionRequest.Deflag" class="control-label">Deflag</label> <br />
+                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="true" /> On
+                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Off<br />
+                            <span asp-validation-for="EditPromotionRequest.Deflag" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 d-flex flex-row justify-content-start">
+                                <a href="ListPromotion" class="btn btn-secondary me-3">
+
+                                    <i class="bi bi-arrow-left"></i>
+                                    <span>Trở về</span>
+                                </a>
+                                <button type="submit" class="btn btn-primary ">
+                                    <i class="bi bi-pencil"></i>
+                                    <span>Lưu</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div>
+                Không tìm thấy thông tin khuyến mãi.
+            </div>
+        }
+
+    </div>
+</div>
+
