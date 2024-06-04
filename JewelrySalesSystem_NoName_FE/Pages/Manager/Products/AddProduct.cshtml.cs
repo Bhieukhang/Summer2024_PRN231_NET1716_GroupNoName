@@ -118,6 +118,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.IsSuccessStatusCode)
                 {
+                    TempData["SuccessMessage"] = "The Jewelry is added successfully !";
                     return RedirectToPage("./ListProduct");
                 }
                 else

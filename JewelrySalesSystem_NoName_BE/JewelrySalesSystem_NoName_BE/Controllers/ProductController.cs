@@ -276,9 +276,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// </summary>
         /// <param name="id">The ID of the product to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
-        /// POST : api/Product
+        /// DELETE : api/Product/id
 
-        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
+        [HttpDelete(ApiEndPointConstant.Product.ProductByIdEndpoint)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)
     {
         var result = await _productService.DeleteProductAsync(id);
