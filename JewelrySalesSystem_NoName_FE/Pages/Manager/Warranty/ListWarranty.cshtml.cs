@@ -29,12 +29,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         }
 
         public IList<WarrantyDTO> WarrantyList { get; set; } = new List<WarrantyDTO>();
-        public IList<ConditionWarrantyDTO> ConditionWarranties { get; set; } = new List<ConditionWarrantyDTO>();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalItems { get; set; }
         public int TotalPages { get; set; }
-        public int PageCondition { get; set; }
 
         public async Task OnGetAsync(int? currentPage)
         {
@@ -55,24 +53,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             catch (Exception ex)
             {
                 WarrantyList = new List<WarrantyDTO>();
-            }
-        }
-
-        public async Task<IActionResult> OnGetConditionAsync()
-        {
-            var url = $"{ApiPath.ConditionWarrantyList}?page=1&size=100";
-            try
-            {
-                var client = _httpClientFactory.CreateClient();
-                var response = await client.GetStringAsync(url);
-
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<ConditionWarrantyDTO>>(response);
-                ConditionWarranties = paginateResult.Items;
-                return Partial("_ListConditionWarranties", ConditionWarranties);
-            }
-            catch (HttpRequestException httpRequestException)
-            {
-                return BadRequest($"Error fetching data from API: {httpRequestException.Message}");
             }
         }
     }

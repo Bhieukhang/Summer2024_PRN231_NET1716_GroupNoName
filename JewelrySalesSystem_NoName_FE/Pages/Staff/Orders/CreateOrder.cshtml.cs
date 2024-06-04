@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Account;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -83,7 +83,20 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
         public IActionResult OnGetDiscount()
         {
-            return Partial("_DiscountRequirement");
+            try
+            {
+                // Log để kiểm tra phương thức đã được gọi
+                Console.WriteLine("OnGetDiscount called");
+
+                // Giả sử bạn có một partial view tên là _DiscountRequirement
+                return Partial("_DiscountRequirements");
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi để kiểm tra nguyên nhân gây ra lỗi
+                Console.WriteLine($"Error in OnGetDiscount: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

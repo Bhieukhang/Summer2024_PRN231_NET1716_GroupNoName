@@ -8,9 +8,17 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Danh sách sản phẩm bảo hành</h3>
-            <button type="button" class="btn btn-link btn-gradient-primary btn-view-list-condition" style="text-decoration: none;">Điều kiện bảo hành</button>
+            <ul class="nav nav-pills flex-column flex-sm-row">
+                <li class="nav-item">
+                    <a class="nav-link active btn-gradient-primary" aria-current="page" href="#">Danh sách sản phẩm bảo hành</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-gradient-light" href="~/Manager/Warranty/ListConditionWarranties" style="color: gray;">Điều kiện bảo hành</a>
+                </li>
+            </ul>
         </div>
+        @if(totalItems > 0)
+        {
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -115,49 +123,12 @@
                     </nav>
                 </div>
             </div>
-        </div>
+            </div>
+        } else
+        {
+            <h3>Hiện tại danh sách trống</h3>
+        }
     </div>
 </div>
 
-<div class="modal fade" id="conditionWarranty" tabindex="-1" role="dialog" aria-labelledby="conditionWarrantyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="conditionWarrantyModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Nội dung chi tiết sẽ được tải vào đây bằng AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('.btn-view-list-condition').click(function () {
-                $.ajax({
-                    url: '@Url.Page("./ListWarranty", new { handler = "Condition" })',
-                    type: 'GET',
-                    success: function (data) {
-                        $('#conditionWarranty .modal-body').html(data);
-                        $('#conditionWarranty').modal('show');
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra khi tải dữ liệu.');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-}
 
