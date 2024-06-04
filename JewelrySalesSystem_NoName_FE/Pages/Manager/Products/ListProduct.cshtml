@@ -4,43 +4,48 @@
 }
 <div class="main-panel">
     <div class="content-wrapper">
-        <h4 class="card-title">Search Jewelry</h4>
-        <form method="post" asp-page-handler="Search">
-            <br/>
-            <div class="form-group">
-                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Enter the product's code"/>
-                <span asp-validation-for="SearchCode" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
         <div class="page-header">
-            <h3 class="page-title"> LIST OF JEWELRY </h3>
+            <h3 class="page-title"> DANH SÁCH TRANG SỨC </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    @*Thêm nút add*@
                     <li class="nav-item">
                         <a class="nav-link" href="~/Manager/Products/AddProduct">
                             <span class="menu-title"></span>
-                            <button type="button" class="btn btn-gradient-primary btn-fw">Thêm sản phẩm</button>
+                            <button type="button" class="btn btn-gradient-primary btn-fw">
+                                <i class="mdi mdi-plus"></i>
+                                Thêm sản phẩm
+                            </button>
                         </a>
                     </li>
                 </ol>
             </nav>
         </div>
-
+        <form method="post" asp-page-handler="Search">
+            <br />
+            <div class="form-group">
+                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" />
+                <span asp-validation-for="SearchCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-gradient-secondary btn-fw">
+                <i class="mdi mdi-magnify"></i>
+                Tìm Kiếm
+            </button>
+        </form>
+        <br/>
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Image</th>
+                                <th></th>
                                 <th>Code</th>
-                                <th>Product Name</th>
-                                <th>Size</th>
-                                <th>Quantity</th>
-                                <th>Total Price</th>
-                                <th>Category</th>
+                                <th>Tên</th>
+                                <th>Kích thước</th>
+                                <th>Số lượng</th>
+                                <th>Giá Bán</th>
+                                <th>Loại</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -56,8 +61,16 @@
                                     <td>@item.Quantity</td>
                                     <td>@item.TotalPrice</td>
                                     <td>@item.Category?.Name</td>
-                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id" class="btn btn-gradient-primary btn-fw">Detail</a></td>
-                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-primary btn-fw">Edit</a></td>
+                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
+                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                            <i class="mdi mdi-file-check btn-icon-append"></i>
+                                            Chỉnh sửa
+                                        </a>
+                                    </td>
+                                    <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
+                                        <i class="mdi mdi-delete"></i>
+                                    Xóa    
+                                    </a></td>
                                 </tr>
                             }
                             @* <tr>

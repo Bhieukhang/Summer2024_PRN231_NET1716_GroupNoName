@@ -1,6 +1,7 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
+    [Authorize]
     public class MembershipController : ControllerBase
     {
         private readonly IMembershipService _service;
@@ -24,6 +26,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of membership.</returns>
         // GET: api/v1/membership
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipEndpoint)]
         [ProducesResponseType(typeof(MembershipResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListMembership(int page, int size)
@@ -40,6 +43,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of membership expired.</returns>
         // GET: api/v1/membership/expired
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipExpired)]
         [ProducesResponseType(typeof(MembershipResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListMembershipExpired(int page, int size)
@@ -56,6 +60,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Membership by name.</returns>
         // GET: api/v1/membership/{name}
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipByName)]
         [ProducesResponseType(typeof(MembershipResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMemberByName(string name)
@@ -71,6 +76,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Membership by name.</returns>
         // GET: api/v1/membership/{name}
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipByUserIdEndpoint)]
         [ProducesResponseType(typeof(ProfileResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProfileMembershipByUserId([FromQuery]Guid id)
@@ -87,6 +93,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Level user money for membership.</returns>
         // GET: api/v1/membership/userMoney
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]
         public async Task<IActionResult> UpdateUserMoneyByUserId([FromQuery]Guid userId, double userMoney)
         {
@@ -102,6 +109,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Total membership.</returns>
         // GET: api/v1/membership/userMoney
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipTotal)]
         public async Task<IActionResult> GetTotalMembership()
         {
@@ -117,6 +125,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Get active membership.</returns>
         // GET: api/v1/membership/userMoney
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipActive)]
         public async Task<IActionResult> GetActiveMembership()
         {
@@ -132,6 +141,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Get  inactive membership.</returns>
         // GET: api/v1/membership/userMoney
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Membership.MembershipUnActive)]
         public async Task<IActionResult> GetUnMembership()
         {

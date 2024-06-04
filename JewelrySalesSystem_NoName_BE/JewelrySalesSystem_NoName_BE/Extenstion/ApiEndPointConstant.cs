@@ -41,6 +41,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string TotalAccountEndpoint = ApiEndpoint + "/Account/Total-account";
             public const string ActiveAccountEndpoint = ApiEndpoint + "/Account/Active-account";
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
+            public const string AccountProfileEndpoint = AccountEndpoint + "/Profile";
+            public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
+            public const string SearchAccountEndpoint = ApiEndpoint + "/Account/search";
         }
         public static class Category
         {
@@ -88,6 +91,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string OrderEndpoint = ApiEndpoint + "/order";
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
+            public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
             public const string OrderByIdEndpoint = OrderEndpoint + "/id";
         }
 

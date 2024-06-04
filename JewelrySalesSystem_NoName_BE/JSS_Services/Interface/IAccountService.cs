@@ -1,4 +1,5 @@
 ﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using System;
@@ -20,5 +21,7 @@ namespace JSS_Services.Interface
         public Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size);
 
         public Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size);
+        Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto);
+        Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name);
     }
 }

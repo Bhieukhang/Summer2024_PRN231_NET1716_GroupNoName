@@ -38,7 +38,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 var user = await _authService.GetAccountByPhone(loginRequest.Phone, loginRequest.Password);
                 var token = await _authService.LoginAsync(loginRequest.Phone, loginRequest.Password);
 
-                return Ok(new LoginResponse(user.Phone, user.Role.RoleName, token));
+                return Ok(new LoginResponse(token));
             }
             catch (UnauthorizedAccessException ex)
             {

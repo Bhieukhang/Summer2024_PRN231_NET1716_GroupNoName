@@ -10,4 +10,9 @@
 
         public bool? Deflag { get; set; }
     }
+
+    public class ConditionWarrantyCreate
+    {
+        public string? Condition { get; set; }
+    }
 }

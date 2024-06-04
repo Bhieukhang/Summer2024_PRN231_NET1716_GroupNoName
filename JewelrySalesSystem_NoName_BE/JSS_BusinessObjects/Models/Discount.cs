@@ -25,5 +25,11 @@ public partial class Discount
 
     public string? Note { get; set; }
 
+    public Guid? MembershipId { get; set; }
+
+    public int? LevelDiscount { get; set; }
+
+    public virtual Membership? Membership { get; set; }
+
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

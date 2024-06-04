@@ -45,7 +45,7 @@
                                             <div class="form-group row">
                                                 <label for="promotion" class="col-sm-2 col-form-label">Khuyến mãi</label>
                                                 <div class="col-sm-9">
-                                                    <button type="button" class="btn btn-primary btn-view-details">Khuyến mãi</button>
+                                                    <button type="button" class="btn btn-primary btn-view-promotions">Khuyến mãi</button>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -95,13 +95,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Thêm chiết khấu</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="testClose()">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Yêu cầu chiết khấu</div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="testClose()">Hủy</button>
                 <button type="button" class="btn btn-primary">Lưu</button>
             </div>
         </div>
@@ -109,66 +109,72 @@
 </div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function testClose() {
+            $('#discount').modal('hide');
+        }
         var productIndex = @Model.Order.Details.Count;
 
         function addProduct() {
             var newProductHtml = `
-                        <div class="product-item">
-                            <div class="form-group">
-                                <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
-                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId">
-                            </div>
-                            <div class="form-group">
-                                <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
-                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName">
-                            </div>
-                            <div class="form-group">
-                                <label for="Order_Details_${productIndex}__Amount">Giá</label>
-                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount">
-                            </div>
-                            <div class="form-group">
-                                <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
-                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1">
-                            </div>
-                        </div>`;
+                            <div class="product-item">
+                                <div class="form-group">
+                                    <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
+                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
+                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Order_Details_${productIndex}__Amount">Giá</label>
+                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
+                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1">
+                                </div>
+                            </div>`;
 
             $('#product-list').append(newProductHtml);
             productIndex++;
         }
+
+        $(document).ready(function () {
+            $('.btn-view-promotions').click(function () {
+                $.ajax({
+                    url: '@Url.Page("./CreateOrder", new { handler = "Promotion" })',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#promotionChoice .modal-body').html(data);
+                        $('#promotionChoice').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
+                    }
+                });
+            });
+
+            $('.btn-view-discount').click(function () {
+                $.ajax({
+                    url: '@Url.Page("./CreateOrder", new { handler = "Discount" })',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#discount .modal-body').html(data);
+                        $('#discount').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
+                    }
+                });
+            });
+            $('#discount').on('hidden.bs.modal', function (e) {
+                $(this).find('.modal-body').html(''); // Xóa nội dung trong modal-body
+            });
+        });
     </script>
 }
-<script>
-    $(document).ready(function () {
-        $('.btn-view-details').click(function () {
-            $.ajax({
-                url: '@Url.Page("./CreateOrder", new { handler = "Promotion" })',
-                type: 'GET',
-                success: function (data) {
-                    $('#promotionChoice .modal-body').html(data);
-                    $('#promotionChoice').modal('show');
-                },
-                error: function (xhr, status, error) {
-                    alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
-                }
-            });
-        });
-        $('.btn-view-discount').click(function () {
-            $.ajax({
-                url: '@Url.Page("./CreateOrder", new { handler = "Discount" })',
-                type: 'GET',
-                success: function (data) {
-                    $('#discount .modal-body').html(data);
-                    $('#discount').modal('show');
-                },
-                error: function (xhr, status, error) {
-                    alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
-                }
-            });
-        });
-    });
-</script>
+
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
