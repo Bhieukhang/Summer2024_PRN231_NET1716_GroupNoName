@@ -120,7 +120,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 });
             }
 
-
             var promotion = new Promotion
             {
                 Id = existingPromotion.Id,
