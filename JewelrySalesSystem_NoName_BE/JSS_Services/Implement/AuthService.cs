@@ -18,11 +18,11 @@ namespace JSS_Services.Implement
 {
     public class AuthService : BaseService<Account>, IAuthService
     {
-        public static IConfiguration Configuration { get; }
-        private readonly HashSet<string> _blacklistedTokens = new HashSet<string>();
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<Account> logger) : base(unitOfWork, logger)
+        public AuthService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<Account> logger, IConfiguration configuration) : base(unitOfWork, logger)
         {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<Account> GetAccountByPhone(string phone, string password)
@@ -66,11 +66,10 @@ namespace JSS_Services.Implement
                     new Claim(ClaimTypes.Role, account.Role.RoleName)
                 };
 
-            var keyString = "tokengroupnonametokengroupnonametokengroupnonametokengroupnonametokengroupnoname";
-            //var keyString = "Tokenspodpsjohinidbfjhbvkfdjhagvakfd&*¨T&(SFGD&(¨SFD(&VY&(6dfsutf7f6dod8g-f&TG08t¨&*ts&¨*dt&sfg(öd&astdecatechlabs";
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(keyString));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var expires = DateTime.Now.AddDays(30);
+            var keyString = _configuration["Jwt:Key"];
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddMinutes(30);
 
             var token = new JwtSecurityToken(
                 claims: claims,

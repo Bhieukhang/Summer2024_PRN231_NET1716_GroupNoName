@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MaterialController : ControllerBase
     {
         private readonly IMaterialService _materialService;
@@ -27,6 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of materials.</returns>
         /// GET : api/Material
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Material.MaterialEndpoint)]
         public async Task<ActionResult<IEnumerable<Material>>> GetAllMaterialsAsync()
         {
@@ -43,6 +46,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The material with the specified ID.</returns>
         /// GET : api/Material
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Material.MaterialByIdEndpoint)]
         public async Task<ActionResult<Material>> GetMaterialByIdAsync(Guid id)
         {
@@ -53,7 +57,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return Ok(material);
         }
-        
+
 
         #region CreateMaterial
         /// <summary>
@@ -63,6 +67,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created material.</returns>
         /// POST : api/Material
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Material.MaterialEndpoint)]
         public async Task<ActionResult<MaterialResponse>> CreateMaterialAsync(MaterialRequest material)
         {
@@ -73,7 +78,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return createdMaterial;
         }
-        
+
 
         #region UpdateMaterial
         /// <summary>
@@ -84,6 +89,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated material.</returns>
         /// POST : api/Material
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPut(ApiEndPointConstant.Material.MaterialByIdEndpoint)]
         public async Task<ActionResult<Material>> UpdateMaterialAsync(Guid id, Material material)
         {
@@ -94,7 +100,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return Ok(updatedMaterial);
         }
-        
+
 
         #region DeleteMaterial
         /// <summary>
@@ -103,6 +109,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="id">The ID of the material to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Material
+        [Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Material.MaterialByIdEndpoint)]
         public async Task<IActionResult> DeleteMaterialAsync(Guid id)
         {

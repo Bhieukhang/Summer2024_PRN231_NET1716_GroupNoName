@@ -1,12 +1,14 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
+    [Authorize]
     public class ConditionWarrantyController : ControllerBase
     {
         private readonly IConditionWarrantyServicecs _service;
@@ -23,6 +25,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty item.</returns>
         // POST: api/v1/condition
         #endregion
+        [Authorize(Roles = "Staff")]
         [HttpPost(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyEndpoint)]
         public async Task<ActionResult> PostConditionWarranty([FromBody] ConditionWarrantyRequest conditionData)
         {
@@ -44,6 +47,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty list.</returns>
         // POST: api/v1/condition
         #endregion
+        [Authorize(Roles = "Staff")]
         [HttpGet(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyEndpoint)]
         public async Task<ActionResult> GetListConditionWarranties(int page, int size)
         {
@@ -60,6 +64,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty item.</returns>
         // POST: api/v1/condition
         #endregion
+        [Authorize(Roles = "Staff")]
         [HttpGet(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyByIdEndpoint)]
         public async Task<ActionResult> GetConditionWarrantyDetail(Guid id)
         {

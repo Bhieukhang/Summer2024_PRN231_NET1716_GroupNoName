@@ -3,12 +3,14 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -27,6 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of products.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
@@ -42,6 +45,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductByIdEndpoint)]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
@@ -100,6 +104,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created product.</returns>
         /// POST : api/Product
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
@@ -163,6 +168,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated product.</returns>
         /// PUT : api/Product/id
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {
@@ -232,9 +238,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// </summary>
         /// <param name="id">The ID of the product to delete.</param>
         /// <returns>A response indicating the result of the delete operation.</returns>
-        /// DELETE : api/Product/id
-
-        [HttpDelete(ApiEndPointConstant.Product.ProductByIdEndpoint)]
+        /// POST : api/Product
+        [Authorize(Roles = "Manager")]
+        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
     public async Task<IActionResult> DeleteProductAsync(Guid id)
     {
         var result = await _productService.DeleteProductAsync(id);

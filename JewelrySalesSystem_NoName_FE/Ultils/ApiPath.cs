@@ -5,7 +5,7 @@
 
         public ApiPath() { }
         public const string host = "https://localhost:";
-        public const string port = "44318";
+        public const string port = "7160";
         public const string url = host + port;
 
         //Authentication
@@ -22,7 +22,7 @@
         public const string MembershipUnActive = url + "/api/v1/membership/unavailable";    
 
         //Promotion
-        public const string Promotion = url + "/api/v1/Promotion";
+        public const string Promotion = url + "/api/v1/promotion";
 
         //Category
         public const string CategoryList = url + "/api/v1/Category";

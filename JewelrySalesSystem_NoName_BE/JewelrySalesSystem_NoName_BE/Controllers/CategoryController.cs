@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -27,13 +29,14 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of categories.</returns> 
         /// GET : api/Category
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategoriesAsync()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
             return Ok(categories);
         }
-       
+
 
         #region GetCategoryById
         /// <summary>
@@ -43,6 +46,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The category with the specified ID.</returns>
         /// GET : api/Category
         #endregion
+        [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> GetCategoryByIdAsync(Guid id)
         {
@@ -63,6 +67,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created category.</returns>
         /// POST : api/Category
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<CategoryResponse>> CreateCategoryAsync(CategoryRequest category)
         {
@@ -84,6 +89,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated category.</returns>
         /// POST : api/Category
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpPut(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> UpdateCategoryAsync(Guid id, Category category)
         {
@@ -104,6 +110,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Category
         #endregion
+        [Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<IActionResult> DeleteCategoryAsync(Guid id)
         {

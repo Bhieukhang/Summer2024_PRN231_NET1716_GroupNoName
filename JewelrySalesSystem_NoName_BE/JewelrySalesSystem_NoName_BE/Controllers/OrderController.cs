@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Implement;
 using JSS_Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _service;
@@ -26,6 +28,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Order item in stall.</returns>
         // POST: api/v1/order
         #endregion
+        [Authorize(Roles = "Staff")]
         [HttpPost(ApiEndPointConstant.Order.OrderEndpoint)]
         public async Task<ActionResult> PostOrder([FromBody] OrderRequest orderData)
         {
@@ -52,6 +55,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of orders that match the search criteria.</returns>
         // GET: api/Order/Search
         #endregion
+        [Authorize(Roles = "Staff, Manager")]
         [HttpGet(ApiEndPointConstant.Order.SearchOrderEndpoint)]
         [ProducesResponseType(typeof(IEnumerable<OrderResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchOrders([FromQuery] Guid? customerId, [FromQuery] DateTime? startDate/*, [FromQuery] DateTime? endDate*/)

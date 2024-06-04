@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using JSS_BusinessObjects.Models;
 using JSS_Services.Implement;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StallController : ControllerBase
     {
         private readonly IStallService _stallService;
@@ -27,6 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of stalls.</returns>
         // GET: api/Stall
         #endregion
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Stall.StallEndpoint)]
         [ProducesResponseType(typeof(StallResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListStallAsync(int page, int size)
@@ -44,7 +47,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The stall with the specified ID.</returns>
         // GET: api/Stall/{id}
         #endregion
-      //  [HttpGet("{id}")]
+        [Authorize(Roles = "Manager, Admin")]
+        //  [HttpGet("{id}")]
         [HttpGet(ApiEndPointConstant.Stall.StallByIdEndpoint)]
         public async Task<ActionResult<Stall>> GetStallByIdAsync(Guid id)
         {
