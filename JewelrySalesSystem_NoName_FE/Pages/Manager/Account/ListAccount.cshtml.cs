@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
 {
+    [Authorize(Roles = "Admin")]
     public class ListAccountModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -28,8 +30,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
         public int TotalPages { get; set; }
         public int TotalAccountCount { get; set; }
         public int ActiveAccountCount { get; set; }
-        public async Task OnGetAsync(int? page, int? size)
+        public async Task<IActionResult> OnGetAsync(int? page, int? size)
         {
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
             Page = page ?? 1;
             Size = size ?? 10;
 
@@ -38,7 +50,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
             var activeCountUrl = $"{ApiPath.ActiveAccount}";
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetStringAsync(url);
 
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<AccountDAO>>(response);
@@ -56,6 +69,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
                 TotalAccountCount = 0;
                 ActiveAccountCount= 0;
             }
+
+            return Page();
         }
     }
 }

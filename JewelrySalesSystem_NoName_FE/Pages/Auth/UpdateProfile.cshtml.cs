@@ -5,17 +5,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 {
+    [Authorize]
     public class UpdateProfileModel : PageModel
     {
-
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UpdateProfileModel(IHttpClientFactory httpClientFactory)
+        public UpdateProfileModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -26,14 +29,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var client = _httpClientFactory.CreateClient();
-            var url = $"{ApiPath.Profile}";
-
-            var token = HttpContext.Session.GetString("Token"); // Ho?c HttpContext.Request.Cookies["Token"]
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                return Unauthorized();
+                return RedirectToPage("/Auth/Login");
             }
+
+            var client = _httpClientFactory.CreateClient();
+            var url = $"{ApiPath.Profile}";
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await client.GetAsync(url);
@@ -75,14 +78,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                 return Page();
             }
 
-            var client = _httpClientFactory.CreateClient();
-            var url = $"{ApiPath.ProfileUpdate}";
-
-            var token = HttpContext.Session.GetString("Token"); // Ho?c HttpContext.Request.Cookies["Token"]
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                return Unauthorized();
+                return RedirectToPage("/Auth/Login");
             }
+
+            var client = _httpClientFactory.CreateClient();
+            var url = $"{ApiPath.ProfileUpdate}";
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(accountProfile), Encoding.UTF8, "application/json");

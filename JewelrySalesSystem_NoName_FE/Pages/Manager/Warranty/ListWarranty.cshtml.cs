@@ -8,13 +8,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.Ultils;
-using System.Drawing;
-using JewelrySalesSystem_NoName_FE.DTOs.Membership;
+using Microsoft.AspNetCore.Authorization;
 using JewelrySalesSystem_NoName_FE.DTOs;
-using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 {
+    [Authorize(Roles = "Manager")]
     public class ListWarrantyModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -34,8 +33,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         public int TotalItems { get; set; }
         public int TotalPages { get; set; }
 
-        public async Task OnGetAsync(int? currentPage)
+        public async Task<IActionResult> OnGetAsync(int? currentPage)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
             Page = currentPage ?? 1;
             Size = 10;
 
@@ -43,6 +48,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             try
             {
                 var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetStringAsync(url);
 
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<WarrantyDTO>>(response);
@@ -52,8 +58,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             }
             catch (Exception ex)
             {
+                // Handle error appropriately
                 WarrantyList = new List<WarrantyDTO>();
             }
+
+            return Page();
         }
     }
 }
