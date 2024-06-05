@@ -21,7 +21,7 @@ namespace JSS_Services.Implement
         {
         }
 
-        public async Task<IEnumerable<DashboardRequest>> GetAllDashboardsAsync()
+        public async Task<DashboardRequest> GetDashboardsAsync()
         {
             
             var promotions = await _unitOfWork.GetRepository<Promotion>().GetListAsync();
@@ -33,7 +33,7 @@ namespace JSS_Services.Implement
                 TotalPromotion = totalPromotion,
                 TotalRevenue = totalRevenue
             };
-            return (IEnumerable<DashboardRequest>)dash;
+            return dash;
         }
 
         

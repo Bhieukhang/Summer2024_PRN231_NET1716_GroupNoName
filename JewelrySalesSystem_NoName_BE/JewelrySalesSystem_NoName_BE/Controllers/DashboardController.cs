@@ -13,11 +13,11 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     [Authorize]
     public class DashboardController : ControllerBase
     {
-        private readonly IDashboardService _DashboardService;
+        private readonly IDashboardService _dashboardService;
 
-        public DashboardController(IDashboardService DashboardService)
+        public DashboardController(IDashboardService dashboardService)
         {
-            _DashboardService = DashboardService;
+            _dashboardService = dashboardService;
         }
 
         #region GetAllDashboards
@@ -29,9 +29,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
         [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Dashboard.DashboardEndpoint)]
-        public async Task<ActionResult<IEnumerable<DashboardRequest>>> GetAllDashboardsAsync()
+        public async Task<ActionResult<DashboardRequest>> GetDashboardsAsync()
         {
-            var Dashboards = await _DashboardService.GetAllDashboardsAsync();
+            var Dashboards = await _dashboardService.GetDashboardsAsync();
             return Ok(Dashboards);
         }
 
