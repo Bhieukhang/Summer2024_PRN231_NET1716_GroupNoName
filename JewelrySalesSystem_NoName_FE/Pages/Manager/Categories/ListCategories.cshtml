@@ -1,0 +1,79 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Categories.ListCategoriesModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> DANH SÁCH LOẠI TRANG SỨC </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Products/AddProduct">
+                            <span class="menu-title"></span>
+                            <button type="button" class="btn btn-gradient-primary btn-fw">
+                                <i class="mdi mdi-plus"></i>
+                                Thêm loại trang sức
+                            </button>
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        @* <form method="post" asp-page-handler="Search">
+            <br />
+            <div class="form-group">
+                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" />
+                <span asp-validation-for="SearchCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-gradient-secondary btn-fw">
+                <i class="mdi mdi-magnify"></i>
+                Tìm Kiếm
+            </button>
+        </form> *@
+        <br/>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Code</th>
+                                <th>Tên</th>
+                                <th>Kích thước</th>
+                                <th>Số lượng</th>
+                                <th>Giá Bán</th>
+                                <th>Loại</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.cateList)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Type</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.PricePressure</td>
+                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
+                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                            <i class="mdi mdi-file-check btn-icon-append"></i>
+                                            Chỉnh sửa
+                                        </a>
+                                    </td>
+                                    <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
+                                        <i class="mdi mdi-delete"></i>
+                                    Xóa    
+                                    </a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
