@@ -2,8 +2,6 @@
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
-using JSS_BusinessObjects.Payload.Response;
-using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
