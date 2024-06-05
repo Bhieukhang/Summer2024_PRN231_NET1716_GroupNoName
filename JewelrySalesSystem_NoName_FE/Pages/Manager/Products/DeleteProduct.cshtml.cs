@@ -42,7 +42,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "The product was deleted successfully.";
+                TempData["SuccessMessage"] = "The product is deleted successfully.";
                 return RedirectToPage("./ListProduct");
             }
             else

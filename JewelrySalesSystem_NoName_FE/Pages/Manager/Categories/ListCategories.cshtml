@@ -38,11 +38,8 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Code</th>
                                 <th>Tên</th>
-                                <th>Kích thước</th>
-                                <th>Số lượng</th>
+                                <th>Mô Tả</th>
                                 <th>Giá Bán</th>
                                 <th>Loại</th>
                                 <th></th>
@@ -55,7 +52,6 @@
                             {
                                 <tr>
                                     <td>@item.Name</td>
-                                    <td>@item.Type</td>
                                     <td>@item.Description</td>
                                     <td>@item.PricePressure</td>
                                     <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
