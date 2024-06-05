@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using JewelrySalesSystem_NoName_FE.Pages.Auth;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,13 +28,26 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddHttpClient();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<TokenHandler>();
+builder.Services.AddHttpClient("ApiClient")
+        .AddHttpMessageHandler<TokenHandler>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.LogoutPath = "/Auth/Logout";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+    });
+
+builder.Services.AddAuthorization(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
-    options.Cookie.HttpOnly = true; // Cho cho phép truy cập session thông qua HTTP
-    options.Cookie.IsEssential = true; 
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
+    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
 });
+
+builder.Services.AddDistributedMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,8 +63,18 @@ app.UseSession();
 
 app.UseRouting();
 app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapRazorPages();
+
+//});
+app.MapGet("/", async context =>
+{
+    context.Response.Redirect("/Auth/Login");
+});
 
 app.Run();

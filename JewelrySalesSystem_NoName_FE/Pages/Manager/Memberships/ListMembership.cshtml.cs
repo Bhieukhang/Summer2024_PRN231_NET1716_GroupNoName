@@ -6,10 +6,11 @@ using System.Net.Http;
 using JewelrySalesSystem_NoName_FE.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
 {
+    [Authorize(Roles = "Admin, Manager")]
     public class ListMembershipModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -32,11 +33,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
 
         [BindProperty]
         public Guid UserId { get; set; }
-        public int TotalActiveMembership {  get; set; }
-        public int TotalUnMembership {  get; set; }
+        public int TotalActiveMembership { get; set; }
+        public int TotalUnMembership { get; set; }
 
         public async Task OnGetAsync(int? currentPage)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                RedirectToPage("/Auth/Login");
+                return;
+            }
+
             Page = currentPage ?? 1;
             Size = 4;
             Console.WriteLine($"Page: {Page}, Size: {Size}");
@@ -46,6 +54,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
             try
             {
                 var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetStringAsync(url);
 
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<MembershipDTO>>(response);
@@ -63,10 +72,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
 
         public async Task<IActionResult> OnGetDetailsAsync(Guid UserId)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
             var url = $"{ApiPath.MembershipProfile}?id={UserId}";
             try
             {
                 var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetStringAsync(url);
 
                 profile = JsonConvert.DeserializeObject<ProfileDTO>(response);
