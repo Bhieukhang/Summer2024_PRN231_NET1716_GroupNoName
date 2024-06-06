@@ -149,7 +149,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
         //[HttpPost]
         [Authorize(Roles = "Admin")]
-        [HttpPost(ApiEndPointConstant.Account.AccountEndpoint)]
+        [HttpPost(ApiEndPointConstant.Account.CreateAccountEndpoint)]
         public async Task<ActionResult<Account>> CreateAccountAsync(Account account)
         {
             var createdAccount = await _accountService.CreateAccountAsync(account);

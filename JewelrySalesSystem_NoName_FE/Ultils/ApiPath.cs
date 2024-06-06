@@ -38,6 +38,7 @@
 
         //account
         public const string AccountList = url + "/api/v1/Account";
+        public const string CreateAccount = url + "/api/v1/Account/Create";
         public const string TotalAccount = url + "/api/v1/Account/Total-account";
         public const string ActiveAccount = url + "/api/v1/Account/Active-account";
 
