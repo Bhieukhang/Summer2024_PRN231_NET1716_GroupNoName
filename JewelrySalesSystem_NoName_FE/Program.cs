@@ -21,6 +21,12 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<TokenHandler>();

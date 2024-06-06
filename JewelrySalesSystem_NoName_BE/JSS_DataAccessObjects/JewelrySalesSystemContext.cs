@@ -38,8 +38,6 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<ProductConditionGroup> ProductConditionGroups { get; set; }
 
-    public virtual DbSet<ProductMaterial> ProductMaterials { get; set; }
-
     public virtual DbSet<Program> Programs { get; set; }
 
     public virtual DbSet<Promotion> Promotions { get; set; }
@@ -90,7 +88,6 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(50);
-            entity.Property(e => e.Type).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ConditionWarranty>(entity =>
@@ -206,6 +203,10 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("FK_Product_Category");
+
+            entity.HasOne(d => d.Material).WithMany(p => p.Products)
+                .HasForeignKey(d => d.MaterialId)
+                .HasConstraintName("FK_Product_Material");
         });
 
         modelBuilder.Entity<ProductConditionGroup>(entity =>
@@ -224,22 +225,6 @@ public partial class JewelrySalesSystemContext : DbContext
                 .HasForeignKey(d => d.PromotionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductConditionGroup_Promotion");
-        });
-
-        modelBuilder.Entity<ProductMaterial>(entity =>
-        {
-            entity.ToTable("ProductMaterial");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.InsDate).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Material).WithMany(p => p.ProductMaterials)
-                .HasForeignKey(d => d.MaterialId)
-                .HasConstraintName("FK_ProductMaterial_Material");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductMaterials)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_ProductMaterial_Product");
         });
 
         modelBuilder.Entity<Program>(entity =>

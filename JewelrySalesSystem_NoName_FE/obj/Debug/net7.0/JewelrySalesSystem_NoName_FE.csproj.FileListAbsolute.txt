@@ -103,3 +103,8 @@ C:\Users\Admin\Downloads\BAO_PRN231_V1\Summer2024_PRN231_NET1716_GroupNoName\Jew
 C:\Users\Admin\Downloads\BAO_PRN231_V1\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.pdb
 C:\Users\Admin\Downloads\BAO_PRN231_V1\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.genruntimeconfig.cache
 C:\Users\Admin\Downloads\BAO_PRN231_V1\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\ref\JewelrySalesSystem_NoName_FE.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+D:\PrjGit\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll

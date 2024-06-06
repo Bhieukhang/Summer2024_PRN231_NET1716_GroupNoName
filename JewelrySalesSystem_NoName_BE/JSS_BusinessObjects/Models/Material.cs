@@ -11,7 +11,5 @@ public partial class Material
 
     public DateTime? InsDate { get; set; }
 
-    public Guid ProductMaterialId { get; set; }
-
-    public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
+    public virtual ICollection<Product> Products { get; } = new List<Product>();
 }
