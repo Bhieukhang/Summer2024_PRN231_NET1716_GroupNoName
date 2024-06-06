@@ -24,9 +24,14 @@
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
 
+        //Promotion
+        public const string Transaction = url + "/api/v1/Transaction";
+
+        //Dashboard
+        public const string Dashboard = url + "/api/v1/Dashboard";
+
         //Category
         public const string CategoryList = url + "/api/v1/Category";
-
 
         //Product
         public const string ProductList = url + "/api/v1/Product";
