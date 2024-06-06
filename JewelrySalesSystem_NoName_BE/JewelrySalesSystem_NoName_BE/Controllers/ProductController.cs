@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of products.</returns>
         /// GET : api/Product
         #endregion
-        [Authorize(Roles = "Admin, Manager, Staff")]
+        //[Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
