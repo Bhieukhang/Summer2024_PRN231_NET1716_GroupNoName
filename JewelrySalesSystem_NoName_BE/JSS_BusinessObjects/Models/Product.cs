@@ -29,7 +29,7 @@ public partial class Product
 
     public double? ProcessPrice { get; set; }
 
-    public Guid? ProductMaterialId { get; set; }
+    public Guid? MaterialId { get; set; }
 
     public string? Code { get; set; }
 
@@ -39,9 +39,9 @@ public partial class Product
 
     public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
 
+    public virtual Material? Material { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
-
-    public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
 }

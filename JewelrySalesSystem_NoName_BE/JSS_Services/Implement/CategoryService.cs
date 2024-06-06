@@ -34,18 +34,13 @@ namespace JSS_Services.Implement
             Category cate = new Category()
             {
                 Id = Guid.NewGuid(),
-                Description = newData.Description,
                 Name = newData.Name,
                 PricePressure = newData.PricePressure,
-                Type = newData.Type
             };
             await _unitOfWork.GetRepository<Category>().InsertAsync(cate);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
-            return new CategoryResponse(cate.Id, cate.Name, cate.Type, cate.PricePressure)
-            {
-                Description = newData.Description
-            };
+            return new CategoryResponse(cate.Id, cate.Name, cate.PricePressure);
         }
 
         public async Task<Category> UpdateCategoryAsync(Guid id, Category updatedData)
@@ -54,8 +49,6 @@ namespace JSS_Services.Implement
             if (existingCategory == null) return null;
 
             existingCategory.Name = updatedData.Name;
-            existingCategory.Type = updatedData.Type;
-            existingCategory.Description = updatedData.Description;
             existingCategory.PricePressure = updatedData.PricePressure;
 
             _unitOfWork.GetRepository<Category>().UpdateAsync(existingCategory);

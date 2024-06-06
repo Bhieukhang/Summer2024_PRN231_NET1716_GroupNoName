@@ -39,9 +39,7 @@
                         <thead>
                             <tr>
                                 <th>Tên</th>
-                                <th>Mô Tả</th>
                                 <th>Giá Bán</th>
-                                <th>Loại</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -52,7 +50,6 @@
                             {
                                 <tr>
                                     <td>@item.Name</td>
-                                    <td>@item.Description</td>
                                     <td>@item.PricePressure</td>
                                     <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                     <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">

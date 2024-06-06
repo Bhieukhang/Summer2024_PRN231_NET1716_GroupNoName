@@ -27,33 +27,59 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             _bucket = _configuration["Firebase:Bucket"];
         }
 
-        public async Task OnGetAsync(Guid id)
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.GetStringAsync(apiUrl);
-            Product = JsonConvert.DeserializeObject<ProductDTO>(response);
-
-            var categoryApiUrl = $"{ApiPath.CategoryList}";
-            var categoryResponse = await client.GetStringAsync(categoryApiUrl);
-            CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(categoryResponse);
-
-            if (!string.IsNullOrEmpty(Product.ImgProduct) && Product.ImgProduct.StartsWith("data:image"))
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
             {
-                var base64Data = Product.ImgProduct.Split(',')[1];
-                Product.ImgProduct = $"data:image/jpeg;base64,{base64Data}";
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
+                var response = await client.GetAsync(apiUrl);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                Product = JsonConvert.DeserializeObject<ProductDTO>(await response.Content.ReadAsStringAsync());
+
+                var categoryApiUrl = $"{ApiPath.CategoryList}";
+                var categoryResponse = await client.GetAsync(categoryApiUrl);
+                CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
             }
         }
 
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
-            var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
-            //var apiUrl = $"https://localhost:44318/api/v1/Product/id?id=2AD3052B-45E9-4B62-9617-B7332396880A";
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
@@ -88,19 +114,26 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     CategoryId = Product.CategoryId,
                     Quantity = Product.Quantity,
                     ProcessPrice = Product.ProcessPrice,
-                    ProductMaterialId = Product.ProductMaterialId,
+                    MaterialId = Product.MaterialId,
                     Code = Product.Code,
-                    ImgProduct = Product.ImgProduct, // base64 string
+                    ImgProduct = Product.ImgProduct,
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
+                var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
                 var response = await client.PutAsync(apiUrl, content);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Jewelry is updated successfully !";
+                    TempData["SuccessMessage"] = "The Jewelry is updated successfully!";
                     return RedirectToPage("./ListProduct");
                 }
                 else
