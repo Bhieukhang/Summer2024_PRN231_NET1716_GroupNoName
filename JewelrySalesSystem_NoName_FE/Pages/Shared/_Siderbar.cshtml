@@ -1,28 +1,83 @@
-﻿@**@
+﻿@using System.Security.Claims
+@**@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
+    var user = HttpContextAccessor.HttpContext.User;
+    var userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 }
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
+            <a href="/profile" class="nav-link">
                 <div class="nav-profile-image">
                     <img src="~/../assets/images/faces/face1.jpg" alt="profile" />
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2">Nguyễn Văn Anh</span>
-                    <span class="text-secondary text-small">Quản lí</span>
+                    @* <span class="font-weight-bold mb-2">@user.Identity.Name</span> *@
+                    <span class="text-secondary text-small">@userRole</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="~/Admin/Statics/Dashboard">
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
-            </a>
-        </li>
+        @if (userRole == "Admin")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Admin/Statics/Dashboard">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="mdi mdi-home menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
+                   aria-controls="ui-basic">
+                    <span class="menu-title">Nhân viên</span>
+                    <i class="menu-arrow"></i>
+                    <i class="fa fa-users menu-icon"></i>
+                </a>
+                <div class="collapse" id="ui-basicd">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Account/ListAccount">Tất Cả Tài khoản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
+                        </li>
+                        @* <li class="nav-item">
+                    <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
+                    </li> *@
+                    </ul>
+                </div>
+            </li>
+        }
+
+        @if (userRole == "Admin" || userRole == "Manager")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Stall/ListStall">
+                    <span class="menu-title">Nhân viên tại quầy</span>
+                    <i class="mdi mdi-home menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Memberships/ListMembership">
+                    <span class="menu-title">Thành viên</span>
+                    <i class="fa fa-users menu-icon"></i>
+                </a>
+            </li>
+        }
+
+        @if (userRole == "Manager")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Warranty/ListWarranty">
+                    <span class="menu-title">Bảo hành</span>
+                    <i class="fa fa-plus menu-icon"></i>
+                </a>
+            </li>
+        }
+
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
                aria-controls="ui-basic">
@@ -50,43 +105,52 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="~/Manager/Memberships/ListMembership">
-                <span class="menu-title">Thành viên</span>
-                <i class="fa fa-users menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-                <span class="menu-title">Chíết khấu</span>
-                <i class="mdi mdi-chart-bar menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="~/Manager/Products/ListProduct">
-                <span class="menu-title">Sản phẩm</span>
-                <i class="fa fa-cubes menu-icon"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="~/Staff/Orders/CreateOrder">
-                <span class="menu-title">Đơn hàng</span>
-                <i class="fa fa-truck menu-icon"></i>
-            </a>
-        </li>
+        
+
+        @if (userRole == "Staff" || userRole == "Manager")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Staff/Orders/CreateOrder">
+                    <span class="menu-title">Đơn hàng</span>
+                    <i class="fa fa-truck menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
+                    <span class="menu-title">Khuyến mãi</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
+        }
+
+        @if (userRole == "Staff")
+        {
+            
+        }
+
+
+
+        @* <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+        <span class="menu-title">Chíết khấu</span>
+        <i class="mdi mdi-chart-bar menu-icon"></i>
+        </a>
+        </li> *@
+
+
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                aria-controls="ui-basic">
                 <span class="menu-title">Hóa Đơn</span>
                 <i class="menu-arrow"></i>
-                    <i class="fa fa-money menu-icon"></i>
+                <i class="fa fa-money menu-icon"></i>
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link" href="~/Staff/Menu/Menu">Bảng Giá Kim Cương </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="~/Staff/Orders/ListOrder"> Danh Sách Đơn Hàng</a>
                     </li>
@@ -94,10 +158,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="~/Staff/Orders/CreateOrder"> Đơn Hàng</a>
                     </li>
-              
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
-                    </li>
+
+                    @* <li class="nav-item">
+                    <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
+                    </li> *@
                 </ul>
             </div>
         </li>
@@ -113,12 +177,7 @@
                 <span class="menu-title">Thanh toán</span>
                 <i class="fa fa-money menu-icon"></i>
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="~/Manager/Warranty/ListWarranty">
-                <span class="menu-title">Bảo hành</span>
-                <i class="fa fa-plus menu-icon"></i>
-            </a>
-        </li>
+        </li> 
+        
     </ul>
 </nav>

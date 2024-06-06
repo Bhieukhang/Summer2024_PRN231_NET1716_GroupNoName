@@ -4,9 +4,11 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
 {
+    [Authorize(Roles = "Admin, Manager")]
     public class ListStallModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -19,6 +21,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
+
         public IList<StallDTO> ListStall { get; set; } = new List<StallDTO>();
         public int Page { get; set; }
         public int Size { get; set; }
@@ -26,8 +29,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
         public int TotalPages { get; set; }
         public int TotalAccountCount { get; set; }
         public int ActiveAccountCount { get; set; }
-        public async Task OnGetAsync(int? page, int? size)
+
+        public async Task<IActionResult> OnGetAsync(int? page, int? size)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
             Page = page ?? 1;
             Size = size ?? 10;
 
@@ -37,6 +47,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
             try
             {
                 var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetStringAsync(url);
 
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<StallDTO>>(response);
@@ -54,6 +65,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
                 TotalAccountCount = 0;
                 ActiveAccountCount = 0;
             }
+
+            return Page();
         }
     }
 }

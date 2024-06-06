@@ -88,7 +88,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     CategoryId = Product.CategoryId,
                     Quantity = Product.Quantity,
                     ProcessPrice = Product.ProcessPrice,
-                    AccessoryId = Product.AccessoryId,
                     ProductMaterialId = Product.ProductMaterialId,
                     Code = Product.Code,
                     ImgProduct = Product.ImgProduct, // base64 string

@@ -12,9 +12,7 @@
     <a class="navbar-brand brand-logo-mini" href=""><img src="" alt="logo" /></a>
 </div>
 <div class="navbar-menu-wrapper d-flex align-items-stretch">
-    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-        <span class="mdi mdi-menu"></span>
-    </button>
+    
     <div class="search-field d-none d-md-block">
         <form class="d-flex align-items-center h-100" action="#">
             <div class="input-group">
@@ -28,20 +26,23 @@
     <ul class="navbar-nav navbar-nav-right">
         <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="nav-profile-img">
-                    <img src="~/../assets/images/faces/face1.jpg" alt="image">
+                @* <div class="nav-profile-img">
+                    <img src="@User.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value ?? " alt="Profile Image">
                     <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                    <p class="mb-1 text-black">Quản lí</p>
-                </div>
+                    <p class="mb-1 text-black">@User.Identity.Name</p>
+                </div> *@
+                @* <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button> *@
             </a>
             <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                <a class="dropdown-item" href="/profile">
+                @* <a class="dropdown-item" href="/profile">
                     <i class="bi bi-person-lines-fill me-2 text-success"></i> Profile
-                </a>
+                </a> *@
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" onclick="logout(event)">
+                <a class="dropdown-item" href="/Auth/Logout">
                     <i class="mdi mdi-logout me-2 text-primary"></i> Thoát
                 </a>
             </div>
@@ -151,30 +152,3 @@
         </li>*@
     </ul>
 </div>
-
-<script>
-    async function logout(event) {
-        event.preventDefault();
-
-        try {
-            const response = await fetch('https://localhost:44318/api/v1/Logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem('Token')}` // Hoặc sử dụng localStorage nếu bạn lưu token ở đó
-                }
-            });
-
-            if (response.ok) {
-                // Xóa token khỏi sessionStorage hoặc localStorage
-                sessionStorage.removeItem('Token');
-                // Chuyển hướng đến trang đăng nhập hoặc trang chủ
-                window.location.href = '/Auth/Login';
-            } else {
-                console.error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-</script>

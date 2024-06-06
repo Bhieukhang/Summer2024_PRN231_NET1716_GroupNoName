@@ -12,7 +12,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of categories.</returns> 
         /// GET : api/Category
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategoriesAsync()
         {
@@ -46,7 +46,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The category with the specified ID.</returns>
         /// GET : api/Category
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> GetCategoryByIdAsync(Guid id)
         {
@@ -67,7 +67,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created category.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<CategoryResponse>> CreateCategoryAsync(CategoryRequest category)
         {
@@ -89,7 +89,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated category.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPut(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> UpdateCategoryAsync(Guid id, Category category)
         {
@@ -110,7 +110,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<IActionResult> DeleteCategoryAsync(Guid id)
         {
