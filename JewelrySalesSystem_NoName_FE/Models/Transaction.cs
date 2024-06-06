@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace JewelrySalesSystem_NoName_FE;
+﻿namespace JewelrySalesSystem_NoName_FE;
 
 public partial class Transaction
 {

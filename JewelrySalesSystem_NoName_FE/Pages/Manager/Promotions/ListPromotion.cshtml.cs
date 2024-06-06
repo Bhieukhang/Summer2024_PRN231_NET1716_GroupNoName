@@ -20,7 +20,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 CurrentPage = currentPage ?? 1;
                 PageSize = pageSize ?? 5;
                 Search = search;
-                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}");
+
+                var token = HttpContext.Session.GetString("Token") ?? "";
+                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}", token);
 
                 // Calculate pages
                 TotalRecord = promotions.Count;
