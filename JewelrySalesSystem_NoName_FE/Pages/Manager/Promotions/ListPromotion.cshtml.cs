@@ -29,11 +29,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 
         public async Task<IActionResult> OnGetAsync(int? currentPage, int? pageSize, string? search)
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
-            if (string.IsNullOrEmpty(token))
-            {
-                return RedirectToPage("/Auth/Login");
-            }
+            //var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    return RedirectToPage("/Auth/Login");
+            //}
 
             try
             {

@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of categories.</returns> 
         /// GET : api/Category
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<IEnumerable<Category>>> GetAllCategoriesAsync()
         {
@@ -46,7 +46,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The category with the specified ID.</returns>
         /// GET : api/Category
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> GetCategoryByIdAsync(Guid id)
         {
