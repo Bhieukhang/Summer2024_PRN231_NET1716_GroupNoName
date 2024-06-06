@@ -1,0 +1,140 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Transactions.ListTransactionModel
+@{
+}
+@{
+    int totalRecord = (int)Model.TotalRecord;
+    int totalPages = (int)Model.TotalPages;
+    int currentPage = Model.CurrentPage;
+    int pageSize = Model.PageSize;
+
+    int startPage = Math.Max(1, currentPage - 2);
+    int endPage = Math.Min(totalPages, currentPage + 2);
+
+    int startIndex = ((currentPage - 1) * pageSize) + 1;
+    int endIndex = startIndex + pageSize - 1;
+    if (endIndex > totalRecord) endIndex = totalRecord;
+    var count = startIndex;
+
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="col-sm-12 col-lg-6 mb-3">
+            <h4 class="card-title">Danh sách giao dịch</h4>
+        </div>
+        <form method="get" id="form-search">
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-5">
+                        <label asp-for="StartDate" class="control-label">Start Date</label>
+                        <input id="input-search" asp-for="StartDate" type="date" class="form-control" />
+                    </div>
+                    <div class="col-sm-12 col-lg-5">
+                        <label asp-for="EndDate" class="control-label">End Date</label>
+                        <input id="input-search" asp-for="EndDate" type="date" class="form-control" />
+                    </div>
+                    <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
+                        <button class="btn btn-secondary mt-4" type="submit" >Search</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" asp-for="CurrentPage" />
+            <input type="hidden" asp-for="PageSize" />
+        </form>
+        <div class="card">
+            <div class="card-body">
+
+                @if (totalRecord > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th> STT </th>
+                                    <th> Order Id </th>
+                                    <th> Description </th>
+                                    <th> Currency </th>
+                                    <th> TotalPrice </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Transactions)
+                                {
+                                    <tr>
+                                        <td>@(count++)</td>
+                                        <td>
+                                            @item.OrderId
+                                        </td>
+                                        <td><span class="badge badge-info">@item.Description</span></td>
+                                        <td>@item.Description</td>
+                                        <td>@item.Currency</td>
+                                        <td>@item.TotalPrice?.ToString("$0.00")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row d-flex justify-content-center align-content-center mt-3">
+                        <div class="col">
+                            <span>Hiện thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> giao dịch</span>
+                        </div>
+
+                        @if (totalPages > 1)
+                        {
+                            <ul class="pagination justify-content-end col">
+                                <li class="page-item @((currentPage == 1) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage-1)" tabindex="-1" aria-disabled="true">Trước</a>
+                                </li>
+
+                                @if (currentPage > 3)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                @for (int pageIndex = startPage; pageIndex <= endPage; pageIndex++)
+                                {
+                                    <li class="page-item @(pageIndex == currentPage ? "active" : "")">
+                                        <a class="page-link" href="?currentPage=@pageIndex">@pageIndex</a>
+                                    </li>
+                                }
+
+                                @if (currentPage < Math.Ceiling(totalRecord / 10.0) - 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                <li class="page-item @((currentPage == totalPages) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage+1)">Tiếp</a>
+                                </li>
+                            </ul>
+
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div>Không tìm thấy giao dịch nào.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const inputSearch = document.getElementById('input-search');
+    const formSearch = document.getElementById('form-search');
+    var timeout = setTimeout(function () { }, 0);
+    window.addEventListener("load", (event) => {
+        const end = inputSearch.value.length;
+        inputSearch.setSelectionRange(end, end);
+        // 👇 scroll to the bottom if a textarea has long text
+        inputSearch.focus()
+    });
+    inputSearch.addEventListener('keypress', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () { formSearch.submit(); }, 3000)
+    });
+</script>
+

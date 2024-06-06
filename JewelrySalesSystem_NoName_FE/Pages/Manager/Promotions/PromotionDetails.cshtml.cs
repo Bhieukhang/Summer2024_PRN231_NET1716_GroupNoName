@@ -12,7 +12,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         {
             try
             {
-                Promotion = await ApiClient.GetAsync<PromotionDTO>($"{ApiPath.Promotion}/id?id={promotionId}");
+                var token = HttpContext.Session.GetString("Token") ?? "";
+                Promotion = await ApiClient.GetAsync<PromotionDTO>($"{ApiPath.Promotion}/id?id={promotionId}", token);
             }
             catch (Exception ex)
             {

@@ -40,13 +40,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 CurrentPage = currentPage ?? 1;
                 PageSize = pageSize ?? 5;
                 Search = search;
-
-                var url = $"{ApiPath.Promotion}?search={Search}";
-                var client = _httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetStringAsync(url);
-
-                var promotions = JsonConvert.DeserializeObject<List<PromotionDTO>>(response);
+                
+                var token = HttpContext.Session.GetString("Token") ?? "";
+                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}", token);
 
                 // Calculate pages
                 TotalRecord = promotions.Count;

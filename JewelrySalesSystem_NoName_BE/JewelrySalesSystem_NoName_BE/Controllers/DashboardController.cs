@@ -1,6 +1,4 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
-using JSS_BusinessObjects.Helper;
-using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
