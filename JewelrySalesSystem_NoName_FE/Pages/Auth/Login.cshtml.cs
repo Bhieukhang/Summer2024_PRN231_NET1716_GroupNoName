@@ -45,12 +45,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                         var jwtToken = handler.ReadJwtToken(loginResponse.Token);
 
                         var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == "name")?.Value ?? LoginRequest.Phone),
-                            new Claim("Token", loginResponse.Token),
-                            new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "imgUrl")?.Value ?? string.Empty),
-                            new Claim(ClaimTypes.Role, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User")
-                        };
+                {
+                    new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == "name")?.Value ?? LoginRequest.Phone),
+                    new Claim("Token", loginResponse.Token),
+                    new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "imgUrl")?.Value ?? string.Empty),
+                    new Claim(ClaimTypes.Role, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User")
+                };
 
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var authProperties = new AuthenticationProperties
@@ -60,10 +60,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                        return RedirectToPage("/Manager/Products/ListProduct");
+                        // Check the role and redirect accordingly
+                        if (await GetRoleAsync() == "Admin")
+                        {
+                            return RedirectToPage("/Admin/Statics/Dashboard");
+                        }
+                        else if (await GetRoleAsync() == "Manager")
+                        {
+                            return RedirectToPage("/Manager/Statics/Dashboard");
+                        }
+                        else if (await GetRoleAsync() == "Staff")
+                        {
+                            return RedirectToPage("/Manager/Products/ListProduct");
+                        }
                     }
-
-                    Message = "Sign in failed. Please try again!";
+                    else
+                    {
+                        Message = "Sign in failed. Please try again!";
+                    }
                 }
                 else
                 {
@@ -76,6 +90,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
             }
 
             return Page();
+        }
+
+        private async Task<string> GetRoleAsync()
+        {
+            var token = HttpContext.Session.GetString("Token");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            return jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? string.Empty;
         }
     }
 }

@@ -6,6 +6,9 @@ using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 using JewelrySalesSystem_NoName_FE.DTOs.Orders;
 using System.Text;
+using JewelrySalesSystem_NoName_FE.Requests.Promotions;
+using JewelrySalesSystem_NoName_FE.Responses;
+using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 {
@@ -64,15 +67,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         }
 
 
-        public async Task<IActionResult> OnGetPromotionAsync()
+        public async Task<IActionResult> OnGetPromotionAsync(string order)
         {
             var url = $"{ApiPath.Promotion}";
+            var token = _httpContextAccessor.HttpContext.Session.GetString("token");
             try
             {
                 var client = _httpClientFactory.CreateClient();
                 var response = await client.GetStringAsync(url);
 
                 ListPromotion = JsonConvert.DeserializeObject<IList<PromotionDTO>>(response);
+
+                // Pass the order along with the promotion list
+                ViewData["Order"] = JsonConvert.DeserializeObject<OrderDTO>(order);
                 return Partial("_ListPromotionApply", ListPromotion);
             }
             catch (Exception)
@@ -80,6 +87,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 return BadRequest();
             }
         }
+
 
         public IActionResult OnGetDiscount()
         {
@@ -98,5 +106,140 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> OnPostAsync([FromBody] OrderDTO order)
+        {
+            // Log to check the method call
+            Console.WriteLine("Order: " + JsonConvert.SerializeObject(order));
+
+            var apiUrl = $"{ApiPath.OrderCheckPromotion}";
+
+            OrderDetailDTO o = new OrderDetailDTO()
+            {
+                Amount = 0,
+                Quantity = 1,
+                ProductId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            };
+            order.Details.Add(o);
+
+            //var token = HttpContext.Session.GetString("Token");
+
+            //var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
+            //var response = await ApiClient.PostAsync<ApiResponse>(apiUrl, order, token ?? "");
+            var client = _httpClientFactory.CreateClient();
+            var json = JsonConvert.SerializeObject(order);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(apiUrl, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Response error: " + response.ReasonPhrase);
+                throw new Exception("Lỗi");
+            }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Response: " + responseData);
+
+            return new JsonResult(responseData);
+            //var client = _httpClientFactory.CreateClient();
+            //var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
+            //var response = await client.PostAsync(apiUrl, jsonContent);
+
+            // Log the status code
+            //Console.WriteLine("Response Status Code: " + response.StatusCode);
+
+            //var responseContent = await response.Content.ReadAsStringAsync();
+
+            //// Log the raw response content
+            //Console.WriteLine("Response Content: " + response);
+
+            //if (!response.IsCompletedSuccessfully)
+            //{
+            //    return StatusCode((int)response.Status, "Error from API: " + response);
+            //}
+
+            //bool isValid;
+            //try
+            //{
+            //    isValid = JsonConvert.DeserializeObject<bool>( response);
+            //}
+            //catch (JsonReaderException jsonEx)
+            //{
+            //    Console.WriteLine($"JSON Deserialization Error: {jsonEx.Message}");
+            //    return BadRequest("Invalid response format from the API");
+            //}
+
+            //if (isValid)
+            //{
+            //    return new JsonResult(new { success = true, message = "Promotion applied successfully." });
+            //}
+            //else
+            //{
+            //    return new JsonResult(new { success = false, message = "Promotion is not valid for this order." });
+            //}
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Log error to check the cause of the error
+            //    Console.WriteLine($"Error in OnPostCheckAsync: {ex.Message}");
+            //    return StatusCode(500, "Internal server error");
+            //}
+        }
+
+        public async Task<IActionResult> OnPostCheckAsync([FromBody] OrderDTO order)
+        {
+            Console.WriteLine("Order: " + JsonConvert.SerializeObject(order));
+
+            if (order.CustomerId == null)
+            {
+                order.CustomerId = "00000000-0000-0000-0000-000000000000";
+            }
+
+            if (order.PromotionId == null)
+            {
+                order.PromotionId = Guid.NewGuid();
+            }
+
+            if (order.DiscountId == null)
+            {
+                order.DiscountId = "00000000-0000-0000-0000-000000000000";
+            }
+
+            if (order.Details == null)
+            {
+                order.Details = new List<OrderDetailDTO>();
+            }
+
+            foreach (var detail in order.Details)
+            {
+             
+                if (string.IsNullOrEmpty(detail.ProductId))
+                {
+                    detail.ProductId = "8381a026-c8df-404a-b4aa-3f5b08ca5070";
+                }
+            }
+
+            var apiUrl = $"{ApiPath.OrderCheckPromotion}";
+            var client = _httpClientFactory.CreateClient();
+            var json = JsonConvert.SerializeObject(order);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(apiUrl, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Response error: " + response.ReasonPhrase);
+                throw new Exception("Lỗi");
+            }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Response: " + responseData);
+
+            return new JsonResult(responseData);
+        }
+
     }
 }

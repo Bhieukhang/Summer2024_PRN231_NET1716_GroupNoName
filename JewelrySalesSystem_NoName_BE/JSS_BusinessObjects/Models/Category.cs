@@ -9,7 +9,5 @@ public partial class Category
 
     public string? Name { get; set; }
 
-    public double? PricePressure { get; set; }
-
     public virtual ICollection<Product> Products { get; } = new List<Product>();
 }

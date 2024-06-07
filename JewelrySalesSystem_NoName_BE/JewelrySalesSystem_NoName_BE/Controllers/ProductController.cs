@@ -5,12 +5,14 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -84,8 +86,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 ImportPrice = product.ImportPrice,
                 InsDate = product.InsDate,
                 ProcessPrice = product.ProcessPrice,
-                TotalPrice = product.TotalPrice,
+                SellingPrice = product.SellingPrice,
                 Size = product.Size,
+                Tax = product.Tax,
                 Quantity = product.Quantity,
                 ImgProduct = product.ImgProduct,
                 CategoryId = product.CategoryId,
@@ -123,14 +126,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Description = productRequest.Description,
                 Deflag = productRequest.Deflag,
                 CategoryId = productRequest.CategoryId,
-                TotalPrice = productRequest.TotalPrice,
+                SellingPrice = productRequest.SellingPrice,
                 ProcessPrice = productRequest.ProcessPrice,
                 ImgProduct = productRequest.ImgProduct,
                 ImportPrice = productRequest.ImportPrice,
                 Size = productRequest.Size,
                 Quantity = productRequest.Quantity,
                 InsDate = productRequest.InsDate,
-                MaterialId = productRequest.MaterialId
+                MaterialId = productRequest.MaterialId,
+                Tax = productRequest.Tax
             };
 
             var createdProduct = await _productService.CreateProductAsync(product, stream, "uploadedFileName");
@@ -145,7 +149,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.ProductName,
                 createdProduct.Description,
                 createdProduct.Size,
-                createdProduct.TotalPrice,
+                createdProduct.SellingPrice,
                 createdProduct.Quantity,
                 createdProduct.CategoryId,
                 createdProduct.MaterialId,
@@ -153,7 +157,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.ImportPrice,
                 createdProduct.InsDate,
                 createdProduct.ProcessPrice,
-                createdProduct.Deflag
+                createdProduct.Deflag,
+                createdProduct.Tax
             ));
         }
 
@@ -197,7 +202,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Description = productRequest.Description,
                 Deflag = productRequest.Deflag,
                 CategoryId = productRequest.CategoryId,
-                TotalPrice = productRequest.TotalPrice,
+                SellingPrice = productRequest.SellingPrice,
                 ProcessPrice = productRequest.ProcessPrice,
                 ImgProduct = productRequest.ImgProduct,
                 ImportPrice = productRequest.ImportPrice,
@@ -205,7 +210,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Code = productRequest.Code,
                 Quantity = productRequest.Quantity,
                 InsDate = productRequest.InsDate,
-                MaterialId = productRequest.MaterialId
+                MaterialId = productRequest.MaterialId,
+                Tax = productRequest.Tax,
             };
 
             var updatedProduct = await _productService.UpdateProductAsync(id, product, stream, "uploadedFileName");
@@ -220,7 +226,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.ProductName,
                 updatedProduct.Description,
                 updatedProduct.Size,
-                updatedProduct.TotalPrice,
+                updatedProduct.SellingPrice,
                 updatedProduct.Quantity,
                 updatedProduct.CategoryId,
                 updatedProduct.MaterialId,
@@ -228,7 +234,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.ImportPrice,
                 updatedProduct.InsDate,
                 updatedProduct.ProcessPrice,
-                updatedProduct.Deflag
+                updatedProduct.Deflag,
+                updatedProduct.Tax
             ));
         }
 
@@ -241,23 +248,31 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [Authorize(Roles = "Manager")]
-        [HttpDelete(ApiEndPointConstant.Product.ProductByIdEndpoint)]
+        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<IActionResult> DeleteProductAsync(Guid id)
         {
-            try
+            var result = await _productService.DeleteProductAsync(id);
+            if (!result)
             {
-                var result = await _productService.DeleteProductAsync(id);
-                if (!result)
-                {
-                    return NotFound();
-                }
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { StatusCode = 500, Error = ex.Message, TimeStamp = DateTime.UtcNow });
-            }
+            return NoContent();
         }
 
+        #region ListPromotionFromProductCode
+        /// <summary>
+        /// Search product code by product code to get list promotion
+        /// </summary>
+        /// <param name="productCode">The Product code of Product.</param>
+        /// <returns>Product item and list promotion mapping product.</returns>
+        /// POST : api/Product
+        #endregion
+        [HttpGet((ApiEndPointConstant.Product.ProductByCodePromotionEndpoint))]
+        public async Task<IActionResult> ListPromotionFromProductCode(String productCode)
+        {
+            var listPromotion = await _productService.GetPromotionByProductCode(productCode);
+            var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }

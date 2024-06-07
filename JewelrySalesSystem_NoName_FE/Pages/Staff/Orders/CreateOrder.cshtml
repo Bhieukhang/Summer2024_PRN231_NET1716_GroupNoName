@@ -1,4 +1,5 @@
 ﻿@page
+@using Newtonsoft.Json
 @model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.CreateOrderModel
 @{
 }
@@ -18,30 +19,30 @@
                                 <div id="product-list">
                                     @for (int i = 0; i < Model.Order.Details.Count; i++)
                                     {
-                                        <div class="product-item">
-                                            <div class="form-group">
-                                                <label asp-for="Order.Details[i].ProductId">Mã barcode</label>
-                                                <input type="text" class="form-control" asp-for="Order.Details[i].ProductId">
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="Order.Details[i].ProductName">Sản phẩm</label>
-                                                <input type="text" class="form-control" asp-for="Order.Details[i].ProductName">
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="Order.Details[i].Amount">Giá</label>
-                                                <input type="number" class="form-control" asp-for="Order.Details[i].Amount">
-                                            </div>
-                                            <div class="form-group">
-                                                <label asp-for="Order.Details[i].Quantity">Số lượng</label>
-                                                <input type="number" class="form-control" asp-for="Order.Details[i].Quantity" min="1">
-                                            </div>
+                                        <div class="form-group">
+                                            <label asp-for="Order.Details[i].ProductId">Mã barcode</label>
+                                            <input type="text" class="form-control" asp-for="Order.Details[i].ProductId">
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Order.Details[i].ProductName">Sản phẩm</label>
+                                            <input type="text" class="form-control" asp-for="Order.Details[i].ProductName">
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Order.Details[i].Amount">Giá</label>
+                                            <input type="number" class="form-control" asp-for="Order.Details[i].Amount">
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Order.Details[i].Quantity">Số lượng</label>
+                                            <input type="number" class="form-control" asp-for="Order.Details[i].Quantity" min="1">
                                         </div>
                                     }
                                 </div>
                                 <div class="col-12 grid-margin">
                                     <div class="card">
                                         <div class="form-group row">
-                                            <button type="button" class="btn btn-light" onclick="addProduct()">Thêm sản phẩm</button>
+                                            <div id="product-list"></div>
+                                            <button type="button" class="btn btn-add" onclick="addProduct()">Thêm sản phẩm</button>
+                                            <div class="form-group row"></div>
                                             <div class="form-group row">
                                                 <label for="promotion" class="col-sm-2 col-form-label">Khuyến mãi</label>
                                                 <div class="col-sm-9">
@@ -113,44 +114,112 @@
         function testClose() {
             $('#discount').modal('hide');
         }
-        var productIndex = @Model.Order.Details.Count;
 
+        var productIndex = 0;
+
+        // Initialize the order object
+        var order = {
+            CustomerId: null,
+            PromotionId: null,
+            DiscountId: null,
+            TotalPrice: 0,
+            MaterialProcessPrice: 0,
+            Type: null,
+            InsDate: null,
+            // Id: "00000000-0000-0000-0000-000000000000",
+            Details: [
+                {
+                    "ProductId": "prod123",
+                    "ProductName": "Product 1",
+                    "Amount": 50.0,
+                    "Quantity": 2
+                }
+            ]
+        };
+
+        // Function to add a product
         function addProduct() {
             var newProductHtml = `
-                            <div class="product-item">
-                                <div class="form-group">
-                                    <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
-                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
-                                    <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Order_Details_${productIndex}__Amount">Giá</label>
-                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
-                                    <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1">
-                                </div>
-                            </div>`;
+                        <div class="product-box">
+                            <div class="form-group text-end">
+                                <button type="button" class="btn btn-danger" onclick="removeProduct(this)">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__ProductId">Mã barcode</label>
+                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductId" name="Order.Details[${productIndex}].ProductId" oninput="updateProduct(${productIndex}, 'ProductId', this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__ProductName">Sản phẩm</label>
+                                <input type="text" class="form-control" id="Order_Details_${productIndex}__ProductName" name="Order.Details[${productIndex}].ProductName" oninput="updateProduct(${productIndex}, 'ProductName', this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__Amount">Giá</label>
+                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Amount" name="Order.Details[${productIndex}].Amount" oninput="updateProduct(${productIndex}, 'Amount', this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label for="Order_Details_${productIndex}__Quantity">Số lượng</label>
+                                <input type="number" class="form-control" id="Order_Details_${productIndex}__Quantity" name="Order.Details[${productIndex}].Quantity" value="1" min="1" oninput="updateProduct(${productIndex}, 'Quantity', this.value)">
+                            </div>
+                        </div>`;
 
             $('#product-list').append(newProductHtml);
+
+            // Add a new empty product detail to the order
+            order.Details.push({
+                ProductId: '',
+                ProductName: '',
+                Amount: 0,
+                Quantity: 1
+            });
+
             productIndex++;
+        }
+
+        // Function to update the product details in the order object
+        function updateProduct(index, field, value) {
+            order.Details[index][field] = value;
+
+            // Recalculate total price
+            order.TotalPrice = order.Details.reduce((total, detail) => total + (detail.Amount * detail.Quantity), 0);
+        }
+
+        // Function to remove a product
+        function removeProduct(button) {
+            const productBox = button.closest('.product-box');
+            const index = $(productBox).index();
+
+            // Remove the product detail from the order
+            order.Details.splice(index, 1);
+
+            // Remove the product box from the DOM
+            productBox.parentElement.removeChild(productBox);
+
+            // Recalculate total price
+            order.TotalPrice = order.Details.reduce((total, detail) => total + (detail.Amount * detail.Quantity), 0);
+        }
+
+
+        function removeProduct(button) {
+            // Find the closest product-box and remove it
+            const productBox = button.closest('.product-box');
+            productBox.parentElement.removeChild(productBox);
         }
 
         $(document).ready(function () {
             $('.btn-view-promotions').click(function () {
+                var order = @Html.Raw(JsonConvert.SerializeObject(Model.Order));
                 $.ajax({
                     url: '@Url.Page("./CreateOrder", new { handler = "Promotion" })',
                     type: 'GET',
+                    data: { order: JSON.stringify(order) },
                     success: function (data) {
                         $('#promotionChoice .modal-body').html(data);
                         $('#promotionChoice').modal('show');
                     },
-                    error: function (xhr, status, error) {
-                        alert('Có lỗi xảy ra khi tải dữ liệu: ' + error);
+                    error: function () {
+                        alert('Error loading promotion details');
                     }
                 });
             });
@@ -168,10 +237,37 @@
                     }
                 });
             });
-            $('#discount').on('hidden.bs.modal', function (e) {
-                $(this).find('.modal-body').html(''); // Xóa nội dung trong modal-body
-            });
+            // $('#discount').on('hidden.bs.modal', function (e) {
+            //     $(this).find('.modal-body').html('');
+            // });
         });
+
+        function applyPromotion(promotionId) {
+            console.log("Applying promotion with ID:", promotionId);
+            console.log("Order: ", order);
+            $.ajax({
+                url: '@Url.Page("./CreateOrder", new { handler = "Check" })',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ promotionId: promotionId, order: order }),
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    console.log("Promotion applied successfully:", response);
+                    if (response.success) {
+                        // Handle successful promotion application
+                    } else {
+                        // Handle invalid promotion
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error applying promotion:", error);
+                    console.log("Status Code:", xhr.status);
+                    console.log("Response Text:", xhr.responseText);
+                }
+            });
+        }
     </script>
 }
 

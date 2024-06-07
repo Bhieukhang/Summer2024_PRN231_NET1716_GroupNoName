@@ -66,14 +66,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
     public class OrderDTO
     {
         public string CustomerId { get; set; }
-        public string PromotionId { get; set; }
+        public Guid PromotionId { get; set; }
         public string DiscountId { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal MaterialProcessPrice { get; set; }
         public string? Type { get; set; }
 
         public DateTime? InsDate { get; set; }
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         public List<OrderDetailDTO> Details { get; set; } = new List<OrderDetailDTO>();
     }
 

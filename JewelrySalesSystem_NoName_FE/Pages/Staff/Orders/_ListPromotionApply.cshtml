@@ -1,41 +1,64 @@
-﻿@model IList<JewelrySalesSystem_NoName_FE.DTOs.Promotions.PromotionDTO>
+﻿@using Newtonsoft.Json
+@model IList<JewelrySalesSystem_NoName_FE.DTOs.Promotions.PromotionDTO>
+@{
+    var order = (JewelrySalesSystem_NoName_FE.DTOs.Orders.OrderDTO)ViewData["Order"];
+}
 
-<div class="card mb-5">
-    @foreach (var promotion in Model)
-    {
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="https://cdn-icons-png.flaticon.com/512/2689/2689901.png" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">@promotion.PromotionName</h5>
-                    <p class="card-text">@promotion.Description</p>
-                    <p class="card-text"><small class="text-muted">@promotion.StartDate</small></p>
+@if (Model != null && Model.Count > 0)
+{
+    <div class="card mb-5">
+        @foreach (var promotion in Model)
+        {
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2689/2689901.png" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">@promotion.PromotionName</h5>
+                        <p class="card-text">@promotion.Description</p>
+                        <p class="card-text"><small class="text-muted">@promotion.StartDate</small></p>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3" style="padding-right: 1rem;">
+                    <input value="@promotion.Id"/>
+                    <button class="btn btn-primary" type="button" onclick="applyPromotion('@promotion.Id')">Áp dụng</button>
                 </div>
             </div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3" style="padding-right: 1rem;">
-                <button class="btn btn-primary" type="button" onclick="applyPromotion(@promotion.Id)">Áp dụng</button>
-            </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}
+else
+{
+    <p>No promotions available.</p>
+}
+@* 
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function applyPromotion(promotionId) {
+            var order = @Html.Raw(JsonConvert.SerializeObject(order));
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function applyPromotion(promotionId) {
-        $.ajax({
-            type: "POST",
-            url: "/CreateOrder",
-            data: { promotionId: promotionId },
-            success: function (response) {
-                // Xử lý phản hồi từ máy chủ sau khi gửi thành công
-                console.log("Promotion applied successfully:", response);
-            },
-            error: function (error) {
-                // Xử lý lỗi nếu có
-                console.error("Error applying promotion:", error);
-            }
-        });
-    }
-</script>
+            console.log("Promotion: ", promotionId, "Order: ", order); // Moved console.log out of AJAX request for better debugging.
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Page("./ListPromotionApply", new { handler = "Check" })',
+                contentType: "application/json",
+                data: JSON.stringify({ promotionId: promotionId, order: order }),
+                success: function (response) {
+                    console.log("Promotion applied successfully:", response);
+                    if (response.success) {
+                        // Handle successful promotion application
+                    } else {
+                        // Handle invalid promotion
+                    }
+                },
+                error: function (error) {
+                    console.error("Error applying promotion:", error, "Url: ", url);
+                    console.log("Url error: ", url);
+                }
+            });
+        }
+    </script>
+} *@

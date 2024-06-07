@@ -15,7 +15,7 @@ public partial class Product
 
     public double? Size { get; set; }
 
-    public double? TotalPrice { get; set; }
+    public double? SellingPrice { get; set; }
 
     public DateTime? InsDate { get; set; }
 
@@ -35,6 +35,8 @@ public partial class Product
 
     public string? ImgProduct { get; set; }
 
+    public double? Tax { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
@@ -44,4 +46,16 @@ public partial class Product
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
+
+    // Tính giá nhập vào
+    public double CalculateImportPrice()
+    {
+        return (ImportPrice ?? 0);
+    }
+
+    // Tính giá bán ra
+    public double CalculateSellingPrice()
+    {
+        return CalculateImportPrice() + (ProcessPrice ?? 0) + (Tax ?? 0);
+    }
 }
