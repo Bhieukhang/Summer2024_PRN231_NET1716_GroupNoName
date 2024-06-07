@@ -106,7 +106,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created product.</returns>
         /// POST : api/Product
         #endregion
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin, Manager")]
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
@@ -172,7 +172,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated product.</returns>
         /// PUT : api/Product/id
         #endregion
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {

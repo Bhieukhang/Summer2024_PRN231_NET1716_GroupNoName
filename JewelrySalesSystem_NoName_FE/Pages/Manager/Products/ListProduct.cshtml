@@ -13,7 +13,14 @@
                             <span class="menu-title"></span>
                             <button type="button" class="btn btn-gradient-primary btn-fw">
                                 <i class="mdi mdi-plus"></i>
-                                Thêm sản phẩm
+                                Thêm trang sức mới
+                            </button>
+                        </a>
+                        <br/>
+                        <a class="nav-link" href="~/Manager/RateOfGold/UpdateGoldRate">
+                            <button type="button" class="btn btn-gradient-primary btn-fw">
+                                <i class="mdi mdi-trending-up"></i>
+                                Cập nhật giá vàng
                             </button>
                         </a>
                     </li>
@@ -58,7 +65,7 @@
                                     <td>@item.ProductName</td>
                                     <td>@item.Size</td>
                                     <td>@item.Quantity</td>
-                                    <td>@item.TotalPrice</td>
+                                    <td>@item.SellingPrice</td>
                                     <td>@item.Category?.Name</td>
                                     <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                     <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">

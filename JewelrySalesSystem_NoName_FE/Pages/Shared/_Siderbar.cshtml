@@ -92,10 +92,14 @@
                 </a>
             </li>
         }
-<<<<<<< HEAD
 
-        @* Staff feature *@
-=======
+        <li class="nav-item">
+            <a class="nav-link" href="~/Manager/RateOfGold/ListGoldRate">
+                <span class="menu-title">Tỉ giá vàng</span>
+                <i class="fa fa-tags menu-icon"></i>
+            </a>
+        </li>
+
         @if (userRole == "Admin" || userRole == "Manager" || userRole == "Staff")
         {
             <li class="nav-item">
@@ -123,8 +127,6 @@
             </div>
         </li>
         }
-        
->>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
 
         @if (userRole == "Staff")
         {

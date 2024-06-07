@@ -48,14 +48,8 @@ public partial class Product
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
 
     // Tính giá nhập vào
-    public double CalculateImportPrice()
-    {
-        return (ImportPrice ?? 0);
-    }
-
-    // Tính giá bán ra
-    public double CalculateSellingPrice()
-    {
-        return CalculateImportPrice() + (ProcessPrice ?? 0) + (Tax ?? 0);
-    }
+    //public double CalculateImportPrice()
+    //{
+    //    return (ImportPrice ?? 0);
+    //}
 }

@@ -26,32 +26,19 @@
                                     <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="Product.Code" class="control-label"></label>
+                                    <input asp-for="Product.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
+                                    <span asp-validation-for="Product.Code" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Product.Description" class="control-label">Mô Tả</label>
                                     <input asp-for="Product.Description" class="form-control" placeholder="Nhập mô tả, thông tin trang sức" />
                                     <span asp-validation-for="Product.Description" class="text-danger"></span>
                                 </div>
-                                @* <div class="form-group">
-                                    <label for="exampleSelectGender">Loại</label>
-                                    <select class="form-select" id="exampleSelectGender">
-                                        <option>Nhẫn</option>
-                                        <option>Vòng tay</option>
-                                        <option>Thêm</option>
-                                    </select>
-                                </div> *@
                                 <div class="form-group">
-                                    @* <label>Hình ảnh</label>
-                                    <input type="file" name="img[]" class="file-upload-default"> *@
-
                                     <label asp-for="Image" class="control-label">Hình Ảnh Trang Sức</label>
                                     <input type="file" asp-for="Image" class="form-control-file" />
                                     <span asp-validation-for="Image" class="text-danger"></span>
-
-                                    @*<div class="input-group col-xs-12">
-                                    <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                    <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
-                                    </span>
-                                    </div> *@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.ImportPrice" class="control-label">Giá Nhập Vào</label>
@@ -64,24 +51,21 @@
                                     <span asp-validation-for="Product.Size" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Product.TotalPrice" class="control-label">Giá Bán</label>
-                                    <input asp-for="Product.TotalPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + 40-50% Giá nhập)"/>
-                                    <span asp-validation-for="Product.TotalPrice" class="text-danger"></span>
+                                    <label asp-for="Product.Tax" class="control-label">Thuế</label>
+                                    <input asp-for="Product.Tax" class="form-control" placeholder="Thuế mặc định bằng 10% giá nhập vào" readonly/>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Product.ProcessPrice" class="control-label">Giá Gia Công</label>
+                                    <input asp-for="Product.ProcessPrice" class="form-control" placeholder="Nhập Giá Gia Công (Nếu Có)" />
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Product.SellingPrice" class="control-label">Giá Bán</label>
+                                    <input asp-for="Product.SellingPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + Thuế)" readonly/>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.Quantity" class="control-label">Số Lượng</label>
                                     <input asp-for="Product.Quantity" class="form-control" />
                                     <span asp-validation-for="Product.Quantity" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Product.ProcessPrice" class="control-label">Giá Gia Công</label>
-                                    <input asp-for="Product.ProcessPrice" class="form-control" placeholder="Nhập Giá Gia Công (Nếu Có)" />
-                                    <span asp-validation-for="Product.ProcessPrice" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Product.Code" class="control-label"></label>
-                                    <input asp-for="Product.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)"/>
-                                    <span asp-validation-for="Product.Code" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.CategoryId" class="control-label">Loại</label>
@@ -90,21 +74,6 @@
                                     </select>
                                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                                 </div>
-                                @* <div class="form-group">
-                                    <label asp-for="Product.Deflag" class="control-label">Deflag</label>
-                                    <input type="checkbox" asp-for="Product.Deflag" class="form-control" />
-                                    <span asp-validation-for="Product.Deflag" class="text-danger"></span>
-                                </div> *@
-                                @* <div class="form-group">
-                                <label asp-for="Product.ProductMaterialId" class="control-label"></label>
-                                <input asp-for="Product.ProductMaterialId" class="form-control" />
-                                <span asp-validation-for="Product.ProductMaterialId" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                <label asp-for="Product.AccessoryId" class="control-label"></label>
-                                <input asp-for="Product.AccessoryId" class="form-control" />
-                                <span asp-validation-for="Product.AccessoryId" class="text-danger"></span>
-                                </div> *@
                                 <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
                                 <a asp-page="./ListProduct" class="btn btn-gradient-light btn-fw">Hủy</a>
                             </form>

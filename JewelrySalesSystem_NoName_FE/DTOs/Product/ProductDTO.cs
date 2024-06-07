@@ -18,7 +18,7 @@ public partial class ProductDTO
 
     public double? Size { get; set; }
 
-    public double? TotalPrice { get; set; }
+    public double? SellingPrice { get; set; }
 
     public DateTime? InsDate { get; set; }
 
@@ -35,6 +35,7 @@ public partial class ProductDTO
     public Guid? MaterialId { get; set; }
 
     public string? Code { get; set; }
+    public double? Tax { get; set; }
 
     public CategoryDTO Category { get; set; }
 
