@@ -6,6 +6,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 {
     public class ListPromotionModel : PageModel
     {
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ListPromotionModel(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         public List<PromotionDTO> Promotions { get; private set; } = new();
         public int TotalPages { get; private set; } = 0;
         public int CurrentPage { get; private set; } = 1;

@@ -12,7 +12,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of promotions.</returns>
         /// GET : api/Promotion
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Promotion.PromotionEndpoint)]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotionsAsync(string? search)
         {
@@ -45,7 +45,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The promotion with the specified ID.</returns>
         /// GET : api/Promotion
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Promotion.PromotionByIdEndpoint)]
         public async Task<ActionResult<Promotion>> GetPromotionByIdAsync(Guid id)
         {

@@ -9,6 +9,7 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class ProductResponse
     {
+        public ProductResponse() { }
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? totalPrice, int? quantity, Guid? categoryId, Guid? productMaterialId, string? code,
             double? importPrice, DateTime? insDate, double? processPrice, bool? deflag)

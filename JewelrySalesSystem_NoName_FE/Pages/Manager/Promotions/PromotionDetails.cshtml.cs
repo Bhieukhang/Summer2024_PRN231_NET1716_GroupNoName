@@ -6,6 +6,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 {
     public class PromotionDetailsModel : PageModel
     {
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public PromotionDetailsModel(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
         public PromotionDTO? Promotion { get; private set; }
 
         public async Task OnGet(Guid promotionId)
