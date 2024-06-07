@@ -1,0 +1,67 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Account.CreateAccountModel
+@{
+}
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title"> Tạo tài khoản </h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        @*Thêm*@
+                    </ol>
+                </nav>
+            </div>
+            <div class="row">
+                <!-- Basic form -->
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Tạo tài khoản Mới</h4>
+                            <form class="forms-sample" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.FullName" class="control-label">Họ Tên</label>
+                                    <input asp-for="CreateAccountDTO.FullName" class="form-control" placeholder="Nhập tên" />
+                                    <span asp-validation-for="CreateAccountDTO.FullName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.Phone" class="control-label">Số điện thoại</label>
+                                    <input asp-for="CreateAccountDTO.Phone" class="form-control" placeholder="Nhập số điện thoại" />
+                                    <span asp-validation-for="CreateAccountDTO.Phone" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.Dob" class="control-label">Ngày sinh</label>
+                                    <input asp-for="CreateAccountDTO.Dob" class="form-control" placeholder="Nhập ngày sinh" />
+                                    <span asp-validation-for="CreateAccountDTO.Dob" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.Password" class="control-label">Mật khẩu</label>
+                                    <input asp-for="CreateAccountDTO.Password" class="form-control" placeholder="Nhập mật khẩu" />
+                                    <span asp-validation-for="CreateAccountDTO.Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.Address" class="control-label">Địa chỉ</label>
+                                    <input asp-for="CreateAccountDTO.Address" class="form-control" placeholder="Nhập địa chỉ" />
+                                    <span asp-validation-for="CreateAccountDTO.Address" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.ImgUrl" class="control-label">Ảnh đại diện</label>
+                                    <input asp-for="CreateAccountDTO.ImgUrl" class="form-control" />
+                                    <span asp-validation-for="CreateAccountDTO.ImgUrl" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CreateAccountDTO.RoleId" class="control-label">Giá Gia Công</label>
+                                    <input asp-for="CreateAccountDTO.RoleId" class="form-control" placeholder="Nhập Giá Gia Công (Nếu Có)" />
+                                    <span asp-validation-for="CreateAccountDTO.RoleId" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
+                                <a asp-page="./ListAccount" class="btn btn-gradient-light btn-fw">Hủy</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
