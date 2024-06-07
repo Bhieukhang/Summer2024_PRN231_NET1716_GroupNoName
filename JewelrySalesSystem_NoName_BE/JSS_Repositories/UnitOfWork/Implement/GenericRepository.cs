@@ -153,7 +153,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.Remove(entity);
     }
 
-    public void DeleteRangeAsync(IEnumerable<T> entities)
+    public async Task DeleteRangeAsync(IEnumerable<T> entities)
     {
         _dbSet.RemoveRange(entities);
     }

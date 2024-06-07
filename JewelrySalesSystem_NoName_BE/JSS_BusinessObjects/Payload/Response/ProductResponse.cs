@@ -11,7 +11,7 @@ namespace JSS_BusinessObjects.Payload.Response
     {
         public ProductResponse() { }
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
-            double? totalPrice, int? quantity, Guid? categoryId, Guid? productMaterialId, string? code,
+            double? totalPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
             double? importPrice, DateTime? insDate, double? processPrice, bool? deflag)
         { 
             Id = id;
@@ -22,7 +22,7 @@ namespace JSS_BusinessObjects.Payload.Response
             TotalPrice = totalPrice;
             Quantity = quantity;
             CategoryId = categoryId;
-            ProductMaterialId = productMaterialId;
+            MaterialId = materialId;
             Code = code;
             ImportPrice = importPrice;
             InsDate = insDate;
@@ -53,15 +53,14 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public double? ProcessPrice { get; set; }
 
-        public Guid? ProductMaterialId { get; set; }
+        public Guid? MaterialId { get; set; }
 
         public string? Code { get; set; }
 
         public string? ImgProduct { get; set; }
 
         public virtual Category? Category { get; set; }
-
-        public virtual ProductMaterial? ProductMaterial { get; set; }   
+        public virtual Material? Material { get; set; }
 
         //public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 

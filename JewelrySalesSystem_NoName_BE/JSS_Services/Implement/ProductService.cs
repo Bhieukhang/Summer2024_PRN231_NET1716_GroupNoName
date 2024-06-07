@@ -91,7 +91,7 @@ namespace JSS_Services.Implement
                 existingProduct.ProcessPrice = updatedData.ProcessPrice != default ? updatedData.ProcessPrice : existingProduct.ProcessPrice;
                 existingProduct.Code = updatedData.Code ?? existingProduct.Code;
                 existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
-                existingProduct.ProductMaterialId = updatedData.ProductMaterialId ?? existingProduct.ProductMaterialId;
+                existingProduct.MaterialId = updatedData.MaterialId ?? existingProduct.MaterialId;
 
                 if (imageStream != null)
                 {
@@ -123,12 +123,28 @@ namespace JSS_Services.Implement
 
         public async Task<bool> DeleteProductAsync(Guid id)
         {
-            var existingProduct = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
-            if (existingProduct == null) return false;
+            try
+            {
+                var orderDetails = await _unitOfWork.GetRepository<OrderDetail>().GetListAsync(selector: od => od.ProductId == id);
+                if (orderDetails.Any())
+                {
+                    await _unitOfWork.GetRepository<OrderDetail>().DeleteRangeAsync((IEnumerable<OrderDetail>)orderDetails);
+                }
 
-            _unitOfWork.GetRepository<Product>().DeleteAsync(existingProduct);
-            return await _unitOfWork.CommitAsync() > 0;
+                var existingProduct = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
+                if (existingProduct == null) return false;
+
+                _unitOfWork.GetRepository<Product>().DeleteAsync(existingProduct);
+                return await _unitOfWork.CommitAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                _logger.LogError(ex, "An error occurred while deleting the product.");
+                throw; // Re-throw the exception to see the full details
+            }
         }
+
         private async Task<string> UploadImageToFirebase(Stream imageStream, string imageName)
         {
             var storage = new FirebaseStorage(_bucket);

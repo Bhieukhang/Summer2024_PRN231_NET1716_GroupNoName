@@ -1,9 +1,14 @@
 using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 {
+    [Authorize(Roles = "Manager")]
     public class ListPromotionModel : PageModel
     {
         private readonly IConfiguration _configuration;
@@ -22,14 +27,22 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         public int TotalRecord { get; private set; } = 0;
         public string? Search { get; private set; } = string.Empty;
 
-        public async Task OnGet(int? currentPage, int? pageSize, string? search)
+        public async Task<IActionResult> OnGetAsync(int? currentPage, int? pageSize, string? search)
         {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
             try
             {
                 CurrentPage = currentPage ?? 1;
                 PageSize = pageSize ?? 5;
                 Search = search;
-                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}");
+                
+                var token = HttpContext.Session.GetString("Token") ?? "";
+                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}", token);
 
                 // Calculate pages
                 TotalRecord = promotions.Count;
@@ -42,6 +55,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 Promotions = new();
                 Console.WriteLine($"Error: {ex}");
             }
+
+            return Page();
         }
     }
 }
