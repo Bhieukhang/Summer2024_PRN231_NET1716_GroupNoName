@@ -1,87 +1,26 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Orders;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 {
     public class AddOrderModel : PageModel
     {
-        [BindProperty]
-        public OrderDTO Order { get; set; } = new OrderDTO();
+        private readonly HttpClient _httpClient;
 
-        public void OnGet()
+        public AddOrderModel(HttpClient httpClient)
         {
-            // Initialize Order with default values if needed
+            _httpClient = httpClient;
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<JsonResult> OnGetProductAsync(string productCode)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
-
-            // Calculate totalPrice here if needed
-            Order.TotalPrice = CalculateTotalPrice(Order.Details);
-
-            // Send Order to API backend
-            var apiResponse = await SendOrderToApiAsync(Order);
-
-            if (apiResponse.IsSuccessStatusCode)
-            {
-                // Handle successful response
-                return RedirectToPage("OrderSuccess");
-            }
-            else
-            {
-                // Handle error response
-                ModelState.AddModelError(string.Empty, "Error sending order to backend.");
-                return Page();
-            }
+            var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
+            var response = await _httpClient.GetStringAsync(apiUrl);
+            var product = JsonConvert.DeserializeObject<ProductResponse>(response);
+            return new JsonResult(product);
         }
-
-        private decimal CalculateTotalPrice(List<OrderDetailDTO> details)
-        {
-            decimal total = 0;
-            foreach (var detail in details)
-            {
-                total += detail.Amount * detail.Quantity;
-            }
-            return total;
-        }
-
-        private async Task<HttpResponseMessage> SendOrderToApiAsync(OrderDTO order)
-        {
-            using (var client = new HttpClient())
-            {
-                // Replace with your actual API endpoint
-                var apiUrl = "YOUR_API_ENDPOINT";
-                var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
-                return await client.PostAsync(apiUrl, jsonContent);
-            }
-        }
-    }
-    public class OrderDTO
-    {
-        public string CustomerId { get; set; }
-        public Guid PromotionId { get; set; }
-        public string DiscountId { get; set; }
-        public decimal TotalPrice { get; set; }
-        public decimal MaterialProcessPrice { get; set; }
-        public string? Type { get; set; }
-
-        public DateTime? InsDate { get; set; }
-        //public Guid Id { get; set; }
-        public List<OrderDetailDTO> Details { get; set; } = new List<OrderDetailDTO>();
-    }
-
-    public class OrderDetailDTO
-    {
-        public string ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal Amount { get; set; }
-        public int Quantity { get; set; }
     }
 }

@@ -44,4 +44,5 @@ public partial class ProductDTO
         get => Deflag.GetValueOrDefault();
         set => Deflag = value;
     }
+
 }

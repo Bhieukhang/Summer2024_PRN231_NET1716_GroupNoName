@@ -40,7 +40,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public async Task<IActionResult> OnPostOrderAsync()
         {
             Order.TotalPrice = CalculateTotalPrice(Order.Details);
-            Order.CustomerId = "F8D700A3-1CD8-4A98-89C1-EB27DE0AE5A6";
+            Order.CustomerId = Guid.Parse("F8D700A3-1CD8-4A98-89C1-EB27DE0AE5A6");
             var apiUrl = $"{ApiPath.OrderCreate}";
             try
             {
@@ -56,9 +56,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             }
 
         }
-        private decimal CalculateTotalPrice(List<OrderDetailDTO> details)
+        private double CalculateTotalPrice(List<OrderDetailDTO> details)
         {
-            decimal total = 0;
+            double total = 0;
             foreach (var detail in details)
             {
                 total += detail.Amount * detail.Quantity;
@@ -119,7 +119,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             {
                 Amount = 0,
                 Quantity = 1,
-                ProductId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                ProductId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             };
             order.Details.Add(o);
 
@@ -195,7 +195,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             if (order.CustomerId == null)
             {
-                order.CustomerId = "00000000-0000-0000-0000-000000000000";
+                order.CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000000");
             }
 
             if (order.PromotionId == null)
@@ -205,7 +205,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             if (order.DiscountId == null)
             {
-                order.DiscountId = "00000000-0000-0000-0000-000000000000";
+                order.DiscountId = Guid.Parse("00000000-0000-0000-0000-000000000000");
             }
 
             if (order.Details == null)
@@ -213,14 +213,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 order.Details = new List<OrderDetailDTO>();
             }
 
-            foreach (var detail in order.Details)
-            {
+            //foreach (var detail in order.Details)
+            //{
              
-                if (string.IsNullOrEmpty(detail.ProductId))
-                {
-                    detail.ProductId = "8381a026-c8df-404a-b4aa-3f5b08ca5070";
-                }
-            }
+            //    if (string.IsNullOrEmpty(detail.ProductId))
+            //    {
+            //        detail.ProductId = Guid.Parse("8381a026-c8df-404a-b4aa-3f5b08ca5070");
+            //    }
+            //}
 
             var apiUrl = $"{ApiPath.OrderCheckPromotion}";
             var client = _httpClientFactory.CreateClient();

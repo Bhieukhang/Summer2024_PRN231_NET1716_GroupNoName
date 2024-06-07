@@ -92,10 +92,8 @@
                 </a>
             </li>
         }
-<<<<<<< HEAD
 
         @* Staff feature *@
-=======
         @if (userRole == "Admin" || userRole == "Manager" || userRole == "Staff")
         {
             <li class="nav-item">
@@ -123,13 +121,11 @@
             </div>
         </li>
         }
-        
->>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
 
         @if (userRole == "Staff")
         {
             <li class="nav-item">
-                <a class="nav-link" href="~/Staff/Orders/CreateOrder">
+                <a class="nav-link" href="~/Staff/Orders/AddOrder">
                     <span class="menu-title">Đơn hàng</span>
                     <i class="fa fa-truck menu-icon"></i>
                 </a>
