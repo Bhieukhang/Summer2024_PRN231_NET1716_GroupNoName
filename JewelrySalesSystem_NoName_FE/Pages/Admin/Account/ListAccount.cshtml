@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Stall.ListStallModels
+@model JewelrySalesSystem_NoName_FE.Pages.Admin.Account.ListAccountModel
 @{
     int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
@@ -54,45 +54,56 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th> Name</th>
-                                        <th> Number </th>
+                                        <th>  </th>
+                                        <th> Full Name</th>
+                                        <th> Phone </th>
+                                        <th> Dob </th>
+                                        <th> Address</th>
                                         <th> View</th>
                                         <th> Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var stall in Model.ListStall)
+                                    @foreach (var account in Model.ListAccount)
                                     {
                                         <tr>
-                                            <td> @stall.Name </td>
-                                            <td> @stall.Number </td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@stall.Id">
+                                                <img src="@account.ImgUrl" alt="" />
+                                            </td>
+                                            <td> @account.FullName </td>
+                                            <td> @account.Phone </td>
+                                            <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
+                                            <td> @account.Address </td>
+
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
                                                     <i class="fa fa-eye menu-icon"></i>
                                                 </button>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@stall.Id">
+                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@account.Id">
                                                     <i class="fa fa-edit menu-icon"></i>
                                                 </button>
                                             </td>
                                         </tr>
-
-
-                                        <!-- Detail -->
-                                        <div class="modal fade custom-modal" id="employeeModal-@stall.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@stall.Id" aria-hidden="true">
+                                        <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="employeeModalLabel-@stall.Id">Stall Details</h5>
+                                                        <h5 class="modal-title" id="employeeModalLabel-@account.Id">Employee Details</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>ID: @stall.Id</p>
-                                                        <p>Phone: @stall.Name</p>
-                                                        <p>Phone: @stall.Number</p>
-                                                        <p>Phone: @stall.StaffId</p>
-                                                        <p>Phone: @stall.Deflag</p>
+                                                        <p>Full Name: @account.FullName</p>
+                                                        <p>Phone: @account.Phone</p>
+                                                        <p>Date of Birth: @(account.Dob.HasValue ? account.Dob.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                                        <p>Password: @account.Password</p>
+                                                        <p>Address: @account.Address</p>
+                                                        <p>Deflag: @account.Deflag</p>
+                                                        <p>RoleId: @account.RoleId</p>
+                                                        <p>InsDate: @(account.InsDate.HasValue ? account.InsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                                        <p>UpsDate: @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                                        <p>Status: @account.Status</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -100,38 +111,60 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Edit -->
-                                        <div class="modal fade custom-modal" id="editModal-@stall.Id" tabindex="-1" aria-labelledby="editModalLabel-@stall.Id" aria-hidden="true">
+                                        <div class="modal fade " id="editModal-@account.Id" tabindex="-1" aria-labelledby="editModalLabel-@account.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModalLabel-@stall.Id">Edit Stall</h5>
+                                                        <h5 class="modal-title" id="editModalLabel-@account.Id">Edit Employee</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <form>
                                                             <div class="mb-3">
                                                                 <label for="editId" class="form-label">Id</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.Id">
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Id">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editName" class="form-label">Name</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.Name">
+                                                                <label for="editId" class="form-label">ImgURL</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.ImgUrl">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editNumber" class="form-label">Number</label>
-                                                                <input type="text" class="form-control" id="editFullName" value="@stall.Number">
-                                                            </div>    
-                                                            <div class="mb-3">
-                                                                <label for="editStaffId" class="form-label">StaffId</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.StaffId">
+                                                                <label for="editId" class="form-label">Full Name</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.FullName">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editDeflag" class="form-label">Deflag</label>
-                                                                <input type="text" class="form-control" id="editPhone" value="@stall.Deflag">
+                                                                <label for="editId" class="form-label">Phone</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Phone">
                                                             </div>
-                                                       
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">Date of Birth</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Dob">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">Password</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Password">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">Address</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Address">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">RoleID</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.RoleId">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">InsDate</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.InsDate">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">UpsDate</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.UpsDate">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="editId" class="form-label">Status</label>
+                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Status">
+                                                            </div>
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
@@ -161,7 +194,6 @@
                                     </li>
                                 </ul>
                             </nav>
-                            
                         </div>
                     </div>
                 </div>

@@ -60,6 +60,12 @@
 
   <ItemGroup>
     <Folder Include="Pages\Admin\Account\" />
+    <Folder Include="DTOs\Material\" />
+    <Folder Include="Pages\Manager\Discount\" />
+    <Folder Include="Pages\Manager\Policy\" />
+    <Folder Include="Pages\Manager\Promotion\" />
+    <Folder Include="Pages\Staff\Bill\" />
+    <Folder Include="Pages\Staff\PurchaseProduct\" />
   </ItemGroup>
 
 </Project>
