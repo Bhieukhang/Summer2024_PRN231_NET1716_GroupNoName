@@ -35,7 +35,6 @@
         public static class Account
         {
             public const string AccountEndpoint = ApiEndpoint + "/Account";
-            public const string CreateAccountEndpoint = AccountEndpoint + "/Create";
             public const string AccountByRoleIdEndpoint = ApiEndpoint + "/AccountByRole";
             public const string TotalAccountEndpoint = ApiEndpoint + "/Account/Total-account";
             public const string ActiveAccountEndpoint = ApiEndpoint + "/Account/Active-account";

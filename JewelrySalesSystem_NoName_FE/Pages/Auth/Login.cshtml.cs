@@ -46,9 +46,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
                         var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == "name")?.Value ?? LoginRequest.Phone),
+                    new Claim(ClaimTypes.NameIdentifier, jwtToken.Claims.FirstOrDefault(c => c.Type == "phone")?.Value ?? LoginRequest.Phone),
                     new Claim("Token", loginResponse.Token),
-                    new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "imgUrl")?.Value ?? string.Empty),
+                    new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value ?? string.Empty),
+                    new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty),
                     new Claim(ClaimTypes.Role, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User")
                 };
 

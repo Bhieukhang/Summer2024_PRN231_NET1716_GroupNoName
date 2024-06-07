@@ -4,21 +4,23 @@
 @{
     var user = HttpContextAccessor.HttpContext.User;
     var userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+    var imgUrl = user.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value;
+    var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 }
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-profile">
             <a href="/profile" class="nav-link">
                 <div class="nav-profile-image">
-                    <img src="~/../assets/images/faces/face1.jpg" alt="profile" />
+                    <img src="@imgUrl" alt="profile" />
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    @* <span class="font-weight-bold mb-2">@user.Identity.Name</span> *@
-                    <span class="text-secondary text-small">@userRole</span>
+                    <span class="font-weight-bold mb-2">@userFullname</span>
+                    <span class="text-secondary text-success text-small">@userRole</span>
                 </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                <i class="bi bi-person-lines-fill nav-profile-badge"></i>
             </a>
         </li>
         @* Admin feature *@
@@ -92,10 +94,8 @@
                 </a>
             </li>
         }
-<<<<<<< HEAD
 
         @* Staff feature *@
-=======
         @if (userRole == "Admin" || userRole == "Manager" || userRole == "Staff")
         {
             <li class="nav-item">
@@ -123,8 +123,6 @@
             </div>
         </li>
         }
-        
->>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
 
         @if (userRole == "Staff")
         {

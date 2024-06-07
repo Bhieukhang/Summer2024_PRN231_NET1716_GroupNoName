@@ -63,7 +63,8 @@ namespace JSS_Services.Implement
                     new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
                     new Claim(ClaimTypes.Name, account.FullName ?? ""),
                     new Claim(ClaimTypes.MobilePhone, account.Phone ?? ""),
-                    new Claim(ClaimTypes.Role, account.Role.RoleName)
+                    new Claim(ClaimTypes.Role, account.Role.RoleName),
+                    new Claim("ImgUrl", account.ImgUrl ?? "")
                 };
 
             var keyString = _configuration["Jwt:Key"];

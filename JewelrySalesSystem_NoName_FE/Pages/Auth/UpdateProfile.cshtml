@@ -7,7 +7,7 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h4 class="page-title"> Edit Profile </h4>
+                <h4 class="page-title"> Chỉnh sửa Hồ sơ </h4>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <!-- Thêm -->
@@ -19,39 +19,35 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <form method="post" class="forms-sample">
+                            <form method="post" class="forms-sample" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label asp-for="accountProfile.FullName" class="control-label">Full Name</label>
+                                    <label asp-for="accountProfile.FullName" class="control-label">Họ tên</label>
                                     <input asp-for="accountProfile.FullName" class="form-control" />
                                     <span asp-validation-for="accountProfile.FullName" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="accountProfile.Dob" class="control-label">Date of Birth</label>
+                                    <label asp-for="accountProfile.Dob" class="control-label">Ngày tháng năm sinh</label>
                                     <input asp-for="accountProfile.Dob" class="form-control" type="date" />
                                     <span asp-validation-for="accountProfile.Dob" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="accountProfile.Address" class="control-label">Address</label>
+                                    <label asp-for="accountProfile.Address" class="control-label">Địa chỉ</label>
                                     <input asp-for="accountProfile.Address" class="form-control" />
                                     <span asp-validation-for="accountProfile.Address" class="text-danger"></span>
                                 </div>
-                                @* <div class="form-group">
-                                <label>Hình ảnh</label>
-                                <input type="file" name="img[]" class="file-upload-default">
-                                <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                                <span class="input-group-append">
-                                <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
-                                </span>
-                                </div>
-                                </div> *@
                                 <div class="form-group">
-                                    <label asp-for="accountProfile.ImgUrl" class="control-label">Profile Image URL</label>
-                                    <input asp-for="accountProfile.ImgUrl" class="form-control" />
-                                    <span asp-validation-for="accountProfile.ImgUrl" class="text-danger"></span>
+                                    <label asp-for="Image" class="control-label">Hình ảnh Hồ sơ</label>
+                                    @if (!string.IsNullOrEmpty(Model.accountProfile.ImgUrl))
+                                    {
+                                        <div>
+                                            <img src="@Model.accountProfile.ImgUrl" alt="Profile Image" style="max-width: 200px; max-height: 200px;" />
+                                        </div>
+                                    }
+                                    <input type="file" asp-for="Image" class="form-control-file" />
+                                    <span asp-validation-for="Image" class="text-danger"></span>
                                 </div>
-                                <button type="submit" class="btn btn-gradient-primary me-2">Save Changes</button>
-                                <a asp-page="./Profile" class="btn btn-light">Cancel</a>
+                                <button type="submit" class="btn btn-gradient-primary me-2">Lưu thay đổi</button>
+                                <a asp-page="./Profile" class="btn btn-light">Hủy</a>
                             </form>
                         </div>
                     </div>

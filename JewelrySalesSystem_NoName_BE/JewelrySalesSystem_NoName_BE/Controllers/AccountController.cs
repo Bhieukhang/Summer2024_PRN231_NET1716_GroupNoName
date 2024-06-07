@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using JSS_BusinessObjects.DTO;
 using Microsoft.AspNetCore.Authorization;
+using JSS_BusinessObjects.Payload.Request;
+using JewelrySalesSystem_NoName_BE.Extenstion;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -18,10 +20,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IRoleService _roleService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IRoleService roleService)
         {
             _accountService = accountService;
+            _roleService = roleService;
         }
         #region GetAccount
         /// <summary>
@@ -96,7 +100,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // GET: api/Account/{id}
         #endregion
         // [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Account.AccountByIdEndpoint)]
         public async Task<ActionResult<Account>> GetAccountByIdAsync(Guid id)
         {
@@ -122,21 +126,61 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         //  [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [HttpPut(ApiEndPointConstant.Account.AccountByIdEndpoint)]
-        public async Task<ActionResult<Account>> UpdateAccountAsync(Guid id, [FromBody] Account account)
+        public async Task<ActionResult<Account>> UpdateAccountAsync(Guid id, [FromBody] AccountRequest accountRequest)
         {
-            if (id != account.Id)
+            Stream stream = null;
+            if (!string.IsNullOrEmpty(accountRequest.ImgUrl))
             {
-                return BadRequest();
+                stream = new MemoryStream(Convert.FromBase64String(accountRequest.ImgUrl));
             }
 
-            var updatedAccount = await _accountService.UpdateAccountAsync(id, account);
+            var existingAccount = await _accountService.GetAccountByIdAsync(id);
+            if (existingAccount == null)
+            {
+                return NotFound("Account not found.");
+            }
 
+            if (accountRequest.RoleId != Guid.Empty && accountRequest.RoleId != accountRequest.RoleId)
+            {
+                var role = await _roleService.GetRoleByIdAsync(accountRequest.RoleId);
+                if (role == null)
+                {
+                    accountRequest.RoleId = existingAccount.RoleId;
+                }
+            }
+
+            var account = new Account
+            {
+                FullName = accountRequest.FullName,
+                Phone = accountRequest.Phone,
+                Dob = accountRequest.Dob,
+                Password = accountRequest.Password,
+                Address = accountRequest.Address,
+                ImgUrl = accountRequest.ImgUrl,
+                Deflag = accountRequest.Deflag,
+                RoleId = accountRequest.RoleId,
+                InsDate = accountRequest.InsDate
+            };
+
+            var updatedAccount = await _accountService.UpdateAccountAsync(id, account, stream, "uploadedFileName");
             if (updatedAccount == null)
             {
-                return NotFound();
+                return StatusCode(500, "An error occurred while updating the account.");
             }
 
-            return Ok(updatedAccount);
+            return Ok(new AccountResponse(
+                updatedAccount.Id,
+                updatedAccount.FullName,
+                updatedAccount.Phone,
+                updatedAccount.Dob,
+                updatedAccount.Password,
+                updatedAccount.Address,
+                updatedAccount.ImgUrl,
+                updatedAccount.Status,
+                updatedAccount.Deflag,
+                updatedAccount.RoleId,
+                updatedAccount.InsDate
+            ));
         }
 
         #region CreateAccount
@@ -149,11 +193,48 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
         //[HttpPost]
         [Authorize(Roles = "Admin")]
-        [HttpPost(ApiEndPointConstant.Account.CreateAccountEndpoint)]
-        public async Task<ActionResult<Account>> CreateAccountAsync(Account account)
+        [HttpPost(ApiEndPointConstant.Account.AccountEndpoint)]
+        public async Task<ActionResult> CreateAccountAsync([FromBody] AccountRequest accountRequest)
         {
-            var createdAccount = await _accountService.CreateAccountAsync(account);
-            return CreatedAtAction(nameof(GetAccountByIdAsync), new { id = createdAccount.Id }, createdAccount);
+            if (string.IsNullOrEmpty(accountRequest.ImgUrl))
+                return BadRequest("No image uploaded.");
+
+            var stream = new MemoryStream(Convert.FromBase64String(accountRequest.ImgUrl));
+            var role = await _roleService.GetRoleByIdAsync(accountRequest.RoleId);
+            if (role == null)
+            {
+                return NotFound("Role not found.");
+            }
+            var account = new Account 
+            { 
+                FullName = accountRequest.FullName,
+                Phone = accountRequest.Phone,
+                Dob = accountRequest.Dob,
+                Password = accountRequest.Password,
+                Address = accountRequest.Address,
+                ImgUrl = accountRequest.ImgUrl,
+                Deflag = accountRequest.Deflag,
+                RoleId = accountRequest.RoleId,
+                InsDate = accountRequest.InsDate
+            };
+            var createdAccount = await _accountService.CreateAccountAsync(account, stream, "uploadedFileName");
+            if (createdAccount == null)
+            {
+                return StatusCode(500, "An error occurred while creating the account.");
+            }
+            return Ok(new AccountResponse(
+                createdAccount.Id,
+                createdAccount.FullName,
+                createdAccount.Phone,
+                createdAccount.Dob,
+                createdAccount.Password,
+                createdAccount.Address,
+                createdAccount.ImgUrl,
+                createdAccount.Status,
+                createdAccount.Deflag,
+                createdAccount.RoleId,
+                createdAccount.InsDate
+            ));
         }
 
         #region AccountProfile
@@ -194,8 +275,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return Unauthorized();
             }
 
-            await _accountService.UpdateProfileAsync(Guid.Parse(accountId), updateProfileDto);
-            return NoContent();
+            Stream stream = null;
+            if (!string.IsNullOrEmpty(updateProfileDto.ImgUrl))
+            {
+                stream = new MemoryStream(Convert.FromBase64String(updateProfileDto.ImgUrl));
+            }
+
+            try
+            {
+                await _accountService.UpdateProfileAsync(Guid.Parse(accountId), updateProfileDto, stream, "uploadedFileName");
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Account not found.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while updating the account profile.");
+            }
         }
 
         #region SearchAccounts

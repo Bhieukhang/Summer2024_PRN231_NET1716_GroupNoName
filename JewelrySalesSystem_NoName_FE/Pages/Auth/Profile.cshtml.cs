@@ -22,6 +22,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
 
         [BindProperty]
         public AccountProfileDTO accountProfile { get; set; }
+        public string RoleName { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -40,6 +41,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
             {
                 var content = await response.Content.ReadAsStringAsync();
                 accountProfile = JsonConvert.DeserializeObject<AccountProfileDTO>(content);
+                RoleName = GetRoleName(accountProfile.RoleId);
+
             }
             else
             {
@@ -48,6 +51,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                 return Page();
             }
             return Page();
+        }
+
+        private string GetRoleName(Guid roleId)
+        {
+            // This is a simplified example. In a real application, you might retrieve these from a database or configuration.
+            var roles = new Dictionary<Guid, string>
+        {
+            { new Guid("0F8FAD5B-D9CB-469F-A165-70867728950E"), "Admin" },
+            { new Guid("7C9E6679-7425-40DE-944B-E07FC1F90AE7"), "Manager" },
+            { new Guid("7C9E6679-7425-40DE-944B-E07FC1F90AE8"), "Staff" }
+        };
+
+            return roles.ContainsKey(roleId) ? roles[roleId] : "User";
         }
     }
 }

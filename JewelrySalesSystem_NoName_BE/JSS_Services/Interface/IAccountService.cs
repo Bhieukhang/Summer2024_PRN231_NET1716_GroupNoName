@@ -14,14 +14,15 @@ namespace JSS_Services.Interface
     {
         Task<IEnumerable<Account>> GetAllAccountsAsync();
         Task<Account> GetAccountByIdAsync(Guid id);
-        Task<Account> UpdateAccountAsync(Guid id, Account account);
-        Task<Account> CreateAccountAsync(Account account);
+        Task<Account> UpdateAccountAsync(Guid id, Account account, Stream imageStream, string imageName);
+        Task<Account> CreateAccountAsync(Account account, Stream imageStream, string imageName);
+        Task<Account> UpdateDeflagAccountAsync(Guid id, Account account);
         Task<int> GetTotalAccountCountAsync(); 
         Task<int> GetActiveAccountCountAsync();
         public Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size);
 
         public Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size);
-        Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto);
+        Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto, Stream imageStream, string imageName);
         Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name);
     }
 }

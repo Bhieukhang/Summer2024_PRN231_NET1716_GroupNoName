@@ -1,4 +1,5 @@
-﻿using JSS_BusinessObjects;
+﻿using Firebase.Storage;
+using JSS_BusinessObjects;
 using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
@@ -17,13 +18,14 @@ namespace JSS_Services.Implement
 {
     public class AccountService : BaseService<AccountService>, IAccountService
     {
+        private readonly string _bucket = "jssimage-253a4.appspot.com";
         public AccountService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<AccountService> logger) : base(unitOfWork, logger)
         {
         }
         public async Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size); ;
@@ -32,7 +34,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
                 predicate: x => x.RoleId == roleId,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -85,18 +87,31 @@ namespace JSS_Services.Implement
             }
         }
        
-        public async Task<Account> CreateAccountAsync(Account account)
+        public async Task<Account> CreateAccountAsync(Account account, Stream imageStream, string imageName)
         {
-            Guid DefaultRoleId = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7");
+            //Guid DefaultRoleId = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7");
             try
             {
+                var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+                if (string.IsNullOrEmpty(imageUrl))
+                {
+                    throw new Exception("Image upload failed, URL is empty.");
+                }
+
                 var accountRepository = _unitOfWork.GetRepository<Account>();
                 account.Id = Guid.NewGuid();
+                account.ImgUrl = imageUrl;
                 account.InsDate = DateTime.UtcNow;
-                account.RoleId = DefaultRoleId;
-                account.UpsDate = DateTime.UtcNow;
+                //account.RoleId = DefaultRoleId;
+                
+                account.Deflag = true;
                 await accountRepository.InsertAsync(account);
-                await _unitOfWork.CommitAsync();
+                //await _unitOfWork.CommitAsync();
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception("Commit failed, no rows affected.");
+                }
 
                 return account;
             }
@@ -107,7 +122,7 @@ namespace JSS_Services.Implement
             }
         }
 
-        public async Task<Account> UpdateAccountAsync(Guid id, Account account)
+        public async Task<Account> UpdateAccountAsync(Guid id, Account account, Stream imageStream, string imageName)
         {
             try
             {
@@ -118,17 +133,30 @@ namespace JSS_Services.Implement
                 {
                     return null;
                 }
-                _account.FullName = account.FullName;
-                _account.Phone = account.Phone;
-                _account.Dob = account.Dob;
-                _account.Password = account.Password;
-                _account.Address = account.Address;
-                _account.ImgUrl = account.ImgUrl;
-                _account.Status = account.Status;
-                _account.RoleId = account.RoleId;
-                _account.UpsDate = DateTime.UtcNow;
+
+                _account.FullName = account.FullName != default ? account.FullName : _account.FullName;
+                _account.Phone = account.Phone != default ? account.Phone : _account.Phone;
+                _account.Dob = account.Dob != default ? account.Dob : _account.Dob;
+                _account.Password = account.Password != default ? account.Password : _account.Password;
+                _account.Address = account.Address != default ? account.Address : _account.Address;
+                _account.Deflag = account.Deflag != default ? account.Deflag : _account.Deflag;
+                _account.RoleId = account.RoleId != Guid.Empty ? account.RoleId : _account.RoleId;
+
+                if (imageStream != null)
+                {
+                    var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+                    _account.ImgUrl = imageUrl;
+                }
+                else if (imageStream == null)
+                {
+                    account.ImgUrl = _account.ImgUrl;
+                }
+                account.UpsDate = DateTime.UtcNow;
+
                 accountRepository.UpdateAsync(_account);
                 await _unitOfWork.CommitAsync();
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful) return null;
 
                 return _account;
             }
@@ -139,7 +167,7 @@ namespace JSS_Services.Implement
             }
         }
 
-        public async Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto)
+        public async Task UpdateProfileAsync(Guid id, UpdateProfileDto updateProfileDto, Stream imageStream, string imageName)
         {
             try
             {
@@ -151,10 +179,19 @@ namespace JSS_Services.Implement
                     throw new KeyNotFoundException("Account not found");
                 }
 
-                account.FullName = updateProfileDto.FullName;
-                account.Dob = updateProfileDto.Dob;
-                account.Address = updateProfileDto.Address;
-                account.ImgUrl = updateProfileDto.ImgUrl;
+                account.FullName = !string.IsNullOrEmpty(updateProfileDto.FullName) ? updateProfileDto.FullName : account.FullName;
+                account.Dob = updateProfileDto.Dob != default ? updateProfileDto.Dob : account.Dob;
+                account.Address = !string.IsNullOrEmpty(updateProfileDto.Address) ? updateProfileDto.Address : account.Address;
+
+                if (imageStream != null)
+                {
+                    var imageUrl = await UploadImageToFirebase(imageStream, imageName);
+                    account.ImgUrl = imageUrl;
+                }
+                //else if (imageStream == null)
+                //{
+                //    account.ImgUrl = account.ImgUrl;
+                //}
                 account.UpsDate = DateTime.UtcNow;
 
                 accountProfile.UpdateAsync(account);
@@ -172,9 +209,58 @@ namespace JSS_Services.Implement
             var accountRepository = _unitOfWork.GetRepository<Account>();
             var accounts = await accountRepository.GetListAsync(
                 predicate: x => x.FullName.Contains(name),
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate)
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate)
             );
             return accounts;
+        }
+
+        private async Task<string> UploadImageToFirebase(Stream imageStream, string imageName)
+        {
+            var storage = new FirebaseStorage(_bucket);
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageName);
+
+            var uploadTask = storage
+                .Child("uploads")
+                .Child(uniqueFileName)
+                .PutAsync(imageStream);
+
+            return await uploadTask;
+        }
+
+        public async Task<Account> UpdateDeflagAccountAsync(Guid id, Account account)
+        {
+            try
+            {
+                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var _account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
+
+                if (_account == null)
+                {
+                    return null;
+                }
+
+                _account.FullName = _account.FullName;
+                _account.Phone = _account.Phone;
+                _account.Dob = _account.Dob;
+                _account.Password = _account.Password;
+                _account.Address = _account.Address;
+                _account.Deflag = account.Deflag != default ? account.Deflag : _account.Deflag;
+                _account.RoleId = _account.RoleId;
+                _account.ImgUrl = _account.ImgUrl;
+                account.UpsDate = DateTime.UtcNow;
+
+                accountRepository.UpdateAsync(_account);
+                await _unitOfWork.CommitAsync();
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful) return null;
+
+                return _account;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating account");
+                throw;
+            }
         }
     }
 }
