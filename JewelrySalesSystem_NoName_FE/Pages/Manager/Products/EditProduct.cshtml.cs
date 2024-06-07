@@ -107,7 +107,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 {
                     ProductName = Product.ProductName,
                     Description = Product.Description,
-                    TotalPrice = Product.TotalPrice,
+                    SellingPrice = Product.SellingPrice,
                     Size = Product.Size,
                     ImportPrice = Product.ImportPrice,
                     Deflag = Product.Deflag,
@@ -117,6 +117,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     MaterialId = Product.MaterialId,
                     Code = Product.Code,
                     ImgProduct = Product.ImgProduct,
+                    Tax = Product.Tax
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);

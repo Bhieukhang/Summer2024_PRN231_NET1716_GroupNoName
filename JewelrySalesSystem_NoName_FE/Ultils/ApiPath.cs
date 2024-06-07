@@ -58,5 +58,7 @@
 
         //ConditionWarranty
         public const string ConditionWarrantyList = url + "/api/v1/condition";
+        //GoldRate
+        public const string GoldRateList = url + "/api/v1/GoldRate";
     }
 }

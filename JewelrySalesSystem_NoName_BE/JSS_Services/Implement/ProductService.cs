@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
@@ -18,7 +18,9 @@ namespace JSS_Services.Implement
     public class ProductService : BaseService<ProductService>, IProductService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
-        public ProductService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<ProductService> logger) : base(unitOfWork, logger)
+
+        public ProductService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<ProductService> logger)
+            : base(unitOfWork, logger)
         {
         }
 
@@ -31,6 +33,7 @@ namespace JSS_Services.Implement
         {
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
         }
+
         public async Task<Product> GetProductByCodeAsync(string code)
         {
             try
@@ -49,6 +52,13 @@ namespace JSS_Services.Implement
         {
             try
             {
+                var goldRate = await _unitOfWork.GetRepository<GoldRate>().FirstOrDefaultAsync(orderBy: g => g.OrderByDescending(s => s.UpsDate));
+
+                if (goldRate == null)
+                {
+                    throw new InvalidOperationException("Current gold rate is not available.");
+                }
+
                 var imageUrl = await UploadImageToFirebase(imageStream, imageName);
                 if (string.IsNullOrEmpty(imageUrl))
                 {
@@ -59,7 +69,12 @@ namespace JSS_Services.Implement
                 newData.ImgProduct = imageUrl;
                 newData.InsDate = DateTime.Now;
 
-                newData.SellingPrice = newData.CalculateSellingPrice();
+                if (!newData.Tax.HasValue)
+                {
+                    newData.Tax = newData.ImportPrice * 0.1;
+                }
+
+                newData.SellingPrice = CalculateSellingPrice(newData, goldRate.Rate);
 
                 await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -93,9 +108,23 @@ namespace JSS_Services.Implement
                 existingProduct.Code = updatedData.Code ?? existingProduct.Code;
                 existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
                 existingProduct.MaterialId = updatedData.MaterialId ?? existingProduct.MaterialId;
-                existingProduct.Tax = updatedData.Tax != default ? updatedData.Tax : existingProduct.Tax;
 
-                existingProduct.SellingPrice = existingProduct.CalculateSellingPrice();
+                if (!updatedData.Tax.HasValue)
+                {
+                    existingProduct.Tax = existingProduct.ImportPrice * 0.1;
+                }
+                else
+                {
+                    existingProduct.Tax = updatedData.Tax;
+                }
+
+                var goldRate = await _unitOfWork.GetRepository<GoldRate>().FirstOrDefaultAsync(orderBy: g => g.OrderByDescending(s => s.UpsDate));
+                if (goldRate == null)
+                {
+                    throw new InvalidOperationException("Current gold rate is not available.");
+                }
+
+                existingProduct.SellingPrice = CalculateSellingPrice(existingProduct, goldRate.Rate);
 
                 if (imageStream != null)
                 {
@@ -143,9 +172,8 @@ namespace JSS_Services.Implement
             }
             catch (Exception ex)
             {
-                // Log the exception
                 _logger.LogError(ex, "An error occurred while deleting the product.");
-                throw; // Re-throw the exception to see the full details
+                throw;
             }
         }
 
@@ -162,7 +190,6 @@ namespace JSS_Services.Implement
             return await uploadTask;
         }
 
-        //Check promotion for each product by Code 
         public async Task<ProductMapPromotion> GetPromotionByProductCode(string productCode)
         {
             ProductMapPromotion promotionMapProduct = new ProductMapPromotion();
@@ -174,7 +201,8 @@ namespace JSS_Services.Implement
             {
                 return promotionMapProduct;
             }
-            ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct,productItem.ProductName, productItem.Description,
+
+            ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
@@ -197,6 +225,11 @@ namespace JSS_Services.Implement
                 }
             }
             return promotionMapProduct;
+        }
+
+        private double? CalculateSellingPrice(Product product, double? goldRate)
+        {
+            return (product.ImportPrice ?? 0) * goldRate + (product.ProcessPrice ?? 0) + (product.Tax ?? 0);
         }
     }
 }

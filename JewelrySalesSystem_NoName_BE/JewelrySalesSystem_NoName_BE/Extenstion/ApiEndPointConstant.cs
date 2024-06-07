@@ -121,7 +121,6 @@
         public static class GoldRate
         {
             public const string GoldRateEndpoint = ApiEndpoint + "/GoldRate";
-            public const string GoldRateByIdEndpoint = GoldRateEndpoint + "/id";
         }
     }
 }

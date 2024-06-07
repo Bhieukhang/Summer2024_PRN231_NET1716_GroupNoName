@@ -10,7 +10,5 @@ public partial class CategoryDTO
 
     public string? Name { get; set; }
 
-    public double? PricePressure { get; set; }
-
     public virtual ICollection<ProductDTO> Products { get; } = new List<ProductDTO>();
 }
