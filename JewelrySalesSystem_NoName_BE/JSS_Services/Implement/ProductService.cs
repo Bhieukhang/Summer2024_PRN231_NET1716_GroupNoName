@@ -1,5 +1,7 @@
 ﻿using Firebase.Storage;
 using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Request;
+using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
@@ -158,6 +160,43 @@ namespace JSS_Services.Implement
                 .PutAsync(imageStream);
 
             return await uploadTask;
+        }
+
+        //Check promotion for each product by Code 
+        public async Task<ProductMapPromotion> GetPromotionByProductCode(string productCode)
+        {
+            ProductMapPromotion promotionMapProduct = new ProductMapPromotion();
+
+            var productItem = await _unitOfWork.GetRepository<Product>()
+                                               .FirstOrDefaultAsync(p => p.Code == productCode,
+                                                                    include: p => p.Include(p => p.ProductConditionGroups));
+            if (productItem == null)
+            {
+                return promotionMapProduct;
+            }
+            ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct,productItem.ProductName, productItem.Description,
+                                                           productItem.Size, productItem.TotalPrice, productItem.Quantity,
+                                                           productItem.CategoryId, productItem.ProductMaterialId, productItem.Code,
+                                                           productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
+                                                           productItem.Deflag);
+            promotionMapProduct.Product = productResponse;
+            List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
+
+            foreach (var conditionGroup in listProductMapPromotion)
+            {
+                if (conditionGroup != null)
+                {
+                    var promotionItem = await _unitOfWork.GetRepository<Promotion>()
+                                                         .FirstOrDefaultAsync(p => p.Id == conditionGroup.PromotionId &&
+                                                                                   p.StartDate < DateTime.Now &&
+                                                                                   p.EndDate > DateTime.Now);
+                    if (promotionItem != null)
+                    {
+                        promotionMapProduct.Promotions.Add(promotionItem);
+                    }
+                }
+            }
+            return promotionMapProduct;
         }
     }
 }

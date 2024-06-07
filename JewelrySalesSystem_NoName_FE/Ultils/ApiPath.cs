@@ -50,7 +50,7 @@
         //Order
         public const string OrderCreate = url + "/api/v1/order";
         public const string OrderByID = url + "/api/v1/order";
-
+        public const string OrderCheckPromotion = url + "/api/v1/check";
 
         //Warranty
         public const string WarrantyList = url + "/api/v1/warranty";

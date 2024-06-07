@@ -5,12 +5,14 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -246,23 +248,31 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [Authorize(Roles = "Manager")]
-        [HttpDelete(ApiEndPointConstant.Product.ProductByIdEndpoint)]
+        [HttpDelete(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<IActionResult> DeleteProductAsync(Guid id)
         {
-            try
+            var result = await _productService.DeleteProductAsync(id);
+            if (!result)
             {
-                var result = await _productService.DeleteProductAsync(id);
-                if (!result)
-                {
-                    return NotFound();
-                }
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { StatusCode = 500, Error = ex.Message, TimeStamp = DateTime.UtcNow });
-            }
+            return NoContent();
         }
 
+        #region ListPromotionFromProductCode
+        /// <summary>
+        /// Search product code by product code to get list promotion
+        /// </summary>
+        /// <param name="productCode">The Product code of Product.</param>
+        /// <returns>Product item and list promotion mapping product.</returns>
+        /// POST : api/Product
+        #endregion
+        [HttpGet((ApiEndPointConstant.Product.ProductByCodePromotionEndpoint))]
+        public async Task<IActionResult> ListPromotionFromProductCode(String productCode)
+        {
+            var listPromotion = await _productService.GetPromotionByProductCode(productCode);
+            var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }

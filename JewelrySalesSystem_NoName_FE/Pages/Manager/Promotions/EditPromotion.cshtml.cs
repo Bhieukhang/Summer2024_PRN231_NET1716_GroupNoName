@@ -8,6 +8,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 {
     public class EditPromotionModel : PageModel
     {
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public EditPromotionModel(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         [BindProperty]
         public EditPromotionRequest EditPromotionRequest { get; set; } = new();
 

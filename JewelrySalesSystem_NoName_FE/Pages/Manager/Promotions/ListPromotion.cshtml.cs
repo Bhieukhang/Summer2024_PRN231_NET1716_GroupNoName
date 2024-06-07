@@ -11,12 +11,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
     [Authorize(Roles = "Manager")]
     public class ListPromotionModel : PageModel
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ListPromotionModel(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
+        public ListPromotionModel(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
-            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
 

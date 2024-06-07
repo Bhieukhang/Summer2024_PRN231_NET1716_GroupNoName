@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _service;
@@ -28,7 +28,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Order item in stall.</returns>
         // POST: api/v1/order
         #endregion
-        [Authorize(Roles = "Staff")]
+        //[Authorize(Roles = "Staff")]
         [HttpPost(ApiEndPointConstant.Order.OrderEndpoint)]
         public async Task<ActionResult> PostOrder([FromBody] OrderRequest orderData)
         {
