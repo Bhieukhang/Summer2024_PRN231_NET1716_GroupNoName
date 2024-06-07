@@ -16,8 +16,14 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             _goldRateService = goldRateService;
         }
-
-        [HttpGet("latest")]
+        #region GetLatestGoldRate
+        /// <summary>
+        /// Get Latest Gold Rate.
+        /// </summary>
+        /// <returns>List of Gold Rate.</returns>
+        /// GET : api/GoldRate
+        #endregion
+        [HttpGet((ApiEndPointConstant.GoldRate.GoldRateEndpoint))]
         public async Task<ActionResult<GoldRate>> GetLatestGoldRate()
         {
             var rate = await _goldRateService.GetLatestGoldRateAsync();
@@ -37,6 +43,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="newRate">The updated gold rate data.</param>
         /// <returns>The updated gold rate.</returns>
         /// PUT : api/GoldRate/id
+        #endregion
         [HttpPost((ApiEndPointConstant.GoldRate.GoldRateByIdEndpoint))]
         public async Task<ActionResult<GoldRate>> UpdateGoldRate([FromBody] double newRate)
         {

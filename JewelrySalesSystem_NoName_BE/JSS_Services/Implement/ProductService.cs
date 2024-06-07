@@ -175,10 +175,10 @@ namespace JSS_Services.Implement
                 return promotionMapProduct;
             }
             ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct,productItem.ProductName, productItem.Description,
-                                                           productItem.Size, productItem.TotalPrice, productItem.Quantity,
-                                                           productItem.CategoryId, productItem.ProductMaterialId, productItem.Code,
+                                                           productItem.Size, productItem.SellingPrice, productItem.Quantity,
+                                                           productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag);
+                                                           productItem.Deflag, productItem.Tax);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 
