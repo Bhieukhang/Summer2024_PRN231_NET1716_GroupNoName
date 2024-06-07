@@ -9,20 +9,15 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class CategoryResponse
     {
-        public CategoryResponse(Guid id, string? name, string? type, double? pricePressure)
+        public CategoryResponse(Guid id, string? name, double? pricePressure)
         {
             Id = id;
             Name = name;   
-            Type = type;
             PricePressure = pricePressure;
         }
         public Guid Id { get; set; }
 
         public string? Name { get; set; }
-
-        public string? Type { get; set; }
-
-        public string? Description { get; set; }
 
         public double? PricePressure { get; set; }
 

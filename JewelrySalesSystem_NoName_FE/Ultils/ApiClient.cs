@@ -5,6 +5,24 @@ namespace JewelrySalesSystem_NoName_FE.Ultils
 {
     public static class ApiClient
     {
+        public static async Task<T> GetAsync<T>(string apiUrl, string token)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetAsync(apiUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(jsonResponse);
+            }
+            else
+            {
+                throw new Exception($"Failed to call API. Status code: {response.StatusCode}");
+            }
+        }
+
         public static async Task<T> GetAsync<T>(string apiUrl)
         {
             var client = new HttpClient();

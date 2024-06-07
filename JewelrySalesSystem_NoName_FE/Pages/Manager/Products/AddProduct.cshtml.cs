@@ -27,28 +27,55 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             _bucket = _configuration["Firebase:Bucket"];
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var categoryApiUrl = $"{ApiPath.CategoryList}";
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.GetStringAsync(categoryApiUrl);
-            CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(response);
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var categoryApiUrl = $"{ApiPath.CategoryList}";
+                var response = await client.GetAsync(categoryApiUrl);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await response.Content.ReadAsStringAsync());
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    await OnGetAsync();
-            //    return Page();
-            //}
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
 
-            var apiUrl = $"{ApiPath.ProductList}";
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
@@ -56,7 +83,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     return Page();
                 }
 
-                // Upload image to Firebase and get URL
                 if (Image != null)
                 {
                     var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(Image.FileName);
@@ -64,33 +90,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     using (var stream = new MemoryStream())
                     {
                         Image.CopyTo(stream);
-                        stream.Seek(0, SeekOrigin.Begin); // Reset stream position to the beginning
+                        stream.Seek(0, SeekOrigin.Begin);
                         var uploadTask = storage.Child("uploads").Child(uniqueFileName).PutAsync(stream);
-                        Product.ImgProduct = await uploadTask; // Get URL from Firebase
-                    }
+                        Product.ImgProduct = await uploadTask;
 
-                    // Convert image to base64 string
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        Image.CopyTo(memoryStream);
-                        Product.ImgProduct = Convert.ToBase64String(memoryStream.ToArray());
+                        stream.Seek(0, SeekOrigin.Begin);
+                        Product.ImgProduct = Convert.ToBase64String(stream.ToArray());
                     }
                 }
+
                 Product.Id = Guid.NewGuid();
                 Product.InsDate = DateTime.Now;
                 Product.Deflag = true;
 
-                var categoryApiUrl = $"{ApiPath.CategoryList}/id?id={Product.CategoryId}";
-                var categoryResponse = await client.GetStringAsync(categoryApiUrl);
-                var category = JsonConvert.DeserializeObject<CategoryDTO>(categoryResponse);
-
-                if (category == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Category not found.");
-                    return Page();
-                }
-
-                // Map ProductDTO to ProductRequest
                 var productRequest = new ProductRequest
                 {
                     ProductName = Product.ProductName,
@@ -103,21 +115,26 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     CategoryId = Product.CategoryId,
                     Quantity = Product.Quantity,
                     ProcessPrice = Product.ProcessPrice,
-                    ProductMaterialId = Product.ProductMaterialId,
+                    MaterialId = Product.MaterialId,
                     Code = Product.Code,
-                    ImgProduct = Product.ImgProduct, // base64 string
-                    Category = category,
+                    ImgProduct = Product.ImgProduct,
                 };
 
-                // Serialize ProductRequest to JSON
                 var json = JsonConvert.SerializeObject(productRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
+                var apiUrl = $"{ApiPath.ProductList}";
                 var response = await client.PostAsync(apiUrl, content);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Jewelry is added successfully !";
+                    TempData["SuccessMessage"] = "The Jewelry is added successfully!";
                     return RedirectToPage("./ListProduct");
                 }
                 else

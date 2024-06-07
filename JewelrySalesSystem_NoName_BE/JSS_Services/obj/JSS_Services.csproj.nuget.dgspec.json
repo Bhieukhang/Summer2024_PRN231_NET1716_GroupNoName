@@ -10,14 +10,22 @@
         "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
         "projectName": "JSS_BusinessObjects",
         "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
+<<<<<<< HEAD
         "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+=======
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -95,7 +103,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205\\RuntimeIdentifierGraph.json"
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         }
       }
     },
@@ -105,14 +117,22 @@
         "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
         "projectName": "JSS_DataAccessObjects",
         "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
+<<<<<<< HEAD
         "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+=======
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -164,7 +184,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205\\RuntimeIdentifierGraph.json"
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         }
       }
     },
@@ -174,14 +198,22 @@
         "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
         "projectName": "JSS_Repositories",
         "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
+<<<<<<< HEAD
         "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+=======
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -236,7 +268,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205\\RuntimeIdentifierGraph.json"
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         }
       }
     },
@@ -246,14 +282,22 @@
         "projectUniqueName": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
         "projectName": "JSS_Services",
         "projectPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\JSS_Services.csproj",
+<<<<<<< HEAD
         "packagesPath": "C:\\Users\\THUAN\\.nuget\\packages\\",
+=======
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         "outputPath": "D:\\PrjGit\\Summer2024_PRN231_NET1716_GroupNoName\\JewelrySalesSystem_NoName_BE\\JSS_Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\THUAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -318,7 +362,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205\\RuntimeIdentifierGraph.json"
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
         }
       }
     }

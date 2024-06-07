@@ -19,9 +19,5 @@ namespace JSS_BusinessObjects.Payload.Response
         public string? MaterialName { get; set; }
 
         public DateTime? InsDate { get; set; }
-
-        public Guid ProductMaterialId { get; set; }
-
-        public virtual ICollection<ProductMaterial> ProductMaterials { get; } = new List<ProductMaterial>();
     }
 }

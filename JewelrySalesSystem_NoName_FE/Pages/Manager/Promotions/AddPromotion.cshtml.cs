@@ -12,7 +12,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         public AddPromotionRequest AddPromotionRequest { get; set; } = new();
 
         [BindProperty]
-        public string? ErrorMessage { get; set; } 
+        public string? ErrorMessage { get; set; }
 
         public IActionResult OnGet()
         {
@@ -25,9 +25,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
             try
             {
                 if (AddPromotionRequest == null) throw new Exception("Promotion data is invalid.");
-                var token = HttpContext.Session.GetString("Token");
+                var token = HttpContext.Session.GetString("Token") ?? "";
 
-                var response = await ApiClient.PostAsync<ApiResponse>($"{ApiPath.Promotion}", AddPromotionRequest, token ?? "");
+                var response = await ApiClient.PostAsync<ApiResponse>($"{ApiPath.Promotion}", AddPromotionRequest, token);
                 if (!response.Success) throw new Exception(response.Message);
 
                 return RedirectToPage("ListPromotion");

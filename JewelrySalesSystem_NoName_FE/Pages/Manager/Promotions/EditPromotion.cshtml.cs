@@ -15,7 +15,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         {
             try
             {
-                EditPromotionRequest = await ApiClient.GetAsync<EditPromotionRequest>($"{ApiPath.Promotion}/id?id={promotionId}");
+                var token = HttpContext.Session.GetString("Token") ?? "";
+                EditPromotionRequest = await ApiClient.GetAsync<EditPromotionRequest>($"{ApiPath.Promotion}/id?id={promotionId}", token);
                 if (EditPromotionRequest == null) throw new Exception("Cannot found promotion with id = " + promotionId);
             }
             catch (Exception ex)
@@ -30,9 +31,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
             try
             {
                 if (EditPromotionRequest == null) throw new Exception("Promotion data is invalid.");
-                var token = HttpContext.Session.GetString("Token");
+                var token = HttpContext.Session.GetString("Token") ?? "";
 
-                var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token ?? "");
+                var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token);
                 if (!response.Success) throw new Exception(response.Message);
 
                 return RedirectToPage("ListPromotion");

@@ -92,8 +92,39 @@
                 </a>
             </li>
         }
+<<<<<<< HEAD
 
         @* Staff feature *@
+=======
+        @if (userRole == "Admin" || userRole == "Manager" || userRole == "Staff")
+        {
+            <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
+               aria-controls="ui-basicc">
+                <span class="menu-title">Quản lí sản phẩm</span>
+                <i class="menu-arrow"></i>
+                <i class="fa fa-cubes menu-icon"></i>
+            </a>
+            <div class="collapse" id="ui-basicc">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Products/ListProduct">Trang Sức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Categories/ListCategories">Loại</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu Sản Phẩm</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        }
+        
+>>>>>>> abb9febe3cf6838fd7f49e0acbc0803922392c90
 
         @if (userRole == "Staff")
         {
@@ -148,13 +179,18 @@
             </div>
         </li>*@
 
-
-        @* <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+        <li class="nav-item">
+            <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
+                <span class="menu-title">Khuyến mãi</span>
+                <i class="fa fa-tags menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
                 <span class="menu-title">Thanh toán</span>
                 <i class="fa fa-money menu-icon"></i>
             </a>
-        </li> *@
+        </li> 
         
     </ul>
 </nav>
