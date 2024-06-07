@@ -54,6 +54,7 @@
             public const string ProductEndpoint = ApiEndpoint + "/Product";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
+            public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
         }
 
         public static class Promotion
@@ -115,6 +116,12 @@
         {
             public const string ConditionWarrantyEndpoint = ApiEndpoint + "/condition";
             public const string ConditionWarrantyByIdEndpoint = ConditionWarrantyEndpoint + "/{id}";
+        }
+
+        public static class GoldRate
+        {
+            public const string GoldRateEndpoint = ApiEndpoint + "/GoldRate";
+            public const string GoldRateByIdEndpoint = GoldRateEndpoint + "/id";
         }
     }
 }

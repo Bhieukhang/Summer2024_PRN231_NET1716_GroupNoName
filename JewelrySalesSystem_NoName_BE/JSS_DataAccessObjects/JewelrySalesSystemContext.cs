@@ -26,6 +26,8 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Discount> Discounts { get; set; }
 
+    public virtual DbSet<GoldRate> GoldRates { get; set; }
+
     public virtual DbSet<Material> Materials { get; set; }
 
     public virtual DbSet<Membership> Memberships { get; set; }
@@ -49,7 +51,7 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<Warranty> Warranties { get; set; }
-        
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -122,6 +124,14 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.HasOne(d => d.Membership).WithMany(p => p.Discounts)
                 .HasForeignKey(d => d.MembershipId)
                 .HasConstraintName("FK_Discount_Membership");
+        });
+
+        modelBuilder.Entity<GoldRate>(entity =>
+        {
+            entity.ToTable("GoldRate");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.UpsDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Material>(entity =>

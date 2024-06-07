@@ -9,6 +9,5 @@ namespace JSS_BusinessObjects.Payload.Request
     public class CategoryRequest
     {
         public string? Name { get; set; }
-        public double? PricePressure { get; set; }
     }
 }

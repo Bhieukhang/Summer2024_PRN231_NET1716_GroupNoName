@@ -57,6 +57,8 @@ namespace JSS_Services.Implement
                 newData.ImgProduct = imageUrl;
                 newData.InsDate = DateTime.Now;
 
+                newData.SellingPrice = newData.CalculateSellingPrice();
+
                 await _unitOfWork.GetRepository<Product>().InsertAsync(newData);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
@@ -84,12 +86,14 @@ namespace JSS_Services.Implement
                 existingProduct.Description = updatedData.Description ?? existingProduct.Description;
                 existingProduct.ImportPrice = updatedData.ImportPrice != default ? updatedData.ImportPrice : existingProduct.ImportPrice;
                 existingProduct.Size = updatedData.Size != default ? updatedData.Size : existingProduct.Size;
-                existingProduct.TotalPrice = updatedData.TotalPrice != default ? updatedData.TotalPrice : existingProduct.TotalPrice;
                 existingProduct.Quantity = updatedData.Quantity != default ? updatedData.Quantity : existingProduct.Quantity;
                 existingProduct.ProcessPrice = updatedData.ProcessPrice != default ? updatedData.ProcessPrice : existingProduct.ProcessPrice;
                 existingProduct.Code = updatedData.Code ?? existingProduct.Code;
                 existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
                 existingProduct.MaterialId = updatedData.MaterialId ?? existingProduct.MaterialId;
+                existingProduct.Tax = updatedData.Tax != default ? updatedData.Tax : existingProduct.Tax;
+
+                existingProduct.SellingPrice = existingProduct.CalculateSellingPrice();
 
                 if (imageStream != null)
                 {

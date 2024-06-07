@@ -9,17 +9,14 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class CategoryResponse
     {
-        public CategoryResponse(Guid id, string? name, double? pricePressure)
+        public CategoryResponse(Guid id, string? name)
         {
             Id = id;
             Name = name;   
-            PricePressure = pricePressure;
         }
         public Guid Id { get; set; }
 
         public string? Name { get; set; }
-
-        public double? PricePressure { get; set; }
 
         public virtual ICollection<Product> Products { get; } = new List<Product>();
     }

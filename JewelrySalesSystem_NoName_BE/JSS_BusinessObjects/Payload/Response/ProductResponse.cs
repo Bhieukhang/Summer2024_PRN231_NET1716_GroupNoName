@@ -10,15 +10,15 @@ namespace JSS_BusinessObjects.Payload.Response
     public class ProductResponse
     {
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
-            double? totalPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
-            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag)
+            double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
+            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax)
         { 
             Id = id;
             ImgProduct = imgProduct;
             ProductName = productName;
             Description = description;
             Size = size;
-            TotalPrice = totalPrice;
+            SellingPrice = sellingPrice;
             Quantity = quantity;
             CategoryId = categoryId;
             MaterialId = materialId;
@@ -27,6 +27,7 @@ namespace JSS_BusinessObjects.Payload.Response
             InsDate = insDate;
             ProcessPrice = processPrice;
             Deflag = deflag;
+            Tax = tax;
         }
         public Guid Id { get; set; }
 
@@ -38,7 +39,7 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public double? Size { get; set; }
 
-        public double? TotalPrice { get; set; }
+        public double? SellingPrice { get; set; }
 
         public DateTime? InsDate { get; set; }
 
@@ -57,6 +58,7 @@ namespace JSS_BusinessObjects.Payload.Response
         public string? Code { get; set; }
 
         public string? ImgProduct { get; set; }
+        public double? Tax { get; set; }
 
         public virtual Category? Category { get; set; }
         public virtual Material? Material { get; set; }

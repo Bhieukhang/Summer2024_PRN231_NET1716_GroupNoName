@@ -84,8 +84,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 ImportPrice = product.ImportPrice,
                 InsDate = product.InsDate,
                 ProcessPrice = product.ProcessPrice,
-                TotalPrice = product.TotalPrice,
+                SellingPrice = product.SellingPrice,
                 Size = product.Size,
+                Tax = product.Tax,
                 Quantity = product.Quantity,
                 ImgProduct = product.ImgProduct,
                 CategoryId = product.CategoryId,
@@ -123,14 +124,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Description = productRequest.Description,
                 Deflag = productRequest.Deflag,
                 CategoryId = productRequest.CategoryId,
-                TotalPrice = productRequest.TotalPrice,
+                SellingPrice = productRequest.SellingPrice,
                 ProcessPrice = productRequest.ProcessPrice,
                 ImgProduct = productRequest.ImgProduct,
                 ImportPrice = productRequest.ImportPrice,
                 Size = productRequest.Size,
                 Quantity = productRequest.Quantity,
                 InsDate = productRequest.InsDate,
-                MaterialId = productRequest.MaterialId
+                MaterialId = productRequest.MaterialId,
+                Tax = productRequest.Tax
             };
 
             var createdProduct = await _productService.CreateProductAsync(product, stream, "uploadedFileName");
@@ -145,7 +147,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.ProductName,
                 createdProduct.Description,
                 createdProduct.Size,
-                createdProduct.TotalPrice,
+                createdProduct.SellingPrice,
                 createdProduct.Quantity,
                 createdProduct.CategoryId,
                 createdProduct.MaterialId,
@@ -153,7 +155,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.ImportPrice,
                 createdProduct.InsDate,
                 createdProduct.ProcessPrice,
-                createdProduct.Deflag
+                createdProduct.Deflag,
+                createdProduct.Tax
             ));
         }
 
@@ -197,7 +200,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Description = productRequest.Description,
                 Deflag = productRequest.Deflag,
                 CategoryId = productRequest.CategoryId,
-                TotalPrice = productRequest.TotalPrice,
+                SellingPrice = productRequest.SellingPrice,
                 ProcessPrice = productRequest.ProcessPrice,
                 ImgProduct = productRequest.ImgProduct,
                 ImportPrice = productRequest.ImportPrice,
@@ -205,7 +208,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Code = productRequest.Code,
                 Quantity = productRequest.Quantity,
                 InsDate = productRequest.InsDate,
-                MaterialId = productRequest.MaterialId
+                MaterialId = productRequest.MaterialId,
+                Tax = productRequest.Tax,
             };
 
             var updatedProduct = await _productService.UpdateProductAsync(id, product, stream, "uploadedFileName");
@@ -220,7 +224,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.ProductName,
                 updatedProduct.Description,
                 updatedProduct.Size,
-                updatedProduct.TotalPrice,
+                updatedProduct.SellingPrice,
                 updatedProduct.Quantity,
                 updatedProduct.CategoryId,
                 updatedProduct.MaterialId,
@@ -228,7 +232,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.ImportPrice,
                 updatedProduct.InsDate,
                 updatedProduct.ProcessPrice,
-                updatedProduct.Deflag
+                updatedProduct.Deflag,
+                updatedProduct.Tax
             ));
         }
 
