@@ -21,6 +21,7 @@
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
             </a>
         </li>
+        @* Admin feature *@
         @if (userRole == "Admin")
         {
             <li class="nav-item">
@@ -39,75 +40,62 @@
                 <div class="collapse" id="ui-basicd">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Manager/Account/ListAccount">Tất Cả Tài khoản</a>
+                            <a class="nav-link" href="~/Admin/Account/ListAccount">Tất Cả Tài khoản</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
+                            <a class="nav-link" href="~/Admin/Employee/ListEmployees">Danh Sách Nhân Viên</a>
                         </li>
-                        @* <li class="nav-item">
-                    <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
-                    </li> *@
                     </ul>
                 </div>
             </li>
         }
 
-        @if (userRole == "Admin" || userRole == "Manager")
+
+        @* Manager feature *@
+
+        @if (userRole == "Manager")
         {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Statics/Dashboard">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="mdi mdi-home menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Stall/ListStall">
                     <span class="menu-title">Nhân viên tại quầy</span>
                     <i class="mdi mdi-home menu-icon"></i>
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Memberships/ListMembership">
                     <span class="menu-title">Thành viên</span>
                     <i class="fa fa-users menu-icon"></i>
                 </a>
             </li>
-        }
 
-        @if (userRole == "Manager")
-        {
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Warranty/ListWarranty">
                     <span class="menu-title">Bảo hành</span>
                     <i class="fa fa-plus menu-icon"></i>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
+                    <span class="menu-title">Khuyến mãi</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
         }
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
-               aria-controls="ui-basic">
-                <span class="menu-title">Nhân viên</span>
-                <i class="menu-arrow"></i>
-                <i class="fa fa-users menu-icon"></i>
-            </a>
-            <div class="collapse" id="ui-basicd">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Account/ListAccount">Tất Cả Tài khoản</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pages/ui-features/dropdowns.html">Thêm</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pages/ui-features/typography.html">Thêm</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        
+        @* Staff feature *@
 
-        @if (userRole == "Staff" || userRole == "Manager")
+        @if (userRole == "Staff")
         {
             <li class="nav-item">
                 <a class="nav-link" href="~/Staff/Orders/CreateOrder">
@@ -123,12 +111,6 @@
             </li>
         }
 
-        @if (userRole == "Staff")
-        {
-            
-        }
-
-
 
         @* <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
@@ -137,7 +119,7 @@
         </a>
         </li> *@
 
-
+        @*
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                aria-controls="ui-basic">
@@ -158,13 +140,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="~/Staff/Orders/CreateOrder"> Đơn Hàng</a>
                     </li>
-
-                    @* <li class="nav-item">
+         
+                 <li class="nav-item">
                     <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
-                    </li> *@
+                    </li> 
                 </ul>
             </div>
-        </li>
+        </li>*@
 
 
         @* <li class="nav-item">

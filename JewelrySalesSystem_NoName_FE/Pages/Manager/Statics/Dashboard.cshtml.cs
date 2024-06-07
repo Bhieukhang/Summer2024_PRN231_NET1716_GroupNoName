@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Statics
 {
-    public class ListEmployeeModel : PageModel
+    public class DashboardModel : PageModel
     {
         public void OnGet()
         {

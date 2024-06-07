@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Manager")]
     public class ListEmployeesModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
