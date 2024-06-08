@@ -85,11 +85,11 @@
                 </div>
                 <div class="modal-body">
                     <form id="promotionForm">
-                        <!-- Danh sách khuyến mãi sẽ được thêm vào đây -->
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="confirmPromotionBtn">Xác nhận</button>
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
         $(document).ready(function () {
             let totalPrice = 0;
             let totalDiscount = 0;
-
+            let listPromotions = [];
             function updateTotalPrice() {
                 totalPrice = 0;
                 $('#productList .product-item').each(function () {
@@ -109,9 +109,10 @@
                     const quantity = parseInt($(this).find('.quantity-input').val());
                     totalPrice += price * quantity;
                 });
-                $('#totalPrice').text(totalPrice);
+                $('#totalPrice').text(totalPrice - totalDiscount + "đ");
             }
 
+            // Thêm sản phẩm
             $('#addProductBtn').click(function () {
                 var productCode = $('#productCode').val();
                 if (!productCode) {
@@ -125,40 +126,45 @@
                     data: { productCode: productCode },
                     success: function (data) {
                         console.log(data);
+                        listPromotions = data.promotions;
                         if (data && data.product) {
                             var productForm = `
-                                                                                        <div class="product-item card shadow-sm mb-3">
-                                                                                            <div class="card-body row">
-                                                                                                <div class="col-md-6">
-                                                                                                    <img src="${data.product.imgProduct}" class="img-fluid" alt="${data.product.productName}">
-                                                                                                </div>
-                                                                                                <div class="col-md-6">
-                                                                                                    <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
-                                                                                                        <i class="fa fa-times"></i>
-                                                                                                    </button>
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Mã sản phẩm</label>
-                                                                                                        <input type="text" class="form-control" value="${data.product.code}" readonly>
-                                                                                                    </div>
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Tên sản phẩm</label>
-                                                                                                        <input type="text" class="form-control" value="${data.product.productName}" readonly>
-                                                                                                    </div>
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Giá sản phẩm</label>
-                                                                                                        <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
-                                                                                                    </div>
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Số lượng</label>
-                                                                                                        <input type="number" class="form-control quantity-input" value="1" min="1">
-                                                                                                    </div>
-                                                                                                    <button type="button" class="btn btn-warning promotion-btn" data-product-id="${data.product.id}" style="float: right;">
-                                                                                                        Khuyến mãi
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    `;
+                                <div class="product-item card shadow-sm mb-3" data-product-code="${data.product.code}">
+                                    <div class="card-body row">
+                                        <div class="col-md-6">
+                                            <img src="${data.product.imgProduct}" class="img-fluid" alt="${data.product.productName}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                            <div class="form-group">
+                                                <label>Mã sản phẩm</label>
+                                                <input type="text" class="form-control" value="${data.product.code}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tên sản phẩm</label>
+                                                <input type="text" class="form-control" value="${data.product.productName}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Giá sản phẩm</label>
+                                                <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Số lượng</label>
+                                                <input type="number" class="form-control quantity-input" value="1" min="1">
+                                            </div>
+                                            <div class="promotion-info" style="display:none;">
+                                                <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
+                                            </div>
+                                                    <div class="form-group"></div>
+                                            <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
+                                                Khuyến mãi
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
                             $('#productList').append(productForm);
                             $('#productCode').val('');
                             // Cập nhật tổng tiền
@@ -187,38 +193,117 @@
                 updateTotalPrice();
             });
 
-            $('#productList').on('click', '.promotion-btn', function () {
-                var productId = $(this).data('product-id');
+            // Hàm cập nhật tổng tiền sau khi áp dụng khuyến mãi
+            function applyPromotion(promotionId, productCode) {
+                console.log("applyPromotion: ", promotionId);
+                var promotion = listPromotions.find(function (promo) {
+                    return promo.id === promotionId;
+                });
 
+                if (promotion) {
+                    console.log("Promotion found: ", promotion);
+                    // Tính toán tiền giảm giá cho sản phẩm
+                    var productItem = $('#productList .product-item').filter(function () {
+                        return $(this).data('product-code') === productCode;
+                    });
+
+                    if (productItem.length > 0) {
+                        var price = parseFloat(productItem.find('input[type="text"][readonly]').eq(2).val());
+                        var quantity = parseInt(productItem.find('.quantity-input').val());
+                        var discountAmount = price * (promotion.productQuantity) * (promotion.percentage / 100);
+
+                        // Cập nhật thông tin khuyến mãi cho sản phẩm
+                        productItem.find('.promotion-info').show().find('.promotion-amount').text(discountAmount + "đ");
+                        productItem.data('promotion-amount', discountAmount);
+
+                        // Tính tổng giảm giá
+                        totalDiscount = 0;
+                        $('#productList .product-item').each(function () {
+                            var discount = $(this).data('promotion-amount') || 0;
+                            totalDiscount += discount;
+                        });
+
+                        // Cập nhật tổng tiền
+                        $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
+                        updateTotalPrice();
+                    } else {
+                        console.log('Không tìm thấy sản phẩm với mã: ', productCode);
+                    }
+                } else {
+                    console.log('Khuyến mãi không tồn tại');
+                }
+            }
+
+            // Sự kiện khi chọn khuyến mãi
+            $('#promotionForm').on('change', 'input[name="promotion"]', function () {
+                var selectedPromotionId = $(this).val();
+                var productCode = $(this).closest('.product-item').data('product-code');
+                if (selectedPromotionId && productCode) {
+                    applyPromotion(selectedPromotionId, productCode);
+                } else {
+                    console.log("Không có khuyến mãi nào được chọn.", selectedPromotionId);
+                }
+            });
+
+            // Hàm gọi API và cập nhật modal khuyến mãi
+            function loadPromotions(productCode) {
+                console.log("Product Code: ", productCode);
                 $.ajax({
-                    url: '/Staff/Orders/AddOrder?handler=Promotions',
+                    url: '/Staff/Orders/AddOrder?handler=Product',
                     type: 'GET',
-                    data: { productId: productId },
+                    data: { productCode: productCode },
                     success: function (data) {
-                        console.log(data); // Kiểm tra dữ liệu phản hồi từ API
-                        if (data && data.promotions && data.promotions.length > 0) {
-                            var promotionList = '';
+                        if (data && data.promotions) {
+                            console.log("Data success: ", data.promotions[0].id);
+                            var promotionsHtml = '';
                             data.promotions.forEach(function (promotion) {
-                                promotionList += `
-                                                                                            <div class="form-check">
-                                                                                                <input class="form-check-input" type="radio" name="promotion" id="promotion${promotion.id}" value="${promotion.id}">
-                                                                                                <label class="form-check-label" for="promotion${promotion.id}">
-                                                                                                    ${promotion.description}
-                                                                                                </label>
-                                                                                            </div>
-                                                                                        `;
+                                promotionsHtml += `
+                                    <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
+                                        <div class="card-body row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                            </div>
+                                            <div class="col-md-10">
+                                                <label class="form-check-label ms-2">
+                                                    ${promotion.promotionName}</label>
+                                                <label class="form-check-label">Bắt đầu: ${promotion.startDate}</label>
+                                                <br>
+                                                <label class="form-check-label">Kết thúc: ${promotion.endDate}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
                             });
-                            $('#promotionForm').html(promotionList);
+                            $('#promotionForm').html(promotionsHtml);
                             $('#promotionModal').modal('show');
                         } else {
                             $('#promotionForm').html('<p>Không có khuyến mãi nào.</p>');
-                            $('#promotionModal').modal('show');
                         }
                     },
                     error: function () {
-                        alert('Không tìm thấy khuyến mãi');
+                        alert('Không thể tải khuyến mãi');
                     }
                 });
+            }
+
+            // Xác nhận khuyến mãi
+            $('#confirmPromotionBtn').click(function () {
+                // Lấy ID của promotion được chọn
+                var selectedPromotionId = $('input[name="promotion"]:checked').val();
+                var productCode = $('input[name="promotion"]:checked').closest('.product-item').data('product-code');
+                // Xử lý ID theo nhu cầu của bạn, ví dụ:
+                console.log("ID của promotion được chọn:", selectedPromotionId, "Product Code:", productCode);
+                if (selectedPromotionId && productCode) {
+                    applyPromotion(selectedPromotionId, productCode);
+                }
+                // Sau khi xử lý xong, đóng modal
+                $('#promotionModal').modal('hide');
+            });
+
+            // Sự kiện khi nhấn nút "Khuyến mãi"
+            $('#productList').on('click', '.promotion-btn', function () {
+                var productCode = $(this).data('product-code');
+                loadPromotions(productCode);
             });
 
             $('#createOrderBtn').click(function () {
@@ -246,74 +331,24 @@
                 });
 
                 $.ajax({
-                    url: '/Staff/Orders/AddOrder?handler=CreateOrder',
+                    url: '/Staff/Orders/AddOrder',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(orderDetails),
-                    success: function (response) {
-                        alert('Hóa đơn đã được tạo thành công');
-                        location.reload();
-                    },
-                    error: function () {
-                        alert('Không thể tạo hóa đơn');
-                    }
-                });
-            });
-
-            $(document).on('click', '.modal-footer .btn-secondary', function () {
-                $('#promotionModal').modal('hide');
-            });
-
-            // Nút "Tìm kiếm" thông tin khách hàng
-            $('#searchCustomerBtn').click(function () {
-                const customerPhone = $('#customerPhone').val();
-                if (!customerPhone) {
-                    alert('Vui lòng nhập số điện thoại');
-                    return;
-                }
-
-                $.ajax({
-                    url: '/Staff/Orders/AddOrder?handler=SearchCustomer',
-                    type: 'GET',
-                    data: { phone: customerPhone },
                     success: function (data) {
-                        if (data && data.customer) {
-                            $('#customerName').val(data.customer.name).prop('readonly', true);
-                            $('#createMemberBtn').hide();
-                        } else {
-                            $('#customerName').val('').prop('readonly', false);
-                            $('#createMemberBtn').show();
-                        }
+                        alert('Đơn hàng đã được tạo');
+                        $('#productList').empty();
+                        $('#customerPhone').val('');
+                        $('#customerName').val('');
+                        $('#totalPrice').text('');
+                        $('#totalDiscount').text('');
                     },
                     error: function () {
-                        alert('Không tìm thấy khách hàng');
-                    }
-                });
-            });
-
-            // Nút "Tạo thành viên mới"
-            $('#createMemberBtn').click(function () {
-                const customerPhone = $('#customerPhone').val();
-                const customerName = $('#customerName').val();
-                if (!customerPhone || !customerName) {
-                    alert('Vui lòng nhập thông tin khách hàng');
-                    return;
-                }
-
-                $.ajax({
-                    url: '/Staff/Orders/AddOrder?handler=CreateCustomer',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ phone: customerPhone, name: customerName }),
-                    success: function (response) {
-                        alert('Thành viên mới đã được tạo');
-                        $('#createMemberBtn').hide();
-                    },
-                    error: function () {
-                        alert('Không thể tạo thành viên mới');
+                        alert('Không thể tạo đơn hàng');
                     }
                 });
             });
         });
+
     </script>
 }
