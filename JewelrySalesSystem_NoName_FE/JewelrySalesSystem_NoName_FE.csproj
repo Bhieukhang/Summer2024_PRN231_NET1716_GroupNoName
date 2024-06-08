@@ -60,7 +60,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Admin\Account\" />
-    <Folder Include="DTOs\Material\" />
   </ItemGroup>
 
 </Project>

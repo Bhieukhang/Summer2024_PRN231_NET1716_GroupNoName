@@ -36,20 +36,38 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin khách hàng</h4>
-                            <div class="form-group">
+                            @if (TempData["Message"] != null)
+                            {
+                                <div class="alert alert-info @(TempData["ShowCreateMemberButton"] != null && (bool)TempData["ShowCreateMemberButton"] ? "alert-danger" : "alert-info")">
+                                    @TempData["Message"]
+                                </div>
+                            }
+                            <form method="post" asp-page-handler="SearchCustomer">
                                 <div class="form-group">
                                     <label>Số điện thoại</label>
-                                    <input type="text" id="customerPhone" class="form-control" placeholder="Nhập số điện thoại">
+                                    <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@TempData["Phone"]">
                                 </div>
                                 <div class="form-group">
                                     <label>Tên khách hàng</label>
-                                    <input type="text" id="customerName" class="form-control" placeholder="Nhập tên khách hàng">
+                                    <input type="text" id="customerName" name="name" class="form-control" placeholder="Nhập tên khách hàng" value="@TempData["Name"]">
                                 </div>
-                                <div style="text-align: right;">
-                                    <button id="searchCustomerBtn" class="btn btn-primary mt-0">Tìm kiếm</button>
-                                    <button id="createMemberBtn" class="btn btn-secondary mt-0" style="display:none;">Tạo thành viên mới</button>
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+                                        @if (TempData["ShowCreateMemberButton"] != null && (bool)TempData["ShowCreateMemberButton"])
+                                        {
+                                            <button type="button" id="createMemberBtn" class="btn btn-secondary mt-0 btn-block text-center"
+                                                    onclick="location.href='/NewAccountPage?phone=@TempData["Phone"]&name=@TempData["Name"]'">
+                                                Tạo thành viên mới
+                                            </button>
+                                        }
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button type="submit" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center">Tìm kiếm</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+
+
 
                             <h4 class="card-title mt-4">Tổng tiền: <span id="totalPrice">0</span></h4>
                             <h4 class="card-title">Khuyến mãi giảm: <span id="totalDiscount">0</span></h4>
@@ -102,6 +120,8 @@
             let totalPrice = 0;
             let totalDiscount = 0;
             let listPromotions = [];
+
+            //Cập nhập tổng tiền
             function updateTotalPrice() {
                 totalPrice = 0;
                 $('#productList .product-item').each(function () {
@@ -129,42 +149,42 @@
                         listPromotions = data.promotions;
                         if (data && data.product) {
                             var productForm = `
-                                <div class="product-item card shadow-sm mb-3" data-product-code="${data.product.code}">
-                                    <div class="card-body row">
-                                        <div class="col-md-6">
-                                            <img src="${data.product.imgProduct}" class="img-fluid" alt="${data.product.productName}">
+                                        <div class="product-item card shadow-sm mb-3" data-product-code="${data.product.code}">
+                                            <div class="card-body row">
+                                                <div class="col-md-6">
+                                                    <img src="${data.product.imgProduct}" class="img-fluid" alt="${data.product.productName}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                    <div class="form-group">
+                                                        <label>Mã sản phẩm</label>
+                                                        <input type="text" class="form-control" value="${data.product.code}" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Tên sản phẩm</label>
+                                                        <input type="text" class="form-control" value="${data.product.productName}" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Giá sản phẩm</label>
+                                                        <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Số lượng</label>
+                                                        <input type="number" class="form-control quantity-input" value="1" min="1">
+                                                    </div>
+                                                    <div class="promotion-info" style="display:none;">
+                                                        <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
+                                                    </div>
+                                                            <div class="form-group"></div>
+                                                    <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
+                                                        Khuyến mãi
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                            <div class="form-group">
-                                                <label>Mã sản phẩm</label>
-                                                <input type="text" class="form-control" value="${data.product.code}" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Tên sản phẩm</label>
-                                                <input type="text" class="form-control" value="${data.product.productName}" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Giá sản phẩm</label>
-                                                <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Số lượng</label>
-                                                <input type="number" class="form-control quantity-input" value="1" min="1">
-                                            </div>
-                                            <div class="promotion-info" style="display:none;">
-                                                <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
-                                            </div>
-                                                    <div class="form-group"></div>
-                                            <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
-                                                Khuyến mãi
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                                    `;
                             $('#productList').append(productForm);
                             $('#productCode').val('');
                             // Cập nhật tổng tiền
@@ -179,11 +199,13 @@
                 });
             });
 
+            //Xóa sản phẩm
             $('#productList').on('click', '.remove-product-btn', function () {
                 $(this).closest('.product-item').remove();
                 updateTotalPrice();
             });
 
+            //Nhập số lượng sản phẩm
             $('#productList').on('input', '.quantity-input', function () {
                 var quantity = $(this).val();
                 if (quantity <= 0) {
@@ -258,21 +280,21 @@
                             var promotionsHtml = '';
                             data.promotions.forEach(function (promotion) {
                                 promotionsHtml += `
-                                    <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
-                                        <div class="card-body row">
-                                            <div class="col-md-2">
-                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                            <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
+                                                <div class="card-body row">
+                                                    <div class="col-md-2">
+                                                        <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <label class="form-check-label ms-2">
+                                                            ${promotion.promotionName}</label>
+                                                        <label class="form-check-label">Bắt đầu: ${promotion.startDate}</label>
+                                                        <br>
+                                                        <label class="form-check-label">Kết thúc: ${promotion.endDate}</label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-10">
-                                                <label class="form-check-label ms-2">
-                                                    ${promotion.promotionName}</label>
-                                                <label class="form-check-label">Bắt đầu: ${promotion.startDate}</label>
-                                                <br>
-                                                <label class="form-check-label">Kết thúc: ${promotion.endDate}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
+                                        `;
                             });
                             $('#promotionForm').html(promotionsHtml);
                             $('#promotionModal').modal('show');

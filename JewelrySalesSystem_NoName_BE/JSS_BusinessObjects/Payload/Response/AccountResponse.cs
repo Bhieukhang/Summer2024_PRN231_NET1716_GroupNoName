@@ -36,7 +36,22 @@ namespace JSS_BusinessObjects.Payload.Response
         public AccountResponse(Guid id, string? fullname, string phone, DateTime? dob, string password, string? address, string? imgUrl,
             string? status, bool? deflag, Guid roleId, DateTime? insDate, DateTime? upsDate)
         {
-            Id = id; FullName = fullname; Phone = phone; Dob = dob; Password = password; Address = address; ImgUrl= imgUrl; Status = status; Deflag = deflag; RoleId = roleId; InsDate = insDate; UpsDate = upsDate;       
+            Id = id; FullName = fullname; Phone = phone; Dob = dob; Password = password; Address = address; ImgUrl = imgUrl; Status = status; Deflag = deflag; RoleId = roleId; InsDate = insDate; UpsDate = upsDate;
         }
+    }
+
+    public class SearchAccountResponse
+    {
+        public SearchAccountResponse(Guid id, string? fullName, string phone)
+        {
+            Id = id;
+            FullName = fullName;
+            Phone = phone;
+        }
+        public Guid Id { get; set; }
+
+        public string? FullName { get; set; }
+
+        public string Phone { get; set; } = null!;
     }
 }

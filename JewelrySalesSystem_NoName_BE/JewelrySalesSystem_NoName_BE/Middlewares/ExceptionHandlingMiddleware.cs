@@ -1,53 +1,64 @@
 ﻿using JSS_BusinessObjects.Payload.Response;
+using JSS_BusinessObjects;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
-
-namespace JewelrySalesSysmte_NoName_BE;
+using System.Threading.Tasks;
 
 public class ExceptionHandlingMiddleware
 {
-	private readonly RequestDelegate _next;
-	private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-	public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
-	{
-		_next = next;
-		_logger = logger;
-	}
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-	public async Task InvokeAsync(HttpContext context)
-	{
-		try
-		{
-			await _next(context);
-		}
-		catch (Exception ex)
-		{
-			await HandleExceptionAsync(context, ex);
-		}
-	}
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
 
-	private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-	{
-		context.Response.ContentType = "application/json";
-		var response = context.Response;
+    public async Task Invoke(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (AppConstant.MessageError messageError)
+        {
+            _logger.LogError($"Error with status code: {messageError.Code}, Message: {messageError.Message}");
 
-		var errorResponse = new ErrorResponse() { TimeStamp = DateTime.UtcNow, Error = exception.Message };
-		switch (exception)
-		{
-			//add more custom exception
-			//For example case AppException: do something
-			case BadHttpRequestException:
-				response.StatusCode = (int)HttpStatusCode.BadRequest;
-				errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
-				_logger.LogInformation(exception.Message);
-				break;
-			default:
-				//unhandled error
-				response.StatusCode = (int) HttpStatusCode.InternalServerError;
-				errorResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-				_logger.LogError(exception.ToString());
-				break;
-		}
-		var result = errorResponse.ToString();
-		await context.Response.WriteAsync(result);
-	}
+            context.Response.StatusCode = messageError.Code;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsync(new ErrorResponse
+            {
+                StatusCode = messageError.Code,
+                Error = messageError.Message,
+                TimeStamp = DateTime.UtcNow
+            }.ToString());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Unexpected error: {ex}");
+
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsync(new ErrorResponse
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+                Error = "Internal Server Error",
+                TimeStamp = DateTime.UtcNow
+            }.ToString());
+        }
+    }
+}
+
+public static class ExceptionMiddlewareExtensions
+{
+    public static void ConfigureCustomExceptionHandler(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+    }
 }
