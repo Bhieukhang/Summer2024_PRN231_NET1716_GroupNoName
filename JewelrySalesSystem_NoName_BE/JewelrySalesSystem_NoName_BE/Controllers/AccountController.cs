@@ -10,6 +10,7 @@ using System.Security.Claims;
 using JSS_BusinessObjects.DTO;
 using Microsoft.AspNetCore.Authorization;
 using JSS_BusinessObjects.Payload.Request;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -328,6 +329,23 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Role = account.Role
             };
             return Ok(searchEmployee);
+        }
+
+        #region SearchMemberByPhone
+        /// <summary>
+        /// Search member by phne.
+        /// </summary>
+        /// <param name="phone">The phone to search for membership.</param>
+        /// <returns>Account of member.</returns>
+        // GET: api/Account/Search
+        #endregion
+        [HttpGet(ApiEndPointConstant.Account.SearchMemberEndpoint)]
+        [ProducesResponseType(typeof(SearchAccountResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SearchMemberByPhone(string phone)
+        {
+            var member = await _accountService.SearchMembership(phone);
+            var result = JsonConvert.SerializeObject(member, Formatting.Indented);
+            return Ok(result);
         }
     }
 }

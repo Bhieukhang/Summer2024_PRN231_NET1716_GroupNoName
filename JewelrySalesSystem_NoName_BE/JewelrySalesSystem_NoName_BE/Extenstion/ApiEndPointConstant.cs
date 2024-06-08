@@ -42,6 +42,7 @@
             public const string AccountProfileEndpoint = AccountEndpoint + "/Profile";
             public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
             public const string SearchAccountEndpoint = AccountEndpoint + "/name";
+            public const string SearchMemberEndpoint = ApiEndpoint + "/Account/search/member";
         }
 
         public static class Role

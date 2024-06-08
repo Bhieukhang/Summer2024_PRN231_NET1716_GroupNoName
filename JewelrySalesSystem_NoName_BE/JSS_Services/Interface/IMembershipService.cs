@@ -20,5 +20,6 @@ namespace JSS_Services.Interface
         public Task<int> GetTotalMembershipCountAsync();
         public Task<int> GetActiveMembershipCountAsync();
         public Task<int> GetUnavailableMembership();
+        public Task<SearchAccountResponse> CreateMembership(string phone, string name);
     }
 }
