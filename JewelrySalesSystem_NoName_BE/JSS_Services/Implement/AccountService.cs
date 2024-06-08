@@ -1,4 +1,6 @@
-﻿using JSS_BusinessObjects;
+﻿using Azure.Core;
+using FirebaseAdmin.Messaging;
+using JSS_BusinessObjects;
 using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
@@ -84,7 +86,7 @@ namespace JSS_Services.Implement
                 throw;
             }
         }
-       
+
         public async Task<Account> CreateAccountAsync(Account account)
         {
             Guid DefaultRoleId = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7");
@@ -176,5 +178,24 @@ namespace JSS_Services.Implement
             );
             return accounts;
         }
+
+        public async Task<SearchAccountResponse> SearchMembership(string phone)
+        {
+            var mem = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == phone,
+                                                                include: a => a.Include(a => a.Role));
+
+            if (mem == null)
+            {
+                throw new AppConstant.MessageError((int)AppConstant.ErrCode.Membership_Not_Found, AppConstant.ErrMessage.MembershipNotFound);
+            }
+
+            if (mem != null && mem.Role.RoleName != AppConstant.Role.Customer)
+            {
+                throw new AppConstant.MessageError((int)AppConstant.ErrCode.Success, AppConstant.ErrMessage.MembershipNotRegister);
+            }
+
+            return new SearchAccountResponse(mem.Id, mem.FullName, mem.Phone);
+        }
+
     }
 }

@@ -32,4 +32,11 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public DateTime? UpsDate { get; set; }
     }
+
+    public class AccountMembership
+    {
+        public string? FullName { get; set; }
+
+        public string Phone { get; set; } = null!;
+    }
 }

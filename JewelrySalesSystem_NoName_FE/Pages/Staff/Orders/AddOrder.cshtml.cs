@@ -1,87 +1,95 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Orders;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Account;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 {
     public class AddOrderModel : PageModel
     {
-        [BindProperty]
-        public OrderDTO Order { get; set; } = new OrderDTO();
+        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public void OnGet()
+        public AddOrderModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
-            // Initialize Order with default values if needed
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+            _httpClient = _httpClientFactory.CreateClient();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IList<Promotion> listPromotions { get; set; } = new List<Promotion>();
+
+        public async Task<JsonResult> OnGetProductAsync(string productCode)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
+            var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
+            var response = await _httpClient.GetStringAsync(apiUrl);
+            var product = JsonConvert.DeserializeObject<ProductResponse>(response);
+            listPromotions = product.Promotions.ToList();
+            return new JsonResult(product);
+        }
 
-            // Calculate totalPrice here if needed
-            Order.TotalPrice = CalculateTotalPrice(Order.Details);
+        public async Task<IActionResult> OnPostSearchCustomerAsync(string phone, string name)
+        {
+            var result = await SearchCustomerAsync(phone);
 
-            // Send Order to API backend
-            var apiResponse = await SendOrderToApiAsync(Order);
-
-            if (apiResponse.IsSuccessStatusCode)
+            if (result is SearchAccountDTO account)
             {
-                // Handle successful response
-                return RedirectToPage("OrderSuccess");
+                TempData["Message"] = "Đã đăng kí thành viên";
+                TempData["ShowCreateMemberButton"] = false;
+                TempData["Phone"] = phone;
+                TempData["Name"] = name;
+            }
+            else if (result is ErrorResponse errorResponse)
+            {
+                TempData["Message"] = "Cần đăng kí thành viên";
+                TempData["ShowCreateMemberButton"] = true;
+                TempData["Phone"] = phone;
+                TempData["Name"] = name;
+            }
+
+            return Page();
+        }
+
+
+        public async Task<object> SearchCustomerAsync(string phone)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var apiUrl = $"https://localhost:44318/api/v1/Account/search/member?phone={phone}";
+            var response = await client.GetAsync(apiUrl);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                var account = JsonConvert.DeserializeObject<SearchAccountDTO>(responseString);
+                return account;
             }
             else
             {
-                // Handle error response
-                ModelState.AddModelError(string.Empty, "Error sending order to backend.");
-                return Page();
+                var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseString);
+                return errorResponse;
             }
         }
 
-        private decimal CalculateTotalPrice(List<OrderDetailDTO> details)
+        public async Task<CreateAccountResponse> CreateAccountAsync(string phone, string name)
         {
-            decimal total = 0;
-            foreach (var detail in details)
-            {
-                total += detail.Amount * detail.Quantity;
-            }
-            return total;
+            var apiUrl = "https://localhost:44318/api/v1/membership";
+            var payload = new { phone, name };
+            var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(apiUrl, content);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<CreateAccountResponse>(responseString);
         }
-
-        private async Task<HttpResponseMessage> SendOrderToApiAsync(OrderDTO order)
-        {
-            using (var client = new HttpClient())
-            {
-                // Replace with your actual API endpoint
-                var apiUrl = "YOUR_API_ENDPOINT";
-                var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
-                return await client.PostAsync(apiUrl, jsonContent);
-            }
-        }
-    }
-    public class OrderDTO
-    {
-        public string CustomerId { get; set; }
-        public Guid PromotionId { get; set; }
-        public string DiscountId { get; set; }
-        public decimal TotalPrice { get; set; }
-        public decimal MaterialProcessPrice { get; set; }
-        public string? Type { get; set; }
-
-        public DateTime? InsDate { get; set; }
-        //public Guid Id { get; set; }
-        public List<OrderDetailDTO> Details { get; set; } = new List<OrderDetailDTO>();
-    }
-
-    public class OrderDetailDTO
-    {
-        public string ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal Amount { get; set; }
-        public int Quantity { get; set; }
     }
 }
