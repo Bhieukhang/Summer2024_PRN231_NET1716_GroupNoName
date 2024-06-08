@@ -9,7 +9,7 @@ namespace JSS_BusinessObjects.Payload.Request
 {
     public class OrderRequest
     {
-        public Guid CustomerId { get; set; }
+        public string CustomerPhone { get; set; }
 
         public Guid? PromotionId { get; set; }
 
