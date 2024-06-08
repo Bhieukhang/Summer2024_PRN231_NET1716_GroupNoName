@@ -43,7 +43,7 @@
         public const string ActiveAccount = url + "/api/v1/Account/Active-account";
 
         //emloyees
-        public const string EmployeesList = url + "/api/v1/AccountByRole";
+        public const string EmployeesList = url + "/api/v1/Account";
 
         //stall
         public const string StallList = url + "/api/v1/Stall";
@@ -60,5 +60,8 @@
         public const string ConditionWarrantyList = url + "/api/v1/condition";
         //GoldRate
         public const string GoldRateList = url + "/api/v1/GoldRate";
+
+        //Role
+        public const string RoleList = url + "/api/v1/Role";
     }
 }

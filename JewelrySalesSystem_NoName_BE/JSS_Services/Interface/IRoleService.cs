@@ -9,6 +9,7 @@ namespace JSS_Services.Interface
 {
     public interface IRoleService
     {
+        Task<IEnumerable<Role>> GetAllRolesAsync();
         Task<Role> GetRoleByIdAsync(Guid? id);
     }
 }

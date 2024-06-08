@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Role;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
+using Newtonsoft.Json.Linq;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
 {
@@ -24,8 +26,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
         }
 
         [BindProperty]
-        public string SearchCode { get; set; }
+        public string? SearchName { get; set; }
         public IList<AccountDAO> ListEmployees { get; set; } = new List<AccountDAO>();
+        public IList<RoleDAO> roleList { get; set; } = new List<RoleDAO>();
         public Guid RoleId { get; set; }
         public int Page { get; set; }
         public int Size { get; set; }
@@ -46,6 +49,74 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
                 return RedirectToPage("/Auth/Login");
             }
 
+            await LoadEmployeeListAsync(token, roleId, page, size);
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostSearchAsync()
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            //if (string.IsNullOrEmpty(SearchName))
+            //{
+            //    await LoadEmployeeListAsync();
+            //    return Page();
+            //}
+
+            if (string.IsNullOrEmpty(SearchName))
+            {
+                return RedirectToPage("/Admin/Employee/ListEmployees");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var apiUrl = $"{ApiPath.EmployeesList}/name?name={SearchName}";
+                var response = await client.GetAsync(apiUrl);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var employee = JsonConvert.DeserializeObject<AccountDAO>(await response.Content.ReadAsStringAsync());
+                    ListEmployees = new List<AccountDAO> { employee };
+
+                    var roleResponse = await client.GetAsync(ApiPath.RoleList);
+                    if (roleResponse.IsSuccessStatusCode)
+                    {
+                        roleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Employee not found.");
+                    await LoadEmployeeListAsync(token, new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae8"), Page, Size);
+                    return Page();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error: {ex.Message}";
+                await LoadEmployeeListAsync(token, new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae8"), Page, Size);
+                return Page();
+            }
+
+            return Page();
+        }
+
+        private async Task LoadEmployeeListAsync(string token, Guid? roleId, int? page, int? size)
+        {
             RoleId = roleId ?? new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae8");
             Page = page ?? 1;
             Size = size ?? 10;
@@ -66,6 +137,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
 
                 TotalAccountCount = await client.GetFromJsonAsync<int>(totalCountUrl);
                 ActiveAccountCount = await client.GetFromJsonAsync<int>(activeCountUrl);
+
+                var roleResponse = await client.GetAsync(ApiPath.RoleList);
+                if (roleResponse.IsSuccessStatusCode)
+                {
+                    roleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+                }
             }
             catch (Exception ex)
             {
@@ -74,10 +151,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Employee
                 TotalAccountCount = 0;
                 ActiveAccountCount = 0;
             }
-
-            return Page();
         }
-
-        
     }
 }

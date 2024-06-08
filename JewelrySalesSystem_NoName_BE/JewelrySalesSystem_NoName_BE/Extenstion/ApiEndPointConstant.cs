@@ -41,8 +41,15 @@
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
             public const string AccountProfileEndpoint = AccountEndpoint + "/Profile";
             public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
-            public const string SearchAccountEndpoint = ApiEndpoint + "/Account/search";
+            public const string SearchAccountEndpoint = AccountEndpoint + "/name";
         }
+
+        public static class Role
+        {
+            public const string RoleEndpoint = ApiEndpoint + "/Role";
+            public const string RoleByIdEndpoint = RoleEndpoint + "/id";
+        }
+
         public static class Category
         {
             public const string CategoryEndpoint = ApiEndpoint + "/Category";

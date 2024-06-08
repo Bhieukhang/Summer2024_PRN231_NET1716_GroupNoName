@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -204,14 +205,26 @@ namespace JSS_Services.Implement
             }
         }
 
-        public async Task<IEnumerable<AccountResponse>> SearchAccountsByNameAsync(string name)
+        public async Task<Account> SearchAccountsByNameAsync(string name)
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
-            var accounts = await accountRepository.GetListAsync(
-                predicate: x => x.FullName.Contains(name),
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate)
-            );
-            return accounts;
+            try
+            {
+                //var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(p => p.FullName.Contains(name), include: s => s.Include(p => p.Role));
+                //return account;
+                if (string.IsNullOrEmpty(name))
+                {
+                    return await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(include: s => s.Include(p => p.Role));
+                }
+                else
+                {
+                    return await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(p => p.FullName.Contains(name), include: s => s.Include(p => p.Role));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the account by name.");
+                throw;
+            }
         }
 
         private async Task<string> UploadImageToFirebase(Stream imageStream, string imageName)

@@ -10,7 +10,6 @@ using System.Security.Claims;
 using JSS_BusinessObjects.DTO;
 using Microsoft.AspNetCore.Authorization;
 using JSS_BusinessObjects.Payload.Request;
-using JewelrySalesSystem_NoName_BE.Extenstion;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -304,13 +303,31 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts that match the search criteria.</returns>
         // GET: api/Account/Search
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet(ApiEndPointConstant.Account.SearchAccountEndpoint)]
-        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SearchAccountsAsync(string name)
+        //[ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Account>> SearchAccountsByNameAsync(string name)
         {
-            var accounts = await _accountService.SearchAccountsByNameAsync(name);
-            return Ok(accounts);
+            var account = await _accountService.SearchAccountsByNameAsync(name);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            var searchEmployee = new Account
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                Phone = account.Phone,
+                Dob = account.Dob,
+                Address = account.Address,
+                ImgUrl = account.ImgUrl,
+                Deflag = account.Deflag,
+                RoleId = account.RoleId,
+                InsDate = account.InsDate,
+                Role = account.Role
+            };
+            return Ok(searchEmployee);
         }
     }
 }

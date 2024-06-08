@@ -17,6 +17,11 @@ namespace JSS_Services.Implement
         {
         }
 
+        public async Task<IEnumerable<Role>> GetAllRolesAsync()
+        {
+            return await _unitOfWork.GetRepository<Role>().GetListAsync();
+        }
+
         public async Task<Role> GetRoleByIdAsync(Guid? id)
         {
             return await _unitOfWork.GetRepository<Role>().FirstOrDefaultAsync(a => a.Id == id);

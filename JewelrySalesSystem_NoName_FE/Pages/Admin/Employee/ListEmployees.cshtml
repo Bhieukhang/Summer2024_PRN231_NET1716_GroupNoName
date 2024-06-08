@@ -53,9 +53,19 @@
         </div>
 
 
-        @* <h4 class="card-title">Tìm Kiếm Nhân Viên</h4> *@
-        
-
+        <h4 class="card-title">Tìm Kiếm Nhân Viên</h4>
+        <form method="post" asp-page-handler="Search">
+            <br />
+            <div class="form-group">
+                <input type="text" id="searchName" name="SearchName" class="form-control" asp-for="SearchName" placeholder="Nhập tên của nhân viên cần tìm" />
+                <span asp-validation-for="SearchName" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-gradient-secondary btn-fw">
+                <i class="mdi mdi-magnify"></i>
+                Tìm Kiếm
+            </button>
+        </form>
+        </br>
         <div class="row">
             <div class="col-12 grid-margin">
                 <div class="card">
