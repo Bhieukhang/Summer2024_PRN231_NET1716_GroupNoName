@@ -5,6 +5,7 @@ using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -37,8 +38,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
                 var user = await _authService.GetAccountByPhone(loginRequest.Phone, loginRequest.Password);
                 var token = await _authService.LoginAsync(loginRequest.Phone, loginRequest.Password);
-
-                return Ok(new LoginResponse(token));
+                return Ok(JsonConvert.SerializeObject(new LoginResponse(token), Formatting.Indented));
             }
             catch (UnauthorizedAccessException ex)
             {

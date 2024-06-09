@@ -18,9 +18,18 @@ public static class AppConstant
             Message = message;
         }
     }
+    public class Role
+    {
+        public const string Admin = "Admin";
+        public const string Manager = "Manager";
+        public const string Staff = "Staff";
+        public const string Customer = "Customer";
+    }
     public enum ErrCode
     {
-        Internal_Server_Error = 500
+        Success = 200,
+        Internal_Server_Error = 500,
+        Membership_Not_Found = 404,
     }
     public class ErrMessage
     {
@@ -30,6 +39,8 @@ public static class AppConstant
         public const string Bad_Request = "The server could not understand the request due to invalid syntax.";
         public const string Unauthorized = "Unauthorized.";
         public const string PromotionIllegal = "Khuyến mãi không hợp lệ";
+        public const string MembershipNotFound = "Không tìm thấy thành viên này!";
+        public const string MembershipNotRegister = "Khách hàng chưa đăng kí tài khoản (đã có tài khoản khác)!";
     }
 }
 

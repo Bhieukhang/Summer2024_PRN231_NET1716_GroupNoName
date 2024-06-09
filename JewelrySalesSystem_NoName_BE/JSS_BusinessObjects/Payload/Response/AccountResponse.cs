@@ -39,4 +39,19 @@ namespace JSS_BusinessObjects.Payload.Response
             Id = id; FullName = fullname; Phone = phone; Dob = dob; Password = password; Address = address; ImgUrl= imgUrl; Status = status; Deflag = deflag; RoleId = roleId; InsDate = insDate;       
         }
     }
+
+    public class SearchAccountResponse
+    {
+        public SearchAccountResponse(Guid id, string? fullName, string phone)
+        {
+            Id = id;
+            FullName = fullName;
+            Phone = phone;
+        }
+        public Guid Id { get; set; }
+
+        public string? FullName { get; set; }
+
+        public string Phone { get; set; } = null!;
+    }
 }

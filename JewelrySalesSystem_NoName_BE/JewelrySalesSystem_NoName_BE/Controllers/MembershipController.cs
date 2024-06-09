@@ -1,4 +1,5 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -146,6 +147,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         public async Task<IActionResult> GetUnMembership()
         {
             var membership = await _service.GetUnavailableMembership();
+            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region CreateMembership
+        /// <summary>
+        /// Create a membership to join system.
+        /// </summary>
+        /// <returns>Membership information.</returns>
+        // GET: api/v1/membership
+        #endregion
+        [HttpPost(ApiEndPointConstant.Membership.MembershipEndpoint)]
+        public async Task<IActionResult> CreateMembership([FromBody] AccountMembership data)
+        {
+            var membership = await _service.CreateMembership(data.Phone, data.FullName);
             var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
             return Ok(result);
         }

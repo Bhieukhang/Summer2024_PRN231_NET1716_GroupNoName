@@ -43,7 +43,7 @@ namespace JSS_Services.Implement
         public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
         {
             var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
-            var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id ==  id);
+            var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id == id);
             if (member == null)
             {
                 return null;
@@ -101,6 +101,46 @@ namespace JSS_Services.Implement
         {
             var unMembership = await _unitOfWork.GetRepository<Membership>().CountAsync(m => m.Deflag == false);
             return unMembership;
+        }
+
+        public async Task<SearchAccountResponse> CreateMembership(string phone, string name)
+        {
+            Guid idAccount = Guid.NewGuid();
+            var account = new Account()
+            {
+                Id = idAccount,
+                FullName = name,
+                Phone = phone,
+                Dob = null,
+                Password = "000",
+                Address = null,
+                ImgUrl = null,
+                Status = "UnActive",
+                Deflag = false,
+                RoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"),
+                InsDate = DateTime.Now,
+                UpsDate = DateTime.Now,
+            };
+            _unitOfWork.GetRepository<Account>().InsertAsync(account);
+            if (account != null)
+            {
+                Membership member = new Membership()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = name,
+                    Level = 1,
+                    Point = 0,
+                    RedeemPoint = 0,
+                    UserId = idAccount,
+                    UsedMoney = 0,
+                    Deflag = true,
+                };
+                _unitOfWork.GetRepository<Membership>().InsertAsync(member);
+
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (isSuccessful == false) return null;
+            }
+            return new SearchAccountResponse(idAccount, account.FullName, account.Phone);
         }
     }
 }
