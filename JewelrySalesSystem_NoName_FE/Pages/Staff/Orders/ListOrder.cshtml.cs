@@ -1,9 +1,7 @@
-﻿
-using JewelrySalesSystem_NoName_FE.Ultils;
+﻿using JewelrySalesSystem_NoName_FE.Ultils;
 using JewelrySalesSystem_NoName_FE.DTOs.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -25,6 +23,28 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             _httpClientFactory = httpClientFactory;
         }
 
+        public async Task OnGetAsync()
+        {
+            await LoadOrderListAsync();
+        }
+
+        private async Task LoadOrderListAsync()
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var apiUrl = $"{ApiPath.GetListOrders}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                OrderList = JsonConvert.DeserializeObject<IList<OrderDTO>>(jsonResponse);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Error retrieving order data. Please try again later.");
+            }
+        }
+
         public async Task OnPostSearchAsync()
         {
             if (string.IsNullOrEmpty(SearchCode))
@@ -34,7 +54,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             }
 
             var client = _httpClientFactory.CreateClient();
- 
+
             var apiUrl = $"{ApiPath.OrderByID}/id?id={SearchCode}";
             var response = await client.GetAsync(apiUrl);
             if (response.IsSuccessStatusCode)

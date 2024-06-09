@@ -142,5 +142,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var result = await _service.GetTotalOrdersByYear(year);
             return Ok(result);
         }
+
+        #region GetAllOrders
+        /// <summary>
+        /// Get all order 
+        /// </summary>
+        /// <returns>Get all orders <returns>
+        // POST: api/v1/order/order/GetListOrders
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.AllOrdersEndpoint)]
+        [ProducesResponseType(typeof(IEnumerable<OrderResponse>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _service.GetAllOrders();
+            return Ok(orders);
+        }
     }
 }

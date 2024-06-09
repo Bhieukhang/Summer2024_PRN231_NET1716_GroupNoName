@@ -29,24 +29,26 @@
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Order List</h4>
+                        <h4 class="card-title">Danh sách đơn hàng</h4>
                         <table class="table table-striped">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>Total Price</th>
-                                    <th>Material Process Price</th>
-                                    <th>Customer ID</th>
-                                    <th>Promotion ID</th>
-                                    <th>Discount ID</th>
+                                    <th>Mã</th>
+                                    <th>Tổng giá trị</th>
+                                    <th>Giá xử lý vật liệu</th>
+                                    <th>ID khách hàng</th>
+                                    <th>Mã khuyến mãi</th>
+                                    <th>Mã giảm giá</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="orderListBody">
                                 @foreach (var order in Model.OrderList)
                                 {
                                     <tr>
+                                        <td>@order.Id</td>
                                         <td>@order.TotalPrice</td>
-                                        @* <td>@order.MaterialProcessPrice</td> *@
-@*                                         <td>@order.CustomerId</td> *@
+                                        <td>@order.MaterialProccessPrice</td>
+                                        <td>@order.CustomerId</td>
                                         <td>@order.PromotionId</td>
                                         <td>@order.DiscountId</td>
                                     </tr>
@@ -60,33 +62,41 @@
     </div>
 </div>
 
-
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
     <script>
         $(document).ready(function () {
-            $('.datepicker').datepicker({
-                format: 'mm/dd/yyyy',
-                endDate: '0d', // Disable future dates
-                autoclose: true
-            }).on('changeDate', function (selected) {
-                var startDate = new Date(selected.date.valueOf());
-                $('#endDate').datepicker('setStartDate', startDate);
-            });
+            getAllOrders();
 
-            $('#startDate').datepicker()
-                .on('changeDate', function (selected) {
-                    var startDate = new Date(selected.date.valueOf());
-                    $('#endDate').datepicker('setStartDate', startDate);
+            function getAllOrders() {
+                $.ajax({
+                    url: '@Url.Page("ListOrder", "OnGetAllOrdersAsync")',
+                    type: 'GET',
+                    success: function (result) {
+                        console.log(result);
+                        // Update the order list with the received data
+                        if (result && result.length > 0) {
+                            var orderListHtml = '';
+                            $.each(result, function (index, order) {
+                                orderListHtml += '<tr>' +
+                                    '<td>' + order.totalPrice + '</td>' +
+                                    '<td>' + order.materialProcessPrice + '</td>' +
+                                    '<td>' + order.customerId + '</td>' +
+                                    '<td>' + order.promotionId + '</td>' +
+                                    '<td>' + order.discountId + '</td>' +
+                                    '</tr>';
+                            });
+                            $('#orderListBody').html(orderListHtml);
+                        } else {
+                            // Handle case when no orders are returned
+                            $('#orderListBody').html('<tr><td colspan="5">Không tìm thấy đơn hàng.</td></tr>');
+                        }
+                    },
+                    error: function () {
+                        alert('Lỗi khi lấy dữ liệu đơn hàng. Vui lòng thử lại sau.');
+                    }
                 });
-
-            $('#endDate').datepicker()
-                .on('changeDate', function (selected) {
-                    var endDate = new Date(selected.date.valueOf());
-                    $('#startDate').datepicker('setEndDate', endDate);
-                });
+            }
         });
     </script>
 }

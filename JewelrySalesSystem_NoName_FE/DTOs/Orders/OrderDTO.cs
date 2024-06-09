@@ -8,6 +8,7 @@
         public double TotalPrice { get; set; }
         public double MaterialProccessPrice { get; set; }
         public List<OrderDetailDTO> Details { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class OrderDetailDTO
