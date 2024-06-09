@@ -7,24 +7,24 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
+{
+    public class ListProductModel : PageModel
     {
-        public class ListProductModel : PageModel
-        {
-            private readonly IHttpClientFactory _httpClientFactory;
-            private readonly IConfiguration _configuration;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public ListProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
-            {
-                _httpClientFactory = httpClientFactory;
-                _configuration = configuration;
-                _httpContextAccessor = httpContextAccessor;
-            }
-            [BindProperty]
-            public string? SearchCode { get; set; }
-            public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
-            public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
+        public ListProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        [BindProperty]
+        public string? SearchCode { get; set; }
+        public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
+        public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -154,4 +154,4 @@
             }
         }
     }
-    }
+}

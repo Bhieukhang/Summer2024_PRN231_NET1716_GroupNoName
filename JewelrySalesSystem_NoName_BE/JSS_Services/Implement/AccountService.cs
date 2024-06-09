@@ -277,7 +277,6 @@ namespace JSS_Services.Implement
                 throw;
             }
         }
-
         public async Task<SearchAccountResponse> SearchMembership(string phone)
         {
             var mem = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == phone,
