@@ -7,6 +7,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Authorization;
 using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
+using System.Net.Http.Json;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
 {
@@ -46,27 +47,54 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Stall
             var url = $"{ApiPath.StallList}?page={Page}&size={Size}";
             var totalCountUrl = $"{ApiPath.TotalAccount}";
             var activeCountUrl = $"{ApiPath.ActiveAccount}";
+
             try
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                
-                var response = await client.GetStringAsync(url);
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<StallDTO>>(response);
-                ListStall = paginateResult.Items;
-                TotalItems = paginateResult.Total;
-                TotalPages = paginateResult.TotalPages;
 
-                TotalAccountCount = await client.GetFromJsonAsync<int>(totalCountUrl);
-                ActiveAccountCount = await client.GetFromJsonAsync<int>(activeCountUrl);
+                var response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var paginateResult = JsonConvert.DeserializeObject<Paginate<StallDTO>>(responseBody);
+                    ListStall = paginateResult.Items;
+                    TotalItems = paginateResult.Total;
+                    TotalPages = paginateResult.TotalPages;
+                }
+                else
+                {
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to fetch stall data: {response.StatusCode} - {errorResponse}");
+                }
+                var totalAccountResponse = await client.GetAsync(totalCountUrl);
+                if (totalAccountResponse.IsSuccessStatusCode)
+                {
+                    TotalAccountCount = await totalAccountResponse.Content.ReadFromJsonAsync<int>();
+                }
+                else
+                {
+                    var errorResponse = await totalAccountResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to fetch total account count: {totalAccountResponse.StatusCode} - {errorResponse}");
+                }
+                var activeAccountResponse = await client.GetAsync(activeCountUrl);
+                if (activeAccountResponse.IsSuccessStatusCode)
+                {
+                    ActiveAccountCount = await activeAccountResponse.Content.ReadFromJsonAsync<int>();
+                }
+                else
+                {
+                    var errorResponse = await activeAccountResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to fetch active account count: {activeAccountResponse.StatusCode} - {errorResponse}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP Request Error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                // Handle error appropriately
-                ListStall = new List<StallDTO>();
-                Console.WriteLine($"Error: {ex.Message}");
-                TotalAccountCount = 0;
-                ActiveAccountCount = 0;
+                Console.WriteLine($"Unexpected Error: {ex.Message}");
             }
 
             return Page();
