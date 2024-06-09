@@ -184,6 +184,23 @@ namespace JSS_Services.Implement
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
             return totalOrders;
         }
+        public async Task<IEnumerable<OrderResponse>> GetAllOrders()
+        {
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
 
+            // Chuyển đổi danh sách đơn hàng sang danh sách OrderResponse
+            var orderResponses = orders.Select(o => new OrderResponse(
+                o.Id,
+                o.CustomerId,
+                o.Type,
+                o.InsDate,
+                o.TotalPrice,
+                o.MaterialProcessPrice,
+                o.DiscountId,
+                o.PromotionId
+            ));
+
+            return orderResponses;
+        }
     }
 }

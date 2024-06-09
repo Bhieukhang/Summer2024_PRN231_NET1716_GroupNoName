@@ -1,0 +1,37 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.PriceGold.PriceGoldModel
+@{
+    decimal usdToVndExchangeRate = 25400;
+    decimal goldPriceInVnd = Model.GoldPrice * usdToVndExchangeRate;
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">PRICE GOLD - GIÁ VÀNG HÔM NAY</h3>
+        </div>
+        <form method="get">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" name="date">
+            <button type="submit">Get Gold Price</button>
+        </form>
+        <br />
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    @if (Model.HasError)
+                    {
+                        <h4>An error occurred while fetching the gold price. Please try again later.</h4>
+                    }
+                    else
+                    {
+                        <h4>Gold Price on @Model.SelectedDate (USD per ounce): @Model.GoldPrice</h4>
+                        <br />
+                        <h3 class="page-title">PRICE GOLD - GIÁ VÀNG TIỀN VIỆT</h3>
+                        <br/>
+                        <h4>Gold Price on @Model.SelectedDate (VND per ounce): @goldPriceInVnd</h4>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
