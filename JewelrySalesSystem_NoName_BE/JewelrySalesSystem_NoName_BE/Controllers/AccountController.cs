@@ -35,7 +35,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Account.AccountEndpoint)]
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListAccountAsync(int page, int size)
@@ -52,7 +52,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accountsByRoleId.</returns>
         // GET: api/Account
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Account.AccountByRoleIdEndpoint)] 
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
@@ -69,7 +69,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Account.TotalAccountEndpoint)]
         public async Task<ActionResult<int>> GetTotalAccountCount()
         {
@@ -84,7 +84,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts.</returns>
         // GET: api/Account
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Account.ActiveAccountEndpoint)]
         public async Task<ActionResult<int>> GetActiveAccountCount()
         {
@@ -125,7 +125,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // PUT: api/Account/{id}
         #endregion
         //  [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPut(ApiEndPointConstant.Account.AccountByIdEndpoint)]
         public async Task<ActionResult<Account>> UpdateAccountAsync(Guid id, [FromBody] AccountRequest accountRequest)
         {
@@ -193,7 +193,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // POST: api/Account
         #endregion
         //[HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost(ApiEndPointConstant.Account.AccountEndpoint)]
         public async Task<ActionResult> CreateAccountAsync([FromBody] AccountRequest accountRequest)
         {
@@ -305,7 +305,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of accounts that match the search criteria.</returns>
         // GET: api/Account/Search
         #endregion
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager, Admin")]
         [HttpGet(ApiEndPointConstant.Account.SearchAccountEndpoint)]
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchAccountsAsync(string name)

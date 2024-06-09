@@ -7,6 +7,7 @@
     int totalActiveAccountCount = Model.ActiveAccountCount;
     int totalInActiveAccountCount = Model.TotalAccountCount - Model.ActiveAccountCount;
 }
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
@@ -15,7 +16,7 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Tổng tài khoản  <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                            Tổng tài khoản <i class="mdi mdi-chart-line mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">@totalAccountCount</h2>
                     </div>
@@ -33,13 +34,13 @@
                 </div>
             </div>
             <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-warning  card-img-holder text-white">
+                <div class="card bg-gradient-warning card-img-holder text-white">
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
                             Tài khoản ngừng hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
                         </h4>
-                        <h2 class="mb-5">@totalInActiveAccountCount<h2>
+                        <h2 class="mb-5">@totalInActiveAccountCount</h2>
                     </div>
                 </div>
             </div>
@@ -54,10 +55,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th> Name</th>
+                                        <th> Name </th>
                                         <th> Number </th>
-                                        <th> View</th>
-                                        <th> Edit</th>
+                                        <th> View </th>
+                                        <th> Edit </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,8 +79,7 @@
                                             </td>
                                         </tr>
 
-
-                                        <!-- Detail -->
+                                        <!-- Detail Modal -->
                                         <div class="modal fade custom-modal" id="employeeModal-@stall.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@stall.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
@@ -89,10 +89,10 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>ID: @stall.Id</p>
-                                                        <p>Phone: @stall.Name</p>
-                                                        <p>Phone: @stall.Number</p>
-                                                        <p>Phone: @stall.StaffId</p>
-                                                        <p>Phone: @stall.Deflag</p>
+                                                        <p>Name: @stall.Name</p>
+                                                        <p>Number: @stall.Number</p>
+                                                        <p>Staff ID: @stall.StaffId</p>
+                                                        <p>Deflag: @stall.Deflag</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Edit -->
+                                        <!-- Edit Modal -->
                                         <div class="modal fade custom-modal" id="editModal-@stall.Id" tabindex="-1" aria-labelledby="editModalLabel-@stall.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
@@ -112,26 +112,25 @@
                                                     <div class="modal-body">
                                                         <form>
                                                             <div class="mb-3">
-                                                                <label for="editId" class="form-label">Id</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.Id">
+                                                                <label for="editId-@stall.Id" class="form-label">Id</label>
+                                                                <input readonly type="text" class="form-control" id="editId-@stall.Id" value="@stall.Id">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editName" class="form-label">Name</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.Name">
+                                                                <label for="editName-@stall.Id" class="form-label">Name</label>
+                                                                <input readonly type="text" class="form-control" id="editName-@stall.Id" value="@stall.Name">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editNumber" class="form-label">Number</label>
-                                                                <input type="text" class="form-control" id="editFullName" value="@stall.Number">
-                                                            </div>    
-                                                            <div class="mb-3">
-                                                                <label for="editStaffId" class="form-label">StaffId</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@stall.StaffId">
+                                                                <label for="editNumber-@stall.Id" class="form-label">Number</label>
+                                                                <input type="text" class="form-control" id="editNumber-@stall.Id" value="@stall.Number">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="editDeflag" class="form-label">Deflag</label>
-                                                                <input type="text" class="form-control" id="editPhone" value="@stall.Deflag">
+                                                                <label for="editStaffId-@stall.Id" class="form-label">Staff ID</label>
+                                                                <input readonly type="text" class="form-control" id="editStaffId-@stall.Id" value="@stall.StaffId">
                                                             </div>
-                                                       
+                                                            <div class="mb-3">
+                                                                <label for="editDeflag-@stall.Id" class="form-label">Deflag</label>
+                                                                <input type="text" class="form-control" id="editDeflag-@stall.Id" value="@stall.Deflag">
+                                                            </div>
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
@@ -142,26 +141,25 @@
                                             </div>
                                         </div>
                                     }
-
                                 </tbody>
                             </table>
+
                             <nav aria-label="Page navigation example" style="padding-top:50px">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                                        <a class="page-link" asp-page="./ListStall" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
                                     </li>
                                     @for (var i = 1; i <= Model.TotalPages; i++)
                                     {
                                         <li class="page-item @(Model.Page == i ? "active" : "")">
-                                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                            <a class="page-link" asp-page="./ListStall" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
                                         </li>
                                     }
                                     <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                                        <a class="page-link" asp-page="./ListStall" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
                                     </li>
                                 </ul>
                             </nav>
-                            
                         </div>
                     </div>
                 </div>
