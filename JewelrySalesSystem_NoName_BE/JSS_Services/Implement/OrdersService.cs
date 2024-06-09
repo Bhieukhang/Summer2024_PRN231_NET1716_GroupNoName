@@ -33,10 +33,11 @@ namespace JSS_Services.Implement
             //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == newData.CustomerPhone);
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
-                CustomerId = newData.CustomerId,
+                CustomerId = customer.Id,
                 PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
