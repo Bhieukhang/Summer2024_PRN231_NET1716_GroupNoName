@@ -46,6 +46,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
         }
 
+        #region PostOrderList
+        /// <summary>
+        /// Create new order in stall.
+        /// </summary>
+        /// <returns>Order item in stall.</returns>
+        // POST: api/v1/order
+        #endregion
+        //[Authorize(Roles = "Staff")]
+        [HttpPost(ApiEndPointConstant.Order.OrderEndpointList)]
+        public async Task<ActionResult> PostOrderList([FromBody] OrderRequestList orderData)
+        {
+            if (orderData.DiscountId == Guid.Empty)
+            {
+                orderData.DiscountId = null;
+            }
+            var order = await _service.CreateOrderList(orderData);
+            var result = JsonConvert.SerializeObject(order, Formatting.Indented);
+            return Ok(result);
+
+        }
+
         #region SearchOrders
         /// <summary>
         /// Search orders by customer ID and start date.
