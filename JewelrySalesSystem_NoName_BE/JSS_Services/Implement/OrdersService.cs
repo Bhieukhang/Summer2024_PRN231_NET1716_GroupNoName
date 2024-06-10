@@ -33,10 +33,11 @@ namespace JSS_Services.Implement
             //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == newData.CustomerPhone);
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
-                CustomerId = newData.CustomerId,
+                CustomerId = customer.Id,
                 PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
@@ -184,6 +185,23 @@ namespace JSS_Services.Implement
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
             return totalOrders;
         }
+        public async Task<IEnumerable<OrderResponse>> GetAllOrders()
+        {
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
 
+            // Chuyển đổi danh sách đơn hàng sang danh sách OrderResponse
+            var orderResponses = orders.Select(o => new OrderResponse(
+                o.Id,
+                o.CustomerId,
+                o.Type,
+                o.InsDate,
+                o.TotalPrice,
+                o.MaterialProcessPrice,
+                o.DiscountId,
+                o.PromotionId
+            ));
+
+            return orderResponses;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public async Task<IActionResult> OnPostOrderAsync()
         {
             Order.TotalPrice = CalculateTotalPrice(Order.Details);
-            Order.CustomerId = Guid.Parse("F8D700A3-1CD8-4A98-89C1-EB27DE0AE5A6");
+            //Order.CustomerId = Guid.Parse("F8D700A3-1CD8-4A98-89C1-EB27DE0AE5A6");
             var apiUrl = $"{ApiPath.OrderCreate}";
             try
             {
@@ -189,57 +189,57 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             //}
         }
 
-        public async Task<IActionResult> OnPostCheckAsync([FromBody] OrderDTO order)
-        {
-            Console.WriteLine("Order: " + JsonConvert.SerializeObject(order));
+        //public async Task<IActionResult> OnPostCheckAsync([FromBody] OrderDTO order)
+        //{
+        //    Console.WriteLine("Order: " + JsonConvert.SerializeObject(order));
 
-            if (order.CustomerId == null)
-            {
-                order.CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000000");
-            }
+        //    if (order.CustomerId == null)
+        //    {
+        //        order.CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        //    }
 
-            if (order.PromotionId == null)
-            {
-                order.PromotionId = Guid.NewGuid();
-            }
+        //    if (order.PromotionId == null)
+        //    {
+        //        order.PromotionId = Guid.NewGuid();
+        //    }
 
-            if (order.DiscountId == null)
-            {
-                order.DiscountId = Guid.Parse("00000000-0000-0000-0000-000000000000");
-            }
+        //    if (order.DiscountId == null)
+        //    {
+        //        order.DiscountId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        //    }
 
-            if (order.Details == null)
-            {
-                order.Details = new List<OrderDetailDTO>();
-            }
+        //    if (order.Details == null)
+        //    {
+        //        order.Details = new List<OrderDetailDTO>();
+        //    }
 
-            //foreach (var detail in order.Details)
-            //{
-             
-            //    if (string.IsNullOrEmpty(detail.ProductId))
-            //    {
-            //        detail.ProductId = Guid.Parse("8381a026-c8df-404a-b4aa-3f5b08ca5070");
-            //    }
-            //}
+        //    //foreach (var detail in order.Details)
+        //    //{
 
-            var apiUrl = $"{ApiPath.OrderCheckPromotion}";
-            var client = _httpClientFactory.CreateClient();
-            var json = JsonConvert.SerializeObject(order);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        //    //    if (string.IsNullOrEmpty(detail.ProductId))
+        //    //    {
+        //    //        detail.ProductId = Guid.Parse("8381a026-c8df-404a-b4aa-3f5b08ca5070");
+        //    //    }
+        //    //}
 
-            var response = await client.PostAsync(apiUrl, content);
+        //    var apiUrl = $"{ApiPath.OrderCheckPromotion}";
+        //    var client = _httpClientFactory.CreateClient();
+        //    var json = JsonConvert.SerializeObject(order);
+        //    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Response error: " + response.ReasonPhrase);
-                throw new Exception("Lỗi");
-            }
+        //    var response = await client.PostAsync(apiUrl, content);
 
-            var responseData = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("Response: " + responseData);
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        Console.WriteLine("Response error: " + response.ReasonPhrase);
+        //        throw new Exception("Lỗi");
+        //    }
 
-            return new JsonResult(responseData);
-        }
+        //    var responseData = await response.Content.ReadAsStringAsync();
+        //    Console.WriteLine("Response: " + responseData);
+
+        //    return new JsonResult(responseData);
+        //}
 
     }
 }

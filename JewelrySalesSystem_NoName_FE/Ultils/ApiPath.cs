@@ -37,14 +37,15 @@
         public const string ProductList = url + "/api/v1/Product";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
-        //account
+        //Account
         public const string AccountList = url + "/api/v1/Account";
         public const string CreateAccount = url + "/api/v1/Account/Create";
         public const string TotalAccount = url + "/api/v1/Account/Total-account";
         public const string ActiveAccount = url + "/api/v1/Account/Active-account";
+        public const string SearchAccount = url + "/api/v1/Account/search/member";
 
-        //emloyees
-        public const string EmployeesList = url + "/api/v1/Account";
+        //Emloyees
+        public const string EmployeesList = url + "/api/v1/AccountByRole";
 
         //stall
         public const string StallList = url + "/api/v1/Stall";
@@ -53,6 +54,7 @@
         public const string OrderCreate = url + "/api/v1/order";
         public const string OrderByID = url + "/api/v1/order";
         public const string OrderCheckPromotion = url + "/api/v1/check";
+        public const string GetListOrders = url + "/api/v1/order/GetListOrders";
 
         //Warranty
         public const string WarrantyList = url + "/api/v1/warranty";
