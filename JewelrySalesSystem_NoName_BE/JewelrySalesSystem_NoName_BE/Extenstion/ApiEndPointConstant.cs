@@ -115,6 +115,8 @@
             public const string OrderStaticMonth = ApiEndpoint + "/static/month";
             public const string OrderStaticYear = ApiEndpoint + "/static/year";
             public const string AllOrdersEndpoint = ApiEndpoint + "/order/GetListOrders"; 
+            public const string OrderEndpointList = ApiEndpoint + "/orderlist";
+            public const string OrderListCusomerPhone = OrderEndpoint + "/customer";
         }
         public static class Discount
         {
