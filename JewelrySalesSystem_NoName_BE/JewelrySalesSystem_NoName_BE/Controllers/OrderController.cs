@@ -163,5 +163,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var result = await _service.GetTotalOrdersByYear(year);
             return Ok(result);
         }
+
+        [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
+        public async Task<ActionResult> GetListOrderByCustomerPhone(string phone)
+        {
+            var result = await _service.GetListOrderByCustomerPhone(phone);
+            var item = JsonConvert.SerializeObject(result, Formatting.Indented);
+            return Ok(item);
+        }
     }
 }

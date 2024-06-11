@@ -253,6 +253,7 @@
             // Sự kiện khi chọn khuyến mãi
             $('#promotionForm').on('change', 'input[name="promotion"]', function () {
                 var selectedPromotionId = $(this).val();
+                // console.log("Gọi event lấy promotion: ", )
                 var productCode = $(this).closest('.product-item').data('product-code');
                 if (selectedPromotionId && productCode) {
                     applyPromotion(selectedPromotionId, productCode);

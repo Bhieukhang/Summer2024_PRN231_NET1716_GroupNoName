@@ -22,5 +22,6 @@ namespace JSS_Services.Interface
         Task<int> GetTotalOrdersByMonth(int year, int month);
         Task<int> GetTotalOrdersByYear(int year);
         Task<OrderResponse> CreateOrderList(OrderRequestList newData);
+        Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone);
     }
 }

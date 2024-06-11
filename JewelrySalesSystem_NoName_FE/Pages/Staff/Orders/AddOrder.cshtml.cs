@@ -126,7 +126,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var apiUrl = $"{ApiPath.OrderCreate}";
+            var apiUrl = $"{ApiPath.OrderListPromotion}";
             var payload = new OrderDTO()
             {
                 CustomerPhone = orderData.CustomerPhone,

@@ -119,7 +119,7 @@ namespace JSS_Services.Implement
                 await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
             }
             //Caculate total price by promotion
-            foreach(var orderDetail in productList)
+            foreach (var orderDetail in productList)
             {
                 totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
             }
@@ -241,6 +241,36 @@ namespace JSS_Services.Implement
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
             return totalOrders;
+        }
+
+        public async Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone)
+        {
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(c => c.Phone == phone, include: c => c.Include(c => c.Orders));
+            if (customer != null)
+            {
+                var inforCustomer = new InforCustomer(customer.Id, customer.FullName, customer.Phone, customer.Address, customer.ImgUrl);
+
+                var listOrder = new List<OrderResponse>();
+                foreach (var order in customer.Orders)
+                {
+                    var orderItem = new OrderResponse()
+                    {
+                        Id = order.Id,
+                        CustomerId = order.CustomerId,
+                        Type = order.Type,
+                        InsDate = order.InsDate,
+                        TotalPrice = order.TotalPrice,
+                        MaterialProcessPrice = order.MaterialProcessPrice
+                    };
+                    listOrder.Add(orderItem);
+                }
+
+                // Tạo đối tượng CustomerOrderResponse và gán giá trị
+                var customerOrder = new CustomerOrderResponse(inforCustomer, listOrder);
+
+                return customerOrder;
+            }
+            return null;
         }
 
     }
