@@ -105,7 +105,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
 
             return Ok(result);
-        } 
+        }
 
         #region PostCheckProduct
         /// <summary>
@@ -177,12 +177,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             var orders = await _service.GetAllOrders();
             return Ok(orders);
-        [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
+        }
+
+        #region GetListOrderByCustomerPhone
+        /// <summary>
+        /// List order search by phone customer 
+        /// </summary>
+        /// <returns>List order <returns>
+        // POST: api/v1/order/order/customer
+        #endregion
+     [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
         public async Task<ActionResult> GetListOrderByCustomerPhone(string phone)
         {
             var result = await _service.GetListOrderByCustomerPhone(phone);
             var item = JsonConvert.SerializeObject(result, Formatting.Indented);
             return Ok(item);
         }
-    }
 }

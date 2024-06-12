@@ -24,7 +24,7 @@
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
 
-        //Promotion
+        //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
 
         //Dashboard
@@ -58,7 +58,7 @@
         public const string OrderListPromotion = url + "/api/v1/orderlist";
 
         //Warranty
-        public const string WarrantyList = url + "/api/v1/warranty";
+        public const string Warranty = url + "/api/v1/warranty";
 
         //ConditionWarranty
         public const string ConditionWarrantyList = url + "/api/v1/condition";

@@ -44,7 +44,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             Page = currentPage ?? 1;
             Size = 10;
 
-            var url = $"{ApiPath.WarrantyList}?page={Page}&size={Size}";
+            var url = $"{ApiPath.Warranty}?page={Page}&size={Size}";
             try
             {
                 var client = _httpClientFactory.CreateClient();

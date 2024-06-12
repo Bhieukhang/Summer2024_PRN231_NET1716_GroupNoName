@@ -16,6 +16,7 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public Guid? OrderDetailId { get; set; }
         public Guid ConditionWarrantyId { get; set; }
+        public string Note {  get; set; }
 
     }
 }
