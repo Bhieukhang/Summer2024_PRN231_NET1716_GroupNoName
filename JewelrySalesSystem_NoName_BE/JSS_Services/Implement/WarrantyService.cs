@@ -62,24 +62,36 @@ namespace JSS_Services.Implement
             return ListWarranties;
         }
 
-        public async Task<WarrantyResponse> CreateWarranty(WarrantyRequest newData)
+        public async Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> newData, string phone)
         {
-            //Warranty war = new Warranty()
-            //{
-            //    Id = Guid.NewGuid(),
-            //    DateOfPurchase = DateTime.Now,
-            //    ExpirationDate = DateTime.Now,
-            //    Period = newData.Period,
-            //    Deflag = true,
-            //    OrderDetailId = null,
-            //    ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
-            //    Status = "Active"
-            //};
-            //await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
-            //bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            //if (isSuccessful == false) return null;
-            //return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.ConditionWarrantyId);
-            return null;
+            List<WarrantyCreateResponse> listWarranty = new List<WarrantyCreateResponse>();
+            foreach (WarrantyRequest item in newData)
+            {
+                var warItem = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(x => x.OrderDetailId == item.OrderDetailId);
+                if (warItem != null)
+                {
+                    continue;
+                }
+                Warranty war = new Warranty()
+                {
+                    Id = Guid.NewGuid(),
+                    DateOfPurchase = DateTime.Now,
+                    ExpirationDate = DateTime.Now,
+                    Period = item.Period,
+                    Deflag = true,
+                    OrderDetailId = (Guid)item.OrderDetailId,
+                    ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
+                    Status = "Active",
+                    Note = item.Note,
+                    Phone = phone
+                };
+                listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = war.Id });
+                await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (isSuccessful == false) return null;
+            }
+           
+            return listWarranty;
         }
     }
 }

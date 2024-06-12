@@ -105,7 +105,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
 
             return Ok(result);
-        } 
+        }
 
         #region PostCheckProduct
         /// <summary>
@@ -164,6 +164,29 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(result);
         }
 
+        //#region GetAllOrders
+        ///// <summary>
+        ///// Get all order 
+        ///// </summary>
+        ///// <returns>Get all orders <returns>
+        //// POST: api/v1/order/order/GetListOrders
+        //#endregion
+        //[HttpGet(ApiEndPointConstant.Order.AllOrdersEndpoint)]
+        //[ProducesResponseType(typeof(IEnumerable<OrderResponse>), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> GetAllOrders()
+        //{
+        //    var orders = await _service.GetAllOrders();
+        //    return Ok(orders);
+            
+        //}
+
+        #region GetListOrderByCustomerPhone
+        /// <summary>
+        /// List order search by phone customer 
+        /// </summary>
+        /// <returns>List order <returns>
+        // POST: api/v1/order/order/customer
+        #endregion
         [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
         public async Task<ActionResult> GetListOrderByCustomerPhone(string phone)
         {
