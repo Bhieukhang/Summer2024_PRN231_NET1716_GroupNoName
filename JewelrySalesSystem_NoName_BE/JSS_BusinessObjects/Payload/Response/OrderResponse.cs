@@ -11,7 +11,7 @@ namespace JSS_BusinessObjects.Payload.Response
     {
         public OrderResponse() { }
         public OrderResponse(Guid id, Guid customerId, string? type, DateTime? insDate, double? totalPrice,
-            double? materialProcessPrice, Guid? discount, Guid? promotion)
+            double? materialProcessPrice, Guid? discount)
         {
             Id = id;
             CustomerId = customerId;
@@ -20,7 +20,6 @@ namespace JSS_BusinessObjects.Payload.Response
             TotalPrice = totalPrice;
             MaterialProcessPrice = materialProcessPrice;
             Discount = discount;
-            Promotion = promotion;
         }
         public OrderResponse(Guid id, Guid customerId, string? type, DateTime? insDate, double? totalPrice,
             double? materialProcessPrice)

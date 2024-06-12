@@ -38,7 +38,6 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 CustomerId = customer.Id,
-                PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
                 DiscountId = newData.DiscountId,
@@ -66,7 +65,6 @@ namespace JSS_Services.Implement
             {
                 //Caculate total price by promotion
                 totalPrice = await CalculateTotalPriceByPromotion((Guid)newData.PromotionId, (double)totalPrice);
-                order.PromotionId = newData.PromotionId;
             }
             order.TotalPrice = totalPrice;
             //Save order
@@ -75,7 +73,7 @@ namespace JSS_Services.Implement
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
-                                     order.MaterialProcessPrice, order.DiscountId, order.PromotionId);
+                                     order.MaterialProcessPrice, order.DiscountId);
         }
 
         public async Task<OrderResponse> CreateOrderList(OrderRequestList newData)
@@ -94,7 +92,6 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 CustomerId = customer.Id,
-                PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
                 DiscountId = newData.DiscountId,
@@ -133,7 +130,7 @@ namespace JSS_Services.Implement
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
-                                     order.MaterialProcessPrice, order.DiscountId, order.PromotionId);
+                                     order.MaterialProcessPrice, order.DiscountId);
         }
         public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/)
         {
@@ -145,7 +142,8 @@ namespace JSS_Services.Implement
             //                         .Include(o => o.Promotion)
             );
 
-            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.DiscountId, o.PromotionId));
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, 
+                o.MaterialProcessPrice, o.DiscountId));
         }
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
         {
@@ -166,8 +164,7 @@ namespace JSS_Services.Implement
                     order.InsDate,
                     order.TotalPrice,
                     order.MaterialProcessPrice,
-                    order.DiscountId,
-                    order.PromotionId
+                    order.DiscountId
                 );
 
                 return orderResponse;
@@ -254,8 +251,7 @@ namespace JSS_Services.Implement
                 o.InsDate,
                 o.TotalPrice,
                 o.MaterialProcessPrice,
-                o.DiscountId,
-                o.PromotionId
+                o.DiscountId
             ));
 
             return orderResponses;

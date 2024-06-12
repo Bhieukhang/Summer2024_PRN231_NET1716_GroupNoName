@@ -46,10 +46,4 @@ public partial class Product
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
-
-    // Tính giá nhập vào
-    //public double CalculateImportPrice()
-    //{
-    //    return (ImportPrice ?? 0);
-    //}
 }

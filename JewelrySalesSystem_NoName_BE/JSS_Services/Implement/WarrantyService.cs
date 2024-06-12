@@ -29,7 +29,7 @@ namespace JSS_Services.Implement
         {
             var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,x.Deflag, x.Status,
-                                                    x.ConditionWarranty),
+                                                    x.ConditionWarrantyId),
                     predicate:
                     Guid.Empty.Equals(id)
                         ? x => true
@@ -42,7 +42,7 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                    x.Deflag, x.Status,x.ConditionWarranty),
+                                                    x.Deflag, x.Status,x.ConditionWarrantyId),
                 page: page,
                 size: size
                 );
@@ -53,9 +53,9 @@ namespace JSS_Services.Implement
         {
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
-                include: x => x.Include(x => x.ConditionWarranty),
+                include: x => x.Include(x => x.WarrantyMappingConditions),
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, 
-                                                   x.Deflag, x.Status, x.ConditionWarranty),
+                                                   x.Deflag, x.Status, x.ConditionWarrantyId),
                 page: page,
                 size: size
             );

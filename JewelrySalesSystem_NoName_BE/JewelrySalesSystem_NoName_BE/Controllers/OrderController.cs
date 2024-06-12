@@ -186,11 +186,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List order <returns>
         // POST: api/v1/order/order/customer
         #endregion
-     [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
+        [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
         public async Task<ActionResult> GetListOrderByCustomerPhone(string phone)
         {
             var result = await _service.GetListOrderByCustomerPhone(phone);
             var item = JsonConvert.SerializeObject(result, Formatting.Indented);
             return Ok(item);
         }
+    }
 }

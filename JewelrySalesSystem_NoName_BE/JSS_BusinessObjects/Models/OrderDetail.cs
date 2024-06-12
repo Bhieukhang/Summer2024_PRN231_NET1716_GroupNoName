@@ -21,9 +21,13 @@ public partial class OrderDetail
 
     public DateTime? InsDate { get; set; }
 
+    public Guid? PromotionId { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
+
+    public virtual Promotion? Promotion { get; set; }
 
     public virtual ICollection<Warranty> Warranties { get; } = new List<Warranty>();
 }
