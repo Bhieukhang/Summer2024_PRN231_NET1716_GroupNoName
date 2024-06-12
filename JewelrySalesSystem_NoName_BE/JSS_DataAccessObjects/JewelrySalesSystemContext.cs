@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using JSS_BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSS_DataAccessObjects;
 
@@ -51,6 +51,8 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<Warranty> Warranties { get; set; }
+
+    public virtual DbSet<WarrantyMappingCondition> WarrantyMappingConditions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -172,10 +174,6 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.HasOne(d => d.Discount).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.DiscountId)
                 .HasConstraintName("FK_Order_Discount");
-
-            entity.HasOne(d => d.Promotion).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.PromotionId)
-                .HasConstraintName("FK_Order_Promotion");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
@@ -194,6 +192,10 @@ public partial class JewelrySalesSystemContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderDetail_Product");
+
+            entity.HasOne(d => d.Promotion).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.PromotionId)
+                .HasConstraintName("FK_OrderDetail_Promotion");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -308,15 +310,26 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.ConditionWarranty).WithMany(p => p.Warranties)
-                .HasForeignKey(d => d.ConditionWarrantyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Warranty_ConditionWarranty");
-
             entity.HasOne(d => d.OrderDetail).WithMany(p => p.Warranties)
                 .HasForeignKey(d => d.OrderDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Warranty_Order");
+        });
+
+        modelBuilder.Entity<WarrantyMappingCondition>(entity =>
+        {
+            entity.ToTable("WarrantyMappingCondition");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.InsDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.ConditionWarranty).WithMany(p => p.WarrantyMappingConditions)
+                .HasForeignKey(d => d.ConditionWarrantyId)
+                .HasConstraintName("FK_WarrantyMappingCondition_ConditionWarranty");
+
+            entity.HasOne(d => d.Warranty).WithMany(p => p.WarrantyMappingConditions)
+                .HasForeignKey(d => d.WarrantyId)
+                .HasConstraintName("FK_WarrantyMappingCondition_Warranty");
         });
 
         OnModelCreatingPartial(modelBuilder);

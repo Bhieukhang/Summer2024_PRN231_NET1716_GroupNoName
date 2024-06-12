@@ -54,4 +54,22 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public string Phone { get; set; } = null!;
     }
+
+    public class InforCustomer
+    {
+        public InforCustomer(Guid id, string? fullName, string phone, string? address, string imgUrl)
+        {
+            Id = id; FullName = fullName;
+            Phone = phone; Address = address;
+            ImgUrl = imgUrl;
+        }
+        public Guid Id { get; set; }
+
+        public string? FullName { get; set; }
+
+        public string Phone { get; set; } = null!;
+        public string? Address { get; set; }
+
+        public string? ImgUrl { get; set; }
+    }
 }
