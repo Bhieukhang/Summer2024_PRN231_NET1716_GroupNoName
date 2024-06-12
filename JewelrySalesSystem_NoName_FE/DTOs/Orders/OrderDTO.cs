@@ -6,6 +6,7 @@
         public Guid PromotionId { get; set; }
         public Guid? DiscountId { get; set; }
         public double TotalPrice { get; set; }
+        public Guid CustomerId { get; set; }
         public double MaterialProccessPrice { get; set; }
         public List<OrderDetailDTO> Details { get; set; }
         public Guid Id { get; set; }

@@ -52,7 +52,7 @@
 
         //Order
         public const string OrderCreate = url + "/api/v1/order";
-        public const string OrderByID = url + "/api/v1/order";
+        public const string OrderByID = url + "/api/v1/order/id";
         public const string OrderCheckPromotion = url + "/api/v1/check";
         public const string GetListOrders = url + "/api/v1/order/GetListOrders";
 
