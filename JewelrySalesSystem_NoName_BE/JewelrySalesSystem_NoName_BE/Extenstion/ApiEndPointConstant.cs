@@ -63,6 +63,9 @@
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
+            public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";
+
+
         }
 
         public static class Promotion

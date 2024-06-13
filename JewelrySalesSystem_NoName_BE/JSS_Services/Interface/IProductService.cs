@@ -1,4 +1,5 @@
-﻿using JSS_BusinessObjects.Models;
+﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using System;
@@ -11,6 +12,10 @@ namespace JSS_Services.Interface
 {
     public interface IProductService
     {
+
+        public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
+
+
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(Guid id);
         Task<Product> GetProductByCodeAsync(string code);
@@ -18,5 +23,6 @@ namespace JSS_Services.Interface
         Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName);
         Task<bool> DeleteProductAsync(Guid id);
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
+   
     }
 }
