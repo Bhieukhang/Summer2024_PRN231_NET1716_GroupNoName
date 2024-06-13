@@ -13,7 +13,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         private readonly IConfiguration _configuration;
         private readonly string _bucket;
 
-        [BindProperty]
+        [BindProperty]  
         public ProductDTO Product { get; set; }
 
         [BindProperty]
