@@ -20,4 +20,27 @@ namespace JSS_BusinessObjects.Payload.Request
         public double? MaterialProcessPrice { get; set; }
         public List<OrderDetailRequest> Details { get; set; }
     }
+
+    public class OrderRequestList
+    {
+        public string CustomerPhone { get; set; }
+
+        public Guid? DiscountId { get; set; }
+
+        public double? TotalPrice { get; set; }
+
+        public double? MaterialProcessPrice { get; set; }
+        public List<OrderDetailPromotionRequest> Details { get; set; }
+    }
+
+    public class OrderDetailPromotionRequest
+    {
+
+        public Guid? PromotionId { get; set; }
+        public double? Amount { get; set; }
+
+        public int? Quantity { get; set; }
+
+        public Guid ProductId { get; set; }
+    }
 }

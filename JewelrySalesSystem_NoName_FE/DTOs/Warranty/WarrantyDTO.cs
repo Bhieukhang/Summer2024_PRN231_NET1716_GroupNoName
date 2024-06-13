@@ -20,5 +20,13 @@
         public bool? Deflag { get; set; }
         public List<WarrantyDTO> warranties { get; set; }
     }
-
+    public class WarrantyCreate
+    {
+        public DateTime? DateOfPurchase { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public string Period { get; set; }
+        public Guid? OrderDetailId { get; set; }
+        public Guid ConditionWarrantyId { get; set; }
+        public Guid ProductId { get; set; }
+    }
 }

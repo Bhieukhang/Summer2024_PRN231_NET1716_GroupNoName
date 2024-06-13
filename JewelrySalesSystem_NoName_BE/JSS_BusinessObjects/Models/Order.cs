@@ -9,8 +9,6 @@ public partial class Order
 
     public Guid CustomerId { get; set; }
 
-    public Guid? PromotionId { get; set; }
-
     public string? Type { get; set; }
 
     public DateTime? InsDate { get; set; }
@@ -26,8 +24,6 @@ public partial class Order
     public virtual Discount? Discount { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
-
-    public virtual Promotion? Promotion { get; set; }
 
     public virtual ICollection<Transaction> Transactions { get; } = new List<Transaction>();
 }

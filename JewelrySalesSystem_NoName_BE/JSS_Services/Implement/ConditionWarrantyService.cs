@@ -1,9 +1,9 @@
 ﻿using Azure;
 using JSS_BusinessObjects;
+using JSS_DataAccessObjects;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
-using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;

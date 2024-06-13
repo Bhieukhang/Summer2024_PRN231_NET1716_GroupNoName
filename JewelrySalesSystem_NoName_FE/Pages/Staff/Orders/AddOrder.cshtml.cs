@@ -126,11 +126,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var apiUrl = $"{ApiPath.OrderCreate}";
+            var apiUrl = $"{ApiPath.OrderListPromotion}";
             var payload = new OrderDTO()
             {
                 CustomerPhone = orderData.CustomerPhone,
-                PromotionId = orderData.PromotionId,
+                //PromotionId = orderData.PromotionId,
                 DiscountId = orderData.DiscountId,
                 TotalPrice = orderData.TotalPrice,
                 MaterialProccessPrice = orderData.MaterialProccessPrice,
@@ -140,7 +140,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var response = await client.PostAsync(apiUrl, content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            return RedirectToPage("/Orders/OrderSucess");
+            return RedirectToPage("/Staff/Orders/OrderSucess");
         }
     }
 }

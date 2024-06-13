@@ -1,0 +1,151 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.CreateWarrantiesModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h2>Tạo phiếu bảo hành</h2>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="">
+                    <h3>Đơn hàng id</h3>
+                </div>
+                <form method="post">
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label class="control-label">Sản phẩm</label>
+                            <input asp-for="Warranty.OrderDetailId" type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua</label>
+                            <input asp-for="Warranty.DateOfPurchase" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Warranty.ExpirationDate" class="control-label">Ngày hết hạn</label>
+                            <input asp-for="Warranty.ExpirationDate" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <label asp-for="Warranty.Period" class="control-label">Thời hạn (tháng)</label>
+                            <input asp-for="Warranty.Period" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <!-- Add any additional form fields here if needed -->
+                    </div>
+                    <div class="form-group row justify-content-end">
+                        <div class="col-auto">
+                            <a asp-page="./Index" class="btn btn-danger">Hủy</a>
+                            <button type="submit" class="btn btn-primary">Hoàn tất</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#conditionModal">
+                    Chọn điều kiện bảo hành
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="conditionModal" tabindex="-1" aria-labelledby="conditionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="conditionModalLabel">Chọn điều kiện bảo hành</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th>Điều kiện</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conditionTableBody">
+                        <!-- Data will be populated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="saveConditionsButton">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Sample data for demonstration purposes
+        const conditions = [
+            { id: 1, name: 'Condition 1' },
+            { id: 2, name: 'Condition 2' },
+            { id: 3, name: 'Condition 3' },
+        ];
+
+        // Function to populate the table with conditions
+        function populateConditionTable() {
+            const tbody = document.getElementById('conditionTableBody');
+            tbody.innerHTML = ''; // Clear existing rows
+            conditions.forEach(condition => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
+                    <td>${condition.name}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Function to get selected conditions
+        function getSelectedConditions() {
+            const checkboxes = document.querySelectorAll('.condition-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
+            return selectedIds;
+        }
+
+        // Handle save button click
+        document.getElementById('saveConditionsButton').addEventListener('click', () => {
+            const selectedConditions = getSelectedConditions();
+            console.log('Selected conditions:', selectedConditions);
+            // Do something with the selected conditions, e.g., send to server or update UI
+        });
+
+        // Initialize the table when the modal is shown
+        document.getElementById('conditionModal').addEventListener('show.bs.modal', populateConditionTable);
+
+        async function loadConditions() {
+            const response = await fetch('@Url.Page("/Manager/Warranty/CreateWarranties", "OnGetCondition")');
+            const conditions = await response.json();
+            const tableBody = document.getElementById('conditionTableBody');
+            tableBody.innerHTML = '';
+
+            conditions.forEach(condition => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                                    <td>${condition.condition}</td>
+                                    <td><button class="btn btn-primary" onclick="selectCondition('${condition.id}', '${condition.condition}')">Chọn</button></td>
+                                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function selectCondition(id, condition) {
+            // Here you can set the selected condition to the form or any input field
+            // For example:
+            document.querySelector('[asp-for="Warranty.Id"]').value = id;
+            // Close the modal
+            var conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+            conditionModal.hide();
+        }
+
+        // Load conditions when modal is opened
+        document.getElementById('conditionModal').addEventListener('shown.bs.modal', loadConditions);
+    </script>
+}

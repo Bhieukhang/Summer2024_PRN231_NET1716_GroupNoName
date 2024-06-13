@@ -24,7 +24,7 @@
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
 
-        //Promotion
+        //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
 
         //Dashboard
@@ -36,6 +36,8 @@
         //Product
         public const string ProductList = url + "/api/v1/Product";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
+
+        public const string SubProductsList = url + "/api/v1/Product/subid";
 
         //Account
         public const string AccountList = url + "/api/v1/Account";
@@ -52,12 +54,13 @@
 
         //Order
         public const string OrderCreate = url + "/api/v1/order";
-        public const string OrderByID = url + "/api/v1/order";
+        public const string OrderByID = url + "/api/v1/order/id";
         public const string OrderCheckPromotion = url + "/api/v1/check";
         public const string GetListOrders = url + "/api/v1/order/GetListOrders";
+        public const string OrderListPromotion = url + "/api/v1/orderlist";
 
         //Warranty
-        public const string WarrantyList = url + "/api/v1/warranty";
+        public const string Warranty = url + "/api/v1/warranty";
 
         //ConditionWarranty
         public const string ConditionWarrantyList = url + "/api/v1/condition";

@@ -13,9 +13,9 @@
                         <h4 class="card-title">Tìm kiếm đơn hàng Jewelry</h4>
                         <form method="get" asp-page-handler="Search" class="forms-sample">
                             <div class="form-group row">
-                                <label for="searchCode" class="col-sm-2 col-form-label">Mã đơn hàng</label>
+                                <label for="SearchCode" class="col-sm-2 col-form-label">Mã đơn hàng</label>
                                 <div class="col-sm-10">
-                                    <input type="text" id="searchCode" name="SearchCode" class="form-control" placeholder="Nhập mã đơn hàng" />
+                                    <input type="text" id="SearchCode" name="SearchCode" class="form-control" placeholder="Nhập mã đơn hàng" />
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -47,9 +47,11 @@
                                     <tr>
                                         <td>@order.Id</td>
                                         <td>@order.TotalPrice</td>
+                                        @* <td>@order.MaterialProcessPrice</td> *@
                                         <td>@order.MaterialProccessPrice</td>
                                         <td>@order.CustomerPhone</td>
                                         <td>@order.PromotionId</td>
+@*                                         <td>@order.CustomerId</td> *@
                                         <td>@order.DiscountId</td>
                                     </tr>
                                 }
@@ -73,7 +75,6 @@
                     url: '@Url.Page("ListOrder", "OnGetAllOrdersAsync")',
                     type: 'GET',
                     success: function (result) {
-                        console.log(result);
                         // Update the order list with the received data
                         if (result && result.length > 0) {
                             var orderListHtml = '';

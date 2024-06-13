@@ -38,7 +38,6 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 CustomerId = customer.Id,
-                PromotionId = null,
                 Type = "BUY",
                 InsDate = DateTime.Now,
                 DiscountId = newData.DiscountId,
@@ -66,7 +65,6 @@ namespace JSS_Services.Implement
             {
                 //Caculate total price by promotion
                 totalPrice = await CalculateTotalPriceByPromotion((Guid)newData.PromotionId, (double)totalPrice);
-                order.PromotionId = newData.PromotionId;
             }
             order.TotalPrice = totalPrice;
             //Save order
@@ -75,9 +73,65 @@ namespace JSS_Services.Implement
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
-                                     order.MaterialProcessPrice, order.DiscountId, order.PromotionId);
+                                     order.MaterialProcessPrice, order.DiscountId);
         }
 
+        public async Task<OrderResponse> CreateOrderList(OrderRequestList newData)
+        {
+            List<OrderDetailPromotionRequest> productList = newData.Details;
+            bool isCheckPromotion = false;
+            //if (newData.PromotionId.HasValue)
+            //{
+            //    isCheckPromotion = await CheckPromotion(newData.PromotionId.Value, productList);
+            //}
+            //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
+            List<OrderDetail> listOrderDetail = new List<OrderDetail>();
+            double? totalPrice = 0;
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone.Equals(newData.CustomerPhone));
+            Order order = new Order()
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = customer.Id,
+                Type = "BUY",
+                InsDate = DateTime.Now,
+                DiscountId = newData.DiscountId,
+                TotalPrice = newData.TotalPrice,
+                MaterialProcessPrice = newData.MaterialProcessPrice,
+            };
+            foreach (var orderDetail in newData.Details)
+            {
+                OrderDetail detail = new OrderDetail()
+                {
+                    Id = Guid.NewGuid(),
+                    Amount = orderDetail.Amount,
+                    Quantity = orderDetail.Quantity,
+                    Discount = 0,
+                    TotalPrice = orderDetail.Amount * orderDetail.Quantity,
+                    OrderId = order.Id,
+                    ProductId = orderDetail.ProductId,
+                    InsDate = DateTime.Now
+                };
+                totalPrice += detail.TotalPrice;
+                listOrderDetail.Add(detail);
+                await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
+            }
+            //Caculate total price by promotion
+            foreach (var orderDetail in productList)
+            {
+                totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+            }
+
+            //order.PromotionId = newData.PromotionId;
+
+            order.TotalPrice = totalPrice;
+            //Save order
+            await _unitOfWork.GetRepository<Order>().InsertAsync(order);
+
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (isSuccessful == false) return null;
+            return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
+                                     order.MaterialProcessPrice, order.DiscountId);
+        }
         public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/)
         {
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
@@ -88,7 +142,8 @@ namespace JSS_Services.Implement
             //                         .Include(o => o.Promotion)
             );
 
-            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, o.MaterialProcessPrice, o.DiscountId, o.PromotionId));
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, 
+                o.MaterialProcessPrice, o.DiscountId));
         }
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
         {
@@ -109,8 +164,7 @@ namespace JSS_Services.Implement
                     order.InsDate,
                     order.TotalPrice,
                     order.MaterialProcessPrice,
-                    order.DiscountId,
-                    order.PromotionId
+                    order.DiscountId
                 );
 
                 return orderResponse;
@@ -197,11 +251,40 @@ namespace JSS_Services.Implement
                 o.InsDate,
                 o.TotalPrice,
                 o.MaterialProcessPrice,
-                o.DiscountId,
-                o.PromotionId
+                o.DiscountId
             ));
 
             return orderResponses;
         }
+        public async Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone)
+        {
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(c => c.Phone == phone, include: c => c.Include(c => c.Orders));
+            if (customer != null)
+            {
+                var inforCustomer = new InforCustomer(customer.Id, customer.FullName, customer.Phone, customer.Address, customer.ImgUrl);
+
+                var listOrder = new List<OrderResponse>();
+                foreach (var order in customer.Orders)
+                {
+                    var orderItem = new OrderResponse()
+                    {
+                        Id = order.Id,
+                        CustomerId = order.CustomerId,
+                        Type = order.Type,
+                        InsDate = order.InsDate,
+                        TotalPrice = order.TotalPrice,
+                        MaterialProcessPrice = order.MaterialProcessPrice
+                    };
+                    listOrder.Add(orderItem);
+                }
+
+                // Tạo đối tượng CustomerOrderResponse và gán giá trị
+                var customerOrder = new CustomerOrderResponse(inforCustomer, listOrder);
+
+                return customerOrder;
+            }
+            return null;
+        }
+
     }
 }

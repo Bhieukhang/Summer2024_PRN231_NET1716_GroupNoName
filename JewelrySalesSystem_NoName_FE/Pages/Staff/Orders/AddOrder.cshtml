@@ -136,6 +136,7 @@
             //Thêm mới sản phẩm
             $('#addProductBtn').click(function () {
                 var productCode = $('#productCode').val();
+                console.log("Product Code: ", productCode);
                 if (!productCode) {
                     alert('Vui lòng nhập mã sản phẩm');
                     return;
@@ -252,6 +253,7 @@
             // Sự kiện khi chọn khuyến mãi
             $('#promotionForm').on('change', 'input[name="promotion"]', function () {
                 var selectedPromotionId = $(this).val();
+                // console.log("Gọi event lấy promotion: ", )
                 var productCode = $(this).closest('.product-item').data('product-code');
                 if (selectedPromotionId && productCode) {
                     applyPromotion(selectedPromotionId, productCode);
@@ -333,15 +335,15 @@
 
                 const productDetails = [];
                 $('#productList .product-item').each(function () {
+                    const promotionId = selectedPromotionId || null;
                     const productId = $(this).data('product-id');
                     const quantity = parseInt($(this).find('.quantity-input').val());
                     const amount = parseFloat($(this).find('input[type="text"][readonly]').eq(2).val()) * quantity;
-                    productDetails.push({ productId: productId, quantity: quantity, amount: amount });
+                    productDetails.push({ productId: productId, quantity: quantity, amount: amount, promotionId: promotionId });
                 });
                 console.log("Product details:", productDetails);
                 const orderData = {
                     customerPhone: $('#customerPhone').val(),
-                    promotionId: selectedPromotionId || null,
                     discountId: null,
                     totalPrice: totalPrice - totalDiscount,
                     materialProcessPrice: 0,

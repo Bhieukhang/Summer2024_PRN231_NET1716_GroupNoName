@@ -36,6 +36,7 @@ public partial class Product
     public string? ImgProduct { get; set; }
 
     public double? Tax { get; set; }
+    public Guid? SubId { get; set; }
 
     public virtual Category? Category { get; set; }
 
@@ -46,10 +47,4 @@ public partial class Product
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
-
-    // Tính giá nhập vào
-    //public double CalculateImportPrice()
-    //{
-    //    return (ImportPrice ?? 0);
-    //}
 }
