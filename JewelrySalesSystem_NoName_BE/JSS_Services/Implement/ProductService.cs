@@ -1,4 +1,5 @@
 ﻿using Firebase.Storage;
+using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -23,6 +24,24 @@ namespace JSS_Services.Implement
             : base(unitOfWork, logger)
         {
         }
+
+        //get all subid
+        public async Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size)
+        {
+
+                IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
+                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity, x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId),
+                    predicate: x => x.SubId == subId,
+                    orderBy: x => x.OrderByDescending(x => x.Id),
+                    page: page,
+                    size: size);
+                return list;
+        }
+
+
+
+
+
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
@@ -206,7 +225,7 @@ namespace JSS_Services.Implement
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag, productItem.Tax);
+                                                           productItem.Deflag, productItem.Tax, productItem.SubId);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 

@@ -33,7 +33,7 @@ public partial class ProductDTO
     public double? ProcessPrice { get; set; }
 
     public Guid? MaterialId { get; set; }
-
+    public Guid? SubId { get; set; }
     public string? Code { get; set; }
     public double? Tax { get; set; }
 

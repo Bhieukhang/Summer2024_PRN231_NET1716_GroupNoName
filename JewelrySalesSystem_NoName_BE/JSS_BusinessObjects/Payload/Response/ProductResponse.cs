@@ -10,10 +10,30 @@ namespace JSS_BusinessObjects.Payload.Response
     public class ProductResponse
     {
         public ProductResponse() { }
+
+        public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId)
+        {
+            Id = id;
+            ImgProduct = imgProduct;
+            ProductName = productName;
+            Description = description;
+            Size = size;
+            SellingPrice = sellingPrice;
+            Quantity = quantity;
+            CategoryId = categoryId;
+            MaterialId = materialId;
+            Code = code;
+            ImportPrice = importPrice;
+            InsDate = insDate;
+            ProcessPrice = processPrice;
+            Deflag = deflag;
+            SubId = subId;
+        }
+
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
-            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax)
-        { 
+            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId)
+        {
             Id = id;
             ImgProduct = imgProduct;
             ProductName = productName;
@@ -29,6 +49,7 @@ namespace JSS_BusinessObjects.Payload.Response
             ProcessPrice = processPrice;
             Deflag = deflag;
             Tax = tax;
+            SubId = subId;
         }
         public Guid Id { get; set; }
 
@@ -60,7 +81,7 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public string? ImgProduct { get; set; }
         public double? Tax { get; set; }
-
+        public Guid? SubId { get; set; }
         public virtual Category? Category { get; set; }
         public virtual Material? Material { get; set; }
 
