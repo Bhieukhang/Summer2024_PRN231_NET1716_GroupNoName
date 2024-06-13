@@ -15,5 +15,5 @@ public partial class ConditionWarranty
 
     public string? Type { get; set; }
 
-    public virtual ICollection<Warranty> Warranties { get; } = new List<Warranty>();
+    public virtual ICollection<WarrantyMappingCondition> WarrantyMappingConditions { get; } = new List<WarrantyMappingCondition>();
 }

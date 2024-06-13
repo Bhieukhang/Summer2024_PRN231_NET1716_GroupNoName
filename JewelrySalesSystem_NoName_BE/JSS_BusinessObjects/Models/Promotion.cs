@@ -25,7 +25,7 @@ public partial class Promotion
 
     public DateTime? EndDate { get; set; }
 
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
 

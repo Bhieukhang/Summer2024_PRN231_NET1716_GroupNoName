@@ -46,6 +46,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
         }
 
+        #region PostOrderList
+        /// <summary>
+        /// Create new order in stall.
+        /// </summary>
+        /// <returns>Order item in stall.</returns>
+        // POST: api/v1/order
+        #endregion
+        //[Authorize(Roles = "Staff")]
+        [HttpPost(ApiEndPointConstant.Order.OrderEndpointList)]
+        public async Task<ActionResult> PostOrderList([FromBody] OrderRequestList orderData)
+        {
+            if (orderData.DiscountId == Guid.Empty)
+            {
+                orderData.DiscountId = null;
+            }
+            var order = await _service.CreateOrderList(orderData);
+            var result = JsonConvert.SerializeObject(order, Formatting.Indented);
+            return Ok(result);
+
+        }
+
         #region SearchOrders
         /// <summary>
         /// Search orders by customer ID and start date.
@@ -84,7 +105,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
 
             return Ok(result);
-        } 
+        }
 
         #region PostCheckProduct
         /// <summary>
@@ -156,6 +177,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
             var orders = await _service.GetAllOrders();
             return Ok(orders);
+        }
+
+        #region GetListOrderByCustomerPhone
+        /// <summary>
+        /// List order search by phone customer 
+        /// </summary>
+        /// <returns>List order <returns>
+        // POST: api/v1/order/order/customer
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderListCusomerPhone)]
+        public async Task<ActionResult> GetListOrderByCustomerPhone(string phone)
+        {
+            var result = await _service.GetListOrderByCustomerPhone(phone);
+            var item = JsonConvert.SerializeObject(result, Formatting.Indented);
+            return Ok(item);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using JSS_BusinessObjects.Models;
-using JSS_DataAccessObjects;
+﻿using JSS_DataAccessObjects;
+using JSS_BusinessObjects.Models;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;

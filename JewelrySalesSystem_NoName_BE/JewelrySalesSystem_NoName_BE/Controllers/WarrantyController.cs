@@ -13,7 +13,7 @@ using System.Drawing;
 namespace JewelrySalesSysmte_NoName_BE.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class WarrantyController : ControllerBase
     {
         private readonly IWarrantyService _service;
@@ -63,12 +63,13 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         /// <returns>Warraty item</returns>
         // POST: api/v1/warranty
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        //[Authorize(Roles = "Manager, Staff")]
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
-        public async Task<ActionResult> CreateWarranty(WarrantyRequest warranty)
+        public async Task<ActionResult> CreateWarranty(List<WarrantyRequest> warranty, [FromQuery] string phone)
         {
-            var newWarranty = await _service.CreateWarranty(warranty);
-            return Ok(newWarranty);
+            var newWarranty = await _service.CreateWarranty(warranty, phone);
+            var result = JsonConvert.SerializeObject(newWarranty, Formatting.Indented);
+            return Ok(result);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             var client = _httpClientFactory.CreateClient();
 
-            var apiUrl = $"{ApiPath.OrderByID}/id?id={SearchCode}";
+            var apiUrl = $"{ApiPath.OrderByID}?id={SearchCode}";
             var response = await client.GetAsync(apiUrl);
             if (response.IsSuccessStatusCode)
             {
