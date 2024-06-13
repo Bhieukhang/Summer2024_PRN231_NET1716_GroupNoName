@@ -179,7 +179,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedAccount.Status,
                 updatedAccount.Deflag,
                 updatedAccount.RoleId,
-                updatedAccount.InsDate
+                updatedAccount.InsDate,
+                updatedAccount.UpsDate
             ));
         }
 
@@ -233,7 +234,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdAccount.Status,
                 createdAccount.Deflag,
                 createdAccount.RoleId,
-                createdAccount.InsDate
+                createdAccount.InsDate,
+                createdAccount.UpsDate
             ));
         }
 

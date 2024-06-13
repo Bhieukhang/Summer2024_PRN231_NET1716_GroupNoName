@@ -28,7 +28,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size); ;
@@ -37,7 +37,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 predicate: x => x.RoleId == roleId,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -105,6 +105,8 @@ namespace JSS_Services.Implement
                 account.Id = Guid.NewGuid();
                 account.ImgUrl = imageUrl;
                 account.InsDate = DateTime.UtcNow;
+                account.Status = "Active";
+                account.UpsDate = DateTime.UtcNow;
                 //account.RoleId = DefaultRoleId;
                 
                 account.Deflag = true;
@@ -144,6 +146,7 @@ namespace JSS_Services.Implement
                 _account.Address = account.Address != default ? account.Address : _account.Address;
                 _account.Deflag = account.Deflag != default ? account.Deflag : _account.Deflag;
                 _account.RoleId = account.RoleId != Guid.Empty ? account.RoleId : _account.RoleId;
+                _account.Status = account.Status != default ? account.Status : _account.Status;
 
                 if (imageStream != null)
                 {
@@ -185,6 +188,7 @@ namespace JSS_Services.Implement
                 account.FullName = !string.IsNullOrEmpty(updateProfileDto.FullName) ? updateProfileDto.FullName : account.FullName;
                 account.Dob = updateProfileDto.Dob != default ? updateProfileDto.Dob : account.Dob;
                 account.Address = !string.IsNullOrEmpty(updateProfileDto.Address) ? updateProfileDto.Address : account.Address;
+                account.Password = !string.IsNullOrEmpty(updateProfileDto.Password) ? updateProfileDto.Password : account.Password;
 
                 if (imageStream != null)
                 {

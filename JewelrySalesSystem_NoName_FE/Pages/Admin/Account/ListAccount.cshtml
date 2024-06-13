@@ -91,7 +91,15 @@
                                             <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
                                             <td> @account.Address </td>
 
+                                            <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                             <td>
+                                                <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Chỉnh sửa
+                                                </a>
+                                            </td>
+
+                                            @* <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
                                                     <i class="fa fa-eye menu-icon"></i>
                                                 </button>
@@ -100,9 +108,9 @@
                                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@account.Id">
                                                     <i class="fa fa-edit menu-icon"></i>
                                                 </button>
-                                            </td>
+                                            </td> *@
                                         </tr>
-                                        <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
+                                        @* <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -119,7 +127,7 @@
                                                         <p>RoleId: @account.RoleId</p>
                                                         <p>InsDate: @(account.InsDate.HasValue ? account.InsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
                                                         <p>UpsDate: @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                                        @* <p>Status: @account.Status</p> *@
+                                                        <p>Status: @account.Status</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -189,7 +197,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> *@
                                     }
 
                                 </tbody>

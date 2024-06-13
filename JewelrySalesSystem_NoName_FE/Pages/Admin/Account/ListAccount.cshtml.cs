@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using Microsoft.AspNetCore.Authorization;
+using JewelrySalesSystem_NoName_FE.DTOs.Role;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 {
@@ -24,6 +25,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
         }
 
         public IList<AccountDAO> ListAccount { get; set; } = new List<AccountDAO>();
+        public IList<RoleDAO> RoleList { get; set; } = new List<RoleDAO>();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalItems { get; set; }
@@ -61,6 +63,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 
                TotalAccountCount = await client.GetFromJsonAsync<int>(totalCountUrl);
                 ActiveAccountCount = await client.GetFromJsonAsync<int>(activeCountUrl);
+
+                var roleApiUrl = $"{ApiPath.RoleList}";
+                var roleResponse = await client.GetAsync(roleApiUrl);
+                RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
             }
             catch (Exception ex)
             {
