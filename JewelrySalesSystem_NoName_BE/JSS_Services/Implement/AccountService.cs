@@ -158,10 +158,10 @@ namespace JSS_Services.Implement
                 {
                     account.ImgUrl = _account.ImgUrl;
                 }
-                account.UpsDate = DateTime.UtcNow;
+                _account.UpsDate = DateTime.UtcNow;
 
                 accountRepository.UpdateAsync(_account);
-                await _unitOfWork.CommitAsync();
+                //await _unitOfWork.CommitAsync();
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful) return null;
 
