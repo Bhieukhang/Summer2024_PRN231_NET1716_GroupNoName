@@ -45,9 +45,10 @@
         public const string TotalAccount = url + "/api/v1/Account/Total-account";
         public const string ActiveAccount = url + "/api/v1/Account/Active-account";
         public const string SearchAccount = url + "/api/v1/Account/search/member";
+        public const string FilteredAccounts = url + "/api/v1/Account/Filtered";
 
         //Emloyees
-        public const string EmployeesList = url + "/api/v1/AccountByRole";
+        public const string EmployeesList = url + "/api/v1/Account";
 
         //stall
         public const string StallList = url + "/api/v1/Stall";

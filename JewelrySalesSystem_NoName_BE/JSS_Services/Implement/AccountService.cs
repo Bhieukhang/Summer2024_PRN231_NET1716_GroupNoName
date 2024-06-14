@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JSS_DataAccessObjects;
+using LinqKit;
 
 namespace JSS_Services.Implement
 {
@@ -43,6 +44,50 @@ namespace JSS_Services.Implement
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size);
+            return listAccount;
+        }
+
+        //public async Task<IPaginate<AccountResponse>> GetListAccountWithDeflagFalseAsync(int page, int size)
+        //{
+        //    Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
+
+        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+        //        selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+        //        predicate: x => x.Deflag == false && x.RoleId != excludedRoleId,
+        //        orderBy: x => x.OrderByDescending(x => x.Id),
+        //        page: page,
+        //        size: size);
+        //    return listAccount;
+        //}
+
+        public async Task<IPaginate<AccountResponse>> GetFilteredAccountsAsync(string? searchTerm, Guid? roleId, bool? deflag, int page, int size)
+        {
+            var accountRepository = _unitOfWork.GetRepository<Account>();
+
+            var predicate = PredicateBuilder.New<Account>(true);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                predicate = predicate.And(x => x.FullName.Contains(searchTerm));
+            }
+
+            if (roleId.HasValue)
+            {
+                predicate = predicate.And(x => x.RoleId == roleId.Value);
+            }
+
+            if (deflag.HasValue)
+            {
+                predicate = predicate.And(x => x.Deflag == deflag.Value);
+            }
+
+            var listAccount = await accountRepository.GetList(
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+                predicate: predicate,
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size);
+
             return listAccount;
         }
 

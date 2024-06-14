@@ -26,5 +26,7 @@ namespace JSS_Services.Interface
         Task<Account> SearchAccountsByNameAsync(string name);
 
         Task<SearchAccountResponse> SearchMembership(string phone);
+        //Task<IPaginate<AccountResponse>> GetListAccountWithDeflagFalseAsync(int page, int size);
+        Task<IPaginate<AccountResponse>> GetFilteredAccountsAsync(string searchTerm, Guid? roleId, bool? deflag, int page, int size);
     }
 }
