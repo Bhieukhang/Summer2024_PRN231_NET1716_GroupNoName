@@ -140,7 +140,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var response = await client.PostAsync(apiUrl, content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            return RedirectToPage("/Staff/Orders/OrderSucess");
+            var orderId = JsonConvert.DeserializeObject<dynamic>(responseString).orderId;
+            return RedirectToPage("/Manager/Warranty/CreateWarranties", new { orderId = orderId });
         }
     }
 }

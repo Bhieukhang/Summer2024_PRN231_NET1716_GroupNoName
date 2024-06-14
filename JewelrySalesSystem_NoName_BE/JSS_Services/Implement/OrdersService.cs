@@ -285,6 +285,43 @@ namespace JSS_Services.Implement
             }
             return null;
         }
+        public async Task<OrderDetailList> GetListOrderDetailByIdAsync(Guid id)
+        {
+            try
+            {
+                var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id, 
+                                                                         include: a => a.Include(a => a.OrderDetails));
+                if (order == null)
+                {
+                    return null;
+                }
+                OrderDetailList orderItem = new OrderDetailList();
+                orderItem.OrderId = id;
+                List<OrderDetailResponse> listDetail = new List<OrderDetailResponse>();
+                foreach (var item in order.OrderDetails)
+                {
+                    OrderDetailResponse o = new OrderDetailResponse()
+                    {
+                        Id = item.Id,
+                        Amount = item.Amount,
+                        Quantity = item.Quantity,
+                        Discount = item.Discount,
+                        TotalPrice = item.TotalPrice,
+                        OrderId = item.OrderId,
+                        ProductId = item.ProductId,
+                        InsDate= item.InsDate,
+                    };
+                    listDetail.Add(o);
+                }
+                orderItem.ListOrder = listDetail;
 
+                return orderItem;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting the order by ID");
+                throw;
+            }
+        }
     }
 }

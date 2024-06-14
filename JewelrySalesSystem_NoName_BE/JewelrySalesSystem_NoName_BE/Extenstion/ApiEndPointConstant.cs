@@ -117,6 +117,7 @@
             public const string AllOrdersEndpoint = ApiEndpoint + "/order/GetListOrders"; 
             public const string OrderEndpointList = ApiEndpoint + "/orderlist";
             public const string OrderListCusomerPhone = OrderEndpoint + "/customer";
+            public const string OrderListDetail = OrderEndpoint + "/detail";
         }
         public static class Discount
         {

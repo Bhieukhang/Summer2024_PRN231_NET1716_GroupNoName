@@ -56,6 +56,7 @@
         public const string OrderCheckPromotion = url + "/api/v1/check";
         public const string GetListOrders = url + "/api/v1/order/GetListOrders";
         public const string OrderListPromotion = url + "/api/v1/orderlist";
+        public const string OrderListDetail = url + "/api/v1/order/detail";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";

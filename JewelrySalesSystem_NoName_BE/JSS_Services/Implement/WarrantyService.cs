@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,7 +22,8 @@ namespace JSS_Services.Implement
 {
     public class WarrantyService : BaseService<WarrantyService>, IWarrantyService
     {
-        public WarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<WarrantyService> logger) : base(unitOfWork, logger)
+        public WarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, 
+            ILogger<WarrantyService> logger) : base(unitOfWork, logger)
         {
         }
 
@@ -62,35 +64,46 @@ namespace JSS_Services.Implement
             return ListWarranties;
         }
 
-        public async Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> newData, string phone)
+        public async Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> list, string phone)
         {
             List<WarrantyCreateResponse> listWarranty = new List<WarrantyCreateResponse>();
-            foreach (WarrantyRequest item in newData)
+            var WarId = Guid.NewGuid();
+            foreach (var item in list)
             {
-                var warItem = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(x => x.OrderDetailId == item.OrderDetailId);
-                if (warItem != null)
+                Warranty warranty = new Warranty()
                 {
-                    continue;
-                }
-                Warranty war = new Warranty()
-                {
-                    Id = Guid.NewGuid(),
-                    DateOfPurchase = DateTime.Now,
-                    ExpirationDate = DateTime.Now,
+                    Id = WarId,
+                    DateOfPurchase = item.DateOfPurchase,
+                    ExpirationDate = item.ExpirationDate,
                     Period = item.Period,
                     Deflag = true,
                     OrderDetailId = (Guid)item.OrderDetailId,
-                    ConditionWarrantyId = Guid.Parse("B1958280-788A-4BD8-95C3-EEF953878098"),
+                    Phone = phone,
                     Status = "Active",
                     Note = item.Note,
-                    Phone = phone
+                    //ConditionWarrantyId = Guid.NewGuid(),
                 };
-                listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = war.Id });
-                await _unitOfWork.GetRepository<Warranty>().InsertAsync(war);
-                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-                if (isSuccessful == false) return null;
+                await _unitOfWork.GetRepository<Warranty>().InsertAsync(warranty);
+                //var conditionId = item.ConditionMap.ConditionWarrantyId;
+                foreach (var map in item.ConditionMap)
+                {
+                    WarrantyMappingCondition condition = new WarrantyMappingCondition()
+                    {
+                        Id = Guid.NewGuid(),
+                        ConditionWarrantyId = map.ConditionWarrantyId,
+                        WarrantyId = warranty.Id,
+                        InsDate = DateTime.Now,
+                    };
+                    await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
+                }
             }
            
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful)
+            {
+                throw new Exception("Commit failed, no rows affected.");
+            }
+            listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
             return listWarranty;
         }
     }

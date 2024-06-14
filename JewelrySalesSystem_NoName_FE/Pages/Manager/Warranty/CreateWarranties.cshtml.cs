@@ -1,4 +1,5 @@
 ﻿using JewelrySalesSystem_NoName_FE.DTOs;
+using JewelrySalesSystem_NoName_FE.DTOs.Orders;
 using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -25,28 +26,36 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
         [BindProperty]
         public WarrantyCreate Warranty { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string OrderId { get; set; }
+        public List<OrderDetailResponse> ListOrder { get; set; } = new List<OrderDetailResponse>();
+        public IList<ConditionWarrantyDTO> ConditionWarranties { get; set; } = new List<ConditionWarrantyDTO>();
 
-        public async Task<IActionResult> OnGetCondition()
+        public async Task<IActionResult> OnGetAsync(string OrderId)
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToPage("/Auth/Login");
             }
-
+            OrderId = "0EFC9E98-9E2D-44D0-98FE-4B4E0F38CA8B";
             var url = $"{ApiPath.ConditionWarrantyList}?page=1&size=100";
+            var apiUrl = $"{ApiPath.OrderListDetail}?id={OrderId}";
             try
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetStringAsync(url);
+                var response = await client.GetStringAsync(apiUrl);
+                var result = JsonConvert.DeserializeObject<OrderDetailList>(response);
+                ListOrder = result.ListOrder;
 
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<ConditionWarrantyDTO>>(response);
+                var responseCondition = await client.GetStringAsync(url); 
+                var resultCondition = JsonConvert.DeserializeObject<Paginate<ConditionWarrantyDTO>>(responseCondition);
+                ConditionWarranties = resultCondition.Items;
             }
             catch (Exception ex)
             {
-                // Handle error appropriately
-                //ConditionWarranties = new List<ConditionWarrantyDTO>();
+                return Page();
             }
 
             return Page();
@@ -62,7 +71,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 {
                     return RedirectToPage("/Auth/Login");
                 }
-                Warranty.ConditionWarrantyId = Guid.Parse("51142E3C-729C-49B4-B6CF-135D4DF06BA5");
+                //Warranty.ConditionWarrantyId = Guid.Parse("51142E3C-729C-49B4-B6CF-135D4DF06BA5");
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -71,12 +80,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Nếu thành công, chuyển hướng đến trang khác
                     return Redirect("~/Staff/Orders/OrderBill");
                 }
                 else
                 {
-                    // Nếu không thành công, xử lý lỗi
                     ModelState.AddModelError(string.Empty, "Error sending order to backend.");
                     return Page();
                 }

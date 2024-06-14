@@ -193,5 +193,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var item = JsonConvert.SerializeObject(result, Formatting.Indented);
             return Ok(item);
         }
+
+        #region GetListOrderDetailById
+        /// <summary>
+        /// List order detail search by id customer 
+        /// </summary>
+        /// <returns>List order detail<returns>
+        // POST: api/v1/order/order/detail
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderListDetail)]
+        public async Task<ActionResult> GetListOrderDetailById(Guid id)
+        {
+            var result = await _service.GetListOrderDetailByIdAsync(id);
+            var item = JsonConvert.SerializeObject(result, Formatting.Indented);
+            return Ok(item);
+        }
     }
 }
