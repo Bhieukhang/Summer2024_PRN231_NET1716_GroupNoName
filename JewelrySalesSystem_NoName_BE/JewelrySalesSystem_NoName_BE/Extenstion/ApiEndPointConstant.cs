@@ -43,8 +43,6 @@
             public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
             public const string SearchAccountEndpoint = AccountEndpoint + "/name";
             public const string SearchMemberEndpoint = ApiEndpoint + "/Account/search/member";
-            //public const string AccountsWithDeflagFalseEndpoint = AccountEndpoint + "/DeflagFalse";
-            public const string FilteredAccountsEndpoint = AccountEndpoint + "/Filtered";
         }
 
         public static class Role
@@ -90,10 +88,10 @@
             public const string MaterialEndpoint = ApiEndpoint + "/Material";
             public const string MaterialByIdEndpoint = MaterialEndpoint + "/id";
         }
-        public static class ProductMaterial
+        public static class Diamond
         {
-            public const string ProductMaterialEndpoint = ApiEndpoint + "/ProductMaterial";
-            public const string ProductMaterialByIdEndpoint = ProductMaterialEndpoint + "/id";
+            public const string DiamondEndpoint = ApiEndpoint + "/Diamond";
+            public const string DiamondByDiamondIdEndpoint = DiamondEndpoint + "/id";
         }
         public static class Membership
         {
