@@ -179,7 +179,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedAccount.Status,
                 updatedAccount.Deflag,
                 updatedAccount.RoleId,
-                updatedAccount.InsDate
+                updatedAccount.InsDate,
+                updatedAccount.UpsDate
             ));
         }
 
@@ -233,7 +234,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdAccount.Status,
                 createdAccount.Deflag,
                 createdAccount.RoleId,
-                createdAccount.InsDate
+                createdAccount.InsDate,
+                createdAccount.UpsDate
             ));
         }
 
@@ -346,6 +348,45 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var member = await _accountService.SearchMembership(phone);
             var result = JsonConvert.SerializeObject(member, Formatting.Indented);
             return Ok(result);
+        }
+
+        //#region GetAccountsWithDeflagFalse
+        ///// <summary>
+        ///// Get all accounts with deflag set to false.
+        ///// </summary>
+        ///// <returns>List of accounts with deflag set to false.</returns>
+        //// GET: api/Account/DeflagFalse
+        //#endregion
+        //[Authorize(Roles = "Manager, Admin")]
+        //[HttpGet(ApiEndPointConstant.Account.AccountsWithDeflagFalseEndpoint)]
+        //[ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> GetListAccountWithDeflagFalseAsync(int page, int size)
+        //{
+        //    var list = await _accountService.GetListAccountWithDeflagFalseAsync(page, size);
+        //    var accounts = JsonConvert.SerializeObject(list, Formatting.Indented);
+        //    return Ok(accounts);
+        //}
+
+        #region GetFilteredAccounts
+        /// <summary>
+        /// Get filtered accounts by search term, role and/or deflag.
+        /// </summary>
+        /// <param name="searchTerm">Search term to filter by.</param>
+        /// <param name="roleId">Role ID to filter by.</param>
+        /// <param name="deflag">Deflag status to filter by.</param>
+        /// <param name="page">Page number.</param>
+        /// <param name="size">Page size.</param>
+        /// <returns>List of filtered accounts.</returns>
+        // GET: api/Account/Filtered
+        #endregion
+        [Authorize(Roles = "Manager, Admin")]
+        [HttpGet(ApiEndPointConstant.Account.FilteredAccountsEndpoint)]
+        [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFilteredAccountsAsync(string? searchTerm, Guid? roleId, bool? deflag, int page, int size)
+        {
+            var list = await _accountService.GetFilteredAccountsAsync(searchTerm, roleId, deflag, page, size);
+            var accounts = JsonConvert.SerializeObject(list, Formatting.Indented);
+            return Ok(accounts);
         }
     }
 }

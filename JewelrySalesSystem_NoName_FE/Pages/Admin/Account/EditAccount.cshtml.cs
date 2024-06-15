@@ -1,6 +1,7 @@
 using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Role;
+using JewelrySalesSystem_NoName_FE.Pages.Admin.Account;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 {
-    public class CreateAccountModel : PageModel
+    public class EditAccountModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
@@ -21,14 +22,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
         public IFormFile Image { get; set; }
         public IList<RoleDAO> RoleList { get; set; } = new List<RoleDAO>();
 
-        public CreateAccountModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public EditAccountModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _bucket = _configuration["Firebase:Bucket"];
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -42,8 +43,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var roleApiUrl = $"{ApiPath.RoleList}";
-                var response = await client.GetAsync(roleApiUrl);
+                var apiUrl = $"{ApiPath.AccountList}/id?id={id}";
+                var response = await client.GetAsync(apiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -51,7 +52,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                     return RedirectToPage("/Auth/Login");
                 }
 
-                RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await response.Content.ReadAsStringAsync());
+                Account = JsonConvert.DeserializeObject<AccountDAO>(await response.Content.ReadAsStringAsync());
+
+                var roleApiUrl = $"{ApiPath.RoleList}";
+                var roleResponse = await client.GetAsync(roleApiUrl);
+                RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
 
                 return Page();
             }
@@ -62,7 +67,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(Guid id)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -100,12 +105,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                     }
                 }
 
-                Account.Id = Guid.NewGuid();
-                Account.InsDate = DateTime.Now;
-                Account.UpsDate = DateTime.Now;
-                Account.Deflag = true;
-                Account.Status = "Active";
-
                 var accountRequest = new AccountDAO
                 {
                     FullName = Account.FullName,
@@ -114,18 +113,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                     Password = Account.Password,
                     Address = Account.Address,
                     ImgUrl = Account.ImgUrl,
-                    Status = Account.Status,
                     Deflag = Account.Deflag,
                     RoleId = Account.RoleId,
-                    InsDate = Account.InsDate,
-                    UpsDate = Account.UpsDate,
                 };
 
                 var json = JsonConvert.SerializeObject(accountRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var apiUrl = $"{ApiPath.AccountList}";
-                var response = await client.PostAsync(apiUrl, content);
+                var apiUrl = $"{ApiPath.AccountList}/id?id={id}";
+                var response = await client.PutAsync(apiUrl, content);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -135,13 +131,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The new account is created successfully!";
+                    TempData["SuccessMessage"] = "The Account is edited successfully!";
                     return RedirectToPage("./ListAccount");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while adding the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the product. Status Code: {response.StatusCode}, Response: {responseBody}");
                 }
             }
             catch (Exception ex)
