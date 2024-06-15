@@ -30,7 +30,8 @@ namespace JSS_Services.Implement
         {
 
                 IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity, x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId),
+                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity
+                    , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId),
                     predicate: x => x.SubId == subId,
                     orderBy: x => x.OrderByDescending(x => x.Id),
                     page: page,
@@ -38,14 +39,10 @@ namespace JSS_Services.Implement
                 return list;
         }
 
-
-
-
-
-
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
+            return await _unitOfWork.GetRepository<Product>().GetListAsync(predicate: p => p.Deflag == true,
+                include: s => s.Include(p => p.Category));
         }
 
         public async Task<Product> GetProductByIdAsync(Guid id)

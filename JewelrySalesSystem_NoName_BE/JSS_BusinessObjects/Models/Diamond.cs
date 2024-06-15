@@ -21,5 +21,7 @@ public partial class Diamond
 
     public Guid JewelryId { get; set; }
 
+    public string? ImageDiamond { get; set; }
+
     public virtual Product Jewelry { get; set; } = null!;
 }

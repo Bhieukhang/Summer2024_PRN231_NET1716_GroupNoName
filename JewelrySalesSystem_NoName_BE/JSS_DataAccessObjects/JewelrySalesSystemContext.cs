@@ -286,6 +286,12 @@ public partial class JewelrySalesSystemContext : DbContext
                 .HasConstraintName("FK_Stall_User");
         });
 
+        modelBuilder.Entity<SubProduct>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.TitleProductName).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Transaction>(entity =>
         {
             entity.ToTable("Transaction");
