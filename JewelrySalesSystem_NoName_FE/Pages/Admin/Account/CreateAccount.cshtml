@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Admin.Account.CreateAccountModel
+@model CreateAccountModel
 @{
 }
 <body>
@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Account.Password" class="control-label">Mật khẩu</label>
-                                    <input asp-for="Account.Password" class="form-control" />
+                                    <input asp-for="Account.Password" type="password" class="form-control" />
                                     <span asp-validation-for="Account.Password" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">

@@ -1,0 +1,82 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Admin.Account.EditAccountModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Chỉnh sửa thông tin tài khoản </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @*Thêm*@
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <!-- Basic form -->
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        @* <h4 class="card-title">CẬP NHẬT TÀI KHOẢN</h4> *@
+                        <form class="forms-sample" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label asp-for="Account.FullName" class="control-label">Họ tên</label>
+                                <input asp-for="Account.FullName" class="form-control" placeholder="Họ tên" />
+                                <span asp-validation-for="Account.FullName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.Phone" class="control-label">Số điện thoại</label>
+                                <input asp-for="Account.Phone" class="form-control" placeholder="0xxxxxxxxx" />
+                                <span asp-validation-for="Account.Phone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.Dob" class="control-label">Ngày tháng năm sinh</label>
+                                <input asp-for="Account.Dob" class="form-control" placeholder="" />
+                                <span asp-validation-for="Account.Dob" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Image" class="control-label">Hình Ảnh Đại Diện</label>
+                                @if (!string.IsNullOrEmpty(Model.Account.ImgUrl))
+                                {
+                                    <div>
+                                        <img src="@Model.Account.ImgUrl" alt="Account Image" style="max-width: 200px; max-height: 200px;" />
+                                    </div>
+                                }
+                                <input type="file" asp-for="Image" class="form-control-file" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.Password" class="control-label">Mật khẩu</label>
+                                <input asp-for="Account.Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                                <span asp-validation-for="Account.Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.Address" class="control-label">Địa chỉ</label>
+                                <input asp-for="Account.Address" class="form-control" placeholder="Nhập địa chỉ" />
+                                <span asp-validation-for="Account.Address" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.Deflag" class="control-label"></label>
+                                <input asp-for="Account.Deflag" class="form-control" />
+                                <span asp-validation-for="Account.Deflag" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Account.RoleId" class="control-label">Chức vụ</label>
+                                <select asp-for="Account.RoleId" class="form-control" asp-items="@(new SelectList(Model.RoleList, "Id", "RoleName"))">
+                                    <option value="">Chọn chức vụ</option>
+                                </select>
+                                <span asp-validation-for="Account.RoleId" class="text-danger"></span>
+                            </div>
+                            @* <div class="form-group">
+                                <label asp-for="Product.DeflagChecked" class="control-label">Trạng thái</label>
+                                <input type="checkbox" asp-for="Product.DeflagChecked" />
+                                <span asp-validation-for="Product.DeflagChecked" class="text-danger"></span>
+                            </div> *@
+                            <button type="submit" class="btn btn-gradient-primary me-2">Cập Nhật</button>
+                            <a asp-page="./ListAccount" class="btn btn-gradient-light btn-fw">Hủy</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

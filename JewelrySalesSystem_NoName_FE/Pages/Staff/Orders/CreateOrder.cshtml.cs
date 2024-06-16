@@ -123,10 +123,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             };
             order.Details.Add(o);
 
-            //var token = HttpContext.Session.GetString("Token");
-
-            //var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
-            //var response = await ApiClient.PostAsync<ApiResponse>(apiUrl, order, token ?? "");
             var client = _httpClientFactory.CreateClient();
             var json = JsonConvert.SerializeObject(order);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
@@ -143,50 +139,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             Console.WriteLine("Response: " + responseData);
 
             return new JsonResult(responseData);
-            //var client = _httpClientFactory.CreateClient();
-            //var jsonContent = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
-            //var response = await client.PostAsync(apiUrl, jsonContent);
-
-            // Log the status code
-            //Console.WriteLine("Response Status Code: " + response.StatusCode);
-
-            //var responseContent = await response.Content.ReadAsStringAsync();
-
-            //// Log the raw response content
-            //Console.WriteLine("Response Content: " + response);
-
-            //if (!response.IsCompletedSuccessfully)
-            //{
-            //    return StatusCode((int)response.Status, "Error from API: " + response);
-            //}
-
-            //bool isValid;
-            //try
-            //{
-            //    isValid = JsonConvert.DeserializeObject<bool>( response);
-            //}
-            //catch (JsonReaderException jsonEx)
-            //{
-            //    Console.WriteLine($"JSON Deserialization Error: {jsonEx.Message}");
-            //    return BadRequest("Invalid response format from the API");
-            //}
-
-            //if (isValid)
-            //{
-            //    return new JsonResult(new { success = true, message = "Promotion applied successfully." });
-            //}
-            //else
-            //{
-            //    return new JsonResult(new { success = false, message = "Promotion is not valid for this order." });
-            //}
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Log error to check the cause of the error
-            //    Console.WriteLine($"Error in OnPostCheckAsync: {ex.Message}");
-            //    return StatusCode(500, "Internal server error");
-            //}
         }
 
         //public async Task<IActionResult> OnPostCheckAsync([FromBody] OrderDTO order)

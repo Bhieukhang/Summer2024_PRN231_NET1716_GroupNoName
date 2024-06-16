@@ -65,7 +65,34 @@
                                 </ol>
                             </nav>
                         </div>
-                        
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm theo tên" value="@Model.SearchTerm" id="searchTerm">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" id="filterRoleId">
+                                    <option value="">Lọc theo vai trò</option>
+                                    @foreach (var role in Model.RoleList)
+                                    {
+                                        <option value="@role.Id" selected="@(role.Id == Model.FilterRoleId ? "selected" : null)">@role.RoleName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" id="filterDeflag">
+                                    <option value="">Lọc theo trạng thái</option>
+                                    <option value="true" selected="@(Model.FilterDeflag == true ? "selected" : null)">Đang hoạt động</option>
+                                    <option value="false" selected="@(Model.FilterDeflag == false ? "selected" : null)">Ngừng hoạt động</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-gradient-primary btn-fw" onclick="applyFilters()">Tìm kiếm</button>
+                            </div>
+                        </div>
+
+
+
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -91,125 +118,151 @@
                                             <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
                                             <td> @account.Address </td>
 
+                                            <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                             <td>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
-                                                    <i class="fa fa-eye menu-icon"></i>
-                                                </button>
+                                                <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Chỉnh sửa
+                                                </a>
                                             </td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@account.Id">
-                                                    <i class="fa fa-edit menu-icon"></i>
-                                                </button>
-                                            </td>
+
+                                            @* <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
+                                        <i class="fa fa-eye menu-icon"></i>
+                                        </button>
+                                        </td>
+                                        <td>
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@account.Id">
+                                        <i class="fa fa-edit menu-icon"></i>
+                                        </button>
+                                        </td> *@
                                         </tr>
-                                        <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="employeeModalLabel-@account.Id">Employee Details</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Full Name: @account.FullName</p>
-                                                        <p>Phone: @account.Phone</p>
-                                                        <p>Date of Birth: @(account.Dob.HasValue ? account.Dob.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                                        <p>Password: @account.Password</p>
-                                                        <p>Address: @account.Address</p>
-                                                        <p>Deflag: @account.Deflag</p>
-                                                        <p>RoleId: @account.RoleId</p>
-                                                        <p>InsDate: @(account.InsDate.HasValue ? account.InsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                                        <p>UpsDate: @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                                        @* <p>Status: @account.Status</p> *@
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Edit -->
-                                        <div class="modal fade " id="editModal-@account.Id" tabindex="-1" aria-labelledby="editModalLabel-@account.Id" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModalLabel-@account.Id">Edit Employee</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Id</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Id">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">ImgURL</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.ImgUrl">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Full Name</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.FullName">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Phone</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Phone">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Date of Birth</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Dob">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Password</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Password">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Address</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Address">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">RoleID</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.RoleId">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">InsDate</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.InsDate">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">UpsDate</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.UpsDate">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="editId" class="form-label">Status</label>
-                                                                <input readonly type="text" class="form-control" id="editFullName" value="@account.Status">
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @* <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="employeeModalLabel-@account.Id">Employee Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Full Name: @account.FullName</p>
+                                    <p>Phone: @account.Phone</p>
+                                    <p>Date of Birth: @(account.Dob.HasValue ? account.Dob.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                    <p>Password: @account.Password</p>
+                                    <p>Address: @account.Address</p>
+                                    <p>Deflag: @account.Deflag</p>
+                                    <p>RoleId: @account.RoleId</p>
+                                    <p>InsDate: @(account.InsDate.HasValue ? account.InsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                    <p>UpsDate: @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
+                                    <p>Status: @account.Status</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <!-- Edit -->
+                                    <div class="modal fade " id="editModal-@account.Id" tabindex="-1" aria-labelledby="editModalLabel-@account.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel-@account.Id">Edit Employee</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Id</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Id">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">ImgURL</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.ImgUrl">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Full Name</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.FullName">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Phone</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Phone">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Date of Birth</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Dob">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Password</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Password">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Address</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Address">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">RoleID</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.RoleId">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">InsDate</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.InsDate">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">UpsDate</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.UpsDate">
+                                    </div>
+                                    <div class="mb-3">
+                                    <label for="editId" class="form-label">Status</label>
+                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Status">
+                                    </div>
+                                    </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div> *@
                                     }
 
                                 </tbody>
                             </table>
+
                             <nav aria-label="Page navigation example" style="padding-top:50px">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
                                     </li>
                                     @for (var i = 1; i <= Model.TotalPages; i++)
                                     {
                                         <li class="page-item @(Model.Page == i ? "active" : "")">
-                                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                            <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
                                         </li>
                                     }
                                     <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
                                     </li>
                                 </ul>
                             </nav>
+
+                            @* <nav aria-label="Page navigation example" style="padding-top:50px">
+                            <ul class="pagination justify-content-end">
+                            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                            <li class="page-item @(Model.Page == i ? "active" : "")">
+                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                            </li>
+                            }
+                            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                            </li>
+                            </ul>
+                            </nav> *@
                         </div>
                     </div>
                 </div>
@@ -217,3 +270,27 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function applyFilters() {
+            var searchTerm = document.getElementById("searchTerm").value;
+            var filterRoleId = document.getElementById("filterRoleId").value;
+            var filterDeflag = document.getElementById("filterDeflag").value;
+
+            var url = `./ListAccount?currentPage=1`;
+
+            if (searchTerm) {
+                url += `&searchTerm=${searchTerm}`;
+            }
+            if (filterRoleId) {
+                url += `&filterRoleId=${filterRoleId}`;
+            }
+            if (filterDeflag) {
+                url += `&filterDeflag=${filterDeflag}`;
+            }
+
+            window.location.href = url;
+        }
+    </script>
+}

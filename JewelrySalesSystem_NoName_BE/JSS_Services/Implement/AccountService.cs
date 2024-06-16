@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JSS_DataAccessObjects;
+using LinqKit;
 
 namespace JSS_Services.Implement
 {
@@ -29,7 +30,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size); ;
@@ -38,11 +39,55 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate),
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 predicate: x => x.RoleId == roleId,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size);
+            return listAccount;
+        }
+
+        //public async Task<IPaginate<AccountResponse>> GetListAccountWithDeflagFalseAsync(int page, int size)
+        //{
+        //    Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
+
+        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+        //        selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+        //        predicate: x => x.Deflag == false && x.RoleId != excludedRoleId,
+        //        orderBy: x => x.OrderByDescending(x => x.Id),
+        //        page: page,
+        //        size: size);
+        //    return listAccount;
+        //}
+
+        public async Task<IPaginate<AccountResponse>> GetFilteredAccountsAsync(string? searchTerm, Guid? roleId, bool? deflag, int page, int size)
+        {
+            var accountRepository = _unitOfWork.GetRepository<Account>();
+
+            var predicate = PredicateBuilder.New<Account>(true);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                predicate = predicate.And(x => x.FullName.Contains(searchTerm));
+            }
+
+            if (roleId.HasValue)
+            {
+                predicate = predicate.And(x => x.RoleId == roleId.Value);
+            }
+
+            if (deflag.HasValue)
+            {
+                predicate = predicate.And(x => x.Deflag == deflag.Value);
+            }
+
+            var listAccount = await accountRepository.GetList(
+                selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+                predicate: predicate,
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size);
+
             return listAccount;
         }
 
@@ -106,6 +151,8 @@ namespace JSS_Services.Implement
                 account.Id = Guid.NewGuid();
                 account.ImgUrl = imageUrl;
                 account.InsDate = DateTime.UtcNow;
+                account.Status = "Active";
+                account.UpsDate = DateTime.UtcNow;
                 //account.RoleId = DefaultRoleId;
                 
                 account.Deflag = true;
@@ -145,6 +192,7 @@ namespace JSS_Services.Implement
                 _account.Address = account.Address != default ? account.Address : _account.Address;
                 _account.Deflag = account.Deflag != default ? account.Deflag : _account.Deflag;
                 _account.RoleId = account.RoleId != Guid.Empty ? account.RoleId : _account.RoleId;
+                _account.Status = account.Status != default ? account.Status : _account.Status;
 
                 if (imageStream != null)
                 {
@@ -155,10 +203,10 @@ namespace JSS_Services.Implement
                 {
                     account.ImgUrl = _account.ImgUrl;
                 }
-                account.UpsDate = DateTime.UtcNow;
+                _account.UpsDate = DateTime.UtcNow;
 
                 accountRepository.UpdateAsync(_account);
-                await _unitOfWork.CommitAsync();
+                //await _unitOfWork.CommitAsync();
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful) return null;
 
@@ -186,6 +234,7 @@ namespace JSS_Services.Implement
                 account.FullName = !string.IsNullOrEmpty(updateProfileDto.FullName) ? updateProfileDto.FullName : account.FullName;
                 account.Dob = updateProfileDto.Dob != default ? updateProfileDto.Dob : account.Dob;
                 account.Address = !string.IsNullOrEmpty(updateProfileDto.Address) ? updateProfileDto.Address : account.Address;
+                account.Password = !string.IsNullOrEmpty(updateProfileDto.Password) ? updateProfileDto.Password : account.Password;
 
                 if (imageStream != null)
                 {

@@ -1,12 +1,11 @@
-﻿using JSS_BusinessObjects.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JSS_BusinessObjects.Payload.Response
+﻿namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
 {
+    public class OrderDetailList
+    {
+        public Guid OrderId { get; set; }
+        public List<OrderDetailResponse> ListOrder = new List<OrderDetailResponse>();
+    }
+
     public class OrderDetailResponse
     {
         public Guid Id { get; set; }
@@ -24,6 +23,7 @@ namespace JSS_BusinessObjects.Payload.Response
         public Guid ProductId { get; set; }
 
         public DateTime? InsDate { get; set; }
+
         public Guid OrderDetailId { get; set; }
 
     }

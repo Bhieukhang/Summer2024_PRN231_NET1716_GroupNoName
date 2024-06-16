@@ -1,7 +1,10 @@
 ﻿@page
+@using Newtonsoft.Json
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.CreateWarrantiesModel
 @{
+    ViewData["Title"] = "Create Warranty";
 }
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
@@ -11,41 +14,52 @@
         <div class="card">
             <div class="card-body">
                 <div class="">
-                    <h3>Đơn hàng id</h3>
+                    <h3>Đơn hàng ID: @Model.OrderId</h3>
                 </div>
-                <form method="post">
+                <form id="warrantyForm" onsubmit="return submitForm(event)" method="post">
                     <div class="form-group row">
-                        <div class="col-md-5">
-                            <label class="control-label">Sản phẩm</label>
-                            <input asp-for="Warranty.OrderDetailId" type="text" class="form-control" />
-                        </div>
-                        <div class="col-md-2">
-                            <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua</label>
-                            <input asp-for="Warranty.DateOfPurchase" type="date" class="form-control" />
-                        </div>
-                        <div class="col-md-2">
-                            <label asp-for="Warranty.ExpirationDate" class="control-label">Ngày hết hạn</label>
-                            <input asp-for="Warranty.ExpirationDate" type="date" class="form-control" />
-                        </div>
-                        <div class="col-md-2">
-                            <label asp-for="Warranty.Period" class="control-label">Thời hạn (tháng)</label>
-                            <input asp-for="Warranty.Period" class="form-control" />
+                        <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required>
                         </div>
                     </div>
+                    @foreach (var order in Model.ListOrder)
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="control-label">Sản phẩm</label>
+                                <input asp-for="@order.ProductId" type="text" class="form-control" value="@order.ProductId" readonly />
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua</label>
+                                <input asp-for="Warranty.DateOfPurchase" type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" />
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="Warranty.ExpirationDate" class="control-label">Ngày hết hạn</label>
+                                <input asp-for="Warranty.ExpirationDate" type="date" class="form-control" id="ExpirationDate_@order.ProductId" />
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="Warranty.Period" class="control-label">Thời hạn (tháng)</label>
+                                <input asp-for="Warranty.Period" class="form-control" id="Period_@order.ProductId" />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
+                            </div>
+                            <input type="hidden" name="SelectedConditions_@order.ProductId" id="SelectedConditions_@order.ProductId" value="" />
+                            <input type="hidden" name="OrderDetailId_@order.ProductId" value="@order.OrderDetailId" />
+                        </div>
+                    }
                     <div class="form-group row">
                         <!-- Add any additional form fields here if needed -->
                     </div>
                     <div class="form-group row justify-content-end">
                         <div class="col-auto">
                             <a asp-page="./Index" class="btn btn-danger">Hủy</a>
-                            <button type="submit" class="btn btn-primary">Hoàn tất</button>
+                            <button type="button" class="btn btn-primary" onclick="submitForm(event)">Hoàn tất</button>
                         </div>
                     </div>
+                    <input type="hidden" name="SerializedListOrder" value="@Html.Raw(JsonConvert.SerializeObject(Model.ListOrder))" />
                 </form>
-                <!-- Button to Open the Modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#conditionModal">
-                    Chọn điều kiện bảo hành
-                </button>
             </div>
         </div>
     </div>
@@ -82,28 +96,28 @@
 
 @section Scripts {
     <script>
-        // Sample data for demonstration purposes
-        const conditions = [
-            { id: 1, name: 'Condition 1' },
-            { id: 2, name: 'Condition 2' },
-            { id: 3, name: 'Condition 3' },
-        ];
+        const conditions = @Html.Raw(Json.Serialize(Model.ConditionWarranties));
+        let selectedProductId;
 
-        // Function to populate the table with conditions
-        function populateConditionTable() {
-            const tbody = document.getElementById('conditionTableBody');
-            tbody.innerHTML = ''; // Clear existing rows
+        async function loadConditions(productId) {
+            selectedProductId = productId;
+            const tableBody = document.getElementById('conditionTableBody');
+            tableBody.innerHTML = '';
+
             conditions.forEach(condition => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
-                    <td>${condition.name}</td>
-                `;
-                tbody.appendChild(tr);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                                                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
+                                                            <td>${condition.condition}</td>
+                                                        `;
+                tableBody.appendChild(row);
             });
+
+            // Show the modal
+            const conditionModal = new bootstrap.Modal(document.getElementById('conditionModal'));
+            conditionModal.show();
         }
 
-        // Function to get selected conditions
         function getSelectedConditions() {
             const checkboxes = document.querySelectorAll('.condition-checkbox:checked');
             const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
@@ -113,39 +127,95 @@
         // Handle save button click
         document.getElementById('saveConditionsButton').addEventListener('click', () => {
             const selectedConditions = getSelectedConditions();
-            console.log('Selected conditions:', selectedConditions);
-            // Do something with the selected conditions, e.g., send to server or update UI
+            console.log(`Selected conditions for product ${selectedProductId}:`, selectedConditions);
+            // Store the selected conditions in the hidden input
+            document.getElementById(`SelectedConditions_${selectedProductId}`).value = JSON.stringify(selectedConditions);
+
+            // Hide the modal
+            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+            conditionModal.hide();
         });
 
-        // Initialize the table when the modal is shown
-        document.getElementById('conditionModal').addEventListener('show.bs.modal', populateConditionTable);
-
-        async function loadConditions() {
-            const response = await fetch('@Url.Page("/Manager/Warranty/CreateWarranties", "OnGetCondition")');
-            const conditions = await response.json();
-            const tableBody = document.getElementById('conditionTableBody');
-            tableBody.innerHTML = '';
-
-            conditions.forEach(condition => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                                    <td>${condition.condition}</td>
-                                    <td><button class="btn btn-primary" onclick="selectCondition('${condition.id}', '${condition.condition}')">Chọn</button></td>
-                                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        function selectCondition(id, condition) {
-            // Here you can set the selected condition to the form or any input field
-            // For example:
-            document.querySelector('[asp-for="Warranty.Id"]').value = id;
-            // Close the modal
-            var conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+        // Modal close button handler
+        document.querySelector('.btn-close').addEventListener('click', () => {
+            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
             conditionModal.hide();
+        });
+
+        // Modal "Đóng" button handler
+        document.querySelector('.btn-secondary').addEventListener('click', () => {
+            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+            conditionModal.hide();
+        });
+
+        function formatDate(inputDate) {
+            const date = new Date(inputDate);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            console.log("InputDate: ", inputDate)
+            return `${year}-${month}-${day}`;
         }
 
-        // Load conditions when modal is opened
-        document.getElementById('conditionModal').addEventListener('shown.bs.modal', loadConditions);
+        function submitForm(event) {
+            event.preventDefault();
+            console.log("Submit ============");
+            const warranties = [];
+
+        @foreach (var order in Model.ListOrder)
+        {
+            <text>
+                                                            var productId = "@order.ProductId";
+                console.log(`Processing product ID: ${productId}`);
+
+                var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+                var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
+                var periodElement = document.getElementById(`Period_${productId}`);
+                var selectedConditionsElement = document.getElementById(`SelectedConditions_${productId}`);
+
+                if (dateOfPurchaseElement && expirationDateElement && periodElement && selectedConditionsElement) {
+                    var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
+                    var expirationDate = formatDate(expirationDateElement.value);
+                    var period = periodElement.value;
+                    var selectedConditions = selectedConditionsElement.value;
+
+                    var conditionIds = JSON.parse(selectedConditions);
+
+                    var warranty = {
+                        dateOfPurchase: dateOfPurchase,
+                        expirationDate: expirationDate,
+                        period: period,
+                        orderDetailId: "@order.OrderDetailId",
+                        conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
+                    };
+
+                    console.log("Order: ", warranty);
+                    warranties.push(warranty);
+                } else {
+                    console.error(`Missing elements for product ID: ${productId}`, {
+                        dateOfPurchaseElement,
+                        expirationDateElement,
+                        periodElement,
+                        selectedConditionsElement
+                    });
+                }
+            </text>
+        }
+                                var customerPhone = document.getElementById("customerPhone").value;
+            var hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "SerializedWarranties";
+            hiddenInput.value = JSON.stringify(warranties);
+            console.log("HiddenInput: ", hiddenInput);
+
+            var hiddenInputPhone = document.createElement("input");
+            hiddenInputPhone.type = "hidden";
+            hiddenInputPhone.name = "CustomerPhone";
+            hiddenInputPhone.value = customerPhone;
+            console.log("HiddenInput Phone: ", hiddenInputPhone);
+            document.querySelector("form#warrantyForm").appendChild(hiddenInput);
+            document.querySelector("form#warrantyForm").submit();
+        }
+
     </script>
 }
