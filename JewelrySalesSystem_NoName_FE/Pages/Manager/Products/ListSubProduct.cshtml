@@ -2,6 +2,23 @@
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListSubProductModel
 
 <div class="main-panel">
+    <div class="page-header">
+        <h3 class="page-title"> DANH SÁCH TRANG SỨC </h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="nav-item">
+                    <a class="nav-link" href="~/Manager/Products/AddProduct">
+                        <span class="menu-title"></span>
+                        <button type="button" class="btn btn-gradient-primary btn-fw">
+                            <i class="mdi mdi-plus"></i>
+                            Thêm trang sức mới
+                        </button>
+                    </a>
+                    <br />
+                </li>
+            </ol>
+        </nav>
+    </div>
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -11,12 +28,9 @@
                             <th></th>
                             <th>Product Name</th>
                             <th>Description</th>
-                            <th>Size</th>
-                            <th>Quantity</th>
                             <th>ImportPrice</th>
                             <th>SellingPrice</th>
                             <th>InsDate</th>
-                            <th></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -29,24 +43,45 @@
                                     <td><img src="@item.ImgProduct" /></td>
                                     <td>@item.ProductName</td>
                                     <td>@item.Description</td>
-                                    <td>@item.Size</td>
-                                    <td>@item.Quantity</td>
                                     <td>@item.ImportPrice</td>
                                     <td>@item.SellingPrice</td>
                                     <td>@item.InsDate</td>
-
                                     <td>
-                                        <a asp-page="./DetailsProduct" asp-route-id="@item.Id">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal-@item.Id">
                                             <i class="fa fa-eye menu-icon"></i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
-                                            <i class="mdi mdi-file-check btn-icon-append"></i>
-                                            Chỉnh sửa
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
+                                <!-- Modal -->
+                                <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết sản phẩm</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Product Name: @item.ProductName</p>
+                                                <p>Description: @item.Description</p>
+                                                <p>Size: @item.Size</p>
+                                                <p>Quantity: @item.Quantity</p>
+                                                <p>Import Price: @item.ImportPrice</p>
+                                                <p>Selling Price: @item.SellingPrice</p>
+                                                <p>Ins Date: @item.InsDate</p>
+                                                <img src="@item.ImgProduct" alt="Product Image" class="modal-product-image" />
+                                            </div>
+                                            <style>
+                                                .modal-product-image {
+                                                    max-width: 100%; /* Adjust the maximum width as needed */
+                                                    height: auto; /* Maintain aspect ratio */
+                                                }
+                                            </style>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         }
                         else
@@ -61,3 +96,5 @@
         </div>
     </div>
 </div>
+
+
