@@ -27,18 +27,22 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         [BindProperty]
         public WarrantyCreate Warranty { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string OrderId { get; set; }
         public List<OrderDetailResponse> ListOrder { get; set; } = new List<OrderDetailResponse>();
         public IList<ConditionWarrantyDTO> ConditionWarranties { get; set; } = new List<ConditionWarrantyDTO>();
         public string orderIdToAPI;
-        public async Task<IActionResult> OnGetAsync(string OrderId)
+        [FromQuery(Name = "phone")]
+        public string Phone { get; set; }
+        [FromQuery(Name = "orderId")]
+        public string OrderId { get; set; }
+        public async Task<IActionResult> OnGetAsync()
         {
+
             var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToPage("/Auth/Login");
             }
-            OrderId = "0EFC9E98-9E2D-44D0-98FE-4B4E0F38CA8B";
+
             var url = $"{ApiPath.ConditionWarrantyList}?page=1&size=100";
             var apiUrl = $"{ApiPath.OrderListDetail}?id={OrderId}";
             try
@@ -84,7 +88,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var customerPhone = Request.Form["CustomerPhone"];
                 var warranties = JsonConvert.DeserializeObject<List<WarrantyCreate>>(serializedWarranties);
 
-                var apiUrlCreate = $"{ApiPath.Warranty}?phone={customerPhone}";
+                var apiUrlCreate = $"{ApiPath.Warranty}?phone={Phone}";
 
 
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(warranties), Encoding.UTF8, "application/json");

@@ -17,7 +17,12 @@
                     <h3>Đơn hàng ID: @Model.OrderId</h3>
                 </div>
                 <form id="warrantyForm" onsubmit="return submitForm(event)" method="post">
-                    <input type="text" id="customerPhone" name="CustomerPhone" placeholder="Enter phone number" required>
+                    <div class="form-group row">
+                        <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required>
+                        </div>
+                    </div>
                     @foreach (var order in Model.ListOrder)
                     {
                         <div class="form-group row">
@@ -102,9 +107,9 @@
             conditions.forEach(condition => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
-                                            <td>${condition.condition}</td>
-                                        `;
+                                                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
+                                                            <td>${condition.condition}</td>
+                                                        `;
                 tableBody.appendChild(row);
             });
 
@@ -160,7 +165,7 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                                    var productId = "@order.ProductId";
+                                                            var productId = "@order.ProductId";
                 console.log(`Processing product ID: ${productId}`);
 
                 var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
@@ -196,8 +201,8 @@
                 }
             </text>
         }
-                var customerPhone = document.getElementById("customerPhone").value;
-                    var hiddenInput = document.createElement("input");
+                                var customerPhone = document.getElementById("customerPhone").value;
+            var hiddenInput = document.createElement("input");
             hiddenInput.type = "hidden";
             hiddenInput.name = "SerializedWarranties";
             hiddenInput.value = JSON.stringify(warranties);
