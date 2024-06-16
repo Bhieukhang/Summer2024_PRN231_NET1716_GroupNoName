@@ -1,5 +1,5 @@
 ﻿using Firebase.Storage;
-﻿using Azure.Core;
+using Azure.Core;
 using FirebaseAdmin.Messaging;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.DTO;
@@ -24,6 +24,8 @@ namespace JSS_Services.Implement
     public class AccountService : BaseService<AccountService>, IAccountService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
+        private readonly Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
+
         public AccountService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<AccountService> logger) : base(unitOfWork, logger)
         {
         }
@@ -31,6 +33,7 @@ namespace JSS_Services.Implement
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+                predicate: x => x.RoleId != excludedRoleId, 
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size); ;
@@ -40,25 +43,12 @@ namespace JSS_Services.Implement
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
-                predicate: x => x.RoleId == roleId,
+                predicate: x => x.RoleId == roleId && x.RoleId != excludedRoleId,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size);
             return listAccount;
         }
-
-        //public async Task<IPaginate<AccountResponse>> GetListAccountWithDeflagFalseAsync(int page, int size)
-        //{
-        //    Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
-
-        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
-        //        selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
-        //        predicate: x => x.Deflag == false && x.RoleId != excludedRoleId,
-        //        orderBy: x => x.OrderByDescending(x => x.Id),
-        //        page: page,
-        //        size: size);
-        //    return listAccount;
-        //}
 
         public async Task<IPaginate<AccountResponse>> GetFilteredAccountsAsync(string? searchTerm, Guid? roleId, bool? deflag, int page, int size)
         {
@@ -73,7 +63,7 @@ namespace JSS_Services.Implement
 
             if (roleId.HasValue)
             {
-                predicate = predicate.And(x => x.RoleId == roleId.Value);
+                predicate = predicate.And(x => x.RoleId == roleId.Value && x.RoleId != excludedRoleId);
             }
 
             if (deflag.HasValue)
@@ -94,12 +84,12 @@ namespace JSS_Services.Implement
         public async Task<int> GetTotalAccountCountAsync()
         {
             var accountRepository = _unitOfWork.GetRepository<Account>();
-            return await accountRepository.CountAsync();
+            return await accountRepository.CountAsync(x => x.RoleId != excludedRoleId);
         }
         public async Task<int> GetActiveAccountCountAsync()
         {
             var accountRepository = _unitOfWork.GetRepository<Account>();
-            return await accountRepository.CountAsync(a => a.Status == "Active");
+            return await accountRepository.CountAsync(a => a.Status == "Active" && a.RoleId != excludedRoleId);
         }
 
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()
@@ -135,7 +125,7 @@ namespace JSS_Services.Implement
                 throw;
             }
         }
-       
+
         public async Task<Account> CreateAccountAsync(Account account, Stream imageStream, string imageName)
         {
             //Guid DefaultRoleId = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7");
@@ -154,7 +144,7 @@ namespace JSS_Services.Implement
                 account.Status = "Active";
                 account.UpsDate = DateTime.UtcNow;
                 //account.RoleId = DefaultRoleId;
-                
+
                 account.Deflag = true;
                 await accountRepository.InsertAsync(account);
                 //await _unitOfWork.CommitAsync();
@@ -215,6 +205,38 @@ namespace JSS_Services.Implement
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while updating account");
+                throw;
+            }
+        }
+
+        public async Task<Account> UpdateDeflagAccountAsync(Guid id)
+        {
+            try
+            {
+                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
+
+                if (account == null)
+                {
+                    return null;
+                }
+
+                account.Deflag = false;
+                account.Status = "Inactive";
+                account.UpsDate = DateTime.UtcNow;
+
+                accountRepository.UpdateAsync(account);
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    return null;
+                }
+
+                return account;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating deflag of account");
                 throw;
             }
         }
@@ -292,41 +314,19 @@ namespace JSS_Services.Implement
             return await uploadTask;
         }
 
-        public async Task<Account> UpdateDeflagAccountAsync(Guid id, Account account)
-        {
-            try
-            {
-                var accountRepository = _unitOfWork.GetRepository<Account>();
-                var _account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
+        //public async Task<IPaginate<AccountResponse>> GetListAccountWithDeflagFalseAsync(int page, int size)
+        //{
+        //    Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
 
-                if (_account == null)
-                {
-                    return null;
-                }
+        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+        //        selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
+        //        predicate: x => x.Deflag == false && x.RoleId != excludedRoleId,
+        //        orderBy: x => x.OrderByDescending(x => x.Id),
+        //        page: page,
+        //        size: size);
+        //    return listAccount;
+        //}
 
-                _account.FullName = _account.FullName;
-                _account.Phone = _account.Phone;
-                _account.Dob = _account.Dob;
-                _account.Password = _account.Password;
-                _account.Address = _account.Address;
-                _account.Deflag = account.Deflag != default ? account.Deflag : _account.Deflag;
-                _account.RoleId = _account.RoleId;
-                _account.ImgUrl = _account.ImgUrl;
-                account.UpsDate = DateTime.UtcNow;
-
-                accountRepository.UpdateAsync(_account);
-                await _unitOfWork.CommitAsync();
-                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-                if (!isSuccessful) return null;
-
-                return _account;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while updating account");
-                throw;
-            }
-        }
         public async Task<SearchAccountResponse> SearchMembership(string phone)
         {
             var mem = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == phone,

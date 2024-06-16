@@ -73,7 +73,7 @@
                             <div class="col-md-3">
                                 <select class="form-control" id="filterRoleId">
                                     <option value="">Lọc theo vai trò</option>
-                                    @foreach (var role in Model.RoleList)
+                                    @foreach (var role in Model.RoleList.Where(r => r.Id != Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9")))
                                     {
                                         <option value="@role.Id" selected="@(role.Id == Model.FilterRoleId ? "selected" : null)">@role.RoleName</option>
                                     }
@@ -101,7 +101,7 @@
                                         <th> Họ tên</th>
                                         <th> Số điện thoại </th>
                                         <th> Ngày tháng năm sinh </th>
-                                        <th> Địa chỉ </th>
+                                        <th> Chức vụ </th>
                                         <th> Xem </th>
                                         <th> Chỉnh sửa</th>
                                     </tr>
@@ -116,115 +116,60 @@
                                             <td> @account.FullName </td>
                                             <td> @account.Phone </td>
                                             <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
-                                            <td> @account.Address </td>
+                                            <td> @account.RoleName </td>
 
-                                            <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
+                                            @* <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
                                             <td>
-                                                <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
-                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
-                                                    Chỉnh sửa
+                                                <a data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id" style="padding: 8px">
+                                                    <i class="fa fa-eye menu-icon"></i>
                                                 </a>
                                             </td>
+                                            <td>
+                                                @if (account.Deflag != false)
+                                                {
+                                                    <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                        <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                        Chỉnh sửa
+                                                    </a>
+                                                }
+                                            </td>
 
-                                            @* <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
-                                        <i class="fa fa-eye menu-icon"></i>
-                                        </button>
-                                        </td>
-                                        <td>
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@account.Id">
-                                        <i class="fa fa-edit menu-icon"></i>
-                                        </button>
-                                        </td> *@
                                         </tr>
-                                        @* <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="employeeModalLabel-@account.Id">Employee Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <p>Full Name: @account.FullName</p>
-                                    <p>Phone: @account.Phone</p>
-                                    <p>Date of Birth: @(account.Dob.HasValue ? account.Dob.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                    <p>Password: @account.Password</p>
-                                    <p>Address: @account.Address</p>
-                                    <p>Deflag: @account.Deflag</p>
-                                    <p>RoleId: @account.RoleId</p>
-                                    <p>InsDate: @(account.InsDate.HasValue ? account.InsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                    <p>UpsDate: @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("yyyy-MM-dd") : "N/A")</p>
-                                    <p>Status: @account.Status</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <!-- Edit -->
-                                    <div class="modal fade " id="editModal-@account.Id" tabindex="-1" aria-labelledby="editModalLabel-@account.Id" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="editModalLabel-@account.Id">Edit Employee</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <form>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Id</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Id">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">ImgURL</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.ImgUrl">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Full Name</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.FullName">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Phone</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Phone">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Date of Birth</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Dob">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Password</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Password">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Address</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Address">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">RoleID</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.RoleId">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">InsDate</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.InsDate">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">UpsDate</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.UpsDate">
-                                    </div>
-                                    <div class="mb-3">
-                                    <label for="editId" class="form-label">Status</label>
-                                    <input readonly type="text" class="form-control" id="editFullName" value="@account.Status">
-                                    </div>
-                                    </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </div> *@
+                                        <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="employeeModalLabel-@account.Id">Thông tin thành viên</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="account-details">
+                                                            <img src="@account.ImgUrl" alt="Account Image" class="account-image" />
+                                                            <div class="account-info">
+                                                                <p><strong>Tên tài khoản:</strong> @account.FullName</p>
+                                                                <p><strong>Số điện thoại:</strong> @account.Phone</p>
+                                                                <p><strong>Ngày sinh:</strong> @(account.Dob.HasValue ? account.Dob.Value.ToString("dd-MM-yyyy") : "N/A")</p>
+                                                                <p><strong>Địa chỉ:</strong> @account.Address</p>
+                                                                <p><strong>Deflag:</strong> @account.Deflag</p>
+                                                                <p><strong>Chức vụ:</strong> @account.RoleName</p>
+                                                                <p><strong>Ngày cập nhật:</strong> @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("dd-MM-yyyy") : "N/A")</p>
+                                                                <p><strong>Trạng thái:</strong> @account.Status</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        @if (account.Deflag != false)
+                                                        {
+                                                            <form method="post" asp-page-handler="DeactivateAccount" class="deactivate-form">
+                                                                <input type="hidden" name="accountId" value="@account.Id" />
+                                                                <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Deactivate</button>
+                                                            </form>
+                                                        }
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     }
 
                                 </tbody>
@@ -246,23 +191,6 @@
                                     </li>
                                 </ul>
                             </nav>
-
-                            @* <nav aria-label="Page navigation example" style="padding-top:50px">
-                            <ul class="pagination justify-content-end">
-                            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
-                            </li>
-                            @for (var i = 1; i <= Model.TotalPages; i++)
-                            {
-                            <li class="page-item @(Model.Page == i ? "active" : "")">
-                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
-                            </li>
-                            }
-                            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                            <a class="page-link" asp-page="./ListAccount" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
-                            </li>
-                            </ul>
-                            </nav> *@
                         </div>
                     </div>
                 </div>
@@ -270,6 +198,39 @@
         </div>
     </div>
 </div>
+
+<style>
+    .account-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .account-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .account-info {
+        width: 100%;
+    }
+
+        .account-info p {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+            .account-info p strong {
+                color: #495057;
+            }
+</style>
 
 @section Scripts {
     <script>
@@ -291,6 +252,12 @@
             }
 
             window.location.href = url;
+        }
+
+        function confirmDeactivate(form) {
+            if (confirm("Bạn có chắc chắn muốn hủy kích hoạt tài khoản này không?")) {
+                form.submit();
+            }
         }
     </script>
 }

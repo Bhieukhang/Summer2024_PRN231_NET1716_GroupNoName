@@ -45,6 +45,7 @@
             public const string SearchMemberEndpoint = ApiEndpoint + "/Account/search/member";
             //public const string AccountsWithDeflagFalseEndpoint = AccountEndpoint + "/DeflagFalse";
             public const string FilteredAccountsEndpoint = AccountEndpoint + "/Filtered";
+            public const string UpdateDeflagEndpoint = AccountEndpoint + "/UpdateDeflag/{id}";
         }
 
         public static class Role

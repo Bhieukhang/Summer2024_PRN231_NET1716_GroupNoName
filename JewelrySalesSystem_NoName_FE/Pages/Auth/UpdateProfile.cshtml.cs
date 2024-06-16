@@ -104,7 +104,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                     FullName = accountProfile.FullName,
                     Dob = accountProfile.Dob,
                     Address = accountProfile.Address,
-                    ImgUrl = accountProfile.ImgUrl
+                    ImgUrl = accountProfile.ImgUrl, 
+                    Password = accountProfile.Password,
                 };
 
                 var json = JsonConvert.SerializeObject(accountRequest);

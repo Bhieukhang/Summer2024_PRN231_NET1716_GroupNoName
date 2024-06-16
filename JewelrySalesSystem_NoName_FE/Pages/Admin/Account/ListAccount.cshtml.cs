@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using Microsoft.AspNetCore.Authorization;
 using JewelrySalesSystem_NoName_FE.DTOs.Role;
+using System.Net.Http.Headers;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 {
@@ -36,6 +37,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
         public string SearchTerm { get; set; }
         public Guid? FilterRoleId { get; set; }
         public bool? FilterDeflag { get; set; }
+
+        private readonly Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
 
         public async Task<IActionResult> OnGetAsync(int? currentPage, string searchTerm, Guid? filterRoleId, bool? filterDeflag)
         {
@@ -85,7 +88,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 var response = await client.GetStringAsync(url);
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<AccountDAO>>(response);
-                ListAccount = paginateResult.Items;
+                ListAccount = paginateResult.Items.Where(x => x.RoleId != excludedRoleId).ToList();
                 TotalItems = paginateResult.Total;
                 TotalPages = paginateResult.TotalPages;
 
@@ -95,6 +98,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 var roleApiUrl = $"{ApiPath.RoleList}";
                 var roleResponse = await client.GetAsync(roleApiUrl);
                 RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+
+                foreach (var account in ListAccount)
+                {
+                    var role = RoleList.FirstOrDefault(r => r.Id == account.RoleId);
+                    if (role != null)
+                    {
+                        account.RoleName = role.RoleName;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -105,6 +117,40 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeactivateAccountAsync(Guid accountId)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
+            var url = $"{ApiPath.UpdateDeflagAccount}/{accountId}";
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await client.PutAsync(url, null);
+                if (response.IsSuccessStatusCode)
+                {
+                    //return RedirectToPage(new { currentPage = Page, searchTerm = SearchTerm, filterRoleId = FilterRoleId, filterDeflag = FilterDeflag });
+                    return RedirectToPage("/Admin/Account/ListAccount");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Failed to deactivate account.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred while deactivating the account.");
+            }
+
+            //return await OnGetAsync(Page, SearchTerm, FilterRoleId, FilterDeflag);
+            return RedirectToPage("/Admin/Account/ListAccount");
         }
 
         //public async Task<IActionResult> OnGetAsync(int? currentPage)

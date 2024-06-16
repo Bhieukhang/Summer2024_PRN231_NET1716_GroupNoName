@@ -55,8 +55,17 @@
                                 <span asp-validation-for="Account.Address" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="Account.Deflag" class="control-label"></label>
-                                <input asp-for="Account.Deflag" class="form-control" />
+                                <label asp-for="Account.Deflag" class="control-label">Trạng thái</label>
+                                <select asp-for="Account.Deflag" class="form-control">
+                                    @foreach (var option in new List<SelectListItem>
+                                    {
+                                    new SelectListItem { Value = "1", Text = "Active" },
+                                    new SelectListItem { Value = "0", Text = "Inactive" }
+                                    })
+                                    {
+                                        <option value="@option.Value" selected="@(Model.Account.Deflag.ToString() == option.Value)">@(option.Text)</option>
+                                    }
+                                </select>
                                 <span asp-validation-for="Account.Deflag" class="text-danger"></span>
                             </div>
                             <div class="form-group">

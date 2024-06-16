@@ -16,7 +16,7 @@ namespace JSS_Services.Interface
         Task<Account> GetAccountByIdAsync(Guid id);
         Task<Account> UpdateAccountAsync(Guid id, Account account, Stream imageStream, string imageName);
         Task<Account> CreateAccountAsync(Account account, Stream imageStream, string imageName);
-        Task<Account> UpdateDeflagAccountAsync(Guid id, Account account);
+        Task<Account> UpdateDeflagAccountAsync(Guid id);
         Task<int> GetTotalAccountCountAsync(); 
         Task<int> GetActiveAccountCountAsync();
         public Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size);
