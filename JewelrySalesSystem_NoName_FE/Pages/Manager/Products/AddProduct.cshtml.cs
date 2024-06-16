@@ -19,6 +19,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         [BindProperty]
         public IFormFile Image { get; set; }
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
+        public IList<SubProductsDTO> SubProductList { get; set; } = new List<SubProductsDTO>();
 
         public AddProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {

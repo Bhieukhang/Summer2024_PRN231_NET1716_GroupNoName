@@ -58,6 +58,10 @@
             public const string CategoryEndpoint = ApiEndpoint + "/Category";
             public const string CategoryByIdEndpoint = CategoryEndpoint + "/id";
         }
+        public static class SubProduct
+        {
+            public const string SubProductsEndpoint = ApiEndpoint + "/SubProducts";
+        }
 
         public static class Product
         {

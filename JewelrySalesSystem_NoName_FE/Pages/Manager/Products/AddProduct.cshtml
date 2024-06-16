@@ -74,6 +74,14 @@
                                     </select>
                                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                                 </div>
+                                <!-- Sub Products  -->
+                                <div class="form-group">
+                                    <label asp-for="Product.SubId" class="control-label">Sản phẩm phân hiệu</label>
+                                    <select asp-for="Product.SubId" class="form-control" asp-items="@(new SelectList(Model.SubProductList, "Id", "Name"))">
+                                        <option value="">Select SubProducts</option>
+                                    </select>
+                                    <span asp-validation-for="Product.SubId" class="text-danger"></span>
+                                </div>
                                 <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
                                 <a asp-page="./ListProduct" class="btn btn-gradient-light btn-fw">Hủy</a>
                             </form>
