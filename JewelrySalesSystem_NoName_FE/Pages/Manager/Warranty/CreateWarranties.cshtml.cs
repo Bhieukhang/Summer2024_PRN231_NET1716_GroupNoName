@@ -30,7 +30,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         public string OrderId { get; set; }
         public List<OrderDetailResponse> ListOrder { get; set; } = new List<OrderDetailResponse>();
         public IList<ConditionWarrantyDTO> ConditionWarranties { get; set; } = new List<ConditionWarrantyDTO>();
-
+        public string orderIdToAPI;
         public async Task<IActionResult> OnGetAsync(string OrderId)
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -52,6 +52,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var responseCondition = await client.GetStringAsync(url); 
                 var resultCondition = JsonConvert.DeserializeObject<Paginate<ConditionWarrantyDTO>>(responseCondition);
                 ConditionWarranties = resultCondition.Items;
+                orderIdToAPI = OrderId;
+
+                TempData["ListOrder"] = JsonConvert.SerializeObject(ListOrder);
+                TempData["ConditionWarranties"] = JsonConvert.SerializeObject(ConditionWarranties);
             }
             catch (Exception ex)
             {
@@ -63,7 +67,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var apiUrlCreate = $"{ApiPath.Warranty}";
+           
             try
             {
                 var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -71,11 +75,20 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 {
                     return RedirectToPage("/Auth/Login");
                 }
-                //Warranty.ConditionWarrantyId = Guid.Parse("51142E3C-729C-49B4-B6CF-135D4DF06BA5");
+
                 var client = _httpClientFactory.CreateClient();
+                client.Timeout = TimeSpan.FromMinutes(5);
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var jsonContent = new StringContent(JsonConvert.SerializeObject(Warranty), Encoding.UTF8, "application/json");
+                var serializedWarranties = Request.Form["SerializedWarranties"];
+                var customerPhone = Request.Form["CustomerPhone"];
+                var warranties = JsonConvert.DeserializeObject<List<WarrantyCreate>>(serializedWarranties);
+
+                var apiUrlCreate = $"{ApiPath.Warranty}?phone={customerPhone}";
+
+
+                var jsonContent = new StringContent(JsonConvert.SerializeObject(warranties), Encoding.UTF8, "application/json");
+                Console.WriteLine(JsonConvert.SerializeObject(warranties));
                 var response = await client.PostAsync(apiUrlCreate, jsonContent);
 
                 if (response.IsSuccessStatusCode)

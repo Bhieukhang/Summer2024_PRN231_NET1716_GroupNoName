@@ -24,5 +24,7 @@
 
         public DateTime? InsDate { get; set; }
 
+        public Guid OrderDetailId { get; set; }
+
     }
 }

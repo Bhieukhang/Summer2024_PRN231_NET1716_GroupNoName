@@ -310,6 +310,7 @@ namespace JSS_Services.Implement
                         OrderId = item.OrderId,
                         ProductId = item.ProductId,
                         InsDate= item.InsDate,
+                        OrderDetailId = item.Id
                     };
                     listDetail.Add(o);
                 }

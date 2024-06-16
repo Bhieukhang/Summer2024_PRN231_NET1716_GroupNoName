@@ -24,6 +24,7 @@ namespace JSS_BusinessObjects.Payload.Response
         public Guid ProductId { get; set; }
 
         public DateTime? InsDate { get; set; }
+        public Guid OrderDetailId { get; set; }
 
     }
 }
