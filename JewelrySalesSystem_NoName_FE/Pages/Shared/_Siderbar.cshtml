@@ -12,15 +12,15 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
         <li class="nav-item nav-profile">
             <a href="/profile" class="nav-link">
                 <div class="nav-profile-image">
-                    <img src="~/../assets/images/faces/face1.jpg" alt="profile" />
+                    <img src="@imgUrl" alt="profile" />
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    @* <span class="font-weight-bold mb-2">@user.Identity.Name</span> *@
+                    <span class="font-weight-bold mb-2">@user.Identity.Name</span>
                     <span class="text-secondary text-small">@userRole</span>
                 </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                <i class="bi bi-person-lines-fill text-success nav-profile-badge"></i>
             </a>
         </li>
         @* Admin feature *@
@@ -119,6 +119,9 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
                     <li class="nav-item">
                         <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu Sản Phẩm</a>
                     </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
+                        </li>
                 </ul>
             </div>
         </li>

@@ -2,6 +2,7 @@
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,26 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return Ok(product);
         }
+
+
+
+        #region ProductBySubIdEndpoint
+        /// <summary>
+        /// Get a product by its Sub ID.
+        /// </summary>
+        /// <param name="id">The ID of the product to retrieve.</param>
+        /// <returns>The product with the specified ID.</returns>
+        /// GET : api/Product/subid
+        #endregion
+     //   [Authorize(Roles = "Admin, Manager, Staff")]
+        [HttpGet(ApiEndPointConstant.Product.ProductBySubIdEndpoint)]
+        public async Task<IActionResult> GetProductBySubIdAsync(Guid subId, int page, int size)
+        {
+            var list = await _productService.GetProductBySubIdAsync(subId, page, size);
+            var pro = JsonConvert.SerializeObject(list, Formatting.Indented);
+            return Ok(pro);
+        }
+
 
         #region SearchProductByCode
         /// <summary>
@@ -134,7 +155,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Quantity = productRequest.Quantity,
                 InsDate = productRequest.InsDate,
                 MaterialId = productRequest.MaterialId,
-                Tax = productRequest.Tax
+                Tax = productRequest.Tax,
+                SubId = productRequest.SubId,
             };
 
             var createdProduct = await _productService.CreateProductAsync(product, stream, "uploadedFileName");
@@ -158,7 +180,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.InsDate,
                 createdProduct.ProcessPrice,
                 createdProduct.Deflag,
-                createdProduct.Tax
+                createdProduct.SubId
             ));
         }
 
@@ -212,6 +234,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 InsDate = productRequest.InsDate,
                 MaterialId = productRequest.MaterialId,
                 Tax = productRequest.Tax,
+                SubId = productRequest.SubId,
             };
 
             var updatedProduct = await _productService.UpdateProductAsync(id, product, stream, "uploadedFileName");
@@ -235,7 +258,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.InsDate,
                 updatedProduct.ProcessPrice,
                 updatedProduct.Deflag,
-                updatedProduct.Tax
+                updatedProduct.Tax,
+                 updatedProduct.SubId
             ));
         }
 

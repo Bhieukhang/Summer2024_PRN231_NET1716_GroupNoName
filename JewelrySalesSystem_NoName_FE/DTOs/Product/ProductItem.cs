@@ -31,6 +31,7 @@
         public string? Code { get; set; }
         public string? ImgProduct { get; set; }
         public string? Tax { get; set; }
+        public Guid? SubId { get; set; }
     }
 
     public class ProductResponse

@@ -43,6 +43,8 @@
             public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
             public const string SearchAccountEndpoint = AccountEndpoint + "/name";
             public const string SearchMemberEndpoint = ApiEndpoint + "/Account/search/member";
+            //public const string AccountsWithDeflagFalseEndpoint = AccountEndpoint + "/DeflagFalse";
+            public const string FilteredAccountsEndpoint = AccountEndpoint + "/Filtered";
         }
 
         public static class Role
@@ -63,6 +65,9 @@
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
+            public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";
+
+
         }
 
         public static class Promotion
