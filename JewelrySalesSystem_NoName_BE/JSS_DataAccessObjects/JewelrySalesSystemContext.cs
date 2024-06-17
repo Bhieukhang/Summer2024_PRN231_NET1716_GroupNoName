@@ -48,6 +48,8 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Stall> Stalls { get; set; }
 
+    public virtual DbSet<SubProduct> SubProducts { get; set; }
+
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<Warranty> Warranties { get; set; }
