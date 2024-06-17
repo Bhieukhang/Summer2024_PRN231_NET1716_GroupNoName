@@ -9,6 +9,7 @@ namespace JSS_Services.Interface
         Task<DiscountResponse> ConfirmDiscountToManager(DiscountRequest confirmData);
         Task<bool> CreateDiscountAsync(DiscountRequest request);
         Task<bool> AcceptDiscountAsync(DiscountRequest request);
+        Task<Discount> FindAsync(Guid id);
         Task<IEnumerable<Discount>> GetAsync(string search);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
@@ -44,7 +45,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             try
             {
                 var response = await _discountService.CreateDiscountAsync(request);
-                return Ok(response);
+
+                if (!response) throw new Exception("Create discount failed.");
+                return Ok(new ApiResponse
+                {
+                    Message = "Create discount successful",
+                    Success = true
+                });
             }
             catch (Exception ex)
             {
@@ -59,20 +66,37 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut(ApiEndPointConstant.Discount.DiscountEndpoint)]
-        public async Task<ActionResult> AcceptDiscount([FromBody] DiscountRequest request)
+        public async Task<ActionResult> UpdateDiscount(DiscountRequest request)
         {
-
             try
             {
                 var response = await _discountService.AcceptDiscountAsync(request);
+                if (!response) throw new Exception("Update discount failed.");
+                return Ok(new ApiResponse
+                {
+                    Message = "Update discount successful",
+                    Success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
+        public async Task<ActionResult> FindDiscountById(Guid id)
+        {
+            try
+            {
+                var response = await _discountService.FindAsync(id);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
         }
+
 
         /// <summary>
         /// Get all discounts

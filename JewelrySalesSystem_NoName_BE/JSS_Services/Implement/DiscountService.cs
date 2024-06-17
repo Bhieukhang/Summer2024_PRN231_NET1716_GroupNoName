@@ -38,7 +38,13 @@ namespace JSS_Services.Implement
             var discountItem = await _unitOfWork
                 .GetRepository<Discount>()
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
-            discountItem.Status = DiscountStatus.Accepted;
+            discountItem.Status = request.Status;
+            discountItem.OrderId = request.OrderId;
+            discountItem.ManagerId = request.ManagerId;
+            discountItem.PercentDiscount = request.PercentDiscount;
+            discountItem.ConditionDiscount = request.ConditionDiscount;
+            discountItem.Description = request.Description;
+            discountItem.UpsDate = DateTime.Now;
             _unitOfWork.GetRepository<Discount>().UpdateAsync(discountItem);
             return await _unitOfWork.CommitAsync() > 0;
         }
@@ -48,6 +54,8 @@ namespace JSS_Services.Implement
             var a = await _unitOfWork.GetRepository<Discount>().GetListAsync();
             return a.Where(i => (i.Description ?? "").Contains(search)).ToList();
         }
+
+        public async Task<Discount> FindAsync(Guid id) => await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task<DiscountResponse> ConfirmDiscountToManager(DiscountRequest confirm)
         {
