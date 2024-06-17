@@ -8,12 +8,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
     {
         public DiscountDTO? Discount { get; private set; }
 
-        public async Task OnGet(Guid promotionId)
+        public async Task OnGet(Guid discountId)
         {
             try
             {
                 var token = HttpContext.Session.GetString("Token") ?? "";
-                Discount = await ApiClient.GetAsync<DiscountDTO>($"{ApiPath.Discount}?id={promotionId}", token);
+                Discount = await ApiClient.GetAsync<DiscountDTO>($"{ApiPath.Discount}/id?id={discountId}", token);
             }
             catch (Exception ex)
             {

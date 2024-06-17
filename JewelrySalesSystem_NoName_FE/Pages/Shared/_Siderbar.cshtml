@@ -2,10 +2,10 @@
 @**@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    var user = HttpContextAccessor.HttpContext.User;
-    var userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-    var imgUrl = user.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value;
-    var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    var user = HttpContextAccessor?.HttpContext?.User;
+    var userRole = user?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+    var imgUrl = user?.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value;
+    var userFullname = user?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 }
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
@@ -17,7 +17,7 @@
                     <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2">@user.Identity.Name</span>
+                    <span class="font-weight-bold mb-2">@user?.Identity?.Name</span>
                     <span class="text-secondary text-small">@userRole</span>
                 </div>
                 <i class="bi bi-person-lines-fill text-success nav-profile-badge"></i>

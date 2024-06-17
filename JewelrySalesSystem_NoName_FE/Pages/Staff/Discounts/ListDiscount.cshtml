@@ -73,7 +73,7 @@
                                         </td>
                                         <td>@discount.OrderId</td>
                                         <td>@discount.ManagerId</td>
-                                        <td><span class="badge bagde-info">@discount.Status</span></td>
+                                        <td><span class="badge @(discount.Status == "Pending"  ? "badge-info" : "badge-success")">@discount.Status</span></td>
                                         <td>@discount.PercentDiscount</td>
                                         <td>@discount.Description</td>
                                         <td>@discount.ConditionDiscount</td>
