@@ -47,7 +47,6 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Stall> Stalls { get; set; }
-    public virtual DbSet<SubProducts> SubProducts { get; set; }
 
     public virtual DbSet<SubProduct> SubProducts { get; set; }
 
