@@ -24,6 +24,9 @@
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
 
+        //Promotion
+        public const string Discount = url + "/api/v1/discount";
+
         //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
 

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JSS_BusinessObjects.Payload.Request
+﻿namespace JSS_BusinessObjects.Payload.Request
 {
     public class DiscountRequest
     {
+        public Guid? Id { get; set; }
+
         public Guid OrderId { get; set; }
 
         public Guid ManagerId { get; set; }
@@ -15,6 +11,8 @@ namespace JSS_BusinessObjects.Payload.Request
         public int? PercentDiscount { get; set; }
 
         public string? Description { get; set; }
+
+        public string? Status { get; set; }
 
         public double? ConditionDiscount { get; set; }
 

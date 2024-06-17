@@ -130,7 +130,10 @@
         }
         public static class Discount
         {
-            public const string DiscountConfirmEndpoint = ApiEndpoint + "/confirm";
+            public const string DiscountConfirmEndpoint = ApiEndpoint + "/discount/confirm";
+            public const string DiscountEndpoint = ApiEndpoint + "/discount";
+            public const string DiscountByIdEndpoint = DiscountEndpoint + "/id";
+
         }
 
         public static class ConditionWarranty
