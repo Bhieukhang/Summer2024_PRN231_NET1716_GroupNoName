@@ -59,6 +59,10 @@
             public const string CategoryEndpoint = ApiEndpoint + "/Category";
             public const string CategoryByIdEndpoint = CategoryEndpoint + "/id";
         }
+        public static class SubProduct
+        {
+            public const string SubProductsEndpoint = ApiEndpoint + "/SubProducts";
+        }
 
         public static class Product
         {
@@ -123,6 +127,7 @@
             public const string AllOrdersEndpoint = ApiEndpoint + "/order/GetListOrders"; 
             public const string OrderEndpointList = ApiEndpoint + "/orderlist";
             public const string OrderListCusomerPhone = OrderEndpoint + "/customer";
+            public const string OrderListDetail = OrderEndpoint + "/detail";
         }
         public static class Discount
         {

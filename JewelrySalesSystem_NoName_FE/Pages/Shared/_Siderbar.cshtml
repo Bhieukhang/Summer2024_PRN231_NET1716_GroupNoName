@@ -288,7 +288,7 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
 @if (userRole == "Staff")
 {
     <li class="nav-item">
-        <a class="nav-link" href="~/Staff/Orders/CreateOrder">
+        <a class="nav-link" href="~/Staff/Orders/AddOrder">
             <span class="menu-title">Đơn hàng</span>
             <i class="fa fa-truck menu-icon"></i>
         </a>

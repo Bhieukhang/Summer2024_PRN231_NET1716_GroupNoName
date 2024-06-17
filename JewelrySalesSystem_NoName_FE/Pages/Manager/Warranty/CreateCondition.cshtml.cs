@@ -1,3 +1,4 @@
+using JewelrySalesSystem_NoName_FE.DTOs.Orders;
 using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
         }
         [BindProperty]
         public ConditionWarrantyCreate ConditionWarrantyItem { get; set; }
+
+
+        //public async Task<IActionResult> OnGetAsync()
+        //{
+        //    var apiUrl = $"{ApiPath.OrderListDetail}";
+        //    try
+        //    {
+        //        var client = _httpClientFactory.CreateClient();
+        //        var jsonContent = new StringContent(JsonConvert.SerializeObject(listOrder), Encoding.UTF8, "application/json");
+        //        var response = await client.PostAsync(apiUrl, jsonContent);
+        //        return Page();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Error sending order to backend.");
+        //        return Page();
+        //    }
+        //}
 
         public async Task<IActionResult> OnPostAsync()
         {
