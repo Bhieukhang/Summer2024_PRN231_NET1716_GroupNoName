@@ -1,0 +1,149 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts.ListDiscountModel
+@{
+    int totalRecord = (int)Model.TotalRecord;
+    int totalPages = (int)Model.TotalPages;
+    int currentPage = Model.CurrentPage;
+    int pageSize = Model.PageSize;
+
+    int startPage = Math.Max(1, currentPage - 2);
+    int endPage = Math.Min(totalPages, currentPage + 2);
+
+    int startIndex = ((currentPage - 1) * pageSize) + 1;
+    int endIndex = startIndex + pageSize - 1;
+    if (endIndex > totalRecord) endIndex = totalRecord;
+    var count = startIndex;
+
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row mb-3">
+            <div class="col-sm-12 col-lg-6">
+                <h4 class="card-title">Danh sách chiết khấu</h4>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <a class="nav-link text-end" href="~/Staff/Discounts/AddDiscount">
+                    <span class="menu-title"></span>
+                    <span class="btn btn-gradient-primary btn-fw">Thêm chiết khấu</span>
+                </a>
+            </div>
+        </div>
+        <form method="get" id="form-search">
+            <div class="form-group">
+                <label asp-for="Search" class="control-label">Search</label>
+                <div class="row">
+                    <div class="col-sm-12 col-lg-10">
+                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Enter key word to search" />
+                    </div>
+                    <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
+                        <button class="btn btn-secondary" type="submit">Search</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" asp-for="CurrentPage" />
+            <input type="hidden" asp-for="PageSize" />
+        </form>
+        <div class="card">
+            <div class="card-body">
+
+                @if (totalRecord > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th> STT </th>
+                                    <th> Id </th>
+                                    <th> Order Id </th>
+                                    <th> Manager Id </th>
+                                    <th> Status </th>
+                                    <th> Percent Discount </th>
+                                    <th> Description </th>
+                                    <th> Condition Discount </th>
+                                    <th> Ins Date - Ups Date </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var discount in Model.Discounts)
+                                {
+                                    <tr>
+                                        <td>@(count++)</td>
+                                        <td title="@discount.Id" data-bs-toggle="tooltip" data-bs-placement="top">
+                                            <a href="DiscountDetails?discountId=@discount.Id"> @discount.Id</a>
+                                        </td>
+                                        <td>@discount.OrderId</td>
+                                        <td>@discount.ManagerId</td>
+                                        <td><span class="badge bagde-info">@discount.Status</span></td>
+                                        <td>@discount.PercentDiscount</td>
+                                        <td>@discount.Description</td>
+                                        <td>@discount.ConditionDiscount</td>
+                                        <td>@discount.InsDate - @discount.UpsDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row d-flex justify-content-center align-content-center mt-3">
+                        <div class="col">
+                            <span>Hiện thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> chiết khấu</span>
+                        </div>
+
+                        @if (totalPages > 1)
+                        {
+                            <ul class="pagination justify-content-end col">
+                                <li class="page-item @((currentPage == 1) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage-1)" tabindex="-1" aria-disabled="true">Trước</a>
+                                </li>
+
+                                @if (currentPage > 3)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                @for (int pageIndex = startPage; pageIndex <= endPage; pageIndex++)
+                                {
+                                    <li class="page-item @(pageIndex == currentPage ? "active" : "")">
+                                        <a class="page-link" href="?currentPage=@pageIndex">@pageIndex</a>
+                                    </li>
+                                }
+
+                                @if (currentPage < Math.Ceiling(totalRecord / 10.0) - 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+
+                                <li class="page-item @((currentPage == totalPages) ? "disabled" : "")">
+                                    <a class="page-link" href="?currentPage=@(currentPage+1)">Tiếp</a>
+                                </li>
+                            </ul>
+
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div>Không tìm thấy chiết khấu nào.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const inputSearch = document.getElementById('input-search');
+    const formSearch = document.getElementById('form-search');
+    var timeout = setTimeout(function () { }, 0);
+    window.addEventListener("load", (event) => {
+        const end = inputSearch.value.length;
+        inputSearch.setSelectionRange(end, end);
+        // 👇 scroll to the bottom if a textarea has long text
+        inputSearch.focus()
+    });
+    inputSearch.addEventListener('keypress', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () { formSearch.submit(); }, 3000)
+    });
+</script>
+
+
