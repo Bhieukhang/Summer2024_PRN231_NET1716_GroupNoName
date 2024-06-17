@@ -388,5 +388,39 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var accounts = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(accounts);
         }
+
+        #region UpdateDeflagAccount
+        /// <summary>
+        /// Update deflag of an account by ID.
+        /// </summary>
+        /// <param name="id">The ID of the account to update deflag.</param>
+        /// <returns>The updated account object with deflag set to false and status set to inactive.</returns>
+        // PUT: api/Account/UpdateDeflag/{id}
+        #endregion
+        [Authorize(Roles = "Manager, Admin")]
+        [HttpPut(ApiEndPointConstant.Account.UpdateDeflagEndpoint)]
+        public async Task<ActionResult<AccountResponse>> UpdateDeflagAccountAsync(Guid id)
+        {
+            var updatedAccount = await _accountService.UpdateDeflagAccountAsync(id);
+            if (updatedAccount == null)
+            {
+                return NotFound("Account not found.");
+            }
+
+            return Ok(new AccountResponse(
+                updatedAccount.Id,
+                updatedAccount.FullName,
+                updatedAccount.Phone,
+                updatedAccount.Dob,
+                updatedAccount.Password,
+                updatedAccount.Address,
+                updatedAccount.ImgUrl,
+                updatedAccount.Status,
+                updatedAccount.Deflag,
+                updatedAccount.RoleId,
+                updatedAccount.InsDate,
+                updatedAccount.UpsDate
+            ));
+        }
     }
 }

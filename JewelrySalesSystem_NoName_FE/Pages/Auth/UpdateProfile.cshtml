@@ -31,6 +31,11 @@
                                     <span asp-validation-for="accountProfile.Dob" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label asp-for="accountProfile.Password" class="control-label">Mật khẩu</label>
+                                    <input asp-for="accountProfile.Password" class="form-control" type="password" />
+                                    <span asp-validation-for="accountProfile.Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="accountProfile.Address" class="control-label">Địa chỉ</label>
                                     <input asp-for="accountProfile.Address" class="form-control" />
                                     <span asp-validation-for="accountProfile.Address" class="text-danger"></span>
