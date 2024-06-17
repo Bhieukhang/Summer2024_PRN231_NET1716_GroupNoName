@@ -35,6 +35,7 @@
 
         //Product
         public const string ProductList = url + "/api/v1/Product";
+        public const string ProductDetails = url + "/api/v1/Product/id";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
         public const string SubProductsList = url + "/api/v1/Product/subid";

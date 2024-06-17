@@ -98,9 +98,11 @@ namespace JSS_Services.Implement
         {
             try
             {
-                await _unitOfWork.GetRepository<Diamond>().DeleteAsync(id);
-                await _unitOfWork.CommitAsync();
-                return true;
+                var existingDiamond = await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(a => a.Id == id);
+                if (existingDiamond == null) return false;
+
+                _unitOfWork.GetRepository<Diamond>().DeleteAsync(existingDiamond);
+                return await _unitOfWork.CommitAsync() > 0;
             }
             catch (Exception ex)
             {

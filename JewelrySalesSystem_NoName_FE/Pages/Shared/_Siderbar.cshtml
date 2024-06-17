@@ -119,9 +119,9 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
                     <li class="nav-item">
                         <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu Sản Phẩm</a>
                     </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
+                    </li>
                 </ul>
             </div>
         </li>
@@ -154,7 +154,7 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
         <span class="menu-title">Chíết khấu</span>
         <i class="mdi mdi-chart-bar menu-icon"></i>
         </a>
-    </li>
+        </li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
             aria-controls="ui-basic">
@@ -222,30 +222,7 @@ var userFullname = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.V
         <i class="fa fa-tags menu-icon"></i>
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
-        aria-controls="ui-basicc">
-        <span class="menu-title">Quản lí sản phẩm</span>
-        <i class="menu-arrow"></i>
-        <i class="fa fa-cubes menu-icon"></i>
-    </a>
-    <div class="collapse" id="ui-basicc">
-        <ul class="nav flex-column sub-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Products/ListProduct">Trang Sức</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Categories/ListCategories">Loại</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu Sản Phẩm</a>
-            </li>
-        </ul>
-    </div>
-</li>
+
 <li class="nav-item">
         <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
             <span class="menu-title">Khuyến mãi</span>

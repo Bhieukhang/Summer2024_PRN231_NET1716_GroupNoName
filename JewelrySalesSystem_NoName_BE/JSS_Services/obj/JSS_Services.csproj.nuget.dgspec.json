@@ -296,6 +296,10 @@
             "FirebaseStorage.net": {
               "target": "Package",
               "version": "[1.0.3, )"
+            },
+            "LinqKit": {
+              "target": "Package",
+              "version": "[1.3.0, )"
             }
           },
           "imports": [

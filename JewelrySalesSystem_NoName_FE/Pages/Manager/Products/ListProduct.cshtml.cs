@@ -1,11 +1,8 @@
-    using JewelrySalesSystem_NoName_FE.DTOs.Product;
-    using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
-    using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
-    using JewelrySalesSystem_NoName_FE.Ultils;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Ultils;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 {
@@ -25,6 +22,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public string? SearchCode { get; set; }
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
+        public ProductDTO productDetail { get; set; } = new ProductDTO();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -121,6 +119,30 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             return Page();
         }
+
+        //public async Task<IActionResult> OnGetDetailsAsync(Guid ProductId)
+        //{
+        //    var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        return RedirectToPage("/Auth/Login");
+        //    }
+
+        //    var url = $"{ApiPath.ProductDetails}id={ProductId}";
+        //    try
+        //    {
+        //        var client = _httpClientFactory.CreateClient();
+        //        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        //        var response = await client.GetStringAsync(url);
+
+        //        productDetail = JsonConvert.DeserializeObject<ProductDTO>(response);
+        //        return Partial("_ProductDetailPartial", productDetail);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         private async Task LoadProductListAsync()
         {

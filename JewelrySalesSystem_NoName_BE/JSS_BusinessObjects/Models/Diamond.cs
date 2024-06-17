@@ -19,9 +19,9 @@ public partial class Diamond
 
     public double? Price { get; set; }
 
-    public Guid JewelryId { get; set; }
+    public Guid? JewelryId { get; set; }
 
     public string? ImageDiamond { get; set; }
 
-    public virtual Product Jewelry { get; set; } = null!;
+    public virtual Product? Jewelry { get; set; } = null!;
 }

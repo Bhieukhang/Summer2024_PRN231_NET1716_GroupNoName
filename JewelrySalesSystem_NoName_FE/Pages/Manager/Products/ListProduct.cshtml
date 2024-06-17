@@ -16,7 +16,7 @@
                                 Thêm trang sức mới
                             </button>
                         </a>
-                        <br/>
+                        <br />
                         <a class="nav-link" href="~/Manager/RateOfGold/UpdateGoldRate">
                             <button type="button" class="btn btn-gradient-primary btn-fw">
                                 <i class="mdi mdi-trending-up"></i>
@@ -38,7 +38,7 @@
                 Tìm Kiếm
             </button>
         </form>
-        <br/>
+        <br />
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -60,24 +60,52 @@
                             @foreach (var item in Model.productList)
                             {
                                 <tr>
-                                    <td><img src="@item.ImgProduct"/></td>
+                                    <td><img src="@item.ImgProduct" /></td>
                                     <td>@item.Code</td>
                                     <td>@item.ProductName</td>
                                     <td>@item.Size</td>
                                     <td>@item.Quantity</td>
                                     <td>@item.SellingPrice</td>
                                     <td>@item.Category?.Name</td>
-                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
-                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                    <td>
+                                        <a data-bs-toggle="modal" data-bs-target="#productModal-@item.Id" style="padding: 8px">
+                                            <i class="fa fa-eye menu-icon"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
                                             <i class="mdi mdi-file-check btn-icon-append"></i>
                                             Chỉnh sửa
                                         </a>
                                     </td>
-                                    @* <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
-                                        <i class="mdi mdi-delete"></i>
-                                    Xóa    
-                                    </a></td> *@
                                 </tr>
+                                <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="employeeModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="product-details">
+                                                    <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
+                                                    <div class="product-info">
+                                                        <h4>@item.ProductName</h4>
+                                                        <p><strong>Code:</strong> @item.Code</p>
+                                                        <p><strong>Mô tả:</strong> @item.Description</p>
+                                                        <p><strong>Kích thước:</strong> @item.Size</p>
+                                                        <p><strong>Số lượng:</strong> @item.Quantity</p>
+                                                        <p><strong>Giá Bán:</strong> @item.SellingPrice</p>
+                                                        <p><strong>Loại:</strong> @item.Category?.Name</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         </tbody>
                     </table>
@@ -86,3 +114,36 @@
         </div>
     </div>
 </div>
+<style>
+    .product-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .product-info {
+        width: 100%;
+    }
+
+        .product-info p {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+            .product-info p strong {
+                color: #495057;
+            }
+</style>
+

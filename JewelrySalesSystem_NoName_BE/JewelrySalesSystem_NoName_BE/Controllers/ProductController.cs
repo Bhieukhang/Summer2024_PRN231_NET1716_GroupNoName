@@ -48,7 +48,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product
         #endregion
-        [Authorize(Roles = "Admin, Manager, Staff")]
+        //[Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductByIdEndpoint)]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
