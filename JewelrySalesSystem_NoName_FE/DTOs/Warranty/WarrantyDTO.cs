@@ -1,4 +1,6 @@
-﻿namespace JewelrySalesSystem_NoName_FE.DTOs.Warranty
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace JewelrySalesSystem_NoName_FE.DTOs.Warranty
 {
     public class WarrantyDTO
     {
@@ -22,11 +24,21 @@
     }
     public class WarrantyCreate
     {
+        [Required]
         public DateTime? DateOfPurchase { get; set; }
+        [Required]
         public DateTime? ExpirationDate { get; set; }
+        
         public string Period { get; set; }
+        [Required]
         public Guid? OrderDetailId { get; set; }
+        public string Note { get; set; } = string.Empty;
+        [Required]
+        public List<ConditionMap> conditionMap { get; set; }
+    }
+
+    public class ConditionMap
+    {
         public Guid ConditionWarrantyId { get; set; }
-        public Guid ProductId { get; set; }
     }
 }

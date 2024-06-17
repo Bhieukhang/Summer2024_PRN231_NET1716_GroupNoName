@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Text;
 using System.Xml.Linq;
 
@@ -140,7 +141,16 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var response = await client.PostAsync(apiUrl, content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            return RedirectToPage("/Staff/Orders/OrderSucess");
+            var jsonResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+
+            // Extracting the Id value
+            var orderId = (string)jsonResponse.Id;
+            var phone = orderData.CustomerPhone;
+
+            var redirectUrl = $"/Manager/Warranty/CreateWarranties?orderId={orderId}&phone={phone}";
+
+            Console.WriteLine(redirectUrl);
+            return new JsonResult(new { redirectUrl });
         }
     }
 }

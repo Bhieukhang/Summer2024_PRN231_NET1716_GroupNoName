@@ -30,30 +30,67 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Danh sách đơn hàng</h4>
-                        <table class="table table-striped">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Mã</th>
-                                    <th>Tổng giá trị</th>
-                                    <th>Giá xử lý vật liệu</th>
-                                    <th>ID khách hàng</th>
-                                    <th>Mã chiết khấu</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orderListBody">
-                                @foreach (var order in Model.OrderList)
-                                {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
                                     <tr>
+
+                                        <th>Mã</th>
+                                        <th>Tổng giá trị</th>
+                                        <th>Giá xử lý vật liệu</th>
+                                        <th>Mã khuyến mãi</th>
+                                        <th>Xem chi tiết</th>
+
                                         <td>@order.Id</td>
                                         <td>@order.TotalPrice</td>
                                         <td>@order.MaterialProccessPrice</td>
                                         <td>@order.CustomerPhone</td>
 @*                                         <td>@order.CustomerId</td> *@
                                         <td>@order.DiscountId</td>
+
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody id="orderListBody">
+                                    @foreach (var order in Model.OrderList)
+                                    {
+                                        <tr>
+                                            <td>@order.Id</td>
+                                            <td>@order.TotalPrice</td>
+                                            <td>@order.MaterialProccessPrice</td>
+                                            <td>@order.DiscountId</td>
+                              
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal-@order.Id">
+                                                    <i class="fa fa-eye menu-icon"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <!-- Detail -->
+                                        <div class="modal fade" id="orderModal-@order.Id" tabindex="-1" aria-labelledby="orderModalLabel-@order.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="orderModalLabel-@order.Id">Order Details - @order.Id</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Mã đơn hàng: @order.Id</p>
+                                                        <p>Tổng giá trị: @order.TotalPrice</p>
+                                                        <p>Giá xử lý vật liệu: @order.MaterialProccessPrice</p>
+                                                        <p>ID khách hàng: @order.CustomerId</p>
+                                                        <p>Mã khuyến mãi: @order.DiscountId</p>
+                                                        <p>Số điện thoại khách hàng: @order.CustomerPhone</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,17 +114,44 @@
                             var orderListHtml = '';
                             $.each(result, function (index, order) {
                                 orderListHtml += '<tr>' +
+                                    '<td>' + order.id + '</td>' +
                                     '<td>' + order.totalPrice + '</td>' +
                                     '<td>' + order.materialProcessPrice + '</td>' +
                                     '<td>' + order.customerId + '</td>' +
                                     '<td>' + order.promotionId + '</td>' +
-                                    '<td>' + order.discountId + '</td>' +
-                                    '</tr>';
+                                    '<td>' + order.customerPhone + '</td>' +
+                                    '<td>' +
+                                        '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal-' + order.id + '">' +
+                                            '<i class="fa fa-eye menu-icon"></i>' +
+                                        '</button>' +
+                                    '</td>' +
+                                '</tr>' +
+                                '<div class="modal fade" id="orderModal-' + order.id + '" tabindex="-1" aria-labelledby="orderModalLabel-' + order.id + '" aria-hidden="true">' +
+                                    '<div class="modal-dialog modal-dialog-centered modal-lg">' +
+                                        '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                                '<h5 class="modal-title" id="orderModalLabel-' + order.id + '">Order Details - ' + order.id + '</h5>' +
+                                                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">' +
+                                                '<p>Mã đơn hàng: ' + order.id + '</p>' +
+                                                '<p>Tổng giá trị: ' + order.totalPrice + '</p>' +
+                                                '<p>Giá xử lý vật liệu: ' + order.materialProcessPrice + '</p>' +
+                                                '<p>ID khách hàng: ' + order.customerId + '</p>' +
+                                                '<p>Mã khuyến mãi: ' + order.promotionId + '</p>' +
+                                                '<p>Số điện thoại khách hàng: ' + order.customerPhone + '</p>' +
+                                            '</div>' +
+                                            '<div class="modal-footer">' +
+                                                '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>';
                             });
                             $('#orderListBody').html(orderListHtml);
                         } else {
                             // Handle case when no orders are returned
-                            $('#orderListBody').html('<tr><td colspan="5">Không tìm thấy đơn hàng.</td></tr>');
+                            $('#orderListBody').html('<tr><td colspan="7">Không tìm thấy đơn hàng.</td></tr>');
                         }
                     },
                     error: function () {

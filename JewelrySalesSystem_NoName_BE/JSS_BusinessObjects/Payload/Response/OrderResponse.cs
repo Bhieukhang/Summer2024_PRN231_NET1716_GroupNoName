@@ -60,4 +60,16 @@ namespace JSS_BusinessObjects.Payload.Response
         public InforCustomer Infor { get; set; }
         public List<OrderResponse> ListOrder { get; set; }
     }
+
+    public class OrderDetailList
+    {
+        public OrderDetailList() { }
+        public OrderDetailList(Guid orderId, List<OrderDetailResponse> listOrder)
+        {
+            OrderId = orderId;
+            ListOrder = listOrder;
+        }
+        public Guid OrderId { get; set; }
+        public List<OrderDetailResponse> ListOrder = new List<OrderDetailResponse>();
+    }
 }

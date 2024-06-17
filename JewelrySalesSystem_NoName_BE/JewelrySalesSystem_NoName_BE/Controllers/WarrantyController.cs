@@ -65,8 +65,10 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         #endregion
         //[Authorize(Roles = "Manager, Staff")]
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
-        public async Task<ActionResult> CreateWarranty(List<WarrantyRequest> warranty, [FromQuery] string phone)
+        public async Task<ActionResult> CreateWarranty([FromBody] List<WarrantyRequest> warranty, [FromQuery] string phone)
         {
+            
+            
             var newWarranty = await _service.CreateWarranty(warranty, phone);
             var result = JsonConvert.SerializeObject(newWarranty, Formatting.Indented);
             return Ok(result);
