@@ -1,0 +1,62 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts.AddDiscountModel
+@{
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Thêm mới chiết khấu</h4>
+                <form class="forms-sample" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="DiscountRequest.OrderId" class="control-label">Order Id</label>
+                        <input asp-for="DiscountRequest.OrderId" class="form-control" placeholder="Enter order id" />
+                        <span asp-validation-for="DiscountRequest.OrderId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DiscountRequest.ManagerId" class="control-label">Manager Id</label>
+                        <input asp-for="DiscountRequest.ManagerId" class="form-control" placeholder="Enter manager id" />
+                        <span asp-validation-for="DiscountRequest.ManagerId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DiscountRequest.PercentDiscount" class="control-label">Percent Discount</label>
+                        <input asp-for="DiscountRequest.PercentDiscount" type="number" max="99999" class="form-control" placeholder="Enter PercentDiscount" />
+                        <span asp-validation-for="DiscountRequest.PercentDiscount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DiscountRequest.Description" class="control-label">Description</label>
+                        <input asp-for="DiscountRequest.Description" class="form-control" placeholder="Enter Description" />
+                        <span asp-validation-for="DiscountRequest.Description" class="text-danger"></span>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label asp-for="DiscountRequest.ConditionDiscount" class="control-label">Condition Discount</label>
+                        <input asp-for="DiscountRequest.ConditionDiscount" type="number" max="100" class="form-control" placeholder="Enter Condition Discount" />
+                        <span asp-validation-for="DiscountRequest.ConditionDiscount" class="text-danger"></span>
+                    </div> 
+                    @if (!String.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <span class="text-danger mb-3">@Model.ErrorMessage</span>
+                    }
+
+                    <div class="row">
+                        <div class="col-sm-12 d-flex flex-row justify-content-start">
+                            <a href="ListDiscount" class="btn btn-secondary me-3">
+
+                                <i class="bi bi-arrow-left"></i>
+                                <span>Trở về</span>
+                            </a>
+                            <button type="submit"  class="btn btn-primary ">
+                                <i class="bi bi-pencil"></i>
+                                <span>Lưu</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

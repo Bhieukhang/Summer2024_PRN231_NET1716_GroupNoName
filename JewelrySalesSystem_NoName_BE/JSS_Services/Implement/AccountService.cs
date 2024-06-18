@@ -8,16 +8,9 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JSS_DataAccessObjects;
-using LinqKit;
 
 namespace JSS_Services.Implement
 {

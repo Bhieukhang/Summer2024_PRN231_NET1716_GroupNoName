@@ -3,9 +3,6 @@ using Google.Apis.Auth.OAuth2;
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Text.Json.Serialization;
 
 
