@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -142,7 +143,7 @@ namespace JSS_Services.Implement
             //                         .Include(o => o.Promotion)
             );
 
-            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, 
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice,
                 o.MaterialProcessPrice, o.DiscountId));
         }
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
@@ -239,6 +240,30 @@ namespace JSS_Services.Implement
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
             return totalOrders;
         }
+
+        public async Task<Dictionary<int, int>> GetTotalOrdersByYearGroupedByMonth(int year)
+        {
+            var orders = await _unitOfWork.GetRepository<Order>()
+                              .Where(order => order.OrderDate.Year == year)
+                              .GroupBy(order => order.OrderDate.Month)
+                              .Select(group => new
+                              {
+                                  Month = group.Key,
+                                  TotalOrders = group.Count()
+                              })
+                              .ToDictionaryAsync(g => g.Month, g => g.TotalOrders);
+
+            for (int month = 1; month <= 12; month++)
+            {
+                if (!orders.ContainsKey(month))
+                {
+                    orders[month] = 0;
+                }
+            }
+
+            return orders;
+        }
+
         public async Task<IEnumerable<OrderResponse>> GetAllOrders()
         {
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
@@ -289,7 +314,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id, 
+                var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id,
                                                                          include: a => a.Include(a => a.OrderDetails));
                 if (order == null)
                 {
@@ -309,7 +334,7 @@ namespace JSS_Services.Implement
                         TotalPrice = item.TotalPrice,
                         OrderId = item.OrderId,
                         ProductId = item.ProductId,
-                        InsDate= item.InsDate,
+                        InsDate = item.InsDate,
                         OrderDetailId = item.Id
                     };
                     listDetail.Add(o);

@@ -16,7 +16,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
 
     public class OrderDetailDTO
     {
-        public Guid PromotionId { get; set; }
+        public Guid? PromotionId { get; set; }
         public double Amount { get; set; }
         public int Quantity { get; set; }
         public Guid ProductId { get; set; }
