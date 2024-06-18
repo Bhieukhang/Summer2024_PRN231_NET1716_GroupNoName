@@ -1,4 +1,5 @@
 ﻿
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
@@ -13,6 +14,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public DateTime? InsDate { get; set; }
         public bool? Deflag { get; set; }
         public Guid? CategoryId { get; set; }
+        public Guid? SubId { get; set; }
         public int? Quantity { get; set; }
         public double? ProcessPrice { get; set; }
         public Guid? MaterialId { get; set; }
@@ -20,6 +22,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public string ImgProduct { get; set; }
         public double? Tax { get; set; }
         public CategoryDTO? Category { get; set; }
+        public SubProductsDTO?SubProductsDTO { get; set; }
 
         [NotMapped] 
         public bool DeflagChecked
