@@ -1,15 +1,13 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
+using JewelrySalesSystem_NoName_FE.DTOs.Discounts;
 using JewelrySalesSystem_NoName_FE.Ultils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
+namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
 {
-    [Authorize(Roles = "Manager")]
-    public class ListPromotionModel : PageModel
+    public class ListDiscountModel : PageModel
     {
-        public List<PromotionDTO> Promotions { get; private set; } = new();
+        public List<DiscountDTO> Discounts { get; private set; } = new();
         public int TotalPages { get; private set; } = 0;
         public int CurrentPage { get; private set; } = 1;
         public int PageSize { get; private set; } = 5;
@@ -23,19 +21,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 CurrentPage = currentPage ?? 1;
                 PageSize = pageSize ?? 5;
                 Search = search;
-                
+
                 var token = HttpContext.Session.GetString("Token") ?? "";
-                var promotions = await ApiClient.GetAsync<List<PromotionDTO>>($"{ApiPath.Promotion}?search={Search}", token);
+                var promotions = await ApiClient.GetAsync<List<DiscountDTO>>($"{ApiPath.Discount}?search={Search}", token);
 
                 // Calculate pages
                 TotalRecord = promotions.Count;
                 TotalPages = (int)Math.Ceiling(TotalRecord / (double)PageSize);
                 promotions = promotions.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
-                Promotions = promotions;
+                Discounts = promotions;
             }
             catch (Exception ex)
             {
-                Promotions = new();
+                Discounts = new();
                 Console.WriteLine($"Error: {ex}");
             }
 

@@ -1,23 +1,26 @@
-using JewelrySalesSystem_NoName_FE.Requests.Promotions;
+using JewelrySalesSystem_NoName_FE.Requests.Discounts;
 using JewelrySalesSystem_NoName_FE.Responses;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
+namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
 {
-    public class EditPromotionModel : PageModel
+    public class EditDiscountModel : PageModel
     {
         [BindProperty]
-        public EditPromotionRequest EditPromotionRequest { get; set; } = new();
+        public DiscountRequest DiscountRequest { get; set; } = new();
 
-        public async Task<IActionResult> OnGet(Guid promotionId)
+        [BindProperty]
+        public string? ErrorMessage { get; set; }
+
+        public async Task<IActionResult> OnGet(Guid discountId)
         {
             try
             {
                 var token = HttpContext.Session.GetString("Token") ?? "";
-                EditPromotionRequest = await ApiClient.GetAsync<EditPromotionRequest>($"{ApiPath.Promotion}/id?id={promotionId}", token);
-                if (EditPromotionRequest == null) throw new Exception("Cannot found promotion with id = " + promotionId);
+                DiscountRequest = await ApiClient.GetAsync<DiscountRequest>($"{ApiPath.Discount}/id?id={discountId}", token);
+                if (DiscountRequest == null) throw new Exception("Cannot found disocunt with id = " + discountId);
             }
             catch (Exception ex)
             {
@@ -30,20 +33,21 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         {
             try
             {
-                if (EditPromotionRequest == null) throw new Exception("Promotion data is invalid.");
+                if (DiscountRequest == null) throw new Exception("Discount data is invalid.");
                 var token = HttpContext.Session.GetString("Token") ?? "";
-
-                var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token);
+                var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Discount}", DiscountRequest, token);
                 if (!response.Success) throw new Exception(response.Message);
 
-                return RedirectToPage("ListPromotion");
+                return RedirectToPage("ListDiscount");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 Console.WriteLine(ex.ToString());
+                ErrorMessage = ex.Message;
                 return Page();
             }
         }
+
     }
 }
