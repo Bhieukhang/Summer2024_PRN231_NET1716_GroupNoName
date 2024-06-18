@@ -43,7 +43,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             Page = page ?? 1;
             Size = size ?? 10;
 
-            var url = $"{ApiPath.SubProductsList}?subid={SubId}&page={Page}&size={Size}";
+            var url = $"{ApiPath.SubProductList}?subid={SubId}&page={Page}&size={Size}";
          
             try
             {

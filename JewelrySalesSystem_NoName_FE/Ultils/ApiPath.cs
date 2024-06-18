@@ -40,7 +40,7 @@
         public const string ProductList = url + "/api/v1/Product";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
-        public const string SubProductsList = url + "/api/v1/Product/subid";
+        public const string SubProductList = url + "/api/v1/Product/subid";
 
         //Account
         public const string AccountList = url + "/api/v1/Account";
