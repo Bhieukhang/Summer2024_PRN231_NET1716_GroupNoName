@@ -17,6 +17,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public string SearchCode { get; set; }
 
         public IList<OrderDTO> OrderList { get; set; } = new List<OrderDTO>();
+        public int TotalOrderCount { get; set; }
 
         public ListOrderModel(IHttpClientFactory httpClientFactory)
         {
@@ -38,6 +39,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             {
                 var jsonResponse = await response.Content.ReadAsStringAsync();
                 OrderList = JsonConvert.DeserializeObject<IList<OrderDTO>>(jsonResponse);
+                TotalOrderCount = OrderList.Count;
             }
             else
             {

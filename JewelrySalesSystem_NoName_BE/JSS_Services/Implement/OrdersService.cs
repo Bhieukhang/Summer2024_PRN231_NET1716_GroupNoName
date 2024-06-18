@@ -7,13 +7,6 @@ using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
@@ -109,6 +102,7 @@ namespace JSS_Services.Implement
                     Discount = 0,
                     TotalPrice = orderDetail.Amount * orderDetail.Quantity,
                     OrderId = order.Id,
+                    PromotionId = orderDetail.PromotionId.HasValue ? orderDetail.PromotionId.Value : (Guid?)null,
                     ProductId = orderDetail.ProductId,
                     InsDate = DateTime.Now
                 };
@@ -117,9 +111,13 @@ namespace JSS_Services.Implement
                 await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
             }
             //Caculate total price by promotion
+
             foreach (var orderDetail in productList)
             {
-                totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+                if (orderDetail.PromotionId != null)
+                {
+                    totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+                }
             }
 
             //order.PromotionId = newData.PromotionId;
@@ -128,11 +126,31 @@ namespace JSS_Services.Implement
             //Save order
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
 
+            // Update usermoney for membership
+            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            membership.UsedMoney += order.TotalPrice;
+            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
+            
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
                                      order.MaterialProcessPrice, order.DiscountId);
         }
+
+        public async Task<MembershipResponse> UpdateUserMoney(Guid userId, double userMoney)
+        {
+            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == userId);
+            membership.UsedMoney += userMoney;
+
+            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (isSuccessful == false) return null;
+            return new MembershipResponse(membership.Id, membership.Name, membership.Level, membership.Point,
+                                          membership.RedeemPoint, membership.UserId, membership.UsedMoney, membership.Deflag);
+        }
+
         public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/)
         {
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
@@ -241,29 +259,6 @@ namespace JSS_Services.Implement
             return totalOrders;
         }
 
-        public async Task<Dictionary<int, int>> GetTotalOrdersByYearGroupedByMonth(int year)
-        {
-            var orders = await _unitOfWork.GetRepository<Order>()
-                              .Where(order => order.OrderDate.Year == year)
-                              .GroupBy(order => order.OrderDate.Month)
-                              .Select(group => new
-                              {
-                                  Month = group.Key,
-                                  TotalOrders = group.Count()
-                              })
-                              .ToDictionaryAsync(g => g.Month, g => g.TotalOrders);
-
-            for (int month = 1; month <= 12; month++)
-            {
-                if (!orders.ContainsKey(month))
-                {
-                    orders[month] = 0;
-                }
-            }
-
-            return orders;
-        }
-
         public async Task<IEnumerable<OrderResponse>> GetAllOrders()
         {
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
@@ -283,7 +278,8 @@ namespace JSS_Services.Implement
         }
         public async Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone)
         {
-            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(c => c.Phone == phone, include: c => c.Include(c => c.Orders));
+            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(c => c.Phone == phone, 
+                                                            include: c => c.Include(c => c.Orders));
             if (customer != null)
             {
                 var inforCustomer = new InforCustomer(customer.Id, customer.FullName, customer.Phone, customer.Address, customer.ImgUrl);
@@ -315,7 +311,8 @@ namespace JSS_Services.Implement
             try
             {
                 var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id,
-                                                                         include: a => a.Include(a => a.OrderDetails));
+                                                                         include: a => a.Include(a => a.OrderDetails)
+                                                                                   .ThenInclude(a => a.Product));
                 if (order == null)
                 {
                     return null;
@@ -335,7 +332,8 @@ namespace JSS_Services.Implement
                         OrderId = item.OrderId,
                         ProductId = item.ProductId,
                         InsDate = item.InsDate,
-                        OrderDetailId = item.Id
+                        OrderDetailId = item.Id,
+                        ProductName = item.Product.ProductName
                     };
                     listDetail.Add(o);
                 }

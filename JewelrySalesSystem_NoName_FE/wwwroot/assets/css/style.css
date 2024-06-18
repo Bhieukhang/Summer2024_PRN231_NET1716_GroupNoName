@@ -9400,6 +9400,8 @@
     --bs-form-valid-border-color: #198754;
     --bs-form-invalid-color: #dc3545;
     --bs-form-invalid-border-color: #dc3545;
+    --bs-color-mixone: rgba(70,34,195,1);
+    --bs-color-mixtwo: rgba(253,45,253,1);
 }
 
 [data-bs-theme=dark] {

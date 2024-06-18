@@ -94,14 +94,14 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Level user money for membership.</returns>
         // GET: api/v1/membership/userMoney
         #endregion
-        [Authorize(Roles = "Manager, Admin")]
-        [HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]
-        public async Task<IActionResult> UpdateUserMoneyByUserId([FromQuery]Guid userId, double userMoney)
-        {
-            var membership = await _service.UpdateUserMoney(userId, userMoney);
-            var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
-            return Ok(result);
-        }
+        //[Authorize(Roles = "Manager, Admin")]
+        //[HttpPatch(ApiEndPointConstant.Membership.MembershipUserMoney)]
+        //public async Task<IActionResult> UpdateUserMoneyByUserId([FromQuery]Guid userId, double userMoney)
+        //{
+        //    var membership = await _service.UpdateUserMoney(userId, userMoney);
+        //    var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
+        //    return Ok(result);
+        //}
 
         #region GetTotalMembership
         /// <summary>

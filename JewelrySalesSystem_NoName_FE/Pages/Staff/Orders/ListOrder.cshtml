@@ -1,11 +1,25 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.ListOrderModel
 @{
-    ViewData["Title"] = "Search Jewelry Orders";
+    int totalOrderCount = Model.TotalOrderCount;
 }
 
 <div class="main-panel">
     <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-mixone card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng đơn hàng  <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalOrderCount</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
@@ -36,9 +50,9 @@
                                     <th>Mã</th>
                                     <th>Tổng giá trị</th>
                                     <th>Giá xử lý vật liệu</th>
-                                    <th>ID khách hàng</th>
+                                    @*                                     <th>ID khách hàng</th>
                                     <th>Mã khuyến mãi</th>
-                                    <th>Mã giảm giá</th>
+                                    <th>Mã giảm giá</th> *@
                                 </tr>
                             </thead>
                             <tbody id="orderListBody">
@@ -47,11 +61,10 @@
                                     <tr>
                                         <td>@order.Id</td>
                                         <td>@order.TotalPrice</td>
-                                        @* <td>@order.MaterialProcessPrice</td> *@
                                         <td>@order.MaterialProccessPrice</td>
                                         <td>@order.CustomerPhone</td>
-@*                                         <td>@order.CustomerId</td> *@
-                                        <td>@order.DiscountId</td>
+                                        @*                                         <td>@order.CustomerId</td> *@
+                                        @*                                         <td>@order.DiscountId</td> *@
                                     </tr>
                                 }
                             </tbody>
@@ -100,3 +113,8 @@
         });
     </script>
 }
+<style>
+    .bg-gradient-mixone {
+        background: linear-gradient(0deg, rgba(34,82,195,1) 9%, rgba(45,253,214,0.9960434857536765) 96%);
+    }
+</style>

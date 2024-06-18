@@ -73,18 +73,6 @@ namespace JSS_Services.Implement
                                           queryMembership.RedeemPoint, queryMembership.UserId, queryMembership.UsedMoney, queryMembership.Deflag);
         }
 
-        public async Task<MembershipResponse> UpdateUserMoney(Guid userId, double userMoney)
-        {
-            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == userId);
-            membership.UsedMoney += userMoney;
-
-            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
-
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (isSuccessful == false) return null;
-            return new MembershipResponse(membership.Id, membership.Name, membership.Level, membership.Point,
-                                          membership.RedeemPoint, membership.UserId, membership.UsedMoney, membership.Deflag);
-        }
 
         public async Task<int> GetTotalMembershipCountAsync()
         {
