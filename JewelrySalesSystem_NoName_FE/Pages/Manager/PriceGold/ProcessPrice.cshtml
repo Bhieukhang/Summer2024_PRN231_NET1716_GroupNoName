@@ -1,0 +1,66 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.PriceGold.ProcessPriceModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danh sách tài khoản</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th> ProcesspriceId  </th>
+                                        <th> ProcessPrice </th>
+                                        <th> Size </th>
+                                        <th> CategoryId </th>
+                                        <th> Description </th>
+                                        <th> UpsDate </th>
+                                        <th> Status </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ProcessPrice in Model.ListProcessPrice)
+                                    {
+                                        <tr>
+                                            <td> @ProcessPrice.ProcesspriceId </td>
+
+                                            <td> @ProcessPrice.ProcessPrice1 </td>
+                                            <td> @ProcessPrice.Size </td>
+                                            <td> @ProcessPrice.CategoryId </td>
+                                            <td> @ProcessPrice.Description </td>
+                                            <td> @ProcessPrice.UpsDate </td>
+                                            <td> @ProcessPrice.Status </td>
+                                        </tr>
+
+
+                                    }
+                                </tbody>
+                            </table>
+
+                            <nav aria-label="Page navigation example" style="padding-top:50px">
+                                <ul class="pagination justify-content-end">
+                                    <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                                        <a class="page-link" asp-page="./ListStall" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                                    </li>
+                                    @for (var i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        <li class="page-item @(Model.Page == i ? "active" : "")">
+                                            <a class="page-link" asp-page="./ListStall" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                        </li>
+                                    }
+                                    <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+                                        <a class="page-link" asp-page="./ListStall" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
