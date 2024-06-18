@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
+
+// Do Huu Thuan
 namespace JSS_BusinessObjects.Payload.Response
 {
     public class StallResponse

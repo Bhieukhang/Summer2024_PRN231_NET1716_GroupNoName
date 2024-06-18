@@ -76,5 +76,11 @@
 
         //Role
         public const string RoleList = url + "/api/v1/Role";
+
+        //PurchasePrice
+        public const string PurchasePriceList = url + "/api/v1/PurchasePrice";
+
+        //ProcessPrice
+        public const string ProcessPriceList = url + "/api/v1/ProcessPrice";
     }
 }
