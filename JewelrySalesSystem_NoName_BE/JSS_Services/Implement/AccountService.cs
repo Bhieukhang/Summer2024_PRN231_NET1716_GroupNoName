@@ -17,7 +17,11 @@ namespace JSS_Services.Implement
     public class AccountService : BaseService<AccountService>, IAccountService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
-        private readonly Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
+        private readonly List<Guid> excludedRoleIds = new List<Guid>
+        {
+            Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"),
+            Guid.Parse("0F8FAD5B-D9CB-469F-A165-70867728950E")
+        };
 
         public AccountService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<AccountService> logger) : base(unitOfWork, logger)
         {
@@ -26,7 +30,7 @@ namespace JSS_Services.Implement
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
-                predicate: x => x.RoleId != excludedRoleId, 
+                predicate: x => !excludedRoleIds.Contains(x.RoleId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size); ;
@@ -36,7 +40,7 @@ namespace JSS_Services.Implement
         {
             IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
-                predicate: x => x.RoleId == roleId && x.RoleId != excludedRoleId,
+                predicate: x => x.RoleId == roleId && !excludedRoleIds.Contains(x.RoleId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
                 size: size);
@@ -56,7 +60,7 @@ namespace JSS_Services.Implement
 
             if (roleId.HasValue)
             {
-                predicate = predicate.And(x => x.RoleId == roleId.Value && x.RoleId != excludedRoleId);
+                predicate = predicate.And(x => x.RoleId == roleId.Value && !excludedRoleIds.Contains(x.RoleId));
             }
 
             if (deflag.HasValue)
@@ -77,12 +81,12 @@ namespace JSS_Services.Implement
         public async Task<int> GetTotalAccountCountAsync()
         {
             var accountRepository = _unitOfWork.GetRepository<Account>();
-            return await accountRepository.CountAsync(x => x.RoleId != excludedRoleId);
+            return await accountRepository.CountAsync(x => !excludedRoleIds.Contains(x.RoleId));
         }
         public async Task<int> GetActiveAccountCountAsync()
         {
             var accountRepository = _unitOfWork.GetRepository<Account>();
-            return await accountRepository.CountAsync(a => a.Status == "Active" && a.RoleId != excludedRoleId);
+            return await accountRepository.CountAsync(a => a.Status == "Active" && !excludedRoleIds.Contains(a.RoleId));
         }
 
         public async Task<IEnumerable<Account>> GetAllAccountsAsync()

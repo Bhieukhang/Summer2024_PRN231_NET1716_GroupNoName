@@ -5,6 +5,7 @@ using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -132,19 +133,33 @@ namespace JSS_Services.Implement
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
                                      order.MaterialProcessPrice, order.DiscountId);
         }
-        public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? customerId, DateTime? startDate/*, DateTime? endDate*/)
+        public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? id, Guid? customerId, DateTime? startDate)
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
-                predicate: o => (!customerId.HasValue || o.CustomerId == customerId) &&
-                                (!startDate.HasValue || o.InsDate >= startDate)
-            //(!endDate.HasValue || o.InsDate <= endDate)
-            //include: source => source.Include(o => o.Discount)
-            //                         .Include(o => o.Promotion)
-            );
+            var orderRepository = _unitOfWork.GetRepository<Order>();
 
-            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice, 
+            var predicate = PredicateBuilder.New<Order>(true);
+
+            if (id.HasValue)
+            {
+                predicate = predicate.And(o => o.Id == id.Value);
+            }
+
+            if (customerId.HasValue)
+            {
+                predicate = predicate.And(o => o.CustomerId == customerId.Value);
+            }
+
+            if (startDate.HasValue)
+            {
+                predicate = predicate.And(o => o.InsDate >= startDate.Value);
+            }
+
+            var orders = await orderRepository.GetListAsync(predicate: predicate);
+
+            return orders.Select(o => new OrderResponse(o.Id, o.CustomerId, o.Type, o.InsDate, o.TotalPrice,
                 o.MaterialProcessPrice, o.DiscountId));
         }
+
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id)
         {
             try

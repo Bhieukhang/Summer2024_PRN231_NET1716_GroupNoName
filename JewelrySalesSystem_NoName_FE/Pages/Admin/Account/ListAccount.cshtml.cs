@@ -38,7 +38,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
         public Guid? FilterRoleId { get; set; }
         public bool? FilterDeflag { get; set; }
 
-        private readonly Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
+        //private readonly Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
 
         public async Task<IActionResult> OnGetAsync(int? currentPage, string searchTerm, Guid? filterRoleId, bool? filterDeflag)
         {
@@ -88,7 +88,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 var response = await client.GetStringAsync(url);
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<AccountDAO>>(response);
-                ListAccount = paginateResult.Items.Where(x => x.RoleId != excludedRoleId).ToList();
+                ListAccount = paginateResult.Items.Where(x => !AccountDAO.ExcludedRoleIds.Contains(x.RoleId)).ToList();
                 TotalItems = paginateResult.Total;
                 TotalPages = paginateResult.TotalPages;
 
@@ -98,6 +98,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 var roleApiUrl = $"{ApiPath.RoleList}";
                 var roleResponse = await client.GetAsync(roleApiUrl);
                 RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+
+                RoleList = RoleList.Where(r => !AccountDAO.ExcludedRoleIds.Contains(r.Id)).ToList();
 
                 foreach (var account in ListAccount)
                 {

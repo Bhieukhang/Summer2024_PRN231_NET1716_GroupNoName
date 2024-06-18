@@ -118,7 +118,7 @@
             public const string OrderEndpoint = ApiEndpoint + "/order";
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
-            public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
+            public const string SearchOrderEndpoint = AllOrdersEndpoint + "/search";
             public const string OrderByIdEndpoint = OrderEndpoint + "/id";
             public const string OrderCheckPromotionEndpoint = ApiEndpoint + "/check";
             public const string OrderStatic = ApiEndpoint + "/static";

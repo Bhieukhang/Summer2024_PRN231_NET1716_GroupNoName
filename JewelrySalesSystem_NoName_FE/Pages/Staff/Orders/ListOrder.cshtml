@@ -7,50 +7,47 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Tìm kiếm đơn hàng Jewelry</h4>
-                        <form method="get" asp-page-handler="Search" class="forms-sample">
-                            <div class="form-group row">
-                                <label for="SearchCode" class="col-sm-2 col-form-label">Mã đơn hàng</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="SearchCode" name="SearchCode" class="form-control" placeholder="Nhập mã đơn hàng" />
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Danh sách đơn hàng</h4>
+                        <form method="get">
+                            <div class="form-group">
+                                <label for="OrderId">Order ID</label>
+                                <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" />
+                            </div>
+                            <div class="form-group">
+                                <label for="CustomerId">Customer ID</label>
+                                <input type="text" class="form-control" id="CustomerId" name="CustomerId" value="@Model.SearchCriteria.CustomerId" />
+                            </div>
+                            <div class="form-group">
+                                <label for="StartDate">Start Date</label>
+                                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="thead-dark">
                                     <tr>
-
                                         <th>Mã</th>
                                         <th>Tổng giá trị</th>
                                         <th>Giá xử lý vật liệu</th>
                                         <th>Mã khuyến mãi</th>
                                         <th>Xem chi tiết</th>
+                                        <th>Ngày mua hàng</th>
                                     </tr>
                                 </thead>
                                 <tbody id="orderListBody">
-                                    @foreach (var order in Model.OrderList)
+                                    @foreach (var order in Model.FilteredOrderList)
                                     {
                                         <tr>
                                             <td>@order.Id</td>
                                             <td>@order.TotalPrice</td>
                                             <td>@order.MaterialProccessPrice</td>
                                             <td>@order.DiscountId</td>
-                              
+                                            <td>@order.InsDate</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal-@order.Id">
                                                     <i class="fa fa-eye menu-icon"></i>
@@ -89,68 +86,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            getAllOrders();
-
-            function getAllOrders() {
-                $.ajax({
-                    url: '@Url.Page("ListOrder", "OnGetAllOrdersAsync")',
-                    type: 'GET',
-                    success: function (result) {
-                        // Update the order list with the received data
-                        if (result && result.length > 0) {
-                            var orderListHtml = '';
-                            $.each(result, function (index, order) {
-                                orderListHtml += '<tr>' +
-                                    '<td>' + order.id + '</td>' +
-                                    '<td>' + order.totalPrice + '</td>' +
-                                    '<td>' + order.materialProcessPrice + '</td>' +
-                                    '<td>' + order.customerId + '</td>' +
-                                    '<td>' + order.promotionId + '</td>' +
-                                    '<td>' + order.customerPhone + '</td>' +
-                                    '<td>' +
-                                        '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal-' + order.id + '">' +
-                                            '<i class="fa fa-eye menu-icon"></i>' +
-                                        '</button>' +
-                                    '</td>' +
-                                '</tr>' +
-                                '<div class="modal fade" id="orderModal-' + order.id + '" tabindex="-1" aria-labelledby="orderModalLabel-' + order.id + '" aria-hidden="true">' +
-                                    '<div class="modal-dialog modal-dialog-centered modal-lg">' +
-                                        '<div class="modal-content">' +
-                                            '<div class="modal-header">' +
-                                                '<h5 class="modal-title" id="orderModalLabel-' + order.id + '">Order Details - ' + order.id + '</h5>' +
-                                                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
-                                            '</div>' +
-                                            '<div class="modal-body">' +
-                                                '<p>Mã đơn hàng: ' + order.id + '</p>' +
-                                                '<p>Tổng giá trị: ' + order.totalPrice + '</p>' +
-                                                '<p>Giá xử lý vật liệu: ' + order.materialProcessPrice + '</p>' +
-                                                '<p>ID khách hàng: ' + order.customerId + '</p>' +
-                                                '<p>Mã khuyến mãi: ' + order.promotionId + '</p>' +
-                                                '<p>Số điện thoại khách hàng: ' + order.customerPhone + '</p>' +
-                                            '</div>' +
-                                            '<div class="modal-footer">' +
-                                                '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>' +
-                                            '</div>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>';
-                            });
-                            $('#orderListBody').html(orderListHtml);
-                        } else {
-                            // Handle case when no orders are returned
-                            $('#orderListBody').html('<tr><td colspan="7">Không tìm thấy đơn hàng.</td></tr>');
-                        }
-                    },
-                    error: function () {
-                        alert('Lỗi khi lấy dữ liệu đơn hàng. Vui lòng thử lại sau.');
-                    }
-                });
-            }
-        });
-    </script>
-}

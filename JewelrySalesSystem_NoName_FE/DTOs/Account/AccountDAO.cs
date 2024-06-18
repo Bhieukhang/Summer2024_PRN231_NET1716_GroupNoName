@@ -26,5 +26,10 @@
 
         public DateTime? UpsDate { get; set; }
         public string RoleName { get; set; }
+        public static readonly List<Guid> ExcludedRoleIds = new List<Guid>
+        {
+            Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"),
+            Guid.Parse("0F8FAD5B-D9CB-469F-A165-70867728950E")
+        };
     }
 }
