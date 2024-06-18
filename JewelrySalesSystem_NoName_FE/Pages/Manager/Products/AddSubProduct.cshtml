@@ -1,12 +1,48 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.AddProductModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.AddSubProductModel
 @{
 }
 <body>
     <div class="main-panel">
         <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-info card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                            <h4 class="font-weight-normal mb-3">
+                                Chi Phí Gia Công  <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                            </h4>
+                            <h2 class="mb-5">1000000</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-success card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                            <h4 class="font-weight-normal mb-3">
+                                Giá Thu Mua Lại <i class="mdi mdi-diamond mdi-24px float-end"></i>
+                            </h4>
+                            <h2 class="mb-5"></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card bg-gradient-warning  card-img-holder text-white">
+                        <div class="card-body">
+                            <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                            <h4 class="font-weight-normal mb-3">
+                                Tài khoản ngừng hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                            </h4>
+                            <h2 class="mb-5"><h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="page-header">
-                <h3 class="page-title"> Thêm sản phẩm </h3>
+                <h3 class="page-title">Sản Phẩm Thu Mua Lại </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         @*Thêm*@
@@ -18,10 +54,10 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Thêm Trang Sức Mới</h4>
+                            <h4 class="card-title">Thêm Trang Sức Thu Mua Lại</h4>
                             <form class="forms-sample" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label asp-for="Product.ProductName" class="control-label">Tên</label>
+                                    <label asp-for="Product.ProductName" class="control-label">Tên Sản Phẩm</label>
                                     <input asp-for="Product.ProductName" class="form-control" placeholder="Nhập tên trang sức" />
                                     <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                                 </div>
@@ -46,13 +82,13 @@
                                     <span asp-validation-for="Product.ImportPrice" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Product.Size" class="control-label">Kích Thước</label>
+                                    <label asp-for="Product.Size" class="control-label">Kích Thước(mm)</label>
                                     <input asp-for="Product.Size" class="form-control" placeholder="Nhập kích thước trang sức" />
                                     <span asp-validation-for="Product.Size" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.Tax" class="control-label">Thuế</label>
-                                    <input asp-for="Product.Tax" class="form-control" placeholder="Thuế mặc định bằng 10% giá nhập vào" readonly/>
+                                    <input asp-for="Product.Tax" class="form-control" placeholder="Thuế mặc định bằng 10% giá nhập vào" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.ProcessPrice" class="control-label">Giá Gia Công</label>
@@ -60,7 +96,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.SellingPrice" class="control-label">Giá Bán</label>
-                                    <input asp-for="Product.SellingPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + Thuế)" readonly/>
+                                    <input asp-for="Product.SellingPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + Thuế)" readonly />
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.Quantity" class="control-label">Số Lượng</label>
@@ -74,9 +110,16 @@
                                     </select>
                                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                                 </div>
-                                <!-- Sub Products  -->
+                                <!-- Sub Products  
+                                <div class="form-group">
+                                    <label asp-for="Product.SubId" class="control-label">Sản phẩm phân hiệu</label>
+                                    <select asp-for="Product.SubId" class="form-control" asp-items="@(new SelectList(Model.SubProductList, "Id", "TitleProductName"))">
+                                        <option value="">Select SubProducts</option>
+                                    </select>
+                                    <span asp-validation-for="Product.SubId" class="text-danger"></span>
+                                </div>-->
                                 <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
-                                <a asp-page="./ListProduct" class="btn btn-gradient-light btn-fw">Hủy</a>
+                                <a asp-page="./ListSubProduct" class="btn btn-gradient-light btn-fw">Hủy</a>
                             </form>
                         </div>
                     </div>

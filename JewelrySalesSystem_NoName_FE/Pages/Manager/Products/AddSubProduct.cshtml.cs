@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 {
-    public class AddProductModel : PageModel
+    public class AddSubProductModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
@@ -21,7 +21,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
         public IList<SubProductsDTO> SubProductList { get; set; } = new List<SubProductsDTO>();
 
-        public AddProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AddSubProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
@@ -127,6 +127,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     Code = Product.Code,
                     ImgProduct = Product.ImgProduct,
                     Tax = Product.Tax,
+                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);
@@ -144,7 +145,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["SuccessMessage"] = "The Jewelry is added successfully!";
-                    return RedirectToPage("./ListProduct");
+                    return RedirectToPage("./ListSubProduct");
                 }
                 else
                 {
