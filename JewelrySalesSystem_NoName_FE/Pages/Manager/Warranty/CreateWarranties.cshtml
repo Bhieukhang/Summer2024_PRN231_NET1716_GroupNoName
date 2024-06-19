@@ -26,10 +26,10 @@
                     @foreach (var order in Model.ListOrder)
                     {
                         <div class="form-group row">
-                            <div class="col-md-4">
+                            @* <div class="col-md-4">
                                 <label class="control-label">Sản phẩm</label>
                                 <input type="text" class="form-control" value="@order.ProductName" readonly />
-                            </div>
+                            </div> *@
                             <div class="col-md-2">
                                 <label class="control-label">Ngày mua</label>
                                 <input type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" onchange="setExpirationMinDate('@order.ProductId')" required />

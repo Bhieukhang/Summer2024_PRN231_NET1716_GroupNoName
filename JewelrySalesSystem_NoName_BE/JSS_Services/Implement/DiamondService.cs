@@ -43,6 +43,7 @@ namespace JSS_Services.Implement
 
                 diamond.Id = Guid.NewGuid();
                 diamond.ImageDiamond = imageUrl;
+                diamond.InsDate = DateTime.Now;
 
                 await _unitOfWork.GetRepository<Diamond>().InsertAsync(diamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -68,12 +69,13 @@ namespace JSS_Services.Implement
                 if (existingDiamond == null) return null;
 
                 existingDiamond.DiamondName = diamond.DiamondName ?? existingDiamond.DiamondName;
+                existingDiamond.Code = diamond.Code ?? existingDiamond.Code;
                 existingDiamond.Carat = diamond.Carat ?? existingDiamond.Carat;
                 existingDiamond.Color = diamond.Color ?? existingDiamond.Color;
                 existingDiamond.Clarity = diamond.Clarity ?? existingDiamond.Clarity;
                 existingDiamond.Cut = diamond.Cut ?? existingDiamond.Cut;
                 existingDiamond.Price = diamond.Price ?? existingDiamond.Price;
-                existingDiamond.JewelryId = diamond.JewelryId != Guid.Empty ? diamond.JewelryId : existingDiamond.JewelryId;
+                existingDiamond.Quantity = diamond.Quantity ?? existingDiamond.Quantity;
 
                 if (imageStream != null)
                 {
@@ -85,6 +87,7 @@ namespace JSS_Services.Implement
                     diamond.ImageDiamond = existingDiamond.ImageDiamond;
                 }
 
+                existingDiamond.UpsDate = DateTime.Now;
                 _unitOfWork.GetRepository<Diamond>().UpdateAsync(existingDiamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful) return null;

@@ -41,11 +41,11 @@ public partial class Product
 
     public virtual Category? Category { get; set; }
 
-    public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
-
     public virtual Material? Material { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
+
+    public virtual SubProduct? Sub { get; set; }
 }

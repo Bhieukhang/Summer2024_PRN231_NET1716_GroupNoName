@@ -73,13 +73,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
             var diamond = new Diamond
             {
-                DiamondName = diamondRequest.ImageDiamond,
+                DiamondName = diamondRequest.DiamondName,
+                Code = diamondRequest.Code,
                 Carat = diamondRequest.Carat,
                 Color = diamondRequest.Color,
                 Clarity = diamondRequest.Clarity,
                 Cut = diamondRequest.Cut,
                 Price = diamondRequest.Price,
                 ImageDiamond = diamondRequest.ImageDiamond,
+                Quantity = diamondRequest.Quantity
             };
 
             var createdDiamond = await _diamondService.CreateDiamondAsync(diamond, stream, "uploadedFileName");
@@ -91,13 +93,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(new DiamondResponse(
                 createdDiamond.Id,
                 createdDiamond.DiamondName,
+                createdDiamond.Code,
                 createdDiamond.Carat,
                 createdDiamond.Color,
                 createdDiamond.Clarity,
                 createdDiamond.Cut,
                 createdDiamond.Price,
                 createdDiamond.ImageDiamond,
-                createdDiamond.JewelryId
+                createdDiamond.Quantity,
+                createdDiamond.InsDate
             ));
         }
 
@@ -127,12 +131,14 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var diamond = new Diamond
             {
                 DiamondName = diamondRequest.ImageDiamond,
+                Code = diamondRequest.Code,
                 Carat = diamondRequest.Carat,
                 Color = diamondRequest.Color,
                 Clarity = diamondRequest.Clarity,
                 Cut = diamondRequest.Cut,
                 Price = diamondRequest.Price,
                 ImageDiamond = diamondRequest.ImageDiamond,
+                Quantity = diamondRequest.Quantity
             };
 
             var updatedDiamond = await _diamondService.UpdateDiamondAsync(id, diamond, stream, "uploadedFileName");
@@ -144,13 +150,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(new DiamondResponse(
                updatedDiamond.Id,
                updatedDiamond.DiamondName,
+               updatedDiamond.Code,
                updatedDiamond.Carat,
                updatedDiamond.Color,
                updatedDiamond.Clarity,
                updatedDiamond.Cut,
                updatedDiamond.Price,
                updatedDiamond.ImageDiamond,
-               updatedDiamond.JewelryId
+               updatedDiamond.Quantity,
+               updatedDiamond.InsDate
            ));
         }
 

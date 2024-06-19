@@ -81,6 +81,7 @@
         //Diamond
         public const string DiamondList = url + "/api/v1/Diamond";
         public const string DiamondDetails = url + "/api/v1/Diamond/id";
+
         //PurchasePrice
         public const string PurchasePriceList = url + "/api/v1/PurchasePrice";
 

@@ -1,18 +1,12 @@
-﻿using BusinessObjects.Mo;
-using JSS_BusinessObjects.Payload.Response;
+﻿using JSS_BusinessObjects.Payload.Response;
 using JSS_BusinessObjects;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JSS_Services.Interface;
+using JSS_BusinessObjects.Models;
 
 
-// Do Huu Thuan
 namespace JSS_Services.Implement
 {
     public class PurchasePriceService : BaseService<PurchasePrice>, IPurchasePriceService

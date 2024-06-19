@@ -9,6 +9,8 @@ public partial class Diamond
 
     public string? DiamondName { get; set; }
 
+    public string? Code { get; set; }
+
     public double? Carat { get; set; }
 
     public string? Color { get; set; }
@@ -19,9 +21,11 @@ public partial class Diamond
 
     public double? Price { get; set; }
 
-    public Guid? JewelryId { get; set; }
-
     public string? ImageDiamond { get; set; }
 
-    public virtual Product Jewelry { get; set; } = null!;
+    public int? Quantity { get; set; }
+
+    public DateTime? InsDate { get; set; }
+
+    public DateTime? UpsDate { get; set; }
 }

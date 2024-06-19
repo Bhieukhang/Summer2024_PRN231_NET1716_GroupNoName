@@ -5,28 +5,22 @@
 }
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title"> DANH SÁCH TRANG SỨC </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Products/AddProduct">
-                            <span class="menu-title"></span>
-                            <button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="mdi mdi-plus"></i>
-                                Thêm trang sức mới
-                            </button>
-                        </a>
-                        <br />
-                        <a class="nav-link" href="~/Manager/RateOfGold/UpdateGoldRate">
-                            <button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="mdi mdi-trending-up"></i>
-                                Cập nhật giá vàng
-                            </button>
-                        </a>
-                    </li>
-                </ol>
-            </nav>
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title display-4">DANH SÁCH TRANG SỨC</h1>
+            </div>
+            <div>
+                <a class="nav-link d-inline-block" href="~/Manager/Products/AddProduct">
+                    <button type="button" class="btn btn-gradient-primary btn-fw me-2">
+                        <i class="mdi mdi-plus"></i>
+                        Thêm trang sức mới
+                    </button>
+                </a>
+                <button type="button" class="btn btn-inverse-success btn-fw" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
+                    <i class="mdi mdi-trending-up"></i>
+                    Cập nhật giá vàng
+                </button>
+            </div>
         </div>
         <form method="post" asp-page-handler="Search">
             <br />
@@ -43,73 +37,53 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Code</th>
-                                <th>Tên</th>
-                                <th>Kích thước</th>
-                                <th>Số lượng</th>
-                                <th>Giá Bán</th>
-                                <th>Loại</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.productList)
-                            {
-                                <tr>
-                                    <td><img src="@item.ImgProduct" /></td>
-                                    <td>@item.Code</td>
-                                    <td>@item.ProductName</td>
-                                    <td>@item.Size</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.SellingPrice</td>
-                                    <td>@item.Category?.Name</td>
-                                    <td>
-                                        <a data-bs-toggle="modal" data-bs-target="#productModal-@item.Id" style="padding: 8px">
-                                            <i class="fa fa-eye menu-icon"></i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
-                                            <i class="mdi mdi-file-check btn-icon-append"></i>
-                                            Chỉnh sửa
-                                        </a>
-                                    </td>
-                                </tr>
-                                <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết trang sức</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="product-details">
-                                                    <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
-                                                    <div class="product-info">
-                                                        <h4>@item.ProductName</h4>
-                                                        <p><strong>Code :</strong> @item.Code</p>
-                                                        <p><strong>Mô tả :</strong> @item.Description</p>
-                                                        <p><strong>Kích thước :</strong> @item.Size</p>
-                                                        <p><strong>Số lượng :</strong> @item.Quantity</p>
-                                                        <p><strong>Giá Bán :</strong> @item.SellingPrice</p>
-                                                        <p><strong>Loại :</strong> @item.Category?.Name</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @* <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div> *@
+                    <div class="row">
+                        @foreach (var item in Model.productList)
+                        {
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img class="card-img-top" src="@item.ImgProduct" alt="Card image cap">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.ProductName</h5>
+                                        <p class="card-text">Code : <strong>@item.Code</strong></p>
+                                        <p class="card-text">Loại : <strong>@item.Category?.Name</strong></p>
+                                        <p class="card-text">Số Lượng : <strong>@item.Quantity</strong></p>
+                                        <p class="card-text">Giá Bán : <strong>@item.SellingPrice</strong></p>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="~/Manager/Products/EditProduct?id=@item.Id" class="btn btn-outline-secondary btn-fw me-2">Edit</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#productModal-@item.Id" class="btn btn-outline-danger btn-fw">
+                                                <i class="fa fa-eye menu-icon"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            }
-                        </tbody>
-                    </table>
+                            </div>
+                            <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="product-details">
+                                                <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
+                                                <div class="product-info">
+                                                    <h4>@item.ProductName</h4>
+                                                    <p><strong>Code :</strong> @item.Code</p>
+                                                    <p><strong>Mô tả :</strong> @item.Description</p>
+                                                    <p><strong>Kích thước :</strong> @item.Size</p>
+                                                    <p><strong>Số lượng :</strong> @item.Quantity</p>
+                                                    <p><strong>Giá Bán :</strong> @item.SellingPrice</p>
+                                                    <p><strong>Loại :</strong> @item.Category?.Name</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                     <nav aria-label="Page navigation example" style="padding-top:50px">
                         <ul class="pagination justify-content-end">
                             <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
@@ -131,7 +105,71 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="updateGoldRateModal" tabindex="-1" aria-labelledby="updateGoldRateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateGoldRateModalLabel">Cập nhật tỉ giá vàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateGoldRateForm" method="post">
+                    <div class="form-group">
+                        <label for="newRate">New Gold Rate</label>
+                        <input type="number" step="0.01" class="form-control" id="newRate" name="NewRate" required />
+                    </div>
+                    <button type="submit" class="btn btn-gradient-primary me-2">Cập Nhật</button>
+                    <button type="button" class="btn btn-gradient-light btn-fw" data-bs-dismiss="modal">Hủy</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#updateGoldRateForm").on("submit", function(e) {
+                e.preventDefault();
+
+                var newrate = $("#newRate").val();
+
+                $.ajax({
+                    url: '@Url.Page("/Manager/RateOfGold/UpdateGoldRate")',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    data: JSON.stringify(newrate),
+                    success: function(result) {
+                        alert("Cập nhật tỉ giá vàng thành công!");
+                        $("#updateGoldRateModal").modal('hide');
+                    },
+                    error: function(err) {
+                        alert("Có lỗi xảy ra khi cập nhật tỉ giá vàng. Vui lòng thử lại.");
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 <style>
+    .page-title {
+        font-size: 2.5rem; 
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-img-top {
+        max-height: 200px;
+        object-fit: cover;
+    }
+
     .product-details {
         display: flex;
         flex-direction: column;
@@ -163,4 +201,3 @@
                 color: #495057;
             }
 </style>
-
