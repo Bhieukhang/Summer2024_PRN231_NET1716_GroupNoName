@@ -41,8 +41,6 @@ namespace JSS_Services.Implement
                     size: size);
                 return list;
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
         //Do Huu Thuan
         public async Task<int> GetTotalSubProductAsync()
         {
@@ -54,14 +52,13 @@ namespace JSS_Services.Implement
 
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
-=======
+        {
+            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
+        }
+
+
 
         public async Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size)
->>>>>>> 2d80fe07a84d0c7c85e1ed663bff0957718eb5b2
-=======
-
-        public async Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size)
->>>>>>> 2d80fe07a84d0c7c85e1ed663bff0957718eb5b2
         {
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
                 selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
