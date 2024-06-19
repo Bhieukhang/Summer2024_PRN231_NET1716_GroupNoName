@@ -306,5 +306,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);
             return Ok(result);
         }
+
+        //DO Huu Thuan
+        #region GetTotalSubProductAsync
+        /// <summary>
+        /// Get Total SubProductAsync.
+        /// </summary>
+        /// <returns>List of SubProductAsync.</returns>
+        // GET: api/Product
+        #endregion
+        //   [Authorize(Roles = "Manager, Admin")]
+        [HttpGet(ApiEndPointConstant.Product.TotalPurchasePriceEndpoint)]
+        public async Task<ActionResult<int>> GetTotalSubProductAsync()
+        {
+            var TotalPurchasePrice = await _productService.GetTotalSubProductAsync();
+            return Ok(TotalPurchasePrice);
+        }
     }
 }

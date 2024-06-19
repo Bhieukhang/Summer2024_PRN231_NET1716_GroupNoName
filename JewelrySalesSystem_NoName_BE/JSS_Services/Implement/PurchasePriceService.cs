@@ -48,5 +48,19 @@ namespace JSS_Services.Implement
             if (!isSuccessful) return null;
             return existingPurchasePrice;
         }
+        public async Task<PurchasePrice> GetPurchasePriceByIdAsync(int id)
+        {
+            try
+            {
+                var purchasePriceRepository = _unitOfWork.GetRepository<PurchasePrice>();
+                var PurchasePrice = await purchasePriceRepository.FirstOrDefaultAsync(s => s.PurchasePriceId == id);
+                return PurchasePrice;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting stall by ID");
+                throw;
+            }
+        }
     }
 }
