@@ -3,14 +3,14 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Statics
+namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
 {
     public class DashboardModel : PageModel
     {
         [BindProperty]
         public DashboardDTO DashboardData { get; set; } = new();
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             try
             {
