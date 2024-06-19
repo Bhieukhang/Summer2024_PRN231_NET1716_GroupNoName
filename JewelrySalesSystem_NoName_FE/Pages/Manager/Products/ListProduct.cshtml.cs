@@ -1,5 +1,4 @@
 using JewelrySalesSystem_NoName_FE.DTOs;
-using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;

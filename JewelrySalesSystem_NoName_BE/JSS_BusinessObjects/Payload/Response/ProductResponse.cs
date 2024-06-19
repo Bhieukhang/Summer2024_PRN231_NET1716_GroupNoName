@@ -11,6 +11,27 @@ namespace JSS_BusinessObjects.Payload.Response
     {
         public ProductResponse() { }
 
+        public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, 
+            double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, 
+            string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId)
+        {
+            Id = id;
+            ImgProduct = imgProduct;
+            ProductName = productName;
+            Description = description;
+            Size = size;
+            SellingPrice = sellingPrice;
+            Quantity = quantity;
+            CategoryId = categoryId;
+            MaterialId = materialId;
+            Code = code;
+            ImportPrice = importPrice;
+            InsDate = insDate;
+            ProcessPrice = processPrice;
+            Deflag = deflag;
+            SubId = subId;
+        }
+
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
             double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId, Category? category)

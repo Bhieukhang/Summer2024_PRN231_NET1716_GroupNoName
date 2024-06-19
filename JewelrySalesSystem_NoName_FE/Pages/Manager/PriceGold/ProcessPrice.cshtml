@@ -16,10 +16,10 @@
                                         <th> ProcesspriceId  </th>
                                         <th> ProcessPrice </th>
                                         <th> Size </th>
-                                        <th> CategoryId </th>
+                                        @*<th> CategoryId </th>*@
                                         <th> Description </th>
                                         <th> UpsDate </th>
-                                        <th> Status </th>
+                               
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -30,10 +30,15 @@
 
                                             <td> @ProcessPrice.ProcessPrice1 </td>
                                             <td> @ProcessPrice.Size </td>
-                                            <td> @ProcessPrice.CategoryId </td>
+                                         @*   <td> @ProcessPrice.CategoryId </td>*@
                                             <td> @ProcessPrice.Description </td>
                                             <td> @ProcessPrice.UpsDate </td>
-                                            <td> @ProcessPrice.Status </td>
+                                            <td>
+                                                <a asp-page="./EditProcessPrice" asp-route-id="@ProcessPrice.ProcesspriceId" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Chỉnh sửa
+                                                </a>
+                                            </td>
                                         </tr>
 
 

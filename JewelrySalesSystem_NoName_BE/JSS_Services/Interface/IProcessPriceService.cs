@@ -15,5 +15,6 @@ namespace JSS_Services.Interface
     {
         public Task<IPaginate<ProcessPriceResponse>> GetListProcessPriceAsync(int page, int size);
         Task<ProcessPrice> UpdateProcessPriceAsync(int id, ProcessPrice updatedData);
+        Task<ProcessPrice> GetProcessPriceByIdAsync(int id);
     }
 }

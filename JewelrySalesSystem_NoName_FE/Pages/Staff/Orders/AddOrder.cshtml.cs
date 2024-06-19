@@ -5,7 +5,6 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
 using System.Xml.Linq;
@@ -41,12 +40,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
             var response = await _httpClient.GetStringAsync(apiUrl);
             var product = JsonConvert.DeserializeObject<ProductResponse>(response);
+            if (product.Product.Quantity < 1)
+            {
+                TempData["OutOfProduct"] = "Sản phẩm tạm thời hết";
+            }
             listPromotions = product.Promotions.ToList();
             return new JsonResult(product);
         }
 
         public async Task<IActionResult> OnPostHandleCustomerAsync(string phone, string fullName, string action)
         {
+            //if (phone.Length > 12) return TempData["LengthPhone"] = "Độ dài số điện thoại không hợp lệ";
             if (action == "search")
             {
                 var result = await SearchCustomerAsync(phone);
@@ -82,10 +86,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
         public async Task<object> SearchCustomerAsync(string phone)
         {
+            if (phone == null) return TempData["PhoneNull"] = "Điền số điện thoại khách hàng!";
             var token = HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
+            
             var apiUrl = $"{ApiPath.SearchAccount}?phone={phone}";
             var response = await client.GetAsync(apiUrl);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -151,6 +156,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             Console.WriteLine(redirectUrl);
             return new JsonResult(new { redirectUrl });
+        }
+
+        public IActionResult OnPostClearTempData()
+        {
+            TempData.Clear();
+            return new JsonResult(new { success = true });
         }
     }
 }
