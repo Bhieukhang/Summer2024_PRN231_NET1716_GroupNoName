@@ -26,7 +26,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public Guid SubId { get; set; }
         public int Page { get; set; }
         public int Size { get; set; }
-
+        public int TotalSubProductCount { get; set; }
         public async Task<IActionResult> OnGetAsync(Guid? subId, int? page, int? size)
         {
             Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
@@ -44,7 +44,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             Size = size ?? 10;
 
             var url = $"{ApiPath.SubProductList}?subid={SubId}&page={Page}&size={Size}";
-         
+            var totalCountUrl = $"{ApiPath.TotalSubProductList}";
             try
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
@@ -53,14 +53,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(response);
                 ListProducts = paginateResult.Items;
-
+                TotalSubProductCount = await client.GetFromJsonAsync<int>(totalCountUrl);
 
             }
             catch (Exception ex)
             {
 
                 ListProducts = new List<ProductDTO>();
-
+                TotalSubProductCount =0 ;
             }
 
             return Page();

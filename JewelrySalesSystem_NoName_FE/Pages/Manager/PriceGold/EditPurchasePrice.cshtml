@@ -1,0 +1,69 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.PriceGold.EditPurchasePriceModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Chỉnh sửa thông tin giá thu mua  </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @*Thêm*@
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <!-- Basic form -->
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">CẬP NHẬT GIÁ THU MUA</h4>
+                        <form class="forms-sample" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.PurchasePrice1" class="control-label">Nhập Giá</label>
+                                <input asp-for="PurchasePrice.PurchasePrice1" class="form-control" placeholder="Tên" />
+                                <span asp-validation-for="PurchasePrice.PurchasePrice1" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.Size" class="control-label">Kích Thước(mm)</label>
+                                <input asp-for="PurchasePrice.Size" class="form-control" placeholder="Nhập kích thước trang sức" />
+                                <span asp-validation-for="PurchasePrice.Size" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.Description" class="control-label">Mô Tả</label>
+                                <input asp-for="PurchasePrice.Description" class="form-control" placeholder="Nhập mô tả, thông tin trang sức" />
+                                <span asp-validation-for="PurchasePrice.Description" class="text-danger"></span>
+                            </div>
+                      
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.CategoryId" class="control-label">Loại Sản Phẩm </label>
+                                <input asp-for="PurchasePrice.CategoryId" class="form-control" placeholder="Nhập Id" />
+                                <span asp-validation-for="PurchasePrice.CategoryId" class="text-danger"></span>
+                            </div>
+                  
+                           
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.UpsDate" class="control-label">Ngày Cập Nhật</label>
+                                <input asp-for="PurchasePrice.UpsDate" class="form-control" readonly />
+                                <span asp-validation-for="PurchasePrice.UpsDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="PurchasePrice.Status" class="control-label">Trạng thái</label>
+                                <select asp-for="PurchasePrice.Status" class="form-control">
+                                    <option value="true" selected="@((Model.PurchasePrice.Status == true).ToString().ToLower())">Hoạt động</option>
+                                    <option value="false" selected="@((Model.PurchasePrice.Status == false).ToString().ToLower())">Ngừng hoạt động</option>
+                                </select>
+                                <span asp-validation-for="PurchasePrice.Status" class="text-danger"></span>
+                            </div>
+                      
+                   
+                            <button type="submit" class="btn btn-gradient-primary me-2">Cập Nhật</button>
+                            <a asp-page="./PurchasePrice" class="btn btn-gradient-light btn-fw">Hủy</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

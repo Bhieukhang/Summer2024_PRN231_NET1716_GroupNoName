@@ -46,5 +46,20 @@ namespace JSS_Services.Implement
             if (!isSuccessful) return null;
             return existingProcessPrice;
         }
+
+        public async Task<ProcessPrice> GetProcessPriceByIdAsync(int id)
+        {
+            try
+            {
+                var processPriceRepository = _unitOfWork.GetRepository<ProcessPrice>();
+                var ProcessPrice = await processPriceRepository.FirstOrDefaultAsync(s => s.ProcesspriceId == id);
+                return ProcessPrice;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting stall by ID");
+                throw;
+            }
+        }
     }
 }

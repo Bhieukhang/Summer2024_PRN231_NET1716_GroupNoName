@@ -19,13 +19,16 @@ namespace JSS_Services.Implement
     public class ProductService : BaseService<ProductService>, IProductService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
-
+        private readonly List<Guid> excludeIds = new List<Guid>
+        {
+            Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1")
+        };
         public ProductService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<ProductService> logger)
             : base(unitOfWork, logger)
         {
         }
 
-        //get all subid
+        //Do Huu Thuan
         public async Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
 
@@ -38,6 +41,22 @@ namespace JSS_Services.Implement
                     size: size);
                 return list;
         }
+        //Do Huu Thuan
+        public async Task<int> GetTotalSubProductAsync()
+        {
+            var proRepository = _unitOfWork.GetRepository<Product>();
+            return await proRepository.CountAsync(x => excludeIds.Contains((Guid)x.SubId));
+        }
+
+
+
+
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
+        }
+
+
 
         public async Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size)
         {

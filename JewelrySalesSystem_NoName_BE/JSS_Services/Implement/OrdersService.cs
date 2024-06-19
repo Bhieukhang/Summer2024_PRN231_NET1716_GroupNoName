@@ -119,12 +119,24 @@ namespace JSS_Services.Implement
             //Caculate total price by promotion
             foreach (var orderDetail in productList)
             {
-                totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+                if (orderDetail.PromotionId != null)
+                {
+                    totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+                }
+                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Id == orderDetail.ProductId);
+                product.Quantity = product.Quantity - orderDetail.Quantity;
+                _unitOfWork.GetRepository<Product>().UpdateAsync(product);
             }
-
-            //order.PromotionId = newData.PromotionId;
-
             order.TotalPrice = totalPrice;
+
+            //Update usermoney for membership
+            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            membership.UsedMoney += order.TotalPrice;
+            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+
+            //Update quantity product
+            
+
             //Save order
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
 

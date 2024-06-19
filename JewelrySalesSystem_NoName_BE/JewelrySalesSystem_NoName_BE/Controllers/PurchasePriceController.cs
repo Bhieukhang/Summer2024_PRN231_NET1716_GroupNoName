@@ -56,5 +56,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return Ok(updatedPurchasePrice);
         }
+        #region GetPurchasePriceById
+        /// <summary>
+        /// Get a PurchasePrice by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the ProcessPrice to retrieve.</param>
+        /// <returns>The stall with the specified ID.</returns>
+        // GET: api/PurchasePrice/id
+        #endregion
+        //   [Authorize(Roles = "Manager, Admin")]
+        //  [HttpGet("{id}")]
+        [HttpGet(ApiEndPointConstant.PurchasePrice.PurchasePriceByIdEndpoint)]
+        public async Task<ActionResult<PurchasePrice>> GetPurchasePriceByIdAsync(int id)
+        {
+            var PurchasePrice = await _IPurchasePriceService.GetPurchasePriceByIdAsync(id);
+
+            if (PurchasePrice == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(PurchasePrice);
+        }
     }
 }

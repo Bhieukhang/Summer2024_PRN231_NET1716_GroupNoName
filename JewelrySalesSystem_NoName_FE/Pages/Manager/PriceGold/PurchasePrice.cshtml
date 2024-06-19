@@ -16,10 +16,10 @@
                                         <th> PurchasePriceId </th>
                                         <th> PurchasePrice </th>
                                         <th> Size </th>
-                                        <th> CategoryId </th>
+                                        @*<th> CategoryId </th>*@
                                         <th> Description </th>
                                         <th> UpsDate </th>
-                                        <th> Status </th>
+                               
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -30,10 +30,15 @@
 
                                             <td> @purchasePrice.PurchasePrice1 </td>
                                             <td> @purchasePrice.Size </td>
-                                            <td> @purchasePrice.CategoryId </td>
+                                          @*  <td> @purchasePrice.CategoryId </td>*@
                                             <td> @purchasePrice.Description </td>
                                             <td> @purchasePrice.UpsDate </td>
-                                            <td> @purchasePrice.Status </td>
+                                            <td>
+                                                <a asp-page="./EditPurchasePrice" asp-route-id="@purchasePrice.PurchasePriceId" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Chỉnh sửa
+                                                </a>
+                                            </td>
                                         </tr>
 
                                
