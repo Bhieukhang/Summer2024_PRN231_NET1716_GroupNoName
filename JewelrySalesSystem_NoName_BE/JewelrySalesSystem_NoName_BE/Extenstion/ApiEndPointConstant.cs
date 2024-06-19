@@ -92,8 +92,10 @@
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
 
 
+
             // Do Huu Thuan
             public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";
+            public const string TotalPurchasePriceEndpoint = ApiEndpoint + "/Product/PurchasePrice";
         }
 
         public static class Promotion

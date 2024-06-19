@@ -1,102 +1,166 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListSubProductModel
-
+@{
+    int TotalSubProduct = Model.TotalSubProductCount;
+}
 <div class="main-panel">
-
-    <div class="page-header">
-        <h3 class="page-title"> DANH SÁCH TRANG SỨC </h3>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="nav-item">
-                    <a class="nav-link" href="~/Manager/Products/AddSubProduct">
-                        <span class="menu-title"></span>
-                        <button type="button" class="btn btn-gradient-primary btn-fw">
-                            <i class="mdi mdi-plus"></i>
-                            Thêm trang sức mới
-                        </button>
-                    </a>
-                    <br />
-                </li>
-            </ol>
-        </nav>
-    </div>
-    <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Product Name</th>
-                            <th>Description</th>
-                            <th>ImportPrice</th>
-                            <th>SellingPrice</th>
-                            <th>InsDate</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ListProducts != null && Model.ListProducts.Any())
-                        {
-                            foreach (var item in Model.ListProducts)
-                            {
-                                <tr>
-                                    <td><img src="@item.ImgProduct" /></td>
-                                    <td>@item.ProductName</td>
-                                    <td>@item.Description</td>
-                                    <td>@item.ImportPrice</td>
-                                    <td>@item.SellingPrice</td>
-                                    <td>@item.InsDate</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal-@item.Id">
-                                            <i class="fa fa-eye menu-icon"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <!-- Modal -->
-                                <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết sản phẩm</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Product Name: @item.ProductName</p>
-                                                <p>Description: @item.Description</p>
-                                                <p>Size: @item.Size</p>
-                                                <p>Quantity: @item.Quantity</p>
-                                                <p>Import Price: @item.ImportPrice</p>
-                                                <p>Selling Price: @item.SellingPrice</p>
-                                                <p>Ins Date: @item.InsDate</p>
-                                                <img src="@item.ImgProduct" alt="Product Image" class="modal-product-image" />
-                                            </div>
-                                            <style>
-                                                .modal-product-image {
-                                                    max-width: 100%; /* Adjust the maximum width as needed */
-                                                    height: auto; /* Maintain aspect ratio */
-                                                }
-                                            </style>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="9">Không có sản phẩm nào được tìm thấy.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-info card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng số sản phẩm thu mua lại <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@TotalSubProduct</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-success card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng số sản phẩm thu mua lại đã bán <i class="mdi mdi-diamond mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-warning card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng số sản phẩm thu mua lại <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5"></h2>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="page-header">
+            <h3 class="page-title">DANH SÁCH TRANG SỨC</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Products/AddSubProduct">
+                            <button type="button" class="btn btn-gradient-primary btn-fw">
+                                <i class="mdi mdi-plus"></i>
+                                Thêm trang sức mới
+                            </button>
+                        </a>
+                        <br />
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Product Name</th>
+                                    <th>Description</th>
+                                    <th>ImportPrice</th>
+                                    <th>SellingPrice</th>
+                                    <th>InsDate</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ListProducts != null && Model.ListProducts.Any())
+                                {
+                                    foreach (var item in Model.ListProducts)
+                                    {
+                                        <tr>
+                                            <td><img src="@item.ImgProduct" class="product-image" /></td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.ImportPrice</td>
+                                            <td>@item.SellingPrice</td>
+                                            <td>@item.InsDate</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal-@item.Id">
+                                                    <i class="fa fa-eye menu-icon"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a asp-page="./EditSubProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Chỉnh sửa
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết sản phẩm</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Product Name: @item.ProductName</p>
+                                                        <p>Description: @item.Description</p>
+                                                        <p>Size: @item.Size</p>
+                                                        <p>Quantity: @item.Quantity</p>
+                                                        <p>Import Price: @item.ImportPrice</p>
+                                                        <p>Selling Price: @item.SellingPrice</p>
+                                                        <p>Ins Date: @item.InsDate</p>
+                                                        <img src="@item.ImgProduct" alt="Product Image" class="modal-product-image" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9">Không có sản phẩm nào được tìm thấy.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<style>
+    .product-image {
+        max-width: 100px; /* Adjust the maximum width as needed */
+        height: auto; /* Maintain aspect ratio */
+    }
 
+    .modal-product-image {
+        max-width: 100%; /* Adjust the maximum width as needed */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    .main-panel {
+        overflow-x: hidden; /* Hide horizontal overflow */
+    }
+
+    .content-wrapper {
+        padding: 20px; /* Adjust the padding as needed */
+    }
+
+    .card {
+        margin-bottom: 20px; /* Adjust the margin as needed */
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* Enable horizontal scrolling */
+    }
+</style>

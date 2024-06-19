@@ -12,10 +12,9 @@ namespace JSS_Services.Interface
 {
     public interface IProductService
     {
-
+        //Do huu Thuan
+        Task<int> GetTotalSubProductAsync();
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
-
-
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(Guid id);
         Task<Product> GetProductByCodeAsync(string code);
