@@ -55,47 +55,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(promotion);
         }
 
-        [HttpPost(ApiEndPointConstant.Promotion.PromotionEndpoint)]
-        public async Task<IActionResult> CreatePromotion([FromBody] PromotionRequest promotionRequest)
-        {
-            if (promotionRequest.StartDate > promotionRequest.EndDate)
-            {
-                return Ok(new ApiResponse
-                {
-                    Message = "StartDate > EndDate",
-                    Success = false
-                });
-            }
-            var promotion = new Promotion
-            {
-                Id = Guid.NewGuid(),
-                PromotionName = promotionRequest.PromotionName,
-                Type = promotionRequest.Type,
-                Description = promotionRequest.Description,
-                ProductQuantity = promotionRequest.ProductQuantity,
-                Percentage = promotionRequest.Percentage,
-                InsDate = DateTime.Now,
-                UpsDate = DateTime.Now,
-                StartDate = promotionRequest.StartDate,
-                EndDate = promotionRequest.EndDate,
-            };
-
-            var createdPromotion = await _promotionService.CreatePromotionAsync(promotion);
-            if (createdPromotion == null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Message = "Create fail",
-                    Success = false
-                });
-            }
-            return Ok(new ApiResponse
-            {
-                Message = "Create success",
-                Success = true
-            });
-        }
-
 
         #region UpdatePromotion
         /// <summary>
