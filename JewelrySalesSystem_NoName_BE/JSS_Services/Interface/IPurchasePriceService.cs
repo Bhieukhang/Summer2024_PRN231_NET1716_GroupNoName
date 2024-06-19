@@ -14,5 +14,6 @@ namespace JSS_Services.Interface
     public interface IPurchasePriceService
     {
         public Task<IPaginate<PurchasePriceResponse>> GetListPurchasePriceAsync(int page, int size);
+        Task<PurchasePrice> UpdatePurchasePriceAsync(int id, PurchasePrice updatedData);
     }
 }

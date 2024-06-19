@@ -31,5 +31,23 @@ namespace JSS_Services.Implement
                 size: size); ;
             return list;
         }
+        public async Task<ProcessPrice> UpdateProcessPriceAsync(int id, ProcessPrice updatedData)
+        {
+            var existingProcessPrice = await _unitOfWork.GetRepository<ProcessPrice>().FirstOrDefaultAsync(a => a.ProcesspriceId == id);
+            if (existingProcessPrice == null) return null;
+
+            existingProcessPrice.ProcessPrice1 = updatedData.ProcessPrice1;
+            existingProcessPrice.Size = updatedData.Size;
+            existingProcessPrice.CategoryId = updatedData.CategoryId;
+            existingProcessPrice.Description = updatedData.Description;
+            existingProcessPrice.UpsDate = DateTime.Now;
+            existingProcessPrice.Status = updatedData.Status;
+
+
+            _unitOfWork.GetRepository<ProcessPrice>().UpdateAsync(existingProcessPrice);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) return null;
+            return existingProcessPrice;
+        }
     }
 }

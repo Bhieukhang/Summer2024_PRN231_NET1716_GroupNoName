@@ -30,5 +30,23 @@ namespace JSS_Services.Implement
                 size: size); ;
             return list;
         }
+        public async Task<PurchasePrice> UpdatePurchasePriceAsync(int id, PurchasePrice updatedData)
+        {
+            var existingPurchasePrice = await _unitOfWork.GetRepository<PurchasePrice>().FirstOrDefaultAsync(a => a.PurchasePriceId == id);
+            if (existingPurchasePrice == null) return null;
+
+            existingPurchasePrice.PurchasePrice1 = updatedData.PurchasePrice1;
+            existingPurchasePrice.Size = updatedData.Size;
+            existingPurchasePrice.CategoryId = updatedData.CategoryId;
+            existingPurchasePrice.Description = updatedData.Description;
+            existingPurchasePrice.UpsDate = DateTime.Now;
+            existingPurchasePrice.Status = updatedData.Status;
+
+
+            _unitOfWork.GetRepository<PurchasePrice>().UpdateAsync(existingPurchasePrice);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) return null;
+            return existingPurchasePrice;
+        }
     }
 }

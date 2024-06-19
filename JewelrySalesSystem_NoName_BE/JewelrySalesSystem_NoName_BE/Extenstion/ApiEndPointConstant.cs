@@ -31,12 +31,14 @@
         {
             // Do Huu Thuan
             public const string PurchasePriceEndpoint = ApiEndpoint + "/PurchasePrice";
+            public const string PurchasePriceByIdEndpoint = PurchasePriceEndpoint + "/id";
 
         }
         public static class ProcessPrice
         {
             // Do Huu Thuan
             public const string ProcessPriceEndpoint = ApiEndpoint + "/ProcessPrice";
+            public const string ProcessPriceByIdEndpoint = ProcessPriceEndpoint + "/id";
 
         }
         public static class Stall

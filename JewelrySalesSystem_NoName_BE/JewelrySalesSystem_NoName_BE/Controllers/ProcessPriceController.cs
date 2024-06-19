@@ -1,4 +1,5 @@
-﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+﻿using BusinessObjects.Mo;
+using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Implement;
 using JSS_Services.Interface;
@@ -36,5 +37,26 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(ProcessPrice);
         }
 
+
+        #region UpdatePurchasePrice
+        /// <summary>
+        /// Update a PurchasePrice by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the category to update.</param>
+        /// <param name="PurchasePrice">The updated category data.</param>
+        /// <returns>The updated PurchasePrice.</returns>
+        /// POST : api/PurchasePrice
+        #endregion
+        //  [Authorize(Roles = "Manager")]
+        [HttpPut(ApiEndPointConstant.ProcessPrice.ProcessPriceByIdEndpoint)]
+        public async Task<ActionResult<ProcessPrice>> UpdateProcessPriceAsync(int id, ProcessPrice ProcessPrice)
+        {
+            var updatedProcessPrice = await _IProcessPriceService.UpdateProcessPriceAsync(id, ProcessPrice);
+            if (updatedProcessPrice == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedProcessPrice);
+        }
     }
 }

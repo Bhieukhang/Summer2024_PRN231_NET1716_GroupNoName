@@ -1,5 +1,7 @@
-﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+﻿using BusinessObjects.Mo;
+using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +35,28 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var list = await _IPurchasePriceService.GetListPurchasePriceAsync(page, size);
             var PurchasePrice = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(PurchasePrice);
+        }
+
+
+        #region UpdatePurchasePrice
+        /// <summary>
+        /// Update a PurchasePrice by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the category to update.</param>
+        /// <param name="PurchasePrice">The updated category data.</param>
+        /// <returns>The updated PurchasePrice.</returns>
+        /// POST : api/PurchasePrice
+        #endregion
+      //  [Authorize(Roles = "Manager")]
+        [HttpPut(ApiEndPointConstant.PurchasePrice.PurchasePriceByIdEndpoint)]
+        public async Task<ActionResult<PurchasePrice>> UpdatePurchasePriceAsync(int id, PurchasePrice PurchasePrice)
+        {
+            var updatedPurchasePrice = await _IPurchasePriceService.UpdatePurchasePriceAsync(id, PurchasePrice);
+            if (updatedPurchasePrice == null)
+            {
+                return NotFound();
+            }
+            return Ok(updatedPurchasePrice);
         }
     }
 }
