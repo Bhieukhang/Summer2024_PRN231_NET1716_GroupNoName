@@ -39,7 +39,7 @@
                                     <td> @warranty.DateOfPurchase?.ToString("dd-MM-yyyy") </td>
                                     <td> @warranty.ExpirationDate?.ToString("dd-MM-yyyy") </td>
                                     <td> @warranty.Period </td>
-                                    <td> @warranty.ConditionWarranty.Condition</td>
+                                    @* <td> @warranty.ConditionWarranty.Condition</td> *@
                                     <td>
                                         <i class="fa fa-eye menu-icon" data-toggle="modal" data-target="#warranty"></i>
                                         <div class="col-sm-10">
@@ -87,7 +87,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
                                                                     <div class="col-sm-9">
-                                                                        <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Password" value="@warranty.ConditionWarranty.Condition" readonly>
+                                                                       @*  <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Password" value="@warranty.ConditionWarranty.Condition" readonly> *@
                                                                     </div>
                                                                 </div>
                                                             </div>

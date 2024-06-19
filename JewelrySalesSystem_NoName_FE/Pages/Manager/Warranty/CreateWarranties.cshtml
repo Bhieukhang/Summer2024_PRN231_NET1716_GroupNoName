@@ -16,7 +16,7 @@
                 <div class="">
                     <h3>Đơn hàng ID: @Model.OrderId</h3>
                 </div>
-                <form id="warrantyForm" onsubmit="return submitForm(event)" method="post">
+                <form id="warrantyForm" method="post" onsubmit="submitForm(event)">
                     <div class="form-group row">
                         <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
                         <div class="col-sm-2">
@@ -28,19 +28,19 @@
                         <div class="form-group row">
                             <div class="col-md-4">
                                 <label class="control-label">Sản phẩm</label>
-                                <input asp-for="@order.ProductName" type="text" class="form-control" value="@order.ProductName" readonly />
+                                <input type="text" class="form-control" value="@order.ProductName" readonly />
                             </div>
                             <div class="col-md-2">
-                                <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua</label>
-                                <input asp-for="Warranty.DateOfPurchase" type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" />
+                                <label class="control-label">Ngày mua</label>
+                                <input type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" onchange="setExpirationMinDate('@order.ProductId')" required />
                             </div>
                             <div class="col-md-2">
-                                <label asp-for="Warranty.ExpirationDate" class="control-label">Ngày hết hạn</label>
-                                <input asp-for="Warranty.ExpirationDate" type="date" class="form-control" id="ExpirationDate_@order.ProductId" />
+                                <label class="control-label">Ngày hết hạn</label>
+                                <input type="date" class="form-control" id="ExpirationDate_@order.ProductId" required />
                             </div>
                             <div class="col-md-2">
-                                <label asp-for="Warranty.Period" class="control-label">Thời hạn (tháng)</label>
-                                <input asp-for="Warranty.Period" class="form-control" id="Period_@order.ProductId" />
+                                <label class="control-label">Thời hạn (tháng)</label>
+                                <input type="number" class="form-control" id="Period_@order.ProductId" required />
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-gradient-secondary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
@@ -49,13 +49,10 @@
                             <input type="hidden" name="OrderDetailId_@order.ProductId" value="@order.OrderDetailId" />
                         </div>
                     }
-                    <div class="form-group row">
-                        <!-- Add any additional form fields here if needed -->
-                    </div>
                     <div class="form-group row justify-content-end">
                         <div class="col-auto">
                             <a asp-page="./Index" class="btn btn-danger">Hủy</a>
-                            <button type="button" class="btn btn-primary" onclick="submitForm(event)">Hoàn tất</button>
+                            <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
                         </div>
                     </div>
                     <input type="hidden" name="SerializedListOrder" value="@Html.Raw(JsonConvert.SerializeObject(Model.ListOrder))" />
@@ -97,7 +94,13 @@
 @section Scripts {
     <script>
         const conditions = @Html.Raw(JsonConvert.SerializeObject(Model.ConditionWarranties));
-        let selectedProductId;
+        let selectedConditions = [];
+        let selectedProductId = null;
+
+        // Disable the "Tạo bảo hành" button initially
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('createWarrantyButton').disabled = true;
+        });
 
         async function loadConditions(productId) {
             selectedProductId = productId;
@@ -106,17 +109,35 @@
 
             conditions.forEach(condition => {
                 const row = document.createElement('tr');
+                const isChecked = selectedConditions.includes(condition.Id);
                 row.innerHTML = `
-                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.id}"></td>
-                    <td>${condition.condition}</td>
-                `;
+                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
+                            <td>${condition.Condition}</td>
+                        `;
                 tableBody.appendChild(row);
             });
 
-            // Show the modal
             const conditionModal = new bootstrap.Modal(document.getElementById('conditionModal'));
             conditionModal.show();
         }
+
+        document.getElementById('saveConditionsButton').addEventListener('click', () => {
+            selectedConditions = getSelectedConditions();
+            document.getElementById(`SelectedConditions_${selectedProductId}`).value = JSON.stringify(selectedConditions);
+
+            if (selectedConditions.length > 0) {
+                document.getElementById('createWarrantyButton').disabled = false;
+            } else {
+                document.getElementById('createWarrantyButton').disabled = true;
+            }
+
+            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+            conditionModal.hide();
+        });
+
+        document.getElementById('conditionModal').addEventListener('shown.bs.modal', () => {
+            updateCheckboxes();
+        });
 
         function getSelectedConditions() {
             const checkboxes = document.querySelectorAll('.condition-checkbox:checked');
@@ -124,144 +145,86 @@
             return selectedIds;
         }
 
-        // Handle save button click
-        document.getElementById('saveConditionsButton').addEventListener('click', () => {
-            const selectedConditions = getSelectedConditions();
-            console.log(`Selected conditions for product ${selectedProductId}:`, selectedConditions);
-            // Store the selected conditions in the hidden input
-            document.getElementById(`SelectedConditions_${selectedProductId}`).value = JSON.stringify(selectedConditions);
-
-            // Hide the modal
-            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
-            conditionModal.hide();
-        });
-
-        // Modal close button handler
-        document.querySelector('.btn-close').addEventListener('click', () => {
-            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
-            conditionModal.hide();
-        });
-
-        // Modal "Đóng" button handler
-        document.querySelector('.btn-secondary').addEventListener('click', () => {
-            const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
-            conditionModal.hide();
-        });
+        function updateCheckboxes() {
+            const checkboxes = document.querySelectorAll('.condition-checkbox');
+            checkboxes.forEach(checkbox => {
+                const conditionId = checkbox.dataset.id;
+                checkbox.checked = selectedConditions.includes(conditionId);
+            });
+        }
 
         function formatDate(inputDate) {
             const date = new Date(inputDate);
             const year = date.getFullYear();
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const day = date.getDate().toString().padStart(2, '0');
-            console.log("InputDate: ", inputDate)
             return `${year}-${month}-${day}`;
         }
 
-        function validateDates() {
-           function validateDates() {
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result.toISOString().split('T')[0];
+        }
 
-            let isValid = true;
+        function setExpirationMinDate(productId) {
+            const dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+            const expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
 
-            @foreach (var order in Model.ListOrder)
-            {
-                var productId = @order.ProductId;
-                <text>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var dateOfPurchaseElement = document.getElementById("DateOfPurchase_@productId");
-                    var expirationDateElement = document.getElementById("ExpirationDate_@productId");
-
-                    if (dateOfPurchaseElement) {
-                        dateOfPurchaseElement.addEventListener('change', function() {
-                            const dateOfPurchase = new Date(dateOfPurchaseElement.value);
-                            if (dateOfPurchase < now) {
-                                alert('Ngày mua không được là quá khứ.');
-                                dateOfPurchaseElement.value = '';
-                                isValid = false;
-                            }
-
-                            const minExpirationDate = new Date(dateOfPurchase);
-                            minExpirationDate.setDate(minExpirationDate.getDate() + 10);
-
-                            expirationDateElement.setAttribute('min', minExpirationDate.toISOString().split('T')[0]);
-                        });
-                    }
-
-                    if (expirationDateElement) {
-                        expirationDateElement.addEventListener('change', function() {
-                            const expirationDate = new Date(expirationDateElement.value);
-                            const minExpirationDate = new Date(dateOfPurchaseElement.value);
-                            minExpirationDate.setDate(minExpirationDate.getDate() + 10);
-
-                            if (expirationDate < now) {
-                                alert('Ngày hết hạn không được là quá khứ.');
-                                expirationDateElement.value = '';
-                                isValid = false;
-                            } else if (expirationDate < minExpirationDate) {
-                                alert('Ngày hết hạn phải lớn hơn ngày mua ít nhất 10 ngày.');
-                                expirationDateElement.value = '';
-                                isValid = false;
-                            }
-                        });
-                    }
-                });
-                </text>
+            if (dateOfPurchaseElement && expirationDateElement) {
+                const dateOfPurchase = dateOfPurchaseElement.value;
+                if (dateOfPurchase) {
+                    const minExpirationDate = addDays(dateOfPurchase, 10);
+                    expirationDateElement.setAttribute('min', minExpirationDate);
+                }
             }
-
-            return isValid;
         }
 
         function submitForm(event) {
             event.preventDefault();
-
-            if (!validateDates()) {
-                return;
-            }
-
+            console.log("Submit ============");
             const warranties = [];
 
-            @foreach (var order in Model.ListOrder)
-            {
-                <text>
-                    var productId = "@order.ProductId";
-                    console.log(`Processing product ID: ${productId}`);
+        @foreach (var order in Model.ListOrder)
+        {
+            <text>
+                                var productId = "@order.ProductId";
+                console.log(`Processing product ID: ${productId}`);
 
-                    var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
-                    var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
-                    var periodElement = document.getElementById(`Period_${productId}`);
-                    var selectedConditionsElement = document.getElementById(`SelectedConditions_${productId}`);
+                var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+                var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
+                var periodElement = document.getElementById(`Period_${productId}`);
+                var selectedConditionsElement = document.getElementById(`SelectedConditions_${productId}`);
 
-                    if (dateOfPurchaseElement && expirationDateElement && periodElement && selectedConditionsElement) {
-                        var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
-                        var expirationDate = formatDate(expirationDateElement.value);
-                        var period = periodElement.value;
-                        var selectedConditions = selectedConditionsElement.value;
+                if (dateOfPurchaseElement && expirationDateElement && periodElement && selectedConditionsElement) {
+                    var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
+                    var expirationDate = formatDate(expirationDateElement.value);
+                    var period = periodElement.value;
+                    var selectedConditions = selectedConditionsElement.value;
 
-                        var conditionIds = JSON.parse(selectedConditions);
+                    var conditionIds = JSON.parse(selectedConditions);
 
-                        var warranty = {
-                            dateOfPurchase: dateOfPurchase,
-                            expirationDate: expirationDate,
-                            period: period,
-                            orderDetailId: "@order.OrderDetailId",
-                            conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
-                        };
+                    var warranty = {
+                        dateOfPurchase: dateOfPurchase,
+                        expirationDate: expirationDate,
+                        period: period,
+                        orderDetailId: "@order.OrderDetailId",
+                        conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
+                    };
 
-                        console.log("Order: ", warranty);
-                        warranties.push(warranty);
-                    } else {
-                        console.error(`Missing elements for product ID: ${productId}`, {
-                            dateOfPurchaseElement,
-                            expirationDateElement,
-                            periodElement,
-                            selectedConditionsElement
-                        });
-                    }
-                </text>
-            }
-
-            var customerPhone = document.getElementById("customerPhone").value;
+                    console.log("Order: ", warranty);
+                    warranties.push(warranty);
+                } else {
+                    console.error(`Missing elements for product ID: ${productId}`, {
+                        dateOfPurchaseElement,
+                        expirationDateElement,
+                        periodElement,
+                        selectedConditionsElement
+                    });
+                }
+            </text>
+        }
+                    var customerPhone = document.getElementById("customerPhone").value;
             var hiddenInput = document.createElement("input");
             hiddenInput.type = "hidden";
             hiddenInput.name = "SerializedWarranties";
@@ -277,20 +240,18 @@
             document.querySelector("form#warrantyForm").submit();
         }
 
-        // Set the minimum date for DateOfPurchase fields to today
         document.addEventListener('DOMContentLoaded', (event) => {
             const now = new Date();
             const today = now.toISOString().split('T')[0];
 
-            @foreach (var order in Model.ListOrder)
-            {
-                <text>
-                    var productId = "@order.ProductId";
-                    document.getElementById(`DateOfPurchase_${productId}`).setAttribute('min', today);
-                </text>
-            }
-        });
+        @foreach (var order in Model.ListOrder)
+        {
+            <text>
+                                var productId = "@order.ProductId";
+                document.getElementById(`DateOfPurchase_${productId}`).setAttribute('min', today);
+                setExpirationMinDate(productId); // Set initial min expiration date
+            </text>
+        }
+                });
     </script>
 }
-
-

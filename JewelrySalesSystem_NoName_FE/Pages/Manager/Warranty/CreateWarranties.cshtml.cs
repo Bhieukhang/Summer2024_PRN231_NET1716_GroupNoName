@@ -97,7 +97,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return Redirect("~/Staff/Orders/OrderBill");
+                    return Redirect("~/Staff/Orders/ListOrder");
                 }
                 else
                 {
