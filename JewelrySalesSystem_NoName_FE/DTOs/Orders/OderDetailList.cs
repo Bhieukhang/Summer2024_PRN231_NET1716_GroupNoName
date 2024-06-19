@@ -17,6 +17,7 @@
         public double? Discount { get; set; }
 
         public double? TotalPrice { get; set; }
+        public string ProductName { get; set; }
 
         public Guid OrderId { get; set; }
 
