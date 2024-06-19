@@ -38,6 +38,7 @@
 
         //Product
         public const string ProductList = url + "/api/v1/Product";
+        public const string ProductDetails = url + "/api/v1/Product/id";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
         public const string SubProductList = url + "/api/v1/Product/subid";
@@ -77,6 +78,9 @@
         //Role
         public const string RoleList = url + "/api/v1/Role";
 
+        //Diamond
+        public const string DiamondList = url + "/api/v1/Diamond";
+        public const string DiamondDetails = url + "/api/v1/Diamond/id";
         //PurchasePrice
         public const string PurchasePriceList = url + "/api/v1/PurchasePrice";
 

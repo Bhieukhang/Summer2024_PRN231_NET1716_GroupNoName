@@ -36,6 +36,7 @@ public partial class Product
     public string? ImgProduct { get; set; }
 
     public double? Tax { get; set; }
+
     public Guid? SubId { get; set; }
 
     public virtual Category? Category { get; set; }
