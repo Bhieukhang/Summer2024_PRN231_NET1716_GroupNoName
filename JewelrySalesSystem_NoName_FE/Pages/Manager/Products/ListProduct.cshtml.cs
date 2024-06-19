@@ -1,4 +1,5 @@
 using JewelrySalesSystem_NoName_FE.DTOs;
+using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
         public int Page { get; set; }
         public int Size { get; set; }
-        public int TotalItems { get; set; }
         public int TotalPages { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? page, int? size)
+        public async Task<IActionResult> OnGetAsync(int? currentPage)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -36,8 +36,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
-            Page = page ?? 1;
-            Size = size ?? 2;
+            Page = currentPage ?? 1;
+            Size = 2;
             var url = $"{ApiPath.ProductList}?page={Page}&size={Size}";
 
             try
@@ -47,13 +47,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 var productResponse = await client.GetStringAsync(url);
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
-
-                //if (productResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                //{
-                //    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
-                //    return RedirectToPage("/Auth/Login");
-                //}
-                //productList = JsonConvert.DeserializeObject<List<ProductDTO>>(await productResponse.Content.ReadAsStringAsync());
+                TotalPages = paginateResult.TotalPages;
 
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
                 if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -69,7 +63,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
-
+                productList = new List<ProductDTO>();
                 return Page();
             }
         }

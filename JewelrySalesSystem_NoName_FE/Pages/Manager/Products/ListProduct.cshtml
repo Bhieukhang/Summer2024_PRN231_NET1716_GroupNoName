@@ -1,7 +1,6 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListProductModel
 @{
-    int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
 }
 <div class="main-panel">
@@ -114,16 +113,16 @@
                     <nav aria-label="Page navigation example" style="padding-top:50px">
                         <ul class="pagination justify-content-end">
                             <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
                             </li>
                             @for (var i = 1; i <= Model.TotalPages; i++)
                             {
                                 <li class="page-item @(Model.Page == i ? "active" : "")">
-                                    <a class="page-link" asp-page="./ListProduct" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                    <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
                             </li>
                         </ul>
                     </nav>
