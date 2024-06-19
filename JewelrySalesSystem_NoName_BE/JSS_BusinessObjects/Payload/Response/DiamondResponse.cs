@@ -10,7 +10,7 @@ namespace JSS_BusinessObjects.Payload.Response
     public class DiamondResponse
     {
         public DiamondResponse(Guid id, string? diamondName, double? carat, string? color, string? clarity
-            , string? cut, double? price, Guid? jewelryId) 
+            , string? cut, double? price, string? imageDiamond,Guid? jewelryId) 
         {
             Id = id;
             DiamondName = diamondName;
@@ -19,6 +19,7 @@ namespace JSS_BusinessObjects.Payload.Response
             Clarity = clarity;
             Cut = cut;
             Price = price;
+            ImageDiamond = imageDiamond;
             JewelryId = jewelryId;
         }
 

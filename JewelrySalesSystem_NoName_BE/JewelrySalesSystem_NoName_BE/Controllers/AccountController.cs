@@ -52,7 +52,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // GET: api/Account
         #endregion
         [Authorize(Roles = "Manager, Admin")]
-        [HttpGet(ApiEndPointConstant.Account.AccountByRoleIdEndpoint)] 
+        [HttpGet(ApiEndPointConstant.Account.AccountByRoleIdEndpoint)]
         [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
         {
@@ -206,8 +206,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             {
                 return NotFound("Role not found.");
             }
-            var account = new Account 
-            { 
+            var account = new Account
+            {
                 FullName = accountRequest.FullName,
                 Phone = accountRequest.Phone,
                 Dob = accountRequest.Dob,

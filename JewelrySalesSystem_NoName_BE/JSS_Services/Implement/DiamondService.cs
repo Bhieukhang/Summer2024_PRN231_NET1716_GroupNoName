@@ -80,6 +80,10 @@ namespace JSS_Services.Implement
                     var imageUrl = await UploadImageToFirebase(imageStream, imageName);
                     existingDiamond.ImageDiamond = imageUrl;
                 }
+                else if (imageStream == null)
+                {
+                    diamond.ImageDiamond = existingDiamond.ImageDiamond;
+                }
 
                 _unitOfWork.GetRepository<Diamond>().UpdateAsync(existingDiamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

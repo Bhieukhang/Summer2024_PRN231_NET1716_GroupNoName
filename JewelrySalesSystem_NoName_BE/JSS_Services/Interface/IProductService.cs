@@ -16,7 +16,7 @@ namespace JSS_Services.Interface
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
 
 
-        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size);
         Task<Product> GetProductByIdAsync(Guid id);
         Task<Product> GetProductByCodeAsync(string code);
         Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName);

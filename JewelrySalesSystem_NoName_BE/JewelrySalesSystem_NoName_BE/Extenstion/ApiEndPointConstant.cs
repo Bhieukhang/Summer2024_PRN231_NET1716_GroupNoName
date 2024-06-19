@@ -68,6 +68,7 @@
         {
             public const string ProductEndpoint = ApiEndpoint + "/Product";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
+            public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";

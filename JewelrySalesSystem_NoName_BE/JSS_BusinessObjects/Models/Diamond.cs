@@ -19,7 +19,7 @@ public partial class Diamond
 
     public double? Price { get; set; }
 
-    public Guid JewelryId { get; set; }
+    public Guid? JewelryId { get; set; }
 
     public string? ImageDiamond { get; set; }
 

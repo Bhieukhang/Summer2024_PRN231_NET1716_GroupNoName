@@ -76,5 +76,9 @@
 
         //Role
         public const string RoleList = url + "/api/v1/Role";
+
+        //Diamond
+        public const string DiamondList = url + "/api/v1/Diamond";
+        public const string DiamondDetails = url + "/api/v1/Diamond/id";
     }
 }

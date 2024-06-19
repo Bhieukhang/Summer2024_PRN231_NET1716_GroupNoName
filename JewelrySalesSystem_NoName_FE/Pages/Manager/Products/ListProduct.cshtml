@@ -1,6 +1,8 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListProductModel
 @{
+    int totalItems = Model.TotalItems;
+    int totalPages = Model.TotalPages;
 }
 <div class="main-panel">
     <div class="content-wrapper">
@@ -83,7 +85,7 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="employeeModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                                <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết trang sức</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -91,12 +93,12 @@
                                                     <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
                                                     <div class="product-info">
                                                         <h4>@item.ProductName</h4>
-                                                        <p><strong>Code:</strong> @item.Code</p>
-                                                        <p><strong>Mô tả:</strong> @item.Description</p>
-                                                        <p><strong>Kích thước:</strong> @item.Size</p>
-                                                        <p><strong>Số lượng:</strong> @item.Quantity</p>
-                                                        <p><strong>Giá Bán:</strong> @item.SellingPrice</p>
-                                                        <p><strong>Loại:</strong> @item.Category?.Name</p>
+                                                        <p><strong>Code :</strong> @item.Code</p>
+                                                        <p><strong>Mô tả :</strong> @item.Description</p>
+                                                        <p><strong>Kích thước :</strong> @item.Size</p>
+                                                        <p><strong>Số lượng :</strong> @item.Quantity</p>
+                                                        <p><strong>Giá Bán :</strong> @item.SellingPrice</p>
+                                                        <p><strong>Loại :</strong> @item.Category?.Name</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -109,6 +111,22 @@
                             }
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example" style="padding-top:50px">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-page="./ListProduct" asp-route-page="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(Model.Page == i ? "active" : "")">
+                                    <a class="page-link" asp-page="./ListProduct" asp-route-page="@i" asp-route-size="@Model.Size">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-page="./ListProduct" asp-route-page="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

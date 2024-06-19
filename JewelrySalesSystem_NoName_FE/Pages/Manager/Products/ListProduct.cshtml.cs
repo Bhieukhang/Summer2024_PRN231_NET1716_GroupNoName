@@ -1,3 +1,4 @@
+using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public string? SearchCode { get; set; }
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
-        public ProductDTO productDetail { get; set; } = new ProductDTO();
+        public int Page { get; set; }
+        public int Size { get; set; }
+        public int TotalItems { get; set; }
+        public int TotalPages { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int? page, int? size)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -32,19 +36,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
+            Page = page ?? 1;
+            Size = size ?? 2;
+            var url = $"{ApiPath.ProductList}?page={Page}&size={Size}";
 
             try
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var productResponse = await client.GetAsync(ApiPath.ProductList);
-                if (productResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
-                    return RedirectToPage("/Auth/Login");
-                }
-                productList = JsonConvert.DeserializeObject<List<ProductDTO>>(await productResponse.Content.ReadAsStringAsync());
+                var productResponse = await client.GetStringAsync(url);
+                var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
+
+                //if (productResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                //{
+                //    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                //    return RedirectToPage("/Auth/Login");
+                //}
+                //productList = JsonConvert.DeserializeObject<List<ProductDTO>>(await productResponse.Content.ReadAsStringAsync());
 
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
                 if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -53,12 +62,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     return RedirectToPage("/Auth/Login");
                 }
                 cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
+                productList = paginateResult.Items;
 
                 return Page();
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
+
                 return Page();
             }
         }

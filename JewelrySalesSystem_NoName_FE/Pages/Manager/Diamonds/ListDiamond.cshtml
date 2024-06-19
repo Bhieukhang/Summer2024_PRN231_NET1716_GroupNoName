@@ -1,0 +1,140 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds.ListDiamondModel
+@{
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h2 class="page-title"> DANH SÁCH KIM CƯƠNG </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Manager/Diamonds/AddDiamond">
+                            <span class="menu-title"></span>
+                            <button type="button" class="btn btn-gradient-primary btn-fw">
+                                <i class="mdi mdi-plus"></i>
+                                Thêm kim cương mới
+                            </button>
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        @* <form method="post" asp-page-handler="Search">
+            <br />
+            <div class="form-group">
+                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" />
+                <span asp-validation-for="SearchCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-gradient-secondary btn-fw">
+                <i class="mdi mdi-magnify"></i>
+                Tìm Kiếm
+            </button>
+        </form> *@
+        <br />
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Tên</th>
+                                <th>Carat</th>
+                                <th>Màu</th>
+                                <th>Độ trong</th>
+                                <th>Độ cắt</th>
+                                <th>Giá Bán</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.diamondList)
+                            {
+                                <tr>
+                                    <td><img src="@item.ImageDiamond"></td>
+                                    <td>@item.DiamondName</td>
+                                    <td>@item.Carat</td>
+                                    <td>@item.Color</td>
+                                    <td>@item.Clarity</td>
+                                    <td>@item.Cut</td>
+                                    <td>@item.Price<td>
+                                    <td>
+                                        <a data-bs-toggle="modal" data-bs-target="#diamondModal-@item.Id" style="padding: 8px">
+                                            <i class="fa fa-eye menu-icon"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                            <i class="mdi mdi-file-check btn-icon-append"></i>
+                                            Chỉnh sửa
+                                        </a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="diamondModal-@item.Id" tabindex="-1" aria-labelledby="diamondModalLabel-@item.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="diamondModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="diamond-details">
+                                                    <img src="@item.ImageDiamond" alt="Diamond Image" class="diamond-image" />
+                                                    <div class="diamond-info">
+                                                        <h3>@item.DiamondName</h3>
+                                                        <p><strong>Carat :</strong> @item.Carat</p>
+                                                        <p><strong>Màu :</strong> @item.Color</p>
+                                                        <p><strong>Độ trong :</strong> @item.Clarity</p>
+                                                        <p><strong>Độ cắt :</strong> @item.Cut</p>
+                                                        <p><strong>Giá Bán:</strong> @item.Price</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @* <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div> *@
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .diamond-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .diamond-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .diamond-info {
+        width: 100%;
+    }
+
+        .diamond-info p {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+            .diamond-info p strong {
+                color: #495057;
+            }
+</style>
