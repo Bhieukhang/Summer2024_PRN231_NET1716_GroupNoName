@@ -27,17 +27,34 @@
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/{id}";
         }
 
+        public static class PurchasePrice
+        {
+            // Do Huu Thuan
+            public const string PurchasePriceEndpoint = ApiEndpoint + "/PurchasePrice";
+            public const string PurchasePriceByIdEndpoint = PurchasePriceEndpoint + "/id";
+
+        }
+        public static class ProcessPrice
+        {
+            // Do Huu Thuan
+            public const string ProcessPriceEndpoint = ApiEndpoint + "/ProcessPrice";
+            public const string ProcessPriceByIdEndpoint = ProcessPriceEndpoint + "/id";
+
+        }
         public static class Stall
         {
+            // Do Huu Thuan
             public const string StallEndpoint = ApiEndpoint + "/Stall";
             public const string StallByIdEndpoint = StallEndpoint + "/{id}";
         }
         public static class Account
         {
             public const string AccountEndpoint = ApiEndpoint + "/Account";
+            // Do Huu Thuan
             public const string AccountByRoleIdEndpoint = ApiEndpoint + "/AccountByRole";
             public const string TotalAccountEndpoint = ApiEndpoint + "/Account/Total-account";
             public const string ActiveAccountEndpoint = ApiEndpoint + "/Account/Active-account";
+
             public const string AccountByIdEndpoint = AccountEndpoint + "/id";
             public const string AccountProfileEndpoint = AccountEndpoint + "/Profile";
             public const string AccountProfileUpdateEndpoint = AccountProfileEndpoint + "/Update";
@@ -59,8 +76,11 @@
             public const string CategoryEndpoint = ApiEndpoint + "/Category";
             public const string CategoryByIdEndpoint = CategoryEndpoint + "/id";
         }
+
+
         public static class SubProduct
         {
+            // Do Huu Thuan
             public const string SubProductsEndpoint = ApiEndpoint + "/SubProducts";
         }
 
@@ -71,9 +91,10 @@
             public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
+
+
+            // Do Huu Thuan
             public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";
-
-
         }
 
         public static class Promotion
@@ -119,7 +140,7 @@
             public const string OrderEndpoint = ApiEndpoint + "/order";
             public const string OrderEndpointTest = ApiEndpoint + "/orderTest";
             public const string OrderUpdateEndpoint = OrderEndpoint + "/id";
-            public const string SearchOrderEndpoint = ApiEndpoint + "/order/search";
+            public const string SearchOrderEndpoint = AllOrdersEndpoint + "/search";
             public const string OrderByIdEndpoint = OrderEndpoint + "/id";
             public const string OrderCheckPromotionEndpoint = ApiEndpoint + "/check";
             public const string OrderStatic = ApiEndpoint + "/static";

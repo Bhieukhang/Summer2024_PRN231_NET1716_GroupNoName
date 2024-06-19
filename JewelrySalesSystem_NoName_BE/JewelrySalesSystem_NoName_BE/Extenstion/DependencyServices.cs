@@ -69,6 +69,8 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<IGoldRateService, GoldRateService>();
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<ISubProductsService, SubProductsService>();
+            services.AddScoped<IProcessPriceService, ProcessPriceService>();
+            services.AddScoped<IPurchasePriceService, PurchasePriceService>();
             return services;
         }
 

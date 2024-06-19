@@ -73,7 +73,7 @@
                             <div class="col-md-3">
                                 <select class="form-control" id="filterRoleId">
                                     <option value="">Lọc theo vai trò</option>
-                                    @foreach (var role in Model.RoleList.Where(r => r.Id != Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9")))
+                                    @foreach (var role in Model.RoleList@* .Where(r => r.Id != Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9")) *@)
                                     {
                                         <option value="@role.Id" selected="@(role.Id == Model.FilterRoleId ? "selected" : null)">@role.RoleName</option>
                                     }

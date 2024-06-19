@@ -9,6 +9,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Product
         public string TitleProductName { get; set; }
         public string Description { get; set;}
         public int Status { get; set; }
+        public virtual ICollection<ProductDTO> Products { get; } = new List<ProductDTO>();
 
     }
 }

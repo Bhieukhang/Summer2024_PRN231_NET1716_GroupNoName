@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BusinessObjects.Mo;
 using JSS_BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,7 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+    public virtual DbSet<ProcessPrice> ProcessPrices { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
@@ -43,6 +45,7 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Program> Programs { get; set; }
 
     public virtual DbSet<Promotion> Promotions { get; set; }
+    public virtual DbSet<PurchasePrice> PurchasePrices { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -200,6 +203,17 @@ public partial class JewelrySalesSystemContext : DbContext
                 .HasConstraintName("FK_OrderDetail_Promotion");
         });
 
+        modelBuilder.Entity<ProcessPrice>(entity =>
+        {
+            entity.ToTable("ProcessPrice");
+
+            entity.Property(e => e.ProcesspriceId).ValueGeneratedNever();
+
+            entity.Property(e => e.ProcessPrice1).HasColumnName("ProcessPrice");
+
+            entity.Property(e => e.UpsDate).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.ToTable("Product");
@@ -264,6 +278,20 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.UpsDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<PurchasePrice>(entity =>
+        {
+            entity.ToTable("PurchasePrice");
+
+            entity.Property(e => e.PurchasePriceId).ValueGeneratedNever();
+
+            entity.Property(e => e.PurchasePrice1)
+                .HasMaxLength(10)
+                .HasColumnName("PurchasePrice")
+                .IsFixedLength();
+
             entity.Property(e => e.UpsDate).HasColumnType("datetime");
         });
 

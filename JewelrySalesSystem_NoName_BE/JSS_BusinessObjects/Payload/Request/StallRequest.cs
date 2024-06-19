@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+// Do Huu Thuan
 namespace JSS_BusinessObjects.Payload.Request
 {
     public class StallRequest

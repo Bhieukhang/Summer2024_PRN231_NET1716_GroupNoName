@@ -11,8 +11,8 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Warranty
         public bool? Deflag { get; set; }
         public string Status { get; set; }
         public ConditionWarranty ConditionWarranty { get; set; }
-        public string OrderDetail { get; set; }
-        public string Product { get; set; }
+        //public string OrderDetail { get; set; }
+        //public string Product { get; set; }
     }
     public class ConditionWarranty
     {

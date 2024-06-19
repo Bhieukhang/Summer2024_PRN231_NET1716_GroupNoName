@@ -69,19 +69,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
         #region SearchOrders
         /// <summary>
-        /// Search orders by customer ID and start date.
+        /// Search orders by ID, customer ID, and start date.
         /// </summary>
+        /// <param name="id">The order ID to search for.</param>
         /// <param name="customerId">The customer ID to search for.</param>
         /// <param name="startDate">The start date to search for.</param>
         /// <returns>List of orders that match the search criteria.</returns>
         // GET: api/Order/Search
         #endregion
-        [Authorize(Roles = "Staff, Manager")]
+        //[Authorize(Roles = "Staff, Manager")]
         [HttpGet(ApiEndPointConstant.Order.SearchOrderEndpoint)]
         [ProducesResponseType(typeof(IEnumerable<OrderResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SearchOrders([FromQuery] Guid? customerId, [FromQuery] DateTime? startDate/*, [FromQuery] DateTime? endDate*/)
+        public async Task<IActionResult> SearchOrders([FromQuery] Guid? id, [FromQuery] Guid? customerId, [FromQuery] DateTime? startDate)
         {
-            var orders = await _service.SearchOrders(customerId, startDate/*, endDate*/);
+            var orders = await _service.SearchOrders(id, customerId, startDate);
             return Ok(orders);
         }
 

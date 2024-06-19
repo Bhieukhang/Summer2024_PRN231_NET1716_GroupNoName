@@ -41,7 +41,7 @@
         public const string ProductDetails = url + "/api/v1/Product/id";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
-        public const string SubProductsList = url + "/api/v1/Product/subid";
+        public const string SubProductList = url + "/api/v1/Product/subid";
 
         //Account
         public const string AccountList = url + "/api/v1/Account";
@@ -65,6 +65,7 @@
         public const string GetListOrders = url + "/api/v1/order/GetListOrders";
         public const string OrderListPromotion = url + "/api/v1/orderlist";
         public const string OrderListDetail = url + "/api/v1/order/detail";
+        public const string SearchOrders = url + "/api/v1/order/GetListOrders/search";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";
@@ -80,5 +81,10 @@
         //Diamond
         public const string DiamondList = url + "/api/v1/Diamond";
         public const string DiamondDetails = url + "/api/v1/Diamond/id";
+        //PurchasePrice
+        public const string PurchasePriceList = url + "/api/v1/PurchasePrice";
+
+        //ProcessPrice
+        public const string ProcessPriceList = url + "/api/v1/ProcessPrice";
     }
 }

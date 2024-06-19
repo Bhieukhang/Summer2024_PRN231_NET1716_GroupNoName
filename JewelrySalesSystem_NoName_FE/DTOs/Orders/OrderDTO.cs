@@ -12,6 +12,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         public double MaterialProccessPrice { get; set; }
         public List<OrderDetailDTO> Details { get; set; }
         public Guid Id { get; set; }
+        public DateTime? InsDate { get; set; }
     }
 
     public class OrderDetailDTO
