@@ -31,7 +31,7 @@ namespace JSS_Services.Implement
         {
             var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,x.Deflag, x.Status,
-                                                    x.ConditionWarrantyId),
+                                                    x.ConditionWarrantyId, x.Note),
                     predicate:
                     Guid.Empty.Equals(id)
                         ? x => true
@@ -44,7 +44,7 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                    x.Deflag, x.Status,x.ConditionWarrantyId),
+                                                    x.Deflag, x.Status,x.ConditionWarrantyId,x.Note),
                 page: page,
                 size: size
                 );
@@ -57,7 +57,7 @@ namespace JSS_Services.Implement
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 include: x => x.Include(x => x.WarrantyMappingConditions),
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, 
-                                                   x.Deflag, x.Status, x.ConditionWarrantyId),
+                                                   x.Deflag, x.Status, x.ConditionWarrantyId, x.Note),
                 page: page,
                 size: size
             );
@@ -105,6 +105,35 @@ namespace JSS_Services.Implement
             }
             listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
             return listWarranty;
+        }
+
+        public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyRequest request)
+        {
+            var warranty = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
+                predicate: x => x.Id == id);
+
+            if (warranty == null)
+            {
+                throw new KeyNotFoundException("Warranty not found.");
+            }
+
+            warranty.DateOfPurchase = request.DateOfPurchase;
+            warranty.ExpirationDate = request.ExpirationDate;
+            warranty.Note = request.Note;
+
+            if (DateTime.Now > warranty.ExpirationDate)
+            {
+                warranty.Status = "Expired";
+            }
+            else
+            {
+                warranty.Status = "Active";
+            }
+
+            _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
+            await _unitOfWork.CommitAsync();
+
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Deflag, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
         }
     }
 }

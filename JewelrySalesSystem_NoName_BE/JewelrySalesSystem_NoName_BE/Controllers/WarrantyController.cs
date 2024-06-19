@@ -73,5 +73,21 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
             var result = JsonConvert.SerializeObject(newWarranty, Formatting.Indented);
             return Ok(result);
         }
+
+        #region UpdateWarranty
+        /// <summary>
+        /// Update existing warranty.
+        /// </summary>
+        /// <returns>Updated warranty item</returns>
+        // PUT: api/v1/warranty/{id}
+        #endregion
+        [Authorize(Roles = "Manager, Staff")]
+        [HttpPut(ApiEndPointConstant.Warranty.WarrantyByIdEndpoint)]
+        public async Task<ActionResult> UpdateWarranty(Guid id, [FromBody] WarrantyRequest request)
+        {
+            var updatedWarranty = await _service.UpdateWarranty(id, request);
+            var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }

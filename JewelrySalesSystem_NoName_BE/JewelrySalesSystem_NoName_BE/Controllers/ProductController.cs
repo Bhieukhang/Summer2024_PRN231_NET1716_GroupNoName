@@ -1,4 +1,5 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -29,14 +30,18 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <summary>
         /// Get all products.
         /// </summary>
+        /// <param name="page">Page number for pagination.</param>
+        /// <param name="size">Page size for pagination.</param>
         /// <returns>List of products.</returns>
         /// GET : api/Product
         #endregion
         //[Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync(int page, int size)
         {
-            var products = await _productService.GetAllProductsAsync();
+            //var products = await _productService.GetAllProductsAsync(page, size);
+            var list = await _productService.GetAllProductsAsync(page, size);
+            var products = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(products);
         }
 
@@ -48,7 +53,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product
         #endregion
-        [Authorize(Roles = "Admin, Manager, Staff")]
+        //[Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductByIdEndpoint)]
         public async Task<ActionResult<Product>> GetProductByIdAsync(Guid id)
         {
@@ -180,7 +185,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.InsDate,
                 createdProduct.ProcessPrice,
                 createdProduct.Deflag,
-                createdProduct.SubId
+                createdProduct.Tax,
+                createdProduct.SubId,
+                createdProduct.Category
             ));
         }
 
@@ -259,7 +266,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.ProcessPrice,
                 updatedProduct.Deflag,
                 updatedProduct.Tax,
-                 updatedProduct.SubId
+                updatedProduct.SubId,
+                updatedProduct.Category
             ));
         }
 

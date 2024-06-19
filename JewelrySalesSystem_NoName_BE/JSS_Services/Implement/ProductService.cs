@@ -33,13 +33,15 @@ namespace JSS_Services.Implement
         {
 
                 IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity, x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId),
+                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity
+                    , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category),
                     predicate: x => x.SubId == subId,
                     orderBy: x => x.OrderByDescending(x => x.Id),
                     page: page,
                     size: size);
                 return list;
         }
+<<<<<<< HEAD
         //Do Huu Thuan
         public async Task<int> GetTotalSubProductAsync()
         {
@@ -51,8 +53,19 @@ namespace JSS_Services.Implement
 
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
+=======
+
+        public async Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size)
+>>>>>>> 2d80fe07a84d0c7c85e1ed663bff0957718eb5b2
         {
-            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
+            IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
+                selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category),
+                predicate: x => x.Deflag == true,
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size);
+            return list;
         }
 
         public async Task<Product> GetProductByIdAsync(Guid id)
@@ -232,7 +245,7 @@ namespace JSS_Services.Implement
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag, productItem.Tax, productItem.SubId);
+                                                           productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 

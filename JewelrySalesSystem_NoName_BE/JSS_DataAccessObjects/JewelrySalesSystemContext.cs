@@ -50,7 +50,8 @@ public partial class JewelrySalesSystemContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Stall> Stalls { get; set; }
-    public virtual DbSet<SubProducts> SubProducts { get; set; }
+
+    public virtual DbSet<SubProduct> SubProducts { get; set; }
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
@@ -313,6 +314,12 @@ public partial class JewelrySalesSystemContext : DbContext
                 .HasForeignKey(d => d.StaffId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Stall_User");
+        });
+
+        modelBuilder.Entity<SubProduct>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.TitleProductName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Transaction>(entity =>

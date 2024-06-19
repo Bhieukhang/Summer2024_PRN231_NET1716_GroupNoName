@@ -47,6 +47,12 @@
                                     <label>Số điện thoại</label>
                                     <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@TempData["Phone"]">
                                 </div>
+                                @if (TempData["PhoneNull"] != null)
+                                {
+                                    <div class="alert alert-danger">
+                                        @TempData["PhoneNull"]
+                                    </div>
+                                }
                                 <div class="form-group">
                                     <label>Tên khách hàng</label>
                                     <input type="text" id="customerName" name="fullName" class="form-control" placeholder="Nhập tên khách hàng" value="@TempData["Name"]">
@@ -81,7 +87,7 @@
                                 <div class="row">
                                     <button id="createOrderBtn" class="btn btn-success" style="white-space: nowrap;">Tạo hóa đơn</button>
                                     <div class="form-group"></div>
-                                    <button class="btn btn-gradient-secondary">Hủy</button>
+                                    <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button>
                                 </div>
                             </div>
                         </div>
@@ -112,11 +118,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Popup -->
+    <div class="modal fade" id="outOfStockModal" tabindex="-1" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="outOfStockModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fa fa-times-circle-o" style="color: red; font-size: 50px; margin-right: 10px;"></i>
+                    <h3>Sản phẩm tạm thời hết hàng</h3>
+                </div>
+                <div class="modal-footer">
+                    @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 
 @section Scripts {
     <script>
-
+        document.getElementById('cancelButton').addEventListener('click', function () {
+            // Tải lại trang
+            window.location.reload();
+        });
         $(document).ready(function () {
             let totalPrice = 0;
             let totalDiscount = 0;
@@ -157,48 +187,59 @@
                     type: 'GET',
                     data: { productCode: productCode },
                     success: function (data) {
+                        console.log("Quantity product: ", data.product.quantity);
                         listPromotions = data.promotions;
                         if (data && data.product) {
-                            var productForm = `
-                                                                                                <div class="product-item card shadow-sm mb-3" data-product-id="${data.product.id}" data-product-code="${data.product.code}">
-                                                                                            <div class="card-body row">
-                                                                                                <div class="col-md-6">
-                                                                                                           <div class="form-group">
-                                                                                                                <label>Mã sản phẩm</label>
-                                                                                                                <input type="text" class="form-control" value="${data.product.code}" readonly>
-                                                                                                            </div>
-                                                                                                            <div class="form-group">
-                                                                                                                <label>Tên sản phẩm</label>
-                                                                                                                <input type="text" class="form-control" value="${data.product.productName}" readonly>
-                                                                                                            </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-6">
-                                                                                                    <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
-                                                                                                        <i class="fa fa-times"></i>
-                                                                                                    </button>
+                            if (data.product.quantity == 0) {
+                                // Hiển thị modal popup
+                                $('#outOfStockModal').modal('show');
+                            } else {
+                                var productForm = `
+                                                                                                                                                <div class="product-item card shadow-sm mb-3" data-product-id="${data.product.id}" data-product-code="${data.product.code}">
+                                                                                                                                            <div class="card-body row">
+                                                                                                                                                <div class="col-md-6">
+                                                                                                                                                           <div class="form-group">
+                                                                                                                                                                <label>Mã sản phẩm</label>
+                                                                                                                                                                <input type="text" class="form-control" value="${data.product.code}" readonly>
+                                                                                                                                                            </div>
+                                                                                                                                                            <div class="form-group">
+                                                                                                                                                                <label>Tên sản phẩm</label>
+                                                                                                                                                                <input type="text" class="form-control" value="${data.product.productName}" readonly>
+                                                                                                                                                            </div>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="col-md-6">
+                                                                                                                                                    <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
+                                                                                                                                                        <i class="fa fa-times"></i>
+                                                                                                                                                    </button>
 
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Giá sản phẩm</label>
-                                                                                                        <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
-                                                                                                    </div>
-                                                                                                    <div class="form-group">
-                                                                                                        <label>Số lượng</label>
-                                                                                                        <input type="number" class="form-control quantity-input" value="1" min="1">
-                                                                                                    </div>
-                                                                                                    <div class="promotion-info" style="display:none;">
-                                                                                                        <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
-                                                                                                    </div>
-                                                                                                            <div class="form-group"></div>
-                                                                                                    <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
-                                                                                                        Khuyến mãi
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    `;
-                            $('#productList').append(productForm);
-                            $('#productCode').val('');
-                            updateTotalPrice();
+                                                                                                                                                    <div class="form-group">
+                                                                                                                                                        <label>Giá sản phẩm</label>
+                                                                                                                                                        <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
+                                                                                                                                                    </div>
+                                                                                                                                                    <div class="form-group">
+                                                                                                                                                        <label>Số lượng</label>
+                                                                                                                                                        <input type="number" class="form-control quantity-input" value="1" min="1">
+                                                                                                                                                    </div>
+                                                                                                                                                    <div class="form-group">
+                                                                                                                                                        <label>Số lượng còn tại cửa hàng</label>
+                                                                                                                                                        <input type="text" class="form-control" value="${data.product.quantity}" readonly>
+                                                                                                                                                    </div>
+
+                                                                                                                                                    <div class="promotion-info" style="display:none;">
+                                                                                                                                                        <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
+                                                                                                                                                    </div>
+                                                                                                                                                            <div class="form-group"></div>
+                                                                                                                                                    <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
+                                                                                                                                                        Khuyến mãi
+                                                                                                                                                    </button>
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                        </div>
+                                                                                                                                    `;
+                                $('#productList').append(productForm);
+                                $('#productCode').val('');
+                                updateTotalPrice();
+                            }
                         } else {
                             alert('Không tìm thấy sản phẩm');
                         }
@@ -271,6 +312,14 @@
                 }
             });
 
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                var day = ("0" + date.getDate()).slice(-2);
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var year = date.getFullYear();
+                return day + "/" + month + "/" + year;
+            }
+
             // Hàm gọi API và cập nhật modal khuyến mãi
             function loadPromotions(productCode) {
                 console.log("Product Code: ", productCode);
@@ -284,21 +333,20 @@
                             var promotionsHtml = '';
                             data.promotions.forEach(function (promotion) {
                                 promotionsHtml += `
-                                                                            <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
-                                                                                <div class="card-body row">
-                                                                                    <div class="col-md-2">
-                                                                                        <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
-                                                                                    </div>
-                                                                                    <div class="col-md-10">
-                                                                                        <label class="form-check-label ms-2">
-                                                                                            ${promotion.promotionName}</label>
-                                                                                        <label class="form-check-label">Bắt đầu: ${promotion.startDate}</label>
-                                                                                        <br>
-                                                                                        <label class="form-check-label">Kết thúc: ${promotion.endDate}</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        `;
+                        <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
+                            <div class="card-body row">
+                                <div class="col-md-2">
+                                    <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                </div>
+                                <div class="col-md-10">
+                                    <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
+                                    <label class="form-check-label">Bắt đầu: ${formatDate(promotion.startDate)}</label>
+                                    <br>
+                                    <label class="form-check-label">Kết thúc: ${formatDate(promotion.endDate)}</label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                             });
                             $('#promotionForm').html(promotionsHtml);
                             $('#promotionModal').modal('show');

@@ -7,9 +7,12 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         [Required]
         public string CustomerPhone { get; set; } = string.Empty;
         public Guid? DiscountId { get; set; }
+        [Required]
         public double TotalPrice { get; set; }
+        [Required]
         public Guid CustomerId { get; set; }
         public double MaterialProccessPrice { get; set; }
+        [Required]
         public List<OrderDetailDTO> Details { get; set; }
         public Guid Id { get; set; }
         public DateTime? InsDate { get; set; }
