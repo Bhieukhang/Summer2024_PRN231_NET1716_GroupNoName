@@ -29,6 +29,7 @@
 
         //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
+        public const string TransactionOrder = url + "/api/v1/Transaction/orderId";
 
         //Dashboard
         public const string Dashboard = url + "/api/v1/Dashboard";
