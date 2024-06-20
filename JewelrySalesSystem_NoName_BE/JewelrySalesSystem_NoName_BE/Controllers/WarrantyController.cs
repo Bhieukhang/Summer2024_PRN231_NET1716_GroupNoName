@@ -85,9 +85,22 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         [HttpPut(ApiEndPointConstant.Warranty.WarrantyByIdEndpoint)]
         public async Task<ActionResult> UpdateWarranty(Guid id, [FromBody] WarrantyRequest request)
         {
-            var updatedWarranty = await _service.UpdateWarranty(id, request);
-            var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
-            return Ok(result);
+            if (request == null)
+            {
+                return BadRequest("Invalid request payload.");
+            }
+
+            try
+            {
+                var updatedWarranty = await _service.UpdateWarranty(id, request);
+                var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional)
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

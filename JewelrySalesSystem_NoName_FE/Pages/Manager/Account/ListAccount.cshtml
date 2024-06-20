@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Admin.Account.ListAccountModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Account.ListAccountModel
 @{
     int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
@@ -51,19 +51,6 @@
                     <div class="card-body">
                         <div class="page-header">
                             <h3 class="page-title"> DANH SÁCH TÀI KHOẢN </h3>
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="~/Admin/Account/CreateAccount">
-                                            <span class="menu-title"></span>
-                                            <button type="button" class="btn btn-gradient-primary btn-fw">
-                                                <i class="mdi mdi-plus"></i>
-                                                Thêm tài khoản mới
-                                            </button>
-                                        </a>
-                                    </li>
-                                </ol>
-                            </nav>
                         </div>
 
                         <div class="row mb-3">
@@ -102,8 +89,8 @@
                                         <th> Số điện thoại </th>
                                         <th> Ngày tháng năm sinh </th>
                                         <th> Chức vụ </th>
-                                        <th> Xem </th>
-                                        <th> Chỉnh sửa</th>
+                                        <th> Địa chỉ </th>
+                                        <th> Trạng thái </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -117,23 +104,15 @@
                                             <td> @account.Phone </td>
                                             <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
                                             <td> @account.RoleName </td>
+                                            <td> @account.Address</td>
+                                            <td> @account.Status </td>
 
                                             @* <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
-                                            <td>
+                                            @* <td>
                                                 <a data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id" style="padding: 8px">
                                                     <i class="fa fa-eye menu-icon"></i>
                                                 </a>
-                                            </td>
-                                            <td>
-                                                @if (account.Deflag != false)
-                                                {
-                                                    <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
-                                                        <i class="mdi mdi-file-check btn-icon-append"></i>
-                                                        Chỉnh sửa
-                                                    </a>
-                                                }
-                                            </td>
-
+                                            </td> *@
                                         </tr>
                                         <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
@@ -158,13 +137,6 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        @if (account.Deflag != false)
-                                                        {
-                                                            <form method="post" asp-page-handler="DeactivateAccount" class="deactivate-form">
-                                                                <input type="hidden" name="accountId" value="@account.Id" />
-                                                                <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Deactivate</button>
-                                                            </form>
-                                                        }
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                     </div>
                                                 </div>

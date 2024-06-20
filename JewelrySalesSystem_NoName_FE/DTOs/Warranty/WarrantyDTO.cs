@@ -5,11 +5,15 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Warranty
     public class WarrantyDTO
     {
         public Guid Id { get; set; }
-        public DateTime? DateOfPurchase { get; set; }
-        public DateTime? ExpirationDate { get; set; }
+        public DateTime DateOfPurchase { get; set; }
+        public DateTime ExpirationDate { get; set; }
         public string Period { get; set; }
-        public bool? Deflag { get; set; }
+        public bool Deflag { get; set; }
         public string Status { get; set; }
+        public Guid ConditionnWarrantyId { get; set; }
+        public string Note { get; set; }
+        public Guid? OrderDetailId { get; set; }
+        public List<ConditionMap> ConditionMap { get; set; }
         public ConditionWarranty ConditionWarranty { get; set; }
         //public string OrderDetail { get; set; }
         //public string Product { get; set; }

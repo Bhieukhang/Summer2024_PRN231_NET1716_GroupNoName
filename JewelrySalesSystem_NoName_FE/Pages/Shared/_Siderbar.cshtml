@@ -35,7 +35,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
                    aria-controls="ui-basic">
-                    <span class="menu-title">Nhân viên</span>
+                    <span class="menu-title">Tài khoản</span>
                     <i class="menu-arrow"></i>
                     <i class="fa fa-users menu-icon"></i>
                 </a>
@@ -52,9 +52,7 @@
             </li>
         }
 
-
         @* Manager feature *@
-
         @if (userRole == "Manager")
         {
             <li class="nav-item">
@@ -64,7 +62,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
+                <a class="nav-link" href="~/Manager/Account/ListAccount">Danh Sách Nhân Viên</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Stall/ListStall">
@@ -72,21 +70,45 @@
                     <i class="mdi mdi-home menu-icon"></i>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Memberships/ListMembership">
                     <span class="menu-title">Thành viên</span>
                     <i class="fa fa-users menu-icon"></i>
                 </a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
+                   aria-controls="ui-basicc">
+                    <span class="menu-title">Quản lí sản phẩm</span>
+                    <i class="menu-arrow"></i>
+                    <i class="fa fa-cubes menu-icon"></i>
+                </a>
+                <div class="collapse" id="ui-basicc">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Products/ListProduct">Trang Sức</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Categories/ListCategories">Loại</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Diamonds/ListDiamond">Kim Cương</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Warranty/ListWarranty">
                     <span class="menu-title">Bảo hành</span>
                     <i class="fa fa-plus menu-icon"></i>
                 </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
                     <span class="menu-title">Khuyến mãi</span>
@@ -102,39 +124,35 @@
         }
 
         @* Staff feature *@
-        @if (userRole == "Admin" || userRole == "Manager" || userRole == "Staff")
-        {
-            <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
-               aria-controls="ui-basicc">
-                <span class="menu-title">Quản lí sản phẩm</span>
-                <i class="menu-arrow"></i>
-                <i class="fa fa-cubes menu-icon"></i>
-            </a>
-            <div class="collapse" id="ui-basicc">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Products/ListProduct">Trang Sức</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Categories/ListCategories">Loại</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Diamonds/ListDiamond">Kim Cương</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        }
-
         @if (userRole == "Staff")
         {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
+                   aria-controls="ui-basicc">
+                    <span class="menu-title">Quản lí sản phẩm</span>
+                    <i class="menu-arrow"></i>
+                    <i class="fa fa-cubes menu-icon"></i>
+                </a>
+                <div class="collapse" id="ui-basicc">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Products/ListProduct">Trang Sức</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Categories/ListCategories">Loại</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Stall/ListStall">Chất Liệu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Diamonds/ListDiamond">Kim Cương</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Products/ListSubProduct">Thu Mua Trang Sức</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="~/Staff/Orders/AddOrder">
                     <span class="menu-title">Đơn hàng</span>
@@ -160,168 +178,110 @@
             </li>
         }
 
-
         @* <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
         <span class="menu-title">Chíết khấu</span>
         <i class="mdi mdi-chart-bar menu-icon"></i>
         </a>
         </li>
-    <li class="nav-item">
+        <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicd" aria-expanded="false"
-            aria-controls="ui-basic">
-            <span class="menu-title">Nhân viên</span>
-            <i class="menu-arrow"></i>
-            <i class="fa fa-users menu-icon"></i>
+        aria-controls="ui-basic">
+        <span class="menu-title">Nhân viên</span>
+        <i class="menu-arrow"></i>
+        <i class="fa fa-users menu-icon"></i>
         </a>
         <div class="collapse" id="ui-basicd">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="~/Admin/Account/ListAccount">Tất Cả Tài khoản</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="~/Admin/Employee/ListEmployees">Danh Sách Nhân Viên</a>
-                </li>
-            </ul>
+        <ul class="nav flex-column sub-menu">
+        <li class="nav-item">
+        <a class="nav-link" href="~/Admin/Account/ListAccount">Tất Cả Tài khoản</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="~/Admin/Employee/ListEmployees">Danh Sách Nhân Viên</a>
+        </li>
+        </ul>
         </div>
-    </li>
-}
+        </li>
+        }
 
+        @* Staff feature *@
+        @if (userRole == "Manager" || userRole == "Staff")
+        {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/PriceGold/PriceGold">
+                    <span class="menu-title">Giá vàng hiện tại</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
+                    <span class="menu-title">Thanh toán</span>
+                    <i class="fa fa-money menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/RateOfGold/ListGoldRate">
+                    <span class="menu-title">Tỉ giá vàng</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                   aria-controls="ui-basic">
+                    <span class="menu-title">Hóa Đơn</span>
+                    <i class="menu-arrow"></i>
+                    <i class="fa fa-money menu-icon"></i>
+                </a>
+                <div class="collapse" id="ui-basic">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Staff/Menu/Menu">Bảng Giá Kim Cương </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Staff/Orders/ListOrder"> Danh Sách Đơn Hàng</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
 
-@* Manager feature *@
-
-@if (userRole == "Manager")
-{
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Statics/Dashboard">
-            <span class="menu-title">Dashboard</span>
-            <i class="mdi mdi-home menu-icon"></i>
+        @* <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+        <span class="menu-title">Chíết khấu</span>
+        <i class="mdi mdi-chart-bar menu-icon"></i>
         </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Account/ListEmployees">Danh Sách Nhân Viên</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Stall/ListStall">
-            <span class="menu-title">Nhân viên tại quầy</span>
-            <i class="mdi mdi-home menu-icon"></i>
-        </a>
-    </li>
+        </li> *@
 
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Memberships/ListMembership">
-            <span class="menu-title">Thành viên</span>
-            <i class="fa fa-users menu-icon"></i>
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Warranty/ListWarranty">
-            <span class="menu-title">Bảo hành</span>
-            <i class="fa fa-plus menu-icon"></i>
-        </a>
-    </li>
-}
-
-@* Staff feature *@
-    
-
-@if (userRole == "Manager" || userRole == "Staff")
-{
-<li class="nav-item">
-    <a class="nav-link" href="~/Manager/PriceGold/PriceGold">
-        <span class="menu-title">Giá vàng hiện tại</span>
-        <i class="fa fa-tags menu-icon"></i>
-    </a>
-</li>
-
-<li class="nav-item">
-        <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
-            <span class="menu-title">Khuyến mãi</span>
-            <i class="fa fa-tags menu-icon"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
-            <span class="menu-title">Thanh toán</span>
-            <i class="fa fa-money menu-icon"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="~/Manager/RateOfGold/ListGoldRate">
-            <span class="menu-title">Tỉ giá vàng</span>
-            <i class="fa fa-tags menu-icon"></i>
-        </a>
-    </li>
-
-    <li class="nav-item">
+        @*
+        <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
-            aria-controls="ui-basic">
-            <span class="menu-title">Hóa Đơn</span>
-            <i class="menu-arrow"></i>
-            <i class="fa fa-money menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="~/Staff/Menu/Menu">Bảng Giá Kim Cương </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="~/Staff/Orders/ListOrder"> Danh Sách Đơn Hàng</a>
-                </li>
-            </ul>
-        </div>
-    </li>
-}
-
-@if (userRole == "Staff")
-{
-    <li class="nav-item">
-        <a class="nav-link" href="~/Staff/Orders/AddOrder">
-            <span class="menu-title">Đơn hàng</span>
-            <i class="fa fa-truck menu-icon"></i>
-        </a>
-    </li>
-}
-
-
-@* <li class="nav-item">
-<a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-<span class="menu-title">Chíết khấu</span>
-<i class="mdi mdi-chart-bar menu-icon"></i>
-</a>
-</li> *@
-
-@*
-<li class="nav-item">
-    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
         aria-controls="ui-basic">
         <span class="menu-title">Hóa Đơn</span>
         <i class="menu-arrow"></i>
         <i class="fa fa-money menu-icon"></i>
-    </a>
-    <div class="collapse" id="ui-basic">
+        </a>
+        <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="~/Staff/Menu/Menu">Bảng Giá Kim Cương </a>
-            </li>
+        <li class="nav-item">
+        <a class="nav-link" href="~/Staff/Menu/Menu">Bảng Giá Kim Cương </a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="~/Staff/Orders/ListOrder"> Danh Sách Đơn Hàng</a>
-            </li>
+        <li class="nav-item">
+        <a class="nav-link" href="~/Staff/Orders/ListOrder"> Danh Sách Đơn Hàng</a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="~/Staff/Orders/CreateOrder"> Đơn Hàng</a>
-            </li>
-         
-            <li class="nav-item">
-            <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
-            </li> 
+        <li class="nav-item">
+        <a class="nav-link" href="~/Staff/Orders/CreateOrder"> Đơn Hàng</a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" href="~/Manager/Stall/ListStall">Nhân viên tại quầy</a>
+        </li>
         </ul>
-    </div>
-</li>*@
+        </div>
+        </li>*@
 
-   
-        
-</ul>
+
+
+    </ul>
 </nav>

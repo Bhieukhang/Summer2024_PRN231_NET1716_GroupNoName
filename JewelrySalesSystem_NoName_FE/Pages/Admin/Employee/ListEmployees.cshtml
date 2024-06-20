@@ -72,7 +72,7 @@
                     <div class="card-body">
                         <div class="page-header">
                             <h3 class="page-title"> DANH SÁCH NHÂN VIÊN </h3>
-                            <nav aria-label="breadcrumb">
+                            @* <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="nav-item">
                                         <a class="nav-link" href="~/Admin/Account/CreateAccount">
@@ -84,7 +84,7 @@
                                         </a>
                                     </li>
                                 </ol>
-                            </nav>
+                            </nav> *@
                         </div>
                         <div class="table-responsive">
                             <table id="employeeTable" class="table">
@@ -96,8 +96,6 @@
                                         <th> Dob </th>
                                         <th> Address</th>
                                         <th> Status </th>
-                                        <th> View</th>
-                                        <th> Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -113,13 +111,13 @@
                                             <td> @account.Address </td>
                                             <td> @account.Status </td>
 
-                                            <td><a asp-page="/Admin/Account/DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
+                                            @* <td><a asp-page="/Admin/Account/DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                             <td>
                                                 <a asp-page="/Admin/Account/EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
                                                     <i class="mdi mdi-file-check btn-icon-append"></i>
                                                     Chỉnh sửa
                                                 </a>
-                                            </td>
+                                            </td> *@
 
                                             @* <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id">
