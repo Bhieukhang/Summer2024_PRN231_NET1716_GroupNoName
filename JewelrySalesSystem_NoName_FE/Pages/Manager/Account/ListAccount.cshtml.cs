@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Manager")]
     public class ListAccountModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -53,7 +53,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
             }
 
             Page = currentPage ?? 1;
-            Size = 2;
+            Size = 3;
             SearchTerm = searchTerm;
             FilterRoleId = filterRoleId;
             FilterDeflag = filterDeflag;
@@ -154,5 +154,53 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Account
             //return await OnGetAsync(Page, SearchTerm, FilterRoleId, FilterDeflag);
             return RedirectToPage("/Admin/Account/ListAccount");
         }
+
+        //public async Task<IActionResult> OnGetAsync(int? currentPage)
+        //{
+        //    Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+        //    Response.Headers["Pragma"] = "no-cache";
+        //    Response.Headers["Expires"] = "0";
+
+        //    var token = HttpContext.Session.GetString("Token");
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        return RedirectToPage("/Auth/Login");
+        //    }
+
+        //    Page = currentPage ?? 1;
+        //    Size = 10;
+
+        //    var url = $"{ApiPath.AccountList}?page={Page}&size={Size}";
+        //    var totalCountUrl = $"{ApiPath.TotalAccount}";
+        //    var activeCountUrl = $"{ApiPath.ActiveAccount}";
+
+        //    try
+        //    {
+        //        var client = _httpClientFactory.CreateClient("ApiClient");
+        //        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        //        var response = await client.GetStringAsync(url);
+        //        var paginateResult = JsonConvert.DeserializeObject<Paginate<AccountDAO>>(response);
+        //        ListAccount = paginateResult.Items;
+        //        TotalItems = paginateResult.Total;
+        //        TotalPages = paginateResult.TotalPages;
+
+        //        TotalAccountCount = await client.GetFromJsonAsync<int>(totalCountUrl);
+        //        ActiveAccountCount = await client.GetFromJsonAsync<int>(activeCountUrl);
+
+        //        var roleApiUrl = $"{ApiPath.RoleList}";
+        //        var roleResponse = await client.GetAsync(roleApiUrl);
+        //        RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle error appropriately
+        //        ListAccount = new List<AccountDAO>();
+        //        TotalAccountCount = 0;
+        //        ActiveAccountCount = 0;
+        //    }
+
+        //    return Page();
+        //}
     }
 }

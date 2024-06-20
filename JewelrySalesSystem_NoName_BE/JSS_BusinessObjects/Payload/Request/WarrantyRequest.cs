@@ -13,6 +13,9 @@ namespace JSS_BusinessObjects.Payload.Request
         public DateTime? ExpirationDate { get; set; }
 
         public int? Period { get; set; }
+        public bool Deflag { get; set; }
+        public string Status { get; set; }
+        public Guid ConditionWarrantyId { get; set; }
 
         public Guid? OrderDetailId { get; set; }
         public string Note {  get; set; }

@@ -117,23 +117,35 @@ namespace JSS_Services.Implement
                 throw new KeyNotFoundException("Warranty not found.");
             }
 
-            warranty.DateOfPurchase = request.DateOfPurchase;
-            warranty.ExpirationDate = request.ExpirationDate;
-            warranty.Note = request.Note;
+            var currentDate = DateTime.UtcNow;
 
-            if (DateTime.Now > warranty.ExpirationDate)
+            if (currentDate > warranty.ExpirationDate)
             {
                 warranty.Status = "Expired";
+                warranty.Note = "Đã quá thời hạn được bảo hành";
+                _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
+                await _unitOfWork.CommitAsync();
+            }
+            else if (currentDate >= warranty.DateOfPurchase && currentDate <= warranty.ExpirationDate)
+            {
+                warranty.Status = "Valid for Warranty";
+
+                if (string.IsNullOrWhiteSpace(request.Note))
+                {
+                    throw new ArgumentException("Note is required.");
+                }
+                warranty.Note = request.Note;
+
+                _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
+                await _unitOfWork.CommitAsync();
             }
             else
             {
-                warranty.Status = "Active";
+                throw new ArgumentException("Invalid DateOfPurchase or ExpirationDate.");
             }
 
-            _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
-            await _unitOfWork.CommitAsync();
-
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Deflag, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
         }
+
     }
 }
