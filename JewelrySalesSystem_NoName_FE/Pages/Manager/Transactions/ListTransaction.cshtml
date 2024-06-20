@@ -35,7 +35,7 @@
                         <input id="input-search" asp-for="EndDate" type="date" class="form-control" />
                     </div>
                     <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
-                        <button class="btn btn-secondary mt-4" type="submit" >Search</button>
+                        <button class="btn btn-secondary mt-4" type="submit">Search</button>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,6 @@
                                 <tr>
                                     <th> STT </th>
                                     <th> Order Id </th>
-                                    <th> Description </th>
                                     <th> Currency </th>
                                     <th> TotalPrice </th>
                                 </tr>
@@ -66,10 +65,70 @@
                                         <td>
                                             @item.OrderId
                                         </td>
-                                        <td><span class="badge badge-info">@item.Description</span></td>
-                                        <td>@item.Description</td>
                                         <td>@item.Currency</td>
                                         <td>@item.TotalPrice?.ToString("$0.00")</td>
+                                        <td>
+                                            <button type="button" class="btn btn-link btn-view-details text-dark" data-userid="@item.OrderId">
+                                                <i class="fa fa-eye menu-icon"></i>
+                                            </button>
+                                            <div class="col-sm-10">
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="warranty">
+                                                    <div class="modal-dialog modal-xl">
+                                                        <div class="modal-content">
+                                                            @*                                                         <div class="col-md-6 grid-margin stretch-card"> *@
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <h4 class="card-title">Thông tin bảo hành</h4>
+                                                                    <div class="form-group row">
+                                                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Hóa đơn</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Username" value="@tran.OrderId" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Ngày hết hạn</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" value="@warranty.ExpirationDate?.ToString(" dd-MM-yyyy")" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="exampleInputMobile" class="col-sm-3 col-form-label">Giai đoạn</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control" id="exampleInputMobile" placeholder="Mobile number" value="@warranty.Period tháng" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Trạng thái</label>
+                                                                        @if (warranty.Status.Equals("Active"))
+                                                                        {
+                                                                            <div class="col-sm-9">
+                                                                                <label class="badge badge-success">@warranty.Status</label>
+                                                                            </div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div class="col-sm-9">
+                                                                                <label class="badge badge-danger">@warranty.Status</label>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
+                                                                        <div class="col-sm-9">
+                                                                            @*  <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Password" value="@warranty.ConditionWarranty.Condition" readonly> *@
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @*  </div> *@
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -122,19 +181,40 @@
     </div>
 </div>
 
-<script>
-    const inputSearch = document.getElementById('input-search');
-    const formSearch = document.getElementById('form-search');
-    var timeout = setTimeout(function () { }, 0);
-    window.addEventListener("load", (event) => {
-        const end = inputSearch.value.length;
-        inputSearch.setSelectionRange(end, end);
-        // 👇 scroll to the bottom if a textarea has long text
-        inputSearch.focus()
-    });
-    inputSearch.addEventListener('keypress', () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(function () { formSearch.submit(); }, 3000)
-    });
-</script>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.btn-view-details').click(function () {
+                var orderId = $(this).data('userid');
+                console.log("OrderId: ", orderId);
+                $.ajax({
+                    url: '@Url.Page("./ListTransaction", new { handler = "Details" })',
+                    type: 'GET',
+                    data: { orderId: orderId },
+                    success: function (data) {
+                        $('#membership .modal-body').html(data);
+                        $('#membership').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra khi tải dữ liệu.');
+                    }
+                });
+            });
+        });
+
+        const inputSearch = document.getElementById('input-search');
+        const formSearch = document.getElementById('form-search');
+        var timeout = setTimeout(function () { }, 0);
+        window.addEventListener("load", (event) => {
+            const end = inputSearch.value.length;
+            inputSearch.setSelectionRange(end, end);
+            // 👇 scroll to the bottom if a textarea has long text
+            inputSearch.focus()
+        });
+        inputSearch.addEventListener('keypress', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () { formSearch.submit(); }, 3000)
+        });
+    </script>
+}
