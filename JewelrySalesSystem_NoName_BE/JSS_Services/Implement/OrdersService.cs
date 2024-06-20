@@ -109,6 +109,7 @@ namespace JSS_Services.Implement
                     Discount = 0,
                     TotalPrice = orderDetail.Amount * orderDetail.Quantity,
                     OrderId = order.Id,
+                    PromotionId =  orderDetail.PromotionId.HasValue ? orderDetail.PromotionId.Value : (Guid?)null,
                     ProductId = orderDetail.ProductId,
                     InsDate = DateTime.Now
                 };
