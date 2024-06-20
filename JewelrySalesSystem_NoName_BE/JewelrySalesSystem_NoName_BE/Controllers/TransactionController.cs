@@ -2,9 +2,12 @@
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
+using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -35,6 +38,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(Transactions);
         }
 
-        
+        #region GetOrderDetail
+        /// <summary>
+        /// Get detail order and transaction by OrderId.
+        /// </summary>
+        /// <returns>Item order and transactions.</returns>
+        /// GET : api/Transaction/orderId
+        #endregion
+        //[Authorize(Roles = "Manager, Staff")]
+        [HttpGet(ApiEndPointConstant.Transaction.TransactionOrderEndpoint)]
+        public async Task<ActionResult<TransactionResponse>> GetOrderDetail(Guid orderId)
+        {
+            var Transactions = await _TransactionService.GetDetailTransactionByOrderId(orderId);
+            var result = JsonConvert.SerializeObject(Transactions, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }

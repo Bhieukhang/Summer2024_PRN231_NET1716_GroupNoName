@@ -109,6 +109,7 @@ namespace JSS_Services.Implement
                     Discount = 0,
                     TotalPrice = orderDetail.Amount * orderDetail.Quantity,
                     OrderId = order.Id,
+                    PromotionId =  orderDetail.PromotionId.HasValue ? orderDetail.PromotionId.Value : (Guid?)null,
                     ProductId = orderDetail.ProductId,
                     InsDate = DateTime.Now
                 };
@@ -116,6 +117,7 @@ namespace JSS_Services.Implement
                 listOrderDetail.Add(detail);
                 await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
             }
+            
             //Caculate total price by promotion
             foreach (var orderDetail in productList)
             {
@@ -134,11 +136,22 @@ namespace JSS_Services.Implement
             membership.UsedMoney += order.TotalPrice;
             _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
 
-            //Update quantity product
-            
+            //Transaction
+            Transaction tran = new Transaction()
+            {
+                Id = Guid.NewGuid(),
+                OrderId = order.Id,
+                Description = $"Đã thanh toán đơn {order.Id}",
+                Currency = "đ",
+                TotalPrice = order.TotalPrice,
+                InsDate = DateTime.Now,
+            };
+
 
             //Save order
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
+            //Save transaction
+            _unitOfWork.GetRepository<Transaction>().InsertAsync(tran);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;

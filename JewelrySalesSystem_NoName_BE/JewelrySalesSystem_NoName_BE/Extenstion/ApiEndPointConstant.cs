@@ -112,6 +112,7 @@
         public static class Transaction
         {
             public const string TransactionEndpoint = ApiEndpoint + "/Transaction";
+            public const string TransactionOrderEndpoint = TransactionEndpoint + "/orderId";
         }
 
         public static class Material

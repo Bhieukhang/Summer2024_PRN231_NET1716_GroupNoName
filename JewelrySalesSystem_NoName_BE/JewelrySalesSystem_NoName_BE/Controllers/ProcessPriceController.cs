@@ -1,5 +1,5 @@
-﻿using BusinessObjects.Mo;
-using JewelrySalesSystem_NoName_BE.Extenstion;
+﻿using JewelrySalesSystem_NoName_BE.Extenstion;
+using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_Services.Implement;
 using JSS_Services.Interface;

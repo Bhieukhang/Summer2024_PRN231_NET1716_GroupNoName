@@ -36,7 +36,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 return RedirectToPage("/Auth/Login");
             }
             Page = currentPage ?? 1;
-            Size = 2;
+            Size = 8;
             var url = $"{ApiPath.ProductList}?page={Page}&size={Size}";
 
             try

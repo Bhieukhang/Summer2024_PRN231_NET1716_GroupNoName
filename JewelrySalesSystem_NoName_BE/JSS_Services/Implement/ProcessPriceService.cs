@@ -1,5 +1,4 @@
-﻿using BusinessObjects.Mo;
-using JSS_BusinessObjects.Models;
+﻿using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_BusinessObjects;
 using JSS_DataAccessObjects;
@@ -12,8 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-// Do Huu Thuan
 namespace JSS_Services.Implement
 {
     public class ProcessPriceService : BaseService<ProcessPrice>, IProcessPriceService

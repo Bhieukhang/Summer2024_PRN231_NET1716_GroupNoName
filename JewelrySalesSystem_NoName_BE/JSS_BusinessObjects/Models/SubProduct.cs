@@ -12,4 +12,6 @@ public partial class SubProduct
     public string? Description { get; set; }
 
     public int? Status { get; set; }
+
+    public virtual ICollection<Product> Products { get; } = new List<Product>();
 }

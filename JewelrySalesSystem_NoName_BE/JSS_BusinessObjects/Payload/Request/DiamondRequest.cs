@@ -12,6 +12,7 @@ namespace JSS_BusinessObjects.Payload.Request
         public Guid Id { get; set; }
 
         public string? DiamondName { get; set; }
+        public string? Code { get; set; }
 
         public double? Carat { get; set; }
 
@@ -27,6 +28,10 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public string? ImageDiamond { get; set; }
 
-        public virtual Product? Jewelry { get; set; } = null!;
+        public int? Quantity { get; set; }
+
+        public DateTime? InsDate { get; set; }
+
+        public DateTime? UpsDate { get; set; }
     }
 }

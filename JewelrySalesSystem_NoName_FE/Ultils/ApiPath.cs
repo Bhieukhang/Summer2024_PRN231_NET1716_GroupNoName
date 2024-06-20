@@ -29,6 +29,7 @@
 
         //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
+        public const string TransactionOrder = url + "/api/v1/Transaction/orderId";
 
         //Dashboard
         public const string Dashboard = url + "/api/v1/Dashboard";
@@ -82,6 +83,7 @@
         //Diamond
         public const string DiamondList = url + "/api/v1/Diamond";
         public const string DiamondDetails = url + "/api/v1/Diamond/id";
+
         //PurchasePrice
         public const string PurchasePriceList = url + "/api/v1/PurchasePrice";
 

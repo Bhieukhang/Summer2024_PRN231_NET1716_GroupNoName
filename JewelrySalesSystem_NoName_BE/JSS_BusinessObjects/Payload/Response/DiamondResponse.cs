@@ -9,23 +9,26 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class DiamondResponse
     {
-        public DiamondResponse(Guid id, string? diamondName, double? carat, string? color, string? clarity
-            , string? cut, double? price, string? imageDiamond,Guid? jewelryId) 
+        public DiamondResponse(Guid id, string? diamondName, string? code, double? carat, string? color, string? clarity
+            , string? cut, double? price, string? imageDiamond, int? quantity, DateTime? insDate) 
         {
             Id = id;
             DiamondName = diamondName;
+            Code = code;
             Carat = carat;
             Color = color;
             Clarity = clarity;
             Cut = cut;
             Price = price;
             ImageDiamond = imageDiamond;
-            JewelryId = jewelryId;
+            Quantity = quantity;
+            InsDate = insDate;
         }
 
         public Guid Id { get; set; }
 
         public string? DiamondName { get; set; }
+        public string? Code { get; set; }
 
         public double? Carat { get; set; }
 
@@ -41,6 +44,10 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public string? ImageDiamond { get; set; }
 
-        public virtual Product? Jewelry { get; set; } = null!;
+        public int? Quantity { get; set; }
+
+        public DateTime? InsDate { get; set; }
+
+        public DateTime? UpsDate { get; set; }
     }
 }
