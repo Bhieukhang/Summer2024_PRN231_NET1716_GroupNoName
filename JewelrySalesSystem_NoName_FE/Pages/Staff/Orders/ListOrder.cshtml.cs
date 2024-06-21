@@ -57,10 +57,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 filteredOrders = filteredOrders.Where(o => o.Id == SearchCriteria.OrderId.Value);
             }
 
-            if (SearchCriteria.CustomerId.HasValue)
-            {
-                filteredOrders = filteredOrders.Where(o => o.CustomerId == SearchCriteria.CustomerId.Value);
-            }
+            //if (SearchCriteria.CustomerId.HasValue)
+            //{
+            //    filteredOrders = filteredOrders.Where(o => o.CustomerId == SearchCriteria.CustomerId.Value);
+            //}
 
             if (SearchCriteria.StartDate.HasValue)
             {

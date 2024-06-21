@@ -3,6 +3,7 @@
 @{
     Layout = "_Layout";
 }
+@Html.AntiForgeryToken()
 
 <body>
     <div class="main-panel">
@@ -15,7 +16,7 @@
                 <div class="col-md-8 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Trang sức</h4>
+                            <h4 class="card-title">Trang sức(*)</h4>
                             <div class="form-group row">
                                 <div class="col-sm-7">
                                     <input type="text" id="productCode" class="form-control" placeholder="Nhập mã sản phẩm">
@@ -24,8 +25,21 @@
                                     <button id="addProductBtn" class="btn btn-primary">Thêm sản phẩm</button>
                                 </div>
                             </div>
-                            <div id="productList">
-                                <!-- Sản phẩm sẽ được thêm vào đây -->
+                            <div class="container">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã sản phẩm</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Giá sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productTableBody">
+                                        <!-- Các sản phẩm sẽ được thêm vào đây -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -36,43 +50,29 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin khách hàng</h4>
-                            @if (TempData["Message"] != null)
-                            {
-                                <div class="alert alert-info @(TempData["ShowCreateMemberButton"] != null && (bool)TempData["ShowCreateMemberButton"] ? "alert-danger" : "alert-info")">
-                                    @TempData["Message"]
+                            @* Hiển thị lỗi *@
+                            <div id="message-container"></div>
+                            <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@TempData["Phone"]">
+                            </div>
+                             <div class="form-group">
+                                <label>Tên khách hàng</label>
+                                <input type="text" id="customerName" name="fullName" class="form-control" placeholder="Nhập tên khách hàng">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+                                    <button type="button" name="action" value="create" id="createMemberBtn" class="btn btn-secondary mt-0 btn-block text-center">
+                                    Tạo thành viên mới
+                                    </button>
                                 </div>
-                            }
-                            <form method="post" asp-page-handler="HandleCustomer">
-                                <div class="form-group">
-                                    <label>Số điện thoại</label>
-                                    <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@TempData["Phone"]">
+                                <div class="col-md-6 text-right">
+                                    <button type="button" name="action" value="search" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center">Tìm kiếm</button>
                                 </div>
-                                @if (TempData["PhoneNull"] != null)
-                                {
-                                    <div class="alert alert-danger">
-                                        @TempData["PhoneNull"]
-                                    </div>
-                                }
-                                <div class="form-group">
-                                    <label>Tên khách hàng</label>
-                                    <input type="text" id="customerName" name="fullName" class="form-control" placeholder="Nhập tên khách hàng" value="@TempData["Name"]">
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 text-left">
-                                        @if (TempData["ShowCreateMemberButton"] != null && (bool)TempData["ShowCreateMemberButton"])
-                                        {
-                                            <button type="submit" name="action" value="create" id="createMemberBtn" class="btn btn-secondary mt-0 btn-block text-center">
-                                                Tạo thành viên mới
-                                            </button>
-                                        }
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <button type="submit" name="action" value="search" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center">Tìm kiếm</button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                             <h4 class="card-title mt-4">Tổng tiền: <span id="totalPrice">0</span></h4>
                             <h4 class="card-title">Khuyến mãi giảm: <span id="totalDiscount">0</span></h4>
+                            <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable">0</span></h4>
                             <div class="form-group">
                                 <h4 for="paymentMethod">Phương thức thanh toán</h4>
                                 <div class="select-wrapper">
@@ -83,8 +83,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="container">
+                           <div class="container">
                                 <div class="row">
+                                    <input type="hidden" id="requestVerificationToken" value="">
                                     <button id="createOrderBtn" class="btn btn-success" style="white-space: nowrap;">Tạo hóa đơn</button>
                                     <div class="form-group"></div>
                                     <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button>
@@ -136,6 +137,25 @@
                 </div>
             </div>
         </div>
+    </div
+
+     <!-- Modal Popup Not Found Product -->
+    <div class="modal fade" id="notFoundModal" tabindex="-1" aria-labelledby="notFoundModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notFoundModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fa fa-times-circle-o" style="color: red; font-size: 50px; margin-right: 10px;"></i>
+                    <h3>Không tìm thấy sản phẩm này</h3>
+                </div>
+                <div class="modal-footer">
+                    @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -143,15 +163,60 @@
 
 @section Scripts {
     <script>
+        $(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+                $('#requestVerificationToken').val(token);
+             });
+
         document.getElementById('cancelButton').addEventListener('click', function () {
             // Tải lại trang
             window.location.reload();
         });
+
         $(document).ready(function () {
+            const token = $('#requestVerificationToken').val();
+            console.log("Token: ", token);
+
             let totalPrice = 0;
             let totalDiscount = 0;
             let listPromotions = [];
-            let selectedPromotionId = null;
+            let selectedPromotionId = null
+
+            $('#searchCustomerBtn').click(function () {
+                handleCustomerAction('search');
+            });
+
+            $('#createMemberBtn').click(function () {
+                handleCustomerAction('create');
+            });
+
+            //Search Customer
+            function handleCustomerAction(action) {
+            var phone = $('#customerPhone').val();
+            var fullName = $('#customerName').val();
+                console.log("Phone:", phone);
+                  console.log("Fullname: ", fullName);
+            $.ajax({
+                url: '/Staff/Orders/AddOrder?handler=HandleCustomer',
+                type: 'GET',
+                data: { phone: phone, fullName: fullName, action: action },
+                success: function (response) {
+                var messageContainer = $('#message-container');
+                if (response.success) {
+                    // Xử lý khi thành công
+                    $('#customerName').val(response.name);
+                    messageContainer.removeClass('error').addClass('success').html('<span>' + response.message + '</span>');
+                } else {
+                    // Xử lý khi không thành công
+                    messageContainer.removeClass('success').addClass('error').html('<span>' + response.message + '</span>');
+                }
+                },
+                error: function () {
+                    // Xử lý lỗi
+                    alert('Đã xảy ra lỗi khi xử lý yêu cầu.');
+                }
+            });
+            }
 
             function formatCurrency(amount) {
                 // Chuyển đổi số thành chuỗi và sử dụng regex để thêm dấu phân cách hàng nghìn
@@ -161,84 +226,65 @@
                 return formattedAmount;
             }
 
-            //Cập nhập tổng tiền
-            function updateTotalPrice() {
-                totalPrice = 0;
-                $('#productList .product-item').each(function () {
-                    const price = parseFloat($(this).find('input[type="text"][readonly]').eq(2).val());
-                    const quantity = parseInt($(this).find('.quantity-input').val());
-                    totalPrice += price * quantity;
-                });
-                var formattedPrice = formatCurrency(totalPrice - totalDiscount);
-                console.log("Convert: ", formattedPrice);
-                $('#totalPrice').text(formattedPrice + "đ");
-            }
-            //Thêm mới sản phẩm
             $('#addProductBtn').click(function () {
-                var productCode = $('#productCode').val();
-                console.log("Product Code: ", productCode);
-                if (!productCode) {
-                    alert('Vui lòng nhập mã sản phẩm');
-                    return;
-                }
+                var productCode = $('#productCode').val().trim();
 
                 $.ajax({
                     url: '/Staff/Orders/AddOrder?handler=Product',
                     type: 'GET',
                     data: { productCode: productCode },
                     success: function (data) {
+                        console.log("Product load from addProduct: ", data);
                         console.log("Quantity product: ", data.product.quantity);
                         listPromotions = data.promotions;
                         if (data && data.product) {
                             if (data.product.quantity == 0) {
                                 // Hiển thị modal popup
                                 $('#outOfStockModal').modal('show');
-                            } else {
-                                var productForm = `
-                                                                                                                                                <div class="product-item card shadow-sm mb-3" data-product-id="${data.product.id}" data-product-code="${data.product.code}">
-                                                                                                                                            <div class="card-body row">
-                                                                                                                                                <div class="col-md-6">
-                                                                                                                                                           <div class="form-group">
-                                                                                                                                                                <label>Mã sản phẩm</label>
-                                                                                                                                                                <input type="text" class="form-control" value="${data.product.code}" readonly>
-                                                                                                                                                            </div>
-                                                                                                                                                            <div class="form-group">
-                                                                                                                                                                <label>Tên sản phẩm</label>
-                                                                                                                                                                <input type="text" class="form-control" value="${data.product.productName}" readonly>
-                                                                                                                                                            </div>
-                                                                                                                                                </div>
-                                                                                                                                                <div class="col-md-6">
-                                                                                                                                                    <button type="button" class="btn btn-danger remove-product-btn" style="position: absolute; top: 5px; right: 5px; padding: 2px 5px; font-size: 12px;">
-                                                                                                                                                        <i class="fa fa-times"></i>
-                                                                                                                                                    </button>
-
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label>Giá sản phẩm</label>
-                                                                                                                                                        <input type="text" class="form-control" value="${data.product.sellingPrice}" readonly>
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label>Số lượng</label>
-                                                                                                                                                        <input type="number" class="form-control quantity-input" value="1" min="1">
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label>Số lượng còn tại cửa hàng</label>
-                                                                                                                                                        <input type="text" class="form-control" value="${data.product.quantity}" readonly>
-                                                                                                                                                    </div>
-
-                                                                                                                                                    <div class="promotion-info" style="display:none;">
-                                                                                                                                                        <strong style="color: green">Đã chọn khuyến mãi: Giảm</strong> <span class="promotion-amount"></span>
-                                                                                                                                                    </div>
-                                                                                                                                                            <div class="form-group"></div>
-                                                                                                                                                    <button type="button" class="btn btn-warning promotion-btn" data-product-code="${data.product.code}" style="float: right;">
-                                                                                                                                                        Khuyến mãi
-                                                                                                                                                    </button>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                    `;
-                                $('#productList').append(productForm);
+                            } else if (data.product.quantity == null) {
+                                $('#notFoundModal').modal('show');
+                            }
+                            else {
+                                var productRow = `
+                                                         <tr data-product-id="${data.product.id}" data-product-code="${data.product.code}">
+                                                            <td colspan="6" class="text-center" style="color: #a64dff; font-weight: bold;">Số lượng còn lại trong kho: ${data.product.quantity}</td>
+                                                        </tr>
+                                                        <tr class="product-item" data-product-id="${data.product.id}" data-product-code="${data.product.code}">
+                                                            <td>${data.product.code}</td>
+                                                            <td>${data.product.productName}</td>
+                                                            <td>${data.product.sellingPrice}</td>
+                                                            <td>
+                                                                <input type="number" class="form-control quantity-input" value="1" min="1" max="${data.product.quantity}">
+                                                            </td>
+                                                             <td>
+                                                                <button type="button" class="btn btn-warning promotion-btn btn-sm" data-product-code="${data.product.code}">
+                                                                    Chọn khuyến mãi
+                                                                </button>
+                                                                <div class="promotion-info" style="display:none;">
+                                                                    <strong style="color: green">Đã chọn khuyến mãi: </strong> <span class="promotion-amount"></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                        <button type="button" class="btn btn-danger remove-product-btn btn-sm">
+                                                                    <i class="fa fa-times"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    `;
+                                $('#productTableBody').append(productRow);
                                 $('#productCode').val('');
                                 updateTotalPrice();
+
+                                // Thêm sự kiện kiểm tra số lượng nhập vào
+                                $('.quantity-input').on('change', function () {
+                                    var maxQuantity = parseInt($(this).attr('max'));
+                                    var currentQuantity = parseInt($(this).val());
+                                    if (currentQuantity > maxQuantity) {
+                                        $(this).val(maxQuantity);
+                                        alert('Số lượng nhập vào vượt quá số lượng còn lại trong kho.');
+                                    }
+                                    updateTotalPrice();
+                                });
                             }
                         } else {
                             alert('Không tìm thấy sản phẩm');
@@ -249,48 +295,86 @@
                     }
                 });
             });
-            //Xóa sản phẩm
-            $('#productList').on('click', '.remove-product-btn', function () {
-                $(this).closest('.product-item').remove();
+
+            // Xử lý sự kiện xóa sản phẩm
+            $('#productTableBody').on('click', '.remove-product-btn', function () {
+                // Xóa hàng chứa sản phẩm
+                $(this).closest('tr').remove();
+
+                // Xóa dòng "Số lượng còn lại trong kho" nếu tồn tại
+                var productId = $(this).closest('tr').data('product-id');
+                $('#productTableBody tr[data-product-id="' + productId + '"]').each(function () {
+                    if ($(this).find('.text-center').length > 0) {
+                        $(this).remove();
+                    }
+                });
+
                 updateTotalPrice();
             });
-            //Điều kiển số lượng sản phẩm
-            $('#productList').on('input', '.quantity-input', function () {
-                updateTotalPrice();
-            });
+
+            // Hàm tính tổng giá tiền (cần định nghĩa)
+            function updateTotalPrice() {
+                var total = 0;
+                $('#productTableBody .quantity-input').each(function () {
+                    var quantity = $(this).val();
+                    var price = $(this).closest('tr').find('td:nth-child(3)').text();
+                    total += quantity * price;
+                });
+                $('#totalPrice').text(total);
+
+                var totalDiscount = parseFloat($('#totalDiscount').text().replace(/\D/g, '')) || 0;
+                var totalPayable = total - totalDiscount;
+                $('#totalPayable').text(totalPayable.toLocaleString() + ' đ');
+            }
+
             //Khuyến mãi
-            // Hàm cập nhật tổng tiền sau khi áp dụng khuyến mãi
             function applyPromotion(promotionId, productCode) {
                 console.log("applyPromotion: ", promotionId);
                 selectedPromotionId = promotionId;
+
                 var promotion = listPromotions.find(function (promo) {
                     return promo.id === promotionId;
                 });
 
                 if (promotion) {
                     console.log("Promotion found: ", promotion);
-                    // Tính toán tiền giảm giá cho sản phẩm
-                    var productItem = $('#productList .product-item').filter(function () {
+
+                    // Verify the structure of the product item and log details
+                    $('#productTableBody .product-item').each(function () {
+                        var code = $(this).data('product-code');
+                        console.log('Product item data-product-code:', code);
+
+                        // Check if the attribute is present
+                        if (!code) {
+                            console.warn('Missing data-product-code on product item:', this);
+                        }
+                    });
+
+                    // Find the product item with the matching product code
+                    var productItem = $('#productTableBody .product-item').filter(function () {
                         return $(this).data('product-code') === productCode;
                     });
 
-                    if (productItem.length > 0) {
-                        var price = parseFloat(productItem.find('input[type="text"][readonly]').eq(2).val());
-                        var quantity = parseInt(productItem.find('.quantity-input').val());
-                        var discountAmount = price * (promotion.productQuantity) * (promotion.percentage / 100);
+                    console.log("Product Item: ", productItem);
 
-                        // Cập nhật thông tin khuyến mãi cho sản phẩm
-                        productItem.find('.promotion-info').show().find('.promotion-amount').text(discountAmount + "đ");
+                    if (productItem.length > 0) {
+                        // Correctly retrieve price and quantity
+                        var price = parseFloat(productItem.find('td:eq(2)').text().trim()); // Assuming sellingPrice is in the third <td>
+                        var quantity = parseInt(productItem.find('.quantity-input').val());
+                        var discountAmount = price * quantity * (promotion.percentage / 100);  // Correcting discount calculation
+
+                        // Update promotion info for the product
+                        productItem.find('.promotion-info').show().find('.promotion-amount').text(discountAmount.toLocaleString() + "đ");
                         productItem.data('promotion-amount', discountAmount);
 
-                        // Tính tổng giảm giá
-                        totalDiscount = 0;
-                        $('#productList .product-item').each(function () {
+                        // Calculate total discount
+                        var totalDiscount = 0;
+                        $('#productTableBody .product-item').each(function () {
                             var discount = $(this).data('promotion-amount') || 0;
                             totalDiscount += discount;
                         });
 
-                        // Cập nhật tổng tiền
+                        // Update total discount and total price
                         $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
                         updateTotalPrice();
                     } else {
@@ -320,6 +404,17 @@
                 return day + "/" + month + "/" + year;
             }
 
+            // Sự kiện khi chọn khuyến mãi
+            $(document).on('change', '#promotionForm input[name="promotion"]', function () {
+                let selectedPromotionId = $(this).val();
+                let productCode = $(this).closest('.product-item').data('product-code');
+                if (selectedPromotionId && productCode) {
+                    applyPromotion(selectedPromotionId, productCode);
+                } else {
+                    console.log("Không có khuyến mãi nào được chọn.", selectedPromotionId);
+                }
+            });
+
             // Hàm gọi API và cập nhật modal khuyến mãi
             function loadPromotions(productCode) {
                 console.log("Product Code: ", productCode);
@@ -333,20 +428,20 @@
                             var promotionsHtml = '';
                             data.promotions.forEach(function (promotion) {
                                 promotionsHtml += `
-                        <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
-                            <div class="card-body row">
-                                <div class="col-md-2">
-                                    <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
-                                </div>
-                                <div class="col-md-10">
-                                    <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
-                                    <label class="form-check-label">Bắt đầu: ${formatDate(promotion.startDate)}</label>
-                                    <br>
-                                    <label class="form-check-label">Kết thúc: ${formatDate(promotion.endDate)}</label>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                                                    <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
+                                                        <div class="card-body row">
+                                                            <div class="col-md-2">
+                                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
+                                                                <label class="form-check-label">Bắt đầu: ${formatDate(promotion.startDate)}</label>
+                                                                <br>
+                                                                <label class="form-check-label">Kết thúc: ${formatDate(promotion.endDate)}</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
                             });
                             $('#promotionForm').html(promotionsHtml);
                             $('#promotionModal').modal('show');
@@ -360,7 +455,13 @@
                 });
             }
 
-            // Xác nhận khuyến mãi
+            // Sự kiện khi nhấn nút "Chọn khuyến mãi"
+            $('#productTableBody').on('click', '.promotion-btn', function () {
+                let productCode = $(this).data('product-code');
+                loadPromotions(productCode);
+            });
+
+            // // Xác nhận khuyến mãi
             $('#confirmPromotionBtn').click(function () {
                 // Lấy ID của promotion được chọn
                 var selectedPromotionId = $('input[name="promotion"]:checked').val();
@@ -375,7 +476,7 @@
             });
 
             // Sự kiện khi nhấn nút "Khuyến mãi"
-            $('#productList').on('click', '.promotion-btn', function () {
+            $('#productTableBody').on('click', '.promotion-btn', function () {
                 var productCode = $(this).data('product-code');
                 loadPromotions(productCode);
             });
@@ -391,47 +492,69 @@
                 getPromotionId();  // Lấy promotionId khi tạo hóa đơn
 
                 const productDetails = [];
-                $('#productList .product-item').each(function () {
+                $('#productTableBody .product-item').each(function () {
                     const promotionId = selectedPromotionId || null;
                     const productId = $(this).data('product-id');
                     const quantity = parseInt($(this).find('.quantity-input').val());
-                    const amount = parseFloat($(this).find('input[type="text"][readonly]').eq(2).val()) * quantity;
+                    const amount = parseFloat($(this).find('td').eq(2).text()) * quantity;
                     productDetails.push({ productId: productId, quantity: quantity, amount: amount, promotionId: promotionId });
                 });
+                const totalPrice = parseFloat($('#totalPrice').text().replace(/\D/g, ''));
+                const totalDiscount = parseFloat($('#totalDiscount').text().replace(/\D/g, ''));
+                const totalPayable = totalPrice - totalDiscount;
+
                 console.log("Product details:", productDetails);
+                console.log("Tổng tiền cần thanh toán: ", totalPayable);
                 const orderData = {
                     customerPhone: $('#customerPhone').val(),
                     discountId: null,
-                    totalPrice: totalPrice - totalDiscount,
+                    totalPrice: totalPayable,
+                    // totalPrice: totalPrice - totalDiscount,
                     materialProcessPrice: 0,
                     details: productDetails
                 };
                 console.log("Order data: ", orderData);
-                $.ajax({
-                    url: '/Staff/Orders/AddOrder?handler=CreateInvoice',
-                    type: 'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(orderData),
-                    headers: {
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (response) {
-                        console.log("Response success: ", response);
-                        if (response.redirectUrl) {
-                            window.location.href = response.redirectUrl;
-                        } else {
-                            alert(response.message);
-                            // This line will only be reached if response.redirectUrl is null or undefined
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('Error Status:', textStatus);
-                        console.error('Error Thrown:', errorThrown);
-                        console.error('Error Response:', jqXHR.responseText);
-                        alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
-                    }
+                  // Lấy giá trị RequestVerificationToken
+                const token = $('input[name="__RequestVerificationToken"]').val();
+                 $.ajax({
+                        url: '/Staff/Orders/AddOrder?handler=CreateInvoice',
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(orderData),
+                        headers: {
+                            'RequestVerificationToken': token
+                        },
+                        success: function (response) {
+                            if (response.redirectUrl) {
+                                window.location.href = response.redirectUrl;
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error Status:', textStatus);
+            console.error('Error Thrown:', errorThrown);
+            console.error('Error Response:', jqXHR.responseText);
+            alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
+        }
                 });
             });
         });
     </script>
 }
+<style>
+    #message-container {
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+</style>

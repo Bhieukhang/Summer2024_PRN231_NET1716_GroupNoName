@@ -48,26 +48,21 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             return new JsonResult(product);
         }
 
-        public async Task<IActionResult> OnPostHandleCustomerAsync(string phone, string fullName, string action)
+        public async Task<IActionResult> OnGetHandleCustomerAsync(string phone, string fullName, string action)
         {
-            //if (phone.Length > 12) return TempData["LengthPhone"] = "Độ dài số điện thoại không hợp lệ";
             if (action == "search")
             {
                 var result = await SearchCustomerAsync(phone);
 
                 if (result is SearchAccountDTO account)
                 {
-                    TempData["Message"] = "Đã đăng kí thành viên";
-                    TempData["ShowCreateMemberButton"] = false;
-                    TempData["Phone"] = phone;
-                    TempData["Name"] = fullName;
+                    return new JsonResult(new { success = true, message = "Đã đăng kí thành viên", 
+                        showCreateButton = false, phone = phone, name = account.FullName });
                 }
                 else if (result is ErrorResponse errorResponse)
                 {
-                    TempData["Message"] = "Cần đăng kí thành viên";
-                    TempData["ShowCreateMemberButton"] = true;
-                    TempData["Phone"] = phone;
-                    TempData["Name"] = fullName;
+                    return new JsonResult(new { success = false, message = "Cần đăng kí thành viên", 
+                        showCreateButton = true, phone = phone, name = fullName });
                 }
             }
             else if (action == "create")
@@ -78,11 +73,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                     TempData["Phone"] = phone;
                     TempData["Name"] = fullName;
                     TempData["Message"] = "Tạo tài khoản thành công";
+                    return new JsonResult(new { success = true, message = "Tạo tài khoản thành công", phone = phone, name = fullName });
                 }
             }
 
-            return Page();
+            return new JsonResult(new { success = false, message = "Không có thay đổi" });
         }
+
+
 
         public async Task<object> SearchCustomerAsync(string phone)
         {
