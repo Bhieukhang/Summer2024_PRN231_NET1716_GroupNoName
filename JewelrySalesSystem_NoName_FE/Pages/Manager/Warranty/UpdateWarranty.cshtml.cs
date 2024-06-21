@@ -13,104 +13,114 @@ using System;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 {
-    [Authorize(Roles = "Manager")]
-    public class UpdateWarrantyModel : PageModel
+    [Authorize(Roles = "Manager, Staff")]
+    public class EditModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UpdateWarrantyModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public EditModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
-        public WarrantyDTO Warranty { get; set; }
+        public WarrantyRequest Warranty { get; set; }
 
         public bool IsExpired { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
-            var url = $"{ApiPath.Warranty}/{id}";
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetStringAsync(url);
+                var url = $"{ApiPath.Warranty}/{id}";
+                var response = await client.GetAsync(url);
 
-                Warranty = JsonConvert.DeserializeObject<WarrantyDTO>(response);
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                Warranty = JsonConvert.DeserializeObject<WarrantyRequest>(await response.Content.ReadAsStringAsync());
 
                 var currentDate = DateTime.UtcNow;
                 IsExpired = currentDate > Warranty.ExpirationDate;
 
-                if (IsExpired)
-                {
-                    Warranty.Status = "Expired";
-                    Warranty.Note = "?ã quá th?i h?n ???c b?o hành";
-
-                    // G?i API ?? c?p nh?t tr?ng thái và ghi chú
-                    var jsonContent = JsonConvert.SerializeObject(Warranty);
-                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                    var updateResponse = await client.PutAsync(url, content);
-                    updateResponse.EnsureSuccessStatusCode();
-                }
+                return Page();
             }
             catch (Exception ex)
             {
-                // Handle error appropriately
-                return RedirectToPage("./ListWarranty");
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
             }
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
-            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
-            var url = $"{ApiPath.Warranty}/{id}";
             try
             {
-                var client = _httpClientFactory.CreateClient();
+                var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var warrantyRequest = new WarrantyRequest
+                var currentDate = DateTime.UtcNow;
+                IsExpired = currentDate > Warranty.ExpirationDate;
+
+                var warranty = new WarrantyRequest
                 {
                     DateOfPurchase = Warranty.DateOfPurchase,
                     ExpirationDate = Warranty.ExpirationDate,
                     Period = Warranty.Period,
                     Deflag = Warranty.Deflag,
                     Status = Warranty.Status,
-                    ConditionWarrantyId = Warranty.ConditionnWarrantyId,
+                    ConditionWarrantyId = Warranty.ConditionWarrantyId,
                     Note = Warranty.Note
                 };
 
-                var jsonContent = JsonConvert.SerializeObject(warrantyRequest);
+                var jsonContent = JsonConvert.SerializeObject(warranty);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
+                var url = $"{ApiPath.Warranty}/{id}";
                 var response = await client.PutAsync(url, content);
-                response.EnsureSuccessStatusCode();
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "The Warranty is updated successfully!";
+                    return RedirectToPage("./ListWarranty");
+                }
+                else
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the warranty. Status Code: {response.StatusCode}, Response: {responseBody}");
+                }
             }
             catch (Exception ex)
             {
-                // Handle error appropriately
-                return Page();
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
             }
 
-            return RedirectToPage("./ListWarranty");
+            return Page();
         }
     }
 }

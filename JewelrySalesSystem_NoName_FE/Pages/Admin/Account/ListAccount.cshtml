@@ -37,7 +37,7 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Tài khoản ngừng hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                            Tài khoản không hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">@totalInActiveAccountCount<h2>
                     </div>
@@ -150,10 +150,24 @@
                                                                 <p><strong>Số điện thoại:</strong> @account.Phone</p>
                                                                 <p><strong>Ngày sinh:</strong> @(account.Dob.HasValue ? account.Dob.Value.ToString("dd-MM-yyyy") : "N/A")</p>
                                                                 <p><strong>Địa chỉ:</strong> @account.Address</p>
-                                                                <p><strong>Deflag:</strong> @account.Deflag</p>
+                                                                <p><strong>Trạng thái:</strong> @(account.Deflag.HasValue && account.Deflag.Value ? "Đang hoạt động" : "Ngừng hoạt động")</p>
                                                                 <p><strong>Chức vụ:</strong> @account.RoleName</p>
                                                                 <p><strong>Ngày cập nhật:</strong> @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("dd-MM-yyyy") : "N/A")</p>
-                                                                <p><strong>Trạng thái:</strong> @account.Status</p>
+                                                                <p>
+                                                                    <strong>Trạng thái:</strong>
+                                                                    @if (account.Status.Equals("Active"))
+                                                                    {
+                                                                        <label class="badge badge-success">Hoạt động</label>
+                                                                                                                    }
+                                                                    else if (account.Status.Equals("Inactive"))
+                                                                    {
+                                                                        <label class="badge badge-danger">Không hoạt động</label>
+                                                                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @account.Status
+                                                                    }
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -162,10 +176,10 @@
                                                         {
                                                             <form method="post" asp-page-handler="DeactivateAccount" class="deactivate-form">
                                                                 <input type="hidden" name="accountId" value="@account.Id" />
-                                                                <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Deactivate</button>
+                                                                <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Ngưng hoạt động</button>
                                                             </form>
                                                         }
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </div>
                                             </div>

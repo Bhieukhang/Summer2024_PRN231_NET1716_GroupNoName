@@ -36,21 +36,21 @@
                                 @foreach (var warranty in Model.WarrantyList)
                                 {
                                     <tr>
-                                        <td> @warranty.DateOfPurchase?.ToString("dd-MM-yyyy") </td>
-                                        <td> @warranty.ExpirationDate?.ToString("dd-MM-yyyy") </td>
+                                        <td> @warranty.DateOfPurchase.ToString("dd-MM-yyyy") </td>
+                                        <td> @warranty.ExpirationDate.ToString("dd-MM-yyyy") </td>
                                         <td> @warranty.Period </td>
                                         <td>
-                                            @if (warranty.Status.Equals("Valid for Warranty"))
+                                            @if (warranty.Status.Equals("Finish for Warranty"))
                                             {
-                                                <label class="badge badge-success">@warranty.Status</label>
+                                                <label class="badge badge-success">Hoàn thành bảo hành</label>
                                             }
-                                            else if (warranty.Status.Equals("Expired"))
+                                            else if (warranty.Status.Equals("Invalid for Warranty") || warranty.Status.Equals("Expired"))
                                             {
-                                                <label class="badge badge-danger">@warranty.Status</label>
+                                                <label class="badge badge-danger">@((warranty.Status.Equals("Invalid for Warranty")) ? "Không hợp lệ" : "Hết hạn")</label>
                                             }
                                             else
                                             {
-                                                <label class="badge badge-warning">@warranty.Status</label>
+                                                <label class="badge badge-warning">Đang bảo hành</label>
                                             }
                                         </td>
                                         <td>
@@ -86,4 +86,3 @@
         }
     </div>
 </div>
-

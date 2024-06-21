@@ -44,7 +44,7 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Tài khoản ngừng hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                            Tài khoản không hoạt động <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">@totalInActiveAccountCount<h2>
                     </div>
@@ -91,11 +91,11 @@
                                 <thead>
                                     <tr>
                                         <th>  </th>
-                                        <th> Full Name</th>
-                                        <th> Phone </th>
-                                        <th> Dob </th>
-                                        <th> Address</th>
-                                        <th> Status </th>
+                                        <th> Họ Tên</th>
+                                        <th> Số điện thoại </th>
+                                        <th> Ngày sinh </th>
+                                        <th> Địa chỉ</th>
+                                        <th> Trạng thái </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,7 +109,20 @@
                                             <td> @account.Phone </td>
                                             <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
                                             <td> @account.Address </td>
-                                            <td> @account.Status </td>
+                                            <td>
+                                                @if (account.Status.Equals("Active"))
+                                                {
+                                                    <label class="badge badge-success">Hoạt động</label>
+                                                }
+                                                else if (account.Status.Equals("Inactive") || account.Status.Equals("UnActive"))
+                                                {
+                                                    <label class="badge badge-danger">Không hoạt động</label>
+                                                }
+                                                else
+                                                {
+                                                    @account.Status
+                                                }
+                                            </td>
 
                                             @* <td><a asp-page="/Admin/Account/DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td>
                                             <td>

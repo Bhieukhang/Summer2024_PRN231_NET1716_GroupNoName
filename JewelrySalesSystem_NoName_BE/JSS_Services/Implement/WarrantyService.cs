@@ -22,7 +22,7 @@ namespace JSS_Services.Implement
 {
     public class WarrantyService : BaseService<WarrantyService>, IWarrantyService
     {
-        public WarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, 
+        public WarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
             ILogger<WarrantyService> logger) : base(unitOfWork, logger)
         {
         }
@@ -30,7 +30,7 @@ namespace JSS_Services.Implement
         public async Task<WarrantyResponse> GetWarrantyDetail(Guid id)
         {
             var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
-                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,x.Deflag, x.Status,
+                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.Deflag, x.Status,
                                                     x.ConditionWarrantyId, x.Note),
                     predicate:
                     Guid.Empty.Equals(id)
@@ -44,7 +44,7 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                    x.Deflag, x.Status,x.ConditionWarrantyId,x.Note),
+                                                    x.Deflag, x.Status, x.ConditionWarrantyId, x.Note),
                 page: page,
                 size: size
                 );
@@ -56,7 +56,7 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 include: x => x.Include(x => x.WarrantyMappingConditions),
-                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, 
+                selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
                                                    x.Deflag, x.Status, x.ConditionWarrantyId, x.Note),
                 page: page,
                 size: size
@@ -97,7 +97,7 @@ namespace JSS_Services.Implement
                     await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
                 }
             }
-           
+
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful)
             {
@@ -107,44 +107,40 @@ namespace JSS_Services.Implement
             return listWarranty;
         }
 
-        public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyRequest request)
+        public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request)
         {
             var warranty = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
-                predicate: x => x.Id == id);
+                predicate: x => x.Id == id
+            );
 
             if (warranty == null)
             {
                 throw new KeyNotFoundException("Warranty not found.");
             }
 
-            var currentDate = DateTime.UtcNow;
-
-            if (currentDate > warranty.ExpirationDate)
+            if (DateTime.Now > warranty.ExpirationDate)
             {
                 warranty.Status = "Expired";
                 warranty.Note = "Đã quá thời hạn được bảo hành";
-                _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
-                await _unitOfWork.CommitAsync();
-            }
-            else if (currentDate >= warranty.DateOfPurchase && currentDate <= warranty.ExpirationDate)
-            {
-                warranty.Status = "Valid for Warranty";
-
-                if (string.IsNullOrWhiteSpace(request.Note))
-                {
-                    throw new ArgumentException("Note is required.");
-                }
-                warranty.Note = request.Note;
-
-                _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
-                await _unitOfWork.CommitAsync();
             }
             else
             {
-                throw new ArgumentException("Invalid DateOfPurchase or ExpirationDate.");
+                if (string.IsNullOrWhiteSpace(request.Note))
+                {
+                    throw new ArgumentException("Note is required when updating warranty within valid period.");
+                }
+                warranty.Status = request.Status;
+                warranty.Note = request.Note;
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
+            _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful)
+            {
+                throw new Exception("Commit failed, no rows affected.");
+            }
+
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Deflag, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
         }
 
     }
