@@ -219,7 +219,7 @@ namespace JSS_Services.Implement
                 }
 
                 account.Deflag = false;
-                account.Status = "Inactive";
+                account.Status = "UnActive";
                 account.UpsDate = DateTime.UtcNow;
 
                 accountRepository.UpdateAsync(account);
