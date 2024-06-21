@@ -88,6 +88,7 @@ namespace JSS_Services.Implement
             //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
+            double totalPayable = 0;
             var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone.Equals(newData.CustomerPhone));
             Order order = new Order()
             {
@@ -123,18 +124,18 @@ namespace JSS_Services.Implement
             {
                 if (orderDetail.PromotionId != null)
                 {
-                    totalPrice += await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
+                    totalPayable = totalPayable + await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
                 }
                 var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Id == orderDetail.ProductId);
                 product.Quantity = product.Quantity - orderDetail.Quantity;
                 _unitOfWork.GetRepository<Product>().UpdateAsync(product);
             }
-            order.TotalPrice = totalPrice;
+            order.TotalPrice = totalPayable;
 
             //Update usermoney for membership
-            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
-            membership.UsedMoney += order.TotalPrice;
-            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+            //var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            //membership.UsedMoney += order.TotalPrice;
+            //_unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
 
             //Transaction
             Transaction tran = new Transaction()
