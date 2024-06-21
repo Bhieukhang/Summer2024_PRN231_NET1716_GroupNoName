@@ -16,7 +16,7 @@
                 <div class="col-md-8 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Trang sức(*)</h4>
+                            <h4 class="card-title">Trang sức<span class="required">*</span></h4>
                             <div class="form-group row">
                                 <div class="col-sm-7">
                                     <input type="text" id="productCode" class="form-control" placeholder="Nhập mã sản phẩm">
@@ -53,7 +53,7 @@
                             @* Hiển thị lỗi *@
                             <div id="message-container"></div>
                             <div class="form-group">
-                                <label>Số điện thoại</label>
+                                <label>Số điện thoại<span class="required">*</span></label>
                                 <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@TempData["Phone"]">
                             </div>
                              <div class="form-group">
@@ -113,7 +113,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" id="clearPromotionBtn">Bỏ chọn</button>
                     <button type="button" class="btn btn-primary" id="confirmPromotionBtn">Xác nhận</button>
                 </div>
             </div>
@@ -180,7 +180,7 @@
             let totalPrice = 0;
             let totalDiscount = 0;
             let listPromotions = [];
-            let selectedPromotionId = null
+            let selectedPromotions = {};
 
             $('#searchCustomerBtn').click(function () {
                 handleCustomerAction('search');
@@ -308,7 +308,8 @@
                         $(this).remove();
                     }
                 });
-
+                var productCode = $(this).closest('tr').data('product-code');
+                delete selectedPromotions[productCode];
                 updateTotalPrice();
             });
 
@@ -330,8 +331,45 @@
             //Khuyến mãi
             function applyPromotion(promotionId, productCode) {
                 console.log("applyPromotion: ", promotionId);
-                selectedPromotionId = promotionId;
 
+                if (promotionId === null || promotionId === undefined) {
+                    console.log('Khuyến mãi được bỏ chọn');
+        
+                // Find the product item with the matching product code
+                    var productItem = $('#productTableBody .product-item').filter(function () {
+                        return $(this).data('product-code') === productCode;
+                    });
+
+                    if (productItem.length > 0) {
+                        var oldDiscountAmount = productItem.data('promotion-amount') || 0;
+                        var initialPrice = parseFloat(productItem.find('td:eq(2)').text().trim()); // Store initial price
+
+                        // Remove promotion info
+                        productItem.find('.promotion-info').hide();
+                        productItem.data('promotion-amount', null);
+
+                        // Restore initial price for the product
+                        productItem.find('.product-price').text(initialPrice.toLocaleString() + ' đ');
+
+                        // Calculate total discount without this product
+                        var totalDiscount = 0;
+                        $('#productTableBody .product-item').each(function () {
+                            var discount = $(this).data('promotion-amount') || 0;
+                            if ($(this).data('product-code') !== productCode) {
+                                totalDiscount += discount;
+                            }
+                        });
+
+                        // Update total discount and total price
+                        $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
+                        updateTotalPrice();
+                        } else {
+                            console.log('Không tìm thấy sản phẩm với mã: ', productCode);
+                        }
+                    return;
+                 }
+
+                selectedPromotions[productCode] = promotionId;
                 var promotion = listPromotions.find(function (promo) {
                     return promo.id === promotionId;
                 });
@@ -427,11 +465,12 @@
                             console.log("Data success: ", data.promotions[0].id);
                             var promotionsHtml = '';
                             data.promotions.forEach(function (promotion) {
+                                var isChecked = selectedPromotions[productCode] === promotion.id ? 'checked' : '';
                                 promotionsHtml += `
                                                     <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
                                                         <div class="card-body row">
                                                             <div class="col-md-2">
-                                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}">
+                                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}" ${isChecked}>
                                                             </div>
                                                             <div class="col-md-10">
                                                                 <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
@@ -461,6 +500,41 @@
                 loadPromotions(productCode);
             });
 
+            $('#savePromotionBtn').click(function () {
+                var selectedPromotionId = $('#promotionForm input[name="promotion"]:checked').val();
+                var productCode = $('#promotionModal').data('product-code');
+
+                if (selectedPromotionId && productCode) {
+                    applyPromotion(selectedPromotionId, productCode);
+                    $('#promotionModal').modal('hide');
+                } else {
+                    alert("Vui lòng chọn một khuyến mãi.");
+                }
+            });
+
+            // //Event handler for clear selection button click
+           $('#clearPromotionBtn').click(function () {
+                // Loop through each product item in #productTableBody
+                $('#productTableBody .product-item').each(function () {
+                    var productCode = $(this).data('product-code');
+                    console.log("Bỏ chọn sản phẩm: ", productCode);
+
+                // Check if productCode is valid
+                if (productCode) {
+                // Uncheck all radio buttons (if applicable)
+                    $('input[name="promotion"]').prop('checked', false);
+
+                // Remove selected promotion
+                    delete selectedPromotions[productCode];
+
+                // Apply promotion with null promotionId
+                    applyPromotion(null, productCode);
+                } else {
+                    console.log('Không có mã sản phẩm để bỏ chọn khuyến mãi');
+                }
+             });
+         });
+
             // // Xác nhận khuyến mãi
             $('#confirmPromotionBtn').click(function () {
                 // Lấy ID của promotion được chọn
@@ -475,12 +549,6 @@
                 $('#promotionModal').modal('hide');
             });
 
-            // Sự kiện khi nhấn nút "Khuyến mãi"
-            $('#productTableBody').on('click', '.promotion-btn', function () {
-                var productCode = $(this).data('product-code');
-                loadPromotions(productCode);
-            });
-
             // Lấy promotionId từ promotionForm
             function getPromotionId() {
                 // Giả sử promotionId nằm trong thẻ input ẩn có id là #promotionId
@@ -493,7 +561,7 @@
 
                 const productDetails = [];
                 $('#productTableBody .product-item').each(function () {
-                    const promotionId = selectedPromotionId || null;
+                     var promotionId = selectedPromotions[$(this).data('product-code')] || null;
                     const productId = $(this).data('product-id');
                     const quantity = parseInt($(this).find('.quantity-input').val());
                     const amount = parseFloat($(this).find('td').eq(2).text()) * quantity;
@@ -557,4 +625,7 @@
     color: red;
 }
 
+.required {
+    color: red;
+}
 </style>

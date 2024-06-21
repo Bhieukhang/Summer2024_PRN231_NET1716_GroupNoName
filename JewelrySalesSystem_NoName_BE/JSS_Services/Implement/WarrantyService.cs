@@ -67,9 +67,9 @@ namespace JSS_Services.Implement
         public async Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> list, string phone)
         {
             List<WarrantyCreateResponse> listWarranty = new List<WarrantyCreateResponse>();
-            var WarId = Guid.NewGuid();
             foreach (var item in list)
             {
+                var WarId = Guid.NewGuid();
                 Warranty warranty = new Warranty()
                 {
                     Id = WarId,
@@ -96,6 +96,7 @@ namespace JSS_Services.Implement
                     };
                     await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
                 }
+                listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
             }
            
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -103,7 +104,7 @@ namespace JSS_Services.Implement
             {
                 throw new Exception("Commit failed, no rows affected.");
             }
-            listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
+            
             return listWarranty;
         }
 

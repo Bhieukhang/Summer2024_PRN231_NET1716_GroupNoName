@@ -331,7 +331,8 @@ namespace JSS_Services.Implement
             try
             {
                 var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id, 
-                                                                         include: a => a.Include(a => a.OrderDetails));
+                                                                         include: a => a.Include(a => a.OrderDetails)
+                                                                         .ThenInclude(a => a.Product));
                 if (order == null)
                 {
                     return null;
@@ -350,6 +351,7 @@ namespace JSS_Services.Implement
                         TotalPrice = item.TotalPrice,
                         OrderId = item.OrderId,
                         ProductId = item.ProductId,
+                        ProductName = item.Product.ProductName,
                         InsDate= item.InsDate,
                         OrderDetailId = item.Id
                     };
