@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Net.Sockets;
 using System.Text;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
@@ -71,7 +72,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
         public async Task<IActionResult> OnPostAsync()
         {
-           
             try
             {
                 var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -88,25 +88,47 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var customerPhone = Request.Form["CustomerPhone"];
                 var warranties = JsonConvert.DeserializeObject<List<WarrantyCreate>>(serializedWarranties);
 
-                var apiUrlCreate = $"{ApiPath.Warranty}?phone={Phone}";
-
+                var apiUrlCreate = $"{ApiPath.Warranty}?phone={customerPhone}";
 
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(warranties), Encoding.UTF8, "application/json");
-                Console.WriteLine(JsonConvert.SerializeObject(warranties));
+
+                Console.WriteLine("Serialized Warranties: " + JsonConvert.SerializeObject(warranties));
+                Console.WriteLine("API URL: " + apiUrlCreate);
+
                 var response = await client.PostAsync(apiUrlCreate, jsonContent);
 
                 if (response.IsSuccessStatusCode)
                 {
+                    TempData["SuccessMessage"] = "Bảo hành đã được tạo thành công!";
                     return Redirect("~/Staff/Orders/ListOrder");
                 }
                 else
                 {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Response Error: " + errorContent);
                     ModelState.AddModelError(string.Empty, "Error sending order to backend.");
+                    TempData["FailMessage"] = "Tạo bảo hành thất bại!";
                     return Page();
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine("HttpRequestException: " + ex.Message);
+                Console.WriteLine("Stack Trace: " + ex.StackTrace);
+                ModelState.AddModelError(string.Empty, "Network error while sending order to backend.");
+                return Page();
+            }
+            catch (SocketException ex)
+            {
+                Console.WriteLine("SocketException: " + ex.Message);
+                Console.WriteLine("Stack Trace: " + ex.StackTrace);
+                ModelState.AddModelError(string.Empty, "Connection error while sending order to backend.");
+                return Page();
+            }
             catch (Exception ex)
             {
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine("Stack Trace: " + ex.StackTrace);
                 ModelState.AddModelError(string.Empty, "Error sending order to backend.");
                 return Page();
             }

@@ -34,6 +34,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         [BindProperty]
         public List<ProductDetail> ProductDetails { get; set; }
         public IList<Promotion> listPromotions { get; set; } = new List<Promotion>();
+        [BindProperty]
+        public OrderDTO orderData { get; set; }
 
         public async Task<JsonResult> OnGetProductAsync(string productCode)
         {
@@ -48,26 +50,33 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             return new JsonResult(product);
         }
 
-        public async Task<IActionResult> OnPostHandleCustomerAsync(string phone, string fullName, string action)
+        public async Task<IActionResult> OnGetHandleCustomerAsync(string phone, string fullName, string action)
         {
-            //if (phone.Length > 12) return TempData["LengthPhone"] = "Độ dài số điện thoại không hợp lệ";
             if (action == "search")
             {
                 var result = await SearchCustomerAsync(phone);
 
                 if (result is SearchAccountDTO account)
                 {
-                    TempData["Message"] = "Đã đăng kí thành viên";
-                    TempData["ShowCreateMemberButton"] = false;
-                    TempData["Phone"] = phone;
-                    TempData["Name"] = fullName;
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "Đã đăng kí thành viên",
+                        showCreateButton = false,
+                        phone = phone,
+                        name = account.FullName
+                    });
                 }
                 else if (result is ErrorResponse errorResponse)
                 {
-                    TempData["Message"] = "Cần đăng kí thành viên";
-                    TempData["ShowCreateMemberButton"] = true;
-                    TempData["Phone"] = phone;
-                    TempData["Name"] = fullName;
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "Cần đăng kí thành viên",
+                        showCreateButton = true,
+                        phone = phone,
+                        name = fullName
+                    });
                 }
             }
             else if (action == "create")
@@ -78,11 +87,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                     TempData["Phone"] = phone;
                     TempData["Name"] = fullName;
                     TempData["Message"] = "Tạo tài khoản thành công";
+                    return new JsonResult(new { success = true, message = "Tạo tài khoản thành công", phone = phone, name = fullName });
                 }
             }
 
-            return Page();
+            return new JsonResult(new { success = false, message = "Không có thay đổi" });
         }
+
+
 
         public async Task<object> SearchCustomerAsync(string phone)
         {
@@ -90,7 +102,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var token = HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            
+
             var apiUrl = $"{ApiPath.SearchAccount}?phone={phone}";
             var response = await client.GetAsync(apiUrl);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -122,40 +134,48 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             return JsonConvert.DeserializeObject<CreateAccountResponse>(responseString);
         }
 
-        public async Task<IActionResult> OnPostCreateInvoiceAsync([FromBody] OrderDTO orderData)
+        //[HttpPost]
+        public async Task<IActionResult> OnPostCreateInvoiceAsync()
         {
-            if (orderData == null || string.IsNullOrEmpty(orderData.CustomerPhone) || orderData.TotalPrice == null || orderData.Details.Count == 0)
+            using (var reader = new StreamReader(HttpContext.Request.Body))
             {
-                return BadRequest(new { message = "Invalid order data" });
+                var body = await reader.ReadToEndAsync();
+                var orderData = JsonConvert.DeserializeObject<OrderDTO>(body);
+                Console.WriteLine($"Data order: {orderData}");
+
+                //if (orderData == null || string.IsNullOrEmpty(orderData.CustomerPhone) || orderData.TotalPrice == null || orderData.Details.Count == 0)
+                //{
+                //    return BadRequest(new { message = "Invalid order data" });
+                //}
+                var token = HttpContext.Session.GetString("Token");
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var apiUrl = $"{ApiPath.OrderListPromotion}";
+                var payload = new OrderDTO()
+                {
+                    CustomerPhone = orderData.CustomerPhone,
+                    //PromotionId = orderData.PromotionId,
+                    DiscountId = orderData.DiscountId,
+                    TotalPrice = orderData.TotalPrice,
+                    MaterialProccessPrice = orderData.MaterialProccessPrice,
+                    Details = orderData.Details,
+                };
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
+                var responseString = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+
+                // Extracting the Id value
+                var orderId = (string)jsonResponse.Id;
+                var phone = orderData.CustomerPhone;
+
+                var redirectUrl = $"/Manager/Warranty/CreateWarranties?orderId={orderId}&phone={phone}";
+
+                Console.WriteLine(redirectUrl);
+                return new JsonResult(new { redirectUrl });
             }
-            var token = HttpContext.Session.GetString("Token");
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var apiUrl = $"{ApiPath.OrderListPromotion}";
-            var payload = new OrderDTO()
-            {
-                CustomerPhone = orderData.CustomerPhone,
-                //PromotionId = orderData.PromotionId,
-                DiscountId = orderData.DiscountId,
-                TotalPrice = orderData.TotalPrice,
-                MaterialProccessPrice = orderData.MaterialProccessPrice,
-                Details = orderData.Details,
-            };
-            var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(apiUrl, content);
-            response.EnsureSuccessStatusCode();
-            var responseString = await response.Content.ReadAsStringAsync();
-            var jsonResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
-
-            // Extracting the Id value
-            var orderId = (string)jsonResponse.Id;
-            var phone = orderData.CustomerPhone;
-
-            var redirectUrl = $"/Manager/Warranty/CreateWarranties?orderId={orderId}&phone={phone}";
-
-            Console.WriteLine(redirectUrl);
-            return new JsonResult(new { redirectUrl });
         }
 
         public IActionResult OnPostClearTempData()

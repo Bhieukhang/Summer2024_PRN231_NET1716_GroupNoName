@@ -104,7 +104,6 @@ namespace JSS_Services.Implement
             {
                 throw new Exception("Commit failed, no rows affected.");
             }
-
             return listWarranty;
         }
 
@@ -141,7 +140,7 @@ namespace JSS_Services.Implement
                 throw new Exception("Commit failed, no rows affected.");
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate,
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, 
                 warranty.Period, warranty.Deflag, warranty.Status, warranty.Note);
         }
 

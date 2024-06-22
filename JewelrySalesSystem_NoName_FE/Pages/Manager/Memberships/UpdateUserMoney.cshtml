@@ -1,0 +1,35 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships.UpdateUserMoneyModel
+@{
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Cập nhật số tiền sử dụng của thành viên</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Page("./ListMembership")">Danh sách thành viên</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Cập nhật số tiền sử dụng</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Cập nhật số tiền sử dụng cho thành viên: @Model.Membership.Name</h4>
+                        <form method="post">
+                            <div class="form-group">
+                                <label for="userMoney">Số tiền sử dụng</label>
+                                <input type="number" class="form-control" id="userMoney" name="UserMoney" min="0" value="@Model.UserMoney" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

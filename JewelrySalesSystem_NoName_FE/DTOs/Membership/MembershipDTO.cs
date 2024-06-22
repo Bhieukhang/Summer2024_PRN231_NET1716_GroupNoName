@@ -14,7 +14,7 @@
 
         public Guid UserId { get; set; }
 
-        public double? UsedMoney { get; set; }
+        public double UsedMoney { get; set; }
 
         public bool? Deflag { get; set; }
     }

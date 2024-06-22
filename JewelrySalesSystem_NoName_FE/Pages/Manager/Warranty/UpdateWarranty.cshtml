@@ -1,50 +1,61 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.UpdateWarrantyModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.EditModel
 @{
 }
 
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Cập nhật bảo hành</h3>
+            <h3 class="page-title">Bảo hành</h3>
         </div>
         <div class="row">
             <div class="col-12 grid-margin">
                 <div class="card">
                     <div class="card-body">
-                        @if (Model.IsExpired)
-                        {
-                            <div class="alert alert-danger">
-                                Đã quá thời hạn được bảo hành.
+                        <form method="post">
+                            <div class="form-group">
+                                <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua hàng</label>
+                                <input asp-for="Warranty.DateOfPurchase" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.DateOfPurchase" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label>Trạng thái</label>
-                                <input type="text" class="form-control" value="Expired" readonly />
+                                <label asp-for="Warranty.ExpirationDate" class="control-label">Hạn bảo hành</label>
+                                <input asp-for="Warranty.ExpirationDate" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.ExpirationDate" class="text-danger"></span>
                             </div>
-                            <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea class="form-control" readonly>Đã quá thời hạn được bảo hành</textarea>
-                            </div>
-                            <a asp-page="./ListWarranty" class="btn btn-secondary">Quay lại</a>
-                        }
-                        else
-                        {
-                            <form method="post">
+                            @if (Model.IsExpired)
+                            {
                                 <div class="form-group">
-                                    <label>Trạng thái</label>
-                                    <select class="form-control" asp-for="Warranty.Status">
+                                    <label asp-for="Warranty.Status" class="control-label">Trạng thái</label>
+                                    <input asp-for="Warranty.Status" class="form-control" value="Expired" readonly />
+                                    <span asp-validation-for="Warranty.Status" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Warranty.Note" class="control-label">Ghi chú</label>
+                                    <textarea asp-for="Warranty.Note" class="form-control" readonly>Đã quá thời hạn được bảo hành</textarea>
+                                    <span asp-validation-for="Warranty.Note" class="text-danger"></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label asp-for="Warranty.Status" class="control-label">Trạng thái</label>
+                                    <select asp-for="Warranty.Status" class="form-control">
+                                        <option value="Finish for Warranty">Hoàn thành bảo hành</option>
                                         <option value="Valid for Warranty">Được phép bảo hành</option>
                                         <option value="Invalid for Warranty">Không được phép bảo hành</option>
                                     </select>
+                                    <span asp-validation-for="Warranty.Status" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Ghi chú</label>
-                                    <textarea class="form-control" asp-for="Warranty.Note" required></textarea>
+                                    <label asp-for="Warranty.Note" class="control-label">Ghi chú</label>
+                                    <textarea asp-for="Warranty.Note" class="form-control"></textarea>
+                                    <span asp-validation-for="Warranty.Note" class="text-danger"></span>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Lưu</button>
-                                <a asp-page="./ListWarranty" class="btn btn-secondary">Hủy</a>
-                            </form>
-                        }
+                            }
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <a asp-page="./ListWarranty" class="btn btn-secondary">Quay lại</a>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -10,55 +10,71 @@
         <div class="page-header">
             <h2>Tạo phiếu bảo hành</h2>
         </div>
-
-        <div class="card">
-            <div class="card-body">
-                <div class="">
-                    <h3>Đơn hàng ID: @Model.OrderId</h3>
-                </div>
-                <form id="warrantyForm" method="post" onsubmit="submitForm(event)">
-                    <div class="form-group row">
-                        <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required>
-                        </div>
-                    </div>
-                    @foreach (var order in Model.ListOrder)
-                    {
-                        <div class="form-group row">
-                            @* <div class="col-md-4">
-                                <label class="control-label">Sản phẩm</label>
-                                <input type="text" class="form-control" value="@order.ProductName" readonly />
-                            </div> *@
-                            <div class="col-md-2">
-                                <label class="control-label">Ngày mua</label>
-                                <input type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" onchange="setExpirationMinDate('@order.ProductId')" required />
-                            </div>
-                            <div class="col-md-2">
-                                <label class="control-label">Ngày hết hạn</label>
-                                <input type="date" class="form-control" id="ExpirationDate_@order.ProductId" required />
-                            </div>
-                            <div class="col-md-2">
-                                <label class="control-label">Thời hạn (tháng)</label>
-                                <input type="number" class="form-control" id="Period_@order.ProductId" required />
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-gradient-secondary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
-                            </div>
-                            <input type="hidden" name="SelectedConditions_@order.ProductId" id="SelectedConditions_@order.ProductId" value="" />
-                            <input type="hidden" name="OrderDetailId_@order.ProductId" value="@order.OrderDetailId" />
-                        </div>
-                    }
-                    <div class="form-group row justify-content-end">
-                        <div class="col-auto">
-                            <a asp-page="./Index" class="btn btn-danger">Hủy</a>
-                            <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
-                        </div>
-                    </div>
-                    <input type="hidden" name="SerializedListOrder" value="@Html.Raw(JsonConvert.SerializeObject(Model.ListOrder))" />
-                </form>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert-danger">@TempData["FailMessage"]</div>
+        }
+        @if (Model.ListOrder != null && Model.ListOrder.Count > 0)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <h3>Đơn hàng ID: @Model.OrderId</h3>
+                    </div>
+                    <form id="warrantyForm" method="post" onsubmit="submitForm(event)">
+                        <div class="form-group row">
+                            <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required>
+                            </div>
+                        </div>
+                        @foreach (var order in Model.ListOrder)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label class="control-label">Sản phẩm</label>
+                                    <input type="text" class="form-control" value="@order.ProductName" readonly />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Ngày mua<span class="required">*</span></label>
+                                    <input type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" onchange="setExpirationMinDate('@order.ProductId')" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Ngày hết hạn<span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="ExpirationDate_@order.ProductId" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Thời hạn (tháng)<span class="required">*</span></label>
+                                    <input type="number" class="form-control" id="Period_@order.ProductId" required />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-gradient-secondary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
+                                </div>
+                                <input type="hidden" name="SelectedConditions_@order.ProductId" id="SelectedConditions_@order.ProductId" value="" />
+                                <input type="hidden" name="OrderDetailId_@order.ProductId" value="@order.OrderDetailId" />
+                            </div>
+                        }
+                        <div class="form-group row justify-content-end">
+                            <div class="col-auto">
+                                <a asp-page="./Index" class="btn btn-danger">Hủy</a>
+                                <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="SerializedListOrder" value="@Html.Raw(JsonConvert.SerializeObject(Model.ListOrder))" />
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div>Không tồn tại sản phẩm bảo hành</div>
+        }
     </div>
 </div>
 
@@ -96,8 +112,8 @@
         const conditions = @Html.Raw(JsonConvert.SerializeObject(Model.ConditionWarranties));
         let selectedConditions = [];
         let selectedProductId = null;
+        let selectedConditionsMap = {};
 
-        // Disable the "Tạo bảo hành" button initially
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('createWarrantyButton').disabled = true;
         });
@@ -107,13 +123,15 @@
             const tableBody = document.getElementById('conditionTableBody');
             tableBody.innerHTML = '';
 
+            const productSelectedConditions = selectedConditionsMap[productId] || [];
+
             conditions.forEach(condition => {
                 const row = document.createElement('tr');
-                const isChecked = selectedConditions.includes(condition.Id);
+                const isChecked = productSelectedConditions.includes(condition.Id);
                 row.innerHTML = `
-                                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
-                                    <td>${condition.Condition}</td>
-                                `;
+                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
+                    <td>${condition.Condition}</td>
+                `;
                 tableBody.appendChild(row);
             });
 
@@ -122,22 +140,22 @@
         }
 
         document.getElementById('saveConditionsButton').addEventListener('click', () => {
-            selectedConditions = getSelectedConditions();
-            document.getElementById(`SelectedConditions_${selectedProductId}`).value = JSON.stringify(selectedConditions);
+            const checkboxes = document.querySelectorAll('.condition-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
+            selectedConditionsMap[selectedProductId] = selectedIds;
 
-            if (selectedConditions.length > 0) {
-                document.getElementById('createWarrantyButton').disabled = false;
-            } else {
-                document.getElementById('createWarrantyButton').disabled = true;
-            }
+            document.getElementById(`SelectedConditions_${selectedProductId}`).value = JSON.stringify(selectedIds);
 
             const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
             conditionModal.hide();
+
+            validateForm();
         });
 
-        document.getElementById('conditionModal').addEventListener('shown.bs.modal', () => {
-            updateCheckboxes();
-        });
+        function validateForm() {
+            const createWarrantyButton = document.getElementById('createWarrantyButton');
+            createWarrantyButton.disabled = !Object.keys(selectedConditionsMap).some(productId => selectedConditionsMap[productId].length > 0);
+        }
 
         function getSelectedConditions() {
             const checkboxes = document.querySelectorAll('.condition-checkbox:checked');
@@ -182,14 +200,14 @@
 
         function submitForm(event) {
             event.preventDefault();
-            console.log("Submit ============");
+
             const warranties = [];
+            let formValid = true;
 
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                                            var productId = "@order.ProductId";
-                console.log(`Processing product ID: ${productId}`);
+                        var productId = "@order.ProductId";
 
                 var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
                 var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
@@ -200,46 +218,48 @@
                     var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
                     var expirationDate = formatDate(expirationDateElement.value);
                     var period = periodElement.value;
-                    var selectedConditions = selectedConditionsElement.value;
+                    var selectedConditions = selectedConditionsMap[productId] || [];
 
-                    var conditionIds = JSON.parse(selectedConditions);
+                    if (!dateOfPurchase || !expirationDate || !period || selectedConditions.length === 0) {
+                        formValid = false;
+                    } else {
+                        var conditionIds = selectedConditions;
 
-                    var warranty = {
-                        dateOfPurchase: dateOfPurchase,
-                        expirationDate: expirationDate,
-                        period: period,
-                        orderDetailId: "@order.OrderDetailId",
-                        conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
-                    };
+                        var warranty = {
+                            dateOfPurchase: dateOfPurchase,
+                            expirationDate: expirationDate,
+                            period: period,
+                            orderDetailId: "@order.OrderDetailId",
+                            conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
+                        };
 
-                    console.log("Order: ", warranty);
-                    warranties.push(warranty);
+                        warranties.push(warranty);
+                    }
                 } else {
-                    console.error(`Missing elements for product ID: ${productId}`, {
-                        dateOfPurchaseElement,
-                        expirationDateElement,
-                        periodElement,
-                        selectedConditionsElement
-                    });
+                    formValid = false;
                 }
             </text>
         }
-                            var customerPhone = document.getElementById("customerPhone").value;
-            var hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.name = "SerializedWarranties";
-            hiddenInput.value = JSON.stringify(warranties);
-            console.log("HiddenInput: ", hiddenInput);
 
-            var hiddenInputPhone = document.createElement("input");
-            hiddenInputPhone.type = "hidden";
-            hiddenInputPhone.name = "CustomerPhone";
-            hiddenInputPhone.value = customerPhone;
-            console.log("HiddenInput Phone: ", hiddenInputPhone);
-            document.querySelector("form#warrantyForm").appendChild(hiddenInput);
-            document.querySelector("form#warrantyForm").submit();
+            if (formValid) {
+                var customerPhone = document.getElementById("customerPhone").value;
+                var hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "SerializedWarranties";
+                hiddenInput.value = JSON.stringify(warranties);
+
+                var hiddenInputPhone = document.createElement("input");
+                hiddenInputPhone.type = "hidden";
+                hiddenInputPhone.name = "CustomerPhone";
+                hiddenInputPhone.value = customerPhone;
+
+                document.querySelector("form#warrantyForm").appendChild(hiddenInput);
+                document.querySelector("form#warrantyForm").appendChild(hiddenInputPhone);
+                document.querySelector("form#warrantyForm").submit();
+            } else {
+                alert("Please fill out all required fields.");
+            }
         }
-
         document.addEventListener('DOMContentLoaded', (event) => {
             const now = new Date();
             const today = now.toISOString().split('T')[0];
@@ -247,11 +267,20 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                                            var productId = "@order.ProductId";
+                        var productId = "@order.ProductId";
                 document.getElementById(`DateOfPurchase_${productId}`).setAttribute('min', today);
                 setExpirationMinDate(productId); // Set initial min expiration date
             </text>
         }
-                        });
+                validateForm();
+        });
+
     </script>
 }
+
+<style>
+    .required {
+        color: red;
+    }
+
+</style>

@@ -7,10 +7,8 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         [Required]
         public string CustomerPhone { get; set; } = string.Empty;
         public Guid? DiscountId { get; set; }
-        [Required]
+        //[Required]
         public double TotalPrice { get; set; }
-        [Required]
-        public Guid CustomerId { get; set; }
         public double MaterialProccessPrice { get; set; }
         [Required]
         public List<OrderDetailDTO> Details { get; set; }
@@ -20,7 +18,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
 
     public class OrderDetailDTO
     {
-        public Guid PromotionId { get; set; }
+        public Guid? PromotionId { get; set; }
         public double Amount { get; set; }
         public int Quantity { get; set; }
         public Guid ProductId { get; set; }
