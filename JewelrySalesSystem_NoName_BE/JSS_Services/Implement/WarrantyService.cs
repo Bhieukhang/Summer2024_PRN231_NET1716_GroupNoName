@@ -31,7 +31,7 @@ namespace JSS_Services.Implement
         {
             var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.Deflag, x.Status,
-                                                    x.ConditionWarrantyId, x.Note),
+                                                    x.Note),
                     predicate:
                     Guid.Empty.Equals(id)
                         ? x => true
@@ -44,7 +44,7 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                    x.Deflag, x.Status, x.ConditionWarrantyId, x.Note),
+                                                    x.Deflag, x.Status, x.Note),
                 page: page,
                 size: size
                 );
@@ -57,7 +57,7 @@ namespace JSS_Services.Implement
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 include: x => x.Include(x => x.WarrantyMappingConditions),
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                   x.Deflag, x.Status, x.ConditionWarrantyId, x.Note),
+                                                   x.Deflag, x.Status, x.Note),
                 page: page,
                 size: size
             );
@@ -141,7 +141,8 @@ namespace JSS_Services.Implement
                 throw new Exception("Commit failed, no rows affected.");
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, warranty.Period, warranty.Deflag, warranty.Status, warranty.ConditionWarrantyId, warranty.Note);
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, 
+                warranty.Period, warranty.Deflag, warranty.Status, warranty.Note);
         }
 
     }

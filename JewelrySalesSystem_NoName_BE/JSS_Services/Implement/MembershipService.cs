@@ -23,7 +23,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<MembershipResponse>> GetListMembership(int page, int size)
         {
             IPaginate<MembershipResponse> listMembership = await _unitOfWork.GetRepository<Membership>().GetList(
-                selector: x => new MembershipResponse(x.Id, x.Name, x.Level, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
+                selector: x => new MembershipResponse(x.Id, x.Name, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
                 orderBy: x => x.OrderByDescending(x => x.UsedMoney),
                 page: page,
                 size: size);
@@ -33,7 +33,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<MembershipResponse>> GetListMembershipExpired(int page, int size)
         {
             IPaginate<MembershipResponse> listMembershipExpired = await _unitOfWork.GetRepository<Membership>().GetList(
-                selector: x => new MembershipResponse(x.Id, x.Name, x.Level, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
+                selector: x => new MembershipResponse(x.Id, x.Name, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
                 predicate: x => x.Deflag.Equals(false),
                 orderBy: x => x.OrderBy(x => x.UsedMoney),
                 page: page,
@@ -53,7 +53,6 @@ namespace JSS_Services.Implement
             {
                 Id = member.Id,
                 Name = member.Name,
-                Level = member.Level,
                 Point = member.Point,
                 RedeemPoint = member.RedeemPoint,
                 UserId = member.UserId,
@@ -70,7 +69,7 @@ namespace JSS_Services.Implement
             {
                 return null;
             }
-            return new MembershipResponse(queryMembership.Id, queryMembership.Name, queryMembership.Level, queryMembership.Point,
+            return new MembershipResponse(queryMembership.Id, queryMembership.Name, queryMembership.Point,
                                           queryMembership.RedeemPoint, queryMembership.UserId, queryMembership.UsedMoney, queryMembership.Deflag);
         }
 
@@ -83,7 +82,7 @@ namespace JSS_Services.Implement
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
-            return new MembershipResponse(membership.Id, membership.Name, membership.Level, membership.Point,
+            return new MembershipResponse(membership.Id, membership.Name, membership.Point,
                                           membership.RedeemPoint, membership.UserId, membership.UsedMoney, membership.Deflag);
         }
 

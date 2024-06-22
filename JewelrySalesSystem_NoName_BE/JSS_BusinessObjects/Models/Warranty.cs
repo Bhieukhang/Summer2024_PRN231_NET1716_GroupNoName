@@ -19,8 +19,6 @@ public partial class Warranty
 
     public string? Phone { get; set; }
 
-    public Guid ConditionWarrantyId { get; set; }
-
     public string? Status { get; set; }
 
     public string? Note { get; set; }

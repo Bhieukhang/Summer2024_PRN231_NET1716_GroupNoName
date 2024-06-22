@@ -9,8 +9,6 @@ public partial class Membership
 
     public string? Name { get; set; }
 
-    public int? Level { get; set; }
-
     public int? Point { get; set; }
 
     public int? RedeemPoint { get; set; }
@@ -21,7 +19,11 @@ public partial class Membership
 
     public bool? Deflag { get; set; }
 
+    public Guid? MemberTypeId { get; set; }
+
     public virtual ICollection<Discount> Discounts { get; } = new List<Discount>();
+
+    public virtual MemberType? MemberType { get; set; }
 
     public virtual ICollection<Program> Programs { get; } = new List<Program>();
 
