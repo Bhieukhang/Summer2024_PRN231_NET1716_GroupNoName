@@ -613,7 +613,7 @@
                     materialProcessPrice: 0,
                     details: productDetails
                 };
-                console.log("Order data: ", orderData);
+                console.log("Order data: ", JSON.stringify(orderData));
                   // Lấy giá trị RequestVerificationToken
                 const token = $('input[name="__RequestVerificationToken"]').val();
                  $.ajax({
@@ -621,6 +621,7 @@
                         type: 'POST',
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(orderData),
+                        // data: orderData.serialize(),
                         headers: {
                             'RequestVerificationToken': token
                         },
@@ -632,11 +633,11 @@
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-            console.error('Error Status:', textStatus);
-            console.error('Error Thrown:', errorThrown);
-            console.error('Error Response:', jqXHR.responseText);
-            alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
-        }
+                            console.error('Error Status:', textStatus);
+                            console.error('Error Thrown:', errorThrown);
+                            console.error('Error Response:', jqXHR.responseText);
+                            alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
+                        }
                 });
             });
         });

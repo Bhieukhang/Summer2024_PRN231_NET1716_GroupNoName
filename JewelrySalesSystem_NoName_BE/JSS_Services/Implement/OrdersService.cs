@@ -114,23 +114,19 @@ namespace JSS_Services.Implement
                     ProductId = orderDetail.ProductId,
                     InsDate = DateTime.Now
                 };
-                totalPrice += detail.TotalPrice;
+                //totalPrice += detail.TotalPrice;
                 listOrderDetail.Add(detail);
                 await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
             }
             
-            //Caculate total price by promotion
+            //Update quantity product in store
             foreach (var orderDetail in productList)
             {
-                if (orderDetail.PromotionId != null)
-                {
-                    totalPayable = totalPayable + await CalculateTotalPriceByPromotion((Guid)orderDetail.PromotionId, (double)totalPrice);
-                }
                 var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Id == orderDetail.ProductId);
                 product.Quantity = product.Quantity - orderDetail.Quantity;
                 _unitOfWork.GetRepository<Product>().UpdateAsync(product);
             }
-            order.TotalPrice = totalPayable;
+            
 
             //Update usermoney for membership
             //var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
@@ -282,7 +278,8 @@ namespace JSS_Services.Implement
         }
         public async Task<IEnumerable<OrderResponse>> GetAllOrders()
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(orderBy: o => o.OrderByDescending(o => o.InsDate));
+
 
             // Chuyển đổi danh sách đơn hàng sang danh sách OrderResponse
             var orderResponses = orders.Select(o => new OrderResponse(
