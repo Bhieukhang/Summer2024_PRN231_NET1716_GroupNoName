@@ -350,7 +350,8 @@ namespace JSS_Services.Implement
                         ProductId = item.ProductId,
                         ProductName = item.Product.ProductName,
                         InsDate= item.InsDate,
-                        OrderDetailId = item.Id
+                        OrderDetailId = item.Id,
+                        PeriodWarranty = item.Product.PeriodWarranty,
                     };
                     listDetail.Add(o);
                 }

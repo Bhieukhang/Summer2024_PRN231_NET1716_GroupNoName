@@ -88,7 +88,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var customerPhone = Request.Form["CustomerPhone"];
                 var warranties = JsonConvert.DeserializeObject<List<WarrantyCreate>>(serializedWarranties);
 
-                var apiUrlCreate = $"{ApiPath.Warranty}?phone={customerPhone}";
+                var apiUrlCreate = $"{ApiPath.Warranty}?phone={Phone}";
 
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(warranties), Encoding.UTF8, "application/json");
 

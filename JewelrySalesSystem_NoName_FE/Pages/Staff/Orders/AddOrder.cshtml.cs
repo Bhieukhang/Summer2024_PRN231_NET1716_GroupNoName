@@ -84,10 +84,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 var createResponse = await CreateAccountAsync(phone, fullName);
                 if (createResponse != null)
                 {
-                    TempData["Phone"] = phone;
-                    TempData["Name"] = fullName;
-                    TempData["Message"] = "Tạo tài khoản thành công";
-                    return new JsonResult(new { success = true, message = "Tạo tài khoản thành công", phone = phone, name = fullName });
+                    return new JsonResult(new 
+                    { success = true, 
+                      message = "Tạo tài khoản thành công",
+                      phone = phone, 
+                      name = fullName });
                 }
             }
 

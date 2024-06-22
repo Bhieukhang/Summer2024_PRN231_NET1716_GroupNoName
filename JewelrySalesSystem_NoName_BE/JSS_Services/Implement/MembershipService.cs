@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -105,10 +106,9 @@ namespace JSS_Services.Implement
 
         public async Task<SearchAccountResponse> CreateMembership(string phone, string name)
         {
-            Guid idAccount = Guid.NewGuid();
             var account = new Account()
             {
-                Id = idAccount,
+                Id = Guid.NewGuid(),
                 FullName = name,
                 Phone = phone,
                 Dob = null,
@@ -128,20 +128,19 @@ namespace JSS_Services.Implement
                 {
                     Id = Guid.NewGuid(),
                     Name = name,
-                    //Level = "Đồng",
                     Point = 0,
                     RedeemPoint = 0,
-                    UserId = idAccount,
+                    UserId = account.Id,
                     UsedMoney = 0,
                     Deflag = true,
-                    //MemberTypeId = ""
+                    MemberTypeId = Guid.Parse("18095960-ACB3-4FD4-BCD3-646D9DF3E6E1")
                 };
                 _unitOfWork.GetRepository<Membership>().InsertAsync(member);
 
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (isSuccessful == false) return null;
             }
-            return new SearchAccountResponse(idAccount, account.FullName, account.Phone);
+            return new SearchAccountResponse(account.Id, account.FullName, account.Phone);
         }
     }
 }
