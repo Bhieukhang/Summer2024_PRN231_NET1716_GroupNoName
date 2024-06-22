@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -128,12 +129,13 @@ namespace JSS_Services.Implement
                 {
                     Id = Guid.NewGuid(),
                     Name = name,
-                    Level = 1,
+                    //Level = "Đồng",
                     Point = 0,
                     RedeemPoint = 0,
                     UserId = idAccount,
                     UsedMoney = 0,
                     Deflag = true,
+                    //MemberTypeId = ""
                 };
                 _unitOfWork.GetRepository<Membership>().InsertAsync(member);
 
