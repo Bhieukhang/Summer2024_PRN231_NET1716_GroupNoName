@@ -10,25 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\Material\**" />
     <Compile Remove="Pages\Manager\Discount\**" />
     <Compile Remove="Pages\Manager\Policy\**" />
     <Compile Remove="Pages\Manager\Promotion\**" />
     <Compile Remove="Pages\Staff\Bill\**" />
     <Compile Remove="Pages\Staff\PurchaseProduct\**" />
-    <Content Remove="DTOs\Material\**" />
     <Content Remove="Pages\Manager\Discount\**" />
     <Content Remove="Pages\Manager\Policy\**" />
     <Content Remove="Pages\Manager\Promotion\**" />
     <Content Remove="Pages\Staff\Bill\**" />
     <Content Remove="Pages\Staff\PurchaseProduct\**" />
-    <EmbeddedResource Remove="DTOs\Material\**" />
     <EmbeddedResource Remove="Pages\Manager\Discount\**" />
     <EmbeddedResource Remove="Pages\Manager\Policy\**" />
     <EmbeddedResource Remove="Pages\Manager\Promotion\**" />
     <EmbeddedResource Remove="Pages\Staff\Bill\**" />
     <EmbeddedResource Remove="Pages\Staff\PurchaseProduct\**" />
-    <None Remove="DTOs\Material\**" />
     <None Remove="Pages\Manager\Discount\**" />
     <None Remove="Pages\Manager\Policy\**" />
     <None Remove="Pages\Manager\Promotion\**" />

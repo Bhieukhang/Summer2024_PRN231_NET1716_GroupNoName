@@ -6,7 +6,7 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h3 class="page-title"> Thêm sản phẩm </h3>
+                <h2 class="page-title"> Thêm Trang Sức Mới</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         @*Thêm*@
@@ -14,11 +14,9 @@
                 </nav>
             </div>
             <div class="row">
-                <!-- Basic form -->
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Thêm Trang Sức Mới</h4>
                             <form class="forms-sample" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label asp-for="Product.ProductName" class="control-label">Tên</label>
@@ -29,6 +27,13 @@
                                     <label asp-for="Product.Code" class="control-label"></label>
                                     <input asp-for="Product.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
                                     <span asp-validation-for="Product.Code" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Product.MaterialId" class="control-label">Chất Liệu</label>
+                                    <select asp-for="Product.MaterialId" class="form-control" asp-items="@(new SelectList(Model.MaterialList, "Id", "MaterialName"))">
+                                        <option value="">Select Material</option>
+                                    </select>
+                                    <span asp-validation-for="Product.MaterialId" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Product.Description" class="control-label">Mô Tả</label>
@@ -74,7 +79,6 @@
                                     </select>
                                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                                 </div>
-                                <!-- Sub Products  -->
                                 <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
                                 <a asp-page="./ListProduct" class="btn btn-gradient-light btn-fw">Hủy</a>
                             </form>
@@ -85,3 +89,9 @@
         </div>
     </div>
 </body>
+
+<style>
+    .page-title {
+        font-size: 2.0rem;
+    }
+</style>

@@ -24,8 +24,8 @@ namespace JSS_BusinessObjects.Payload.Request
         public string? Code { get; set; }
         public double? Tax { get; set; }
         public string? ImgProduct { get; set; }
+        public int? PeriodWarranty { get; set; }
         public Guid? SubId { get; set; }
-        public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
         public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
         public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
     }

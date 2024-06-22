@@ -76,43 +76,10 @@
                                                 <div class="modal fade" id="warranty">
                                                     <div class="modal-dialog modal-xl">
                                                         <div class="modal-content">
-                                                            @*                                                         <div class="col-md-6 grid-margin stretch-card"> *@
                                                             <div class="card">
                                                                 <div class="card-body">
                                                                     <h4 class="card-title">Thông tin bảo hành</h4>
-                                                                    <div class="form-group row">
-                                                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Hóa đơn</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Username" value="@tran.OrderId" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Ngày hết hạn</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" value="@warranty.ExpirationDate?.ToString(" dd-MM-yyyy")" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label for="exampleInputMobile" class="col-sm-3 col-form-label">Giai đoạn</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" class="form-control" id="exampleInputMobile" placeholder="Mobile number" value="@warranty.Period tháng" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Trạng thái</label>
-                                                                        @if (warranty.Status.Equals("Active"))
-                                                                        {
-                                                                            <div class="col-sm-9">
-                                                                                <label class="badge badge-success">@warranty.Status</label>
-                                                                            </div>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <div class="col-sm-9">
-                                                                                <label class="badge badge-danger">@warranty.Status</label>
-                                                                            </div>
-                                                                        }
-                                                                    </div>
+                                                                    
                                                                     <div class="form-group row">
                                                                         <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
                                                                         <div class="col-sm-9">

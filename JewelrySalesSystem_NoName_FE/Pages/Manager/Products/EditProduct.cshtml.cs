@@ -1,4 +1,5 @@
 using Firebase.Storage;
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         [BindProperty]
         public IFormFile Image { get; set; }
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
+        public IList<MaterialDTO> MaterialList { get; set; } = new List<MaterialDTO>();
 
         public EditProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -55,6 +57,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var categoryApiUrl = $"{ApiPath.CategoryList}";
                 var categoryResponse = await client.GetAsync(categoryApiUrl);
                 CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
+
+                var materialApiUrl = $"{ApiPath.MaterialList}";
+                var materialResponse = await client.GetAsync(materialApiUrl);
+                MaterialList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());
 
                 return Page();
             }

@@ -1,4 +1,5 @@
 using Firebase.Storage;
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         [BindProperty]
         public IFormFile Image { get; set; }
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
-        public IList<SubProductsDTO> SubProductList { get; set; } = new List<SubProductsDTO>();
+        public IList<MaterialDTO> MaterialList { get; set; } = new List<MaterialDTO>();
 
         public AddProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -43,23 +44,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var categoryApiUrl = $"{ApiPath.CategoryList}";
-                var subProductApiUrl = $"{ApiPath.SubProductList}";
+                var materialApiUrl = $"{ApiPath.MaterialList}";
 
                 var response = await client.GetAsync(categoryApiUrl);
-                var subResponse = await client.GetAsync(subProductApiUrl);
+                var mateResponse = await client.GetAsync(materialApiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
-                if (subResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (mateResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
+                
                 CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await response.Content.ReadAsStringAsync());
-                SubProductList = JsonConvert.DeserializeObject<List<SubProductsDTO>>(await response.Content.ReadAsStringAsync());
+                MaterialList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await mateResponse.Content.ReadAsStringAsync());
                 return Page();
             }
             catch (Exception ex)
@@ -84,6 +86,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.Timeout = TimeSpan.FromMinutes(2);
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {

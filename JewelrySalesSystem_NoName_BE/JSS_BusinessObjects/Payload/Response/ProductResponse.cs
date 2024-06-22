@@ -13,7 +13,7 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, 
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, 
-            string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId)
+            string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId, Category? category, Material? material, int? periodWarranty)
         {
             Id = id;
             ImgProduct = imgProduct;
@@ -30,11 +30,14 @@ namespace JSS_BusinessObjects.Payload.Response
             ProcessPrice = processPrice;
             Deflag = deflag;
             SubId = subId;
+            Category = category;
+            Material = material;
+            PeriodWarranty = periodWarranty;
         }
 
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
-            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId, Category? category)
+            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId, Category? category, Material? material, int? periodWarranty)
         {
             Id = id;
             ImgProduct = imgProduct;
@@ -53,6 +56,8 @@ namespace JSS_BusinessObjects.Payload.Response
             Tax = tax;
             SubId = subId;
             Category = category;
+            Material = material;
+            PeriodWarranty = periodWarranty;
         }
         public Guid Id { get; set; }
 
@@ -85,12 +90,8 @@ namespace JSS_BusinessObjects.Payload.Response
         public string? ImgProduct { get; set; }
         public double? Tax { get; set; }
         public Guid? SubId { get; set; }
+        public int? PeriodWarranty { get; set; }
         public virtual Category? Category { get; set; }
         public virtual Material? Material { get; set; }
-
-        //public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
-
-        //public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();
-        public virtual ICollection<Diamond> Diamonds { get; } = new List<Diamond>();
     }
 }

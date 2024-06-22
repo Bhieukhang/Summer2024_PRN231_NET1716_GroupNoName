@@ -37,6 +37,9 @@
         //Category
         public const string CategoryList = url + "/api/v1/Category";
 
+        //Material
+        public const string MaterialList = url + "/api/v1/Material";
+
         //Product
         public const string ProductList = url + "/api/v1/Product";
         public const string ProductDetails = url + "/api/v1/Product/id";

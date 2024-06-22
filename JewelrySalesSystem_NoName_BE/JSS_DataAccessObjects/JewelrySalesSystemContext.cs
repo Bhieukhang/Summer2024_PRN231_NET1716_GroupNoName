@@ -30,6 +30,8 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Material> Materials { get; set; }
 
+    public virtual DbSet<MemberType> MemberTypes { get; set; }
+
     public virtual DbSet<Membership> Memberships { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -148,6 +150,15 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.MaterialName).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<MemberType>(entity =>
+        {
+            entity.ToTable("MemberType");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.InsDate).HasColumnType("datetime");
+            entity.Property(e => e.Type).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<Membership>(entity =>
         {
             entity.ToTable("Membership");
@@ -155,10 +166,14 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(100);
 
+            entity.HasOne(d => d.MemberType).WithMany(p => p.Memberships)
+                .HasForeignKey(d => d.MemberTypeId)
+                .HasConstraintName("FK_Membership_MemberType");
+
             entity.HasOne(d => d.User).WithMany(p => p.Memberships)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Membership_User");
+                .HasConstraintName("FK_Membership_Account");
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -275,6 +290,7 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.ImgUrl).HasColumnName("ImgURL");
             entity.Property(e => e.InsDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.Type).HasMaxLength(50);

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Interface
 {
-    public interface IWarrantyService 
+    public interface IWarrantyService
     {
         public Task<WarrantyResponse> GetWarrantyDetail(Guid id);
         public Task<IPaginate<WarrantyResponse>> GetWarranties(int page, int size);
         public Task<IPaginate<WarrantyResponse>> GetWarrantiesNo(int page, int size);
 
         Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> list, string phone);
-        Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyRequest request);
+        Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request);
     }
 }

@@ -25,6 +25,8 @@ public partial class Promotion
 
     public DateTime? EndDate { get; set; }
 
+    public string? ImgUrl { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();

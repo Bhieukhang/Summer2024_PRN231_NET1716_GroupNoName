@@ -9,12 +9,11 @@ namespace JSS_BusinessObjects.Payload.Response
     public class MembershipResponse
     {
         public MembershipResponse() { }
-        public MembershipResponse(Guid id, string? name, int? level, int? point, int? redeemPoint, Guid userId, double? userMoney,
-            bool? deflag) 
+        public MembershipResponse(Guid id, string? name, int? point, int? redeemPoint, Guid userId, double? userMoney,
+            bool? deflag)
         {
             Id = id;
             Name = name;
-            Level = level;
             Point = point;
             RedeemPoint = redeemPoint;
             UserId = userId;

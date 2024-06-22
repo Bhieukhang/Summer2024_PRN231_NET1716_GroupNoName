@@ -39,6 +39,8 @@ public partial class Product
 
     public Guid? SubId { get; set; }
 
+    public int? PeriodWarranty { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual Material? Material { get; set; }

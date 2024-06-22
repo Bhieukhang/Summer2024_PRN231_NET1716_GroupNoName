@@ -1,7 +1,9 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -67,8 +69,8 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
         public async Task<ActionResult> CreateWarranty([FromBody] List<WarrantyRequest> warranty, [FromQuery] string phone)
         {
-            
-            
+
+
             var newWarranty = await _service.CreateWarranty(warranty, phone);
             var result = JsonConvert.SerializeObject(newWarranty, Formatting.Indented);
             return Ok(result);
@@ -83,24 +85,11 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         #endregion
         [Authorize(Roles = "Manager, Staff")]
         [HttpPut(ApiEndPointConstant.Warranty.WarrantyByIdEndpoint)]
-        public async Task<ActionResult> UpdateWarranty(Guid id, [FromBody] WarrantyRequest request)
+        public async Task<ActionResult> UpdateWarranty(Guid id, [FromBody] WarrantyUpdateRequest request)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid request payload.");
-            }
-
-            try
-            {
-                var updatedWarranty = await _service.UpdateWarranty(id, request);
-                var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (optional)
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var updatedWarranty = await _service.UpdateWarranty(id, request);
+            var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
+            return Ok(result);
         }
     }
 }

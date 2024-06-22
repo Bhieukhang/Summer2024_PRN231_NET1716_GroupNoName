@@ -32,14 +32,14 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
 
-                IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity
-                    , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category),
-                    predicate: x => x.SubId == subId,
-                    orderBy: x => x.OrderByDescending(x => x.Id),
-                    page: page,
-                    size: size);
-                return list;
+            IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
+                selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity
+                , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+                predicate: x => x.SubId == subId,
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size);
+            return list;
         }
         //Do Huu Thuan
         public async Task<int> GetTotalSubProductAsync()
@@ -48,21 +48,16 @@ namespace JSS_Services.Implement
             return await proRepository.CountAsync(x => excludeIds.Contains((Guid)x.SubId));
         }
 
-
-
-
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category));
-        }
-
-
+        //public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        //{
+        //    return await _unitOfWork.GetRepository<Product>().GetListAsync(include: s => s.Include(p => p.Category).Include(c => c.Material));
+        //}
 
         public async Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size)
         {
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
                 selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
-                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category),
+                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
                 predicate: x => x.Deflag == true,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -75,17 +70,43 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<Product> GetProductByCodeAsync(string code)
+        public async Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
         {
-            try
+            if (!string.IsNullOrEmpty(code))
             {
-                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Code == code, include: s => s.Include(p => p.Category));
-                return product;
+                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
+                    p => p.Code == code,
+                    include: s => s.Include(p => p.Category).Include(c => c.Material)
+                );
+
+                var productList = new List<ProductResponse>();
+                if (product != null)
+                {
+                    productList.Add(new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
+                    product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, product.Category, product.Material, product.PeriodWarranty));
+                }
+
+                var paginatedProductList = new Paginate<ProductResponse>
+                {
+                    Items = productList,
+                    Total = productList.Count,
+                    Page = 1,
+                    Size = 12,
+                    TotalPages = productList.Count
+                };
+
+                return paginatedProductList;
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, "An error occurred while getting the product by code.");
-                throw;
+                IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
+                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                        x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+                    predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
+                    orderBy: x => x.OrderByDescending(x => x.Id),
+                    page: page ?? 1,
+                    size: size ?? 12);
+                return list;
             }
         }
 
@@ -149,6 +170,7 @@ namespace JSS_Services.Implement
                 existingProduct.Code = updatedData.Code ?? existingProduct.Code;
                 existingProduct.CategoryId = updatedData.CategoryId != Guid.Empty ? updatedData.CategoryId : existingProduct.CategoryId;
                 existingProduct.MaterialId = updatedData.MaterialId ?? existingProduct.MaterialId;
+                existingProduct.PeriodWarranty = updatedData.PeriodWarranty ?? existingProduct.PeriodWarranty;
 
                 if (!updatedData.Tax.HasValue)
                 {
@@ -247,7 +269,7 @@ namespace JSS_Services.Implement
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category);
+                                                           productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category, productItem.Material, productItem.PeriodWarranty);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 

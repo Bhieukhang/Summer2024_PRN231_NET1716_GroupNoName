@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Material;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,8 +39,10 @@ public partial class ProductDTO
     public string? Code { get; set; }
     [Required]
     public double? Tax { get; set; }
-
+    [Required]
+    public int? PeriodWarranty { get; set; }
     public CategoryDTO Category { get; set; }
+    public MaterialDTO Material { get; set; }
 
     [NotMapped] 
     public bool DeflagChecked

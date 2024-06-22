@@ -36,8 +36,8 @@
                                 @foreach (var warranty in Model.WarrantyList)
                                 {
                                     <tr>
-                                        <td> @warranty.DateOfPurchase?.ToString("dd-MM-yyyy") </td>
-                                        <td> @warranty.ExpirationDate?.ToString("dd-MM-yyyy") </td>
+                                        @* <td> @warranty.DateOfPurchase?.ToString("dd-MM-yyyy") </td>
+                                        <td> @warranty.ExpirationDate?.ToString("dd-MM-yyyy") </td> *@
                                         <td> @warranty.Period </td>
                                         <td>
                                             @if (warranty.Status.Equals("Valid for Warranty"))

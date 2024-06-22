@@ -10,19 +10,18 @@ namespace JSS_BusinessObjects.Payload.Response
     public class WarrantyResponse
     {
         public WarrantyResponse(Guid id, DateTime? dateOfPurchase, DateTime? expirationDate, int? period,
-                                string? status, Guid conditionWarrantyMapId, string? note)
+                                string? status, string? note)
         {
             Id = id;
             DateOfPurchase = dateOfPurchase;
             ExpirationDate = expirationDate;
             Period = period;
             Status = status;
-            ConditionnWarrantyId = conditionWarrantyMapId;
             Note = note;
         }
 
         public WarrantyResponse(Guid id, DateTime? dateOfPurchase, DateTime? expirationDate, int? period,
-                                bool? deflag, string? status, Guid conditionWarranty, string? note)
+                                bool? deflag, string? status, string? note)
         {
             Id = id;
             DateOfPurchase = dateOfPurchase;
@@ -30,7 +29,6 @@ namespace JSS_BusinessObjects.Payload.Response
             Period = period;
             Deflag = deflag;
             Status = status;
-            ConditionnWarrantyId = conditionWarranty;
             Note = note;
         }
 
@@ -48,7 +46,6 @@ namespace JSS_BusinessObjects.Payload.Response
         //public Guid? OrderDetailId { get; set; }
 
         //public string? Phone { get; set; }
-        public Guid ConditionnWarrantyId { get; set; }
         public string? Status { get; set; }
         public string? Note { get; set; }
 
