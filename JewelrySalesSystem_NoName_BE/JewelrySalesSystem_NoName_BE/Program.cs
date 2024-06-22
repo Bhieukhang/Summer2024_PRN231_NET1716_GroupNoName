@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
+using JSS_BusinessObjects.ZaloPay.Config;
 using System.Text.Json.Serialization;
 
 
@@ -61,6 +62,10 @@ try
     //    options.AddPolicy("StaffPolicy", policy => policy.RequireRole("Staff"));
     //    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
     //});
+
+    //payment
+    builder.Services.Configure<ZaloPayConfig>(
+        builder.Configuration.GetSection(ZaloPayConfig.ConfigName));
 
     var app = builder.Build();
 
