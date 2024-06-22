@@ -139,6 +139,25 @@
         </div>
     </div
 
+      <!-- Modal Popup -->
+    <div class="modal fade" id="noPromotionModal" tabindex="-1" aria-labelledby="noPromotionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noPromotionModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fa fa-times-circle-o" style="color: red; font-size: 50px; margin-right: 10px;"></i>
+                    <h3>Sản phẩm này không có khuyến mãi</h3>
+                </div>
+                <div class="modal-footer">
+                    @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                </div>
+            </div>
+        </div>
+    </div
+
      <!-- Modal Popup Not Found Product -->
     <div class="modal fade" id="notFoundModal" tabindex="-1" aria-labelledby="notFoundModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -309,7 +328,15 @@
                     }
                 });
                 var productCode = $(this).closest('tr').data('product-code');
+                // Xóa sản phẩm khỏi khuyến mãi đã chọn
                 delete selectedPromotions[productCode];
+
+                // Cập nhật tổng số tiền giảm giá
+                var totalDiscount = 0;
+                $('#productTableBody .product-discount').each(function () {
+                    totalDiscount += parseFloat($(this).text().replace(/\D/g, '')) || 0;
+                });
+                $('#totalDiscount').text(totalDiscount.toLocaleString() + ' Đ');
                 updateTotalPrice();
             });
 
@@ -321,7 +348,7 @@
                     var price = $(this).closest('tr').find('td:nth-child(3)').text();
                     total += quantity * price;
                 });
-                $('#totalPrice').text(total);
+                $('#totalPrice').text(total.toLocaleString() + ' Đ');
 
                 var totalDiscount = parseFloat($('#totalDiscount').text().replace(/\D/g, '')) || 0;
                 var totalPayable = total - totalDiscount;
@@ -462,11 +489,15 @@
                     data: { productCode: productCode },
                     success: function (data) {
                         if (data && data.promotions) {
-                            console.log("Data success: ", data.promotions[0].id);
-                            var promotionsHtml = '';
-                            data.promotions.forEach(function (promotion) {
-                                var isChecked = selectedPromotions[productCode] === promotion.id ? 'checked' : '';
-                                promotionsHtml += `
+                            if (data.promotions <= 1) {
+                                // Hiển thị modal popup
+                                $('#noPromotionModal').modal('show');
+                            } else {
+                                console.log("Data success: ", data.promotions[0].id);
+                                var promotionsHtml = '';
+                                data.promotions.forEach(function (promotion) {
+                                    var isChecked = selectedPromotions[productCode] === promotion.id ? 'checked' : '';
+                                    promotionsHtml += `
                                                     <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
                                                         <div class="card-body row">
                                                             <div class="col-md-2">
@@ -481,9 +512,10 @@
                                                         </div>
                                                     </div>
                                                 `;
-                            });
-                            $('#promotionForm').html(promotionsHtml);
-                            $('#promotionModal').modal('show');
+                                });
+                                $('#promotionForm').html(promotionsHtml);
+                                $('#promotionModal').modal('show');
+                            }
                         } else {
                             $('#promotionForm').html('<p>Không có khuyến mãi nào.</p>');
                         }

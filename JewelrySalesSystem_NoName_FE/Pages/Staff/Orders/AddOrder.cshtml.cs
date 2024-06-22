@@ -34,6 +34,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         [BindProperty]
         public List<ProductDetail> ProductDetails { get; set; }
         public IList<Promotion> listPromotions { get; set; } = new List<Promotion>();
+        //[BindProperty]
+        //public OrderDTO orderData { get; set; }
 
         public async Task<JsonResult> OnGetProductAsync(string productCode)
         {
@@ -120,8 +122,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             return JsonConvert.DeserializeObject<CreateAccountResponse>(responseString);
         }
 
+        //[HttpPost]
         public async Task<IActionResult> OnPostCreateInvoiceAsync([FromBody] OrderDTO orderData)
         {
+            Console.WriteLine("Received order data: " + JsonConvert.SerializeObject(orderData));
             if (orderData == null || string.IsNullOrEmpty(orderData.CustomerPhone) || orderData.TotalPrice == null || orderData.Details.Count == 0)
             {
                 return BadRequest(new { message = "Invalid order data" });
