@@ -19,7 +19,8 @@
         public const string MembershipProfile = url + "/api/v1/membership/userId";
         public const string MembershipTotal = url + "/api/v1/membership/total";
         public const string MembershipActive = url + "/api/v1/membership/active";
-        public const string MembershipUnActive = url + "/api/v1/membership/unavailable";    
+        public const string MembershipUnActive = url + "/api/v1/membership/unavailable";
+        public const string MembershipUserMoney = url + "/api/v1/membership/userMoney";
 
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";

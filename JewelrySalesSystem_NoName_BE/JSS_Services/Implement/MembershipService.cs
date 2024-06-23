@@ -83,12 +83,35 @@ namespace JSS_Services.Implement
             var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == userId);
             membership.UsedMoney += userMoney;
 
+            await UpdateMemberType(membership);
+
             _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new MembershipResponse(membership.Id, membership.Name, membership.Point,
                                           membership.RedeemPoint, membership.UserId, membership.UsedMoney, membership.Deflag);
+        }
+        private async Task UpdateMemberType(Membership membership)
+        {
+            var memberTypes = await _unitOfWork.GetRepository<MemberType>().GetListAsync();
+
+            if (membership.UsedMoney >= 400000000)
+            {
+                membership.MemberTypeId = memberTypes.FirstOrDefault(mt => mt.Type == "Diamond")?.Id;
+            }
+            else if (membership.UsedMoney >= 150000000)
+            {
+                membership.MemberTypeId = memberTypes.FirstOrDefault(mt => mt.Type == "Gold")?.Id;
+            }
+            else if (membership.UsedMoney >= 30000000)
+            {
+                membership.MemberTypeId = memberTypes.FirstOrDefault(mt => mt.Type == "Silver")?.Id;
+            }
+            else
+            {
+                membership.MemberTypeId = memberTypes.FirstOrDefault(mt => mt.Type == "Bronze")?.Id;
+            }
         }
 
         public async Task<int> GetTotalMembershipCountAsync()
