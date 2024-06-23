@@ -71,7 +71,7 @@
                                         <td title="@promotion.PromotionName" data-bs-toggle="tooltip" data-bs-placement="top">
                                             <a href="PromotionDetails?promotionId=@promotion.Id"> @promotion.PromotionName</a>
                                         </td>
-                                        <td>@(promotion.Deflag == true ? "On" : "Off")</td>
+                                        <td>@(promotion.Deflag == true ? "Hoạt động" : "Không hoạt động")</td>
                                         <td><span class="badge badge-info">@promotion.Type</span></td>
                                         <td>@promotion.Description</td>
                                         <td>@promotion.ProductQuantity</td>
