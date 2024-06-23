@@ -22,26 +22,30 @@
                 </button>
             </div>
         </div>
-        <form method="get">
-            <br />
-            <div class="form-group">
+        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
+            <div class="col-md-4">
+                <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
                 <input type="text" id="searchCode" name="searchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" />
                 <span asp-validation-for="SearchCode" class="text-danger"></span>
             </div>
-            <div class="col-md-3">
-                <select class="form-control" name="selectedCategory" asp-for="SelectedCategory" asp-items="@(new SelectList(Model.cateList, "Id", "Name"))">
+            <div class="col-md-4">
+                <label for="selectedCategory" class="form-label">Chọn loại</label>
+                <select class="form-control" id="selectedCategory" name="selectedCategory" asp-for="SelectedCategory" asp-items="@(new SelectList(Model.cateList, "Id", "Name"))">
                     <option value="">-- Chọn loại --</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <select class="form-control" name="selectedMaterial" asp-for="SelectedMaterial" asp-items="@(new SelectList(Model.mateList, "Id", "MaterialName"))">
+            <div class="col-md-4">
+                <label for="selectedMaterial" class="form-label">Chọn chất liệu</label>
+                <select class="form-control" id="selectedMaterial" name="selectedMaterial" asp-for="SelectedMaterial" asp-items="@(new SelectList(Model.mateList, "Id", "MaterialName"))">
                     <option value="">-- Chọn chất liệu --</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-gradient-secondary btn-fw">
-                <i class="mdi mdi-magnify"></i>
-                Tìm Kiếm
-            </button>
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
+                    <i class="mdi mdi-magnify"></i>
+                    Tìm Kiếm
+                </button>
+            </div>
         </form>
         <br />
         <div class="col-lg-12 grid-margin stretch-card">
@@ -100,16 +104,16 @@
                     <nav aria-label="Page navigation example" style="padding-top:50px">
                         <ul class="pagination justify-content-end">
                             <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Trước</a>
+                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page - 1)" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Trước</a>
                             </li>
                             @for (var i = 1; i <= Model.TotalPages; i++)
                             {
                                 <li class="page-item @(Model.Page == i ? "active" : "")">
-                                    <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
+                                    <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@i" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Sau</a>
+                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page + 1)" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Sau</a>
                             </li>
                         </ul>
                     </nav>
@@ -218,4 +222,35 @@
             .product-info p strong {
                 color: #495057;
             }
+
+    .form-label {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .form-control {
+        border-radius: 0.375rem;
+    }
+
+    .btn-gradient-secondary {
+        background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        color: white;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    .rounded {
+        border-radius: 0.375rem !important;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
 </style>
