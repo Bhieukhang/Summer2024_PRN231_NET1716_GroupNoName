@@ -44,15 +44,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
                     return RedirectToPage("/Auth/Login");
                 }
                 diamondList = JsonConvert.DeserializeObject<List<DiamondDTO>>(await diamondResponse.Content.ReadAsStringAsync());
-
-                //var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
-                //if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                //{
-                //    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
-                //    return RedirectToPage("/Auth/Login");
-                //}
-                //cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
-
                 return Page();
             }
             catch (Exception ex)

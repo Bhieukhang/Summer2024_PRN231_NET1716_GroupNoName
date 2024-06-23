@@ -1,8 +1,10 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects.Models;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -17,23 +19,39 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             _goldRateService = goldRateService;
         }
 
-        #region GetLatestGoldRate
+        //#region GetLatestGoldRate
+        ///// <summary>
+        ///// Get Latest Gold Rate.
+        ///// </summary>
+        ///// <returns>List of Gold Rate.</returns>
+        ///// GET : api/GoldRate
+        //#endregion
+        //[HttpGet((ApiEndPointConstant.GoldRate.GoldRateEndpoint))]
+        //public async Task<ActionResult<GoldRate>> GetLatestGoldRate()
+        //{
+        //    var rate = await _goldRateService.GetLatestGoldRateAsync();
+        //    if (rate == null)
+        //    {
+        //        return NotFound("No gold rate found.");
+        //    }
+
+        //    return Ok(rate);
+        //}
+
+        #region GetAllGoldRates
         /// <summary>
-        /// Get Latest Gold Rate.
+        /// Get all gold rates.
         /// </summary>
-        /// <returns>List of Gold Rate.</returns>
+        /// <returns>List of gold rates.</returns>
         /// GET : api/GoldRate
         #endregion
-        [HttpGet((ApiEndPointConstant.GoldRate.GoldRateEndpoint))]
-        public async Task<ActionResult<GoldRate>> GetLatestGoldRate()
+        //[Authorize(Roles = "Manager, Staff")]
+        [HttpGet(ApiEndPointConstant.GoldRate.GoldRateEndpoint)]
+        public async Task<ActionResult<IEnumerable<GoldRate>>> GetAllGoldRatesAsync(int page, int size)
         {
-            var rate = await _goldRateService.GetLatestGoldRateAsync();
-            if (rate == null)
-            {
-                return NotFound("No gold rate found.");
-            }
-
-            return Ok(rate);
+            var list = await _goldRateService.GetAllGoldRatesAsync(page, size);
+            var goldrates = JsonConvert.SerializeObject(list, Formatting.Indented);
+            return Ok(goldrates);
         }
 
         #region UpdateGoldRate
