@@ -60,6 +60,22 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
         }
 
+        
+        [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
+        public async Task<ActionResult> FindDiscountById(Guid id)
+        {
+            try
+            {
+                var response = await _discountService.FindAsync(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// Manager accept discount
         /// </summary>
@@ -83,20 +99,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
-        public async Task<ActionResult> FindDiscountById(Guid id)
-        {
-            try
-            {
-                var response = await _discountService.FindAsync(id);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
 
         /// <summary>
         /// Get all discounts
