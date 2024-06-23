@@ -58,6 +58,22 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
             return Ok(result);
         }
 
+        #region GetWarrantytDetailList
+        /// <summary>
+        /// Get detail of warranty.
+        /// </summary>
+        /// <returns>IWarranty detail</returns>
+        // GET: api/warranty
+        #endregion
+        [Authorize(Roles = "Manager, Staff")]
+        [HttpGet(ApiEndPointConstant.Warranty.WarrantyConditionEndpoint)]
+        public async Task<ActionResult> GetWarrantytDetailList(Guid id)
+        {
+            var warranty = await _service.GetDetailById(id);
+            var result = JsonConvert.SerializeObject(warranty, Formatting.Indented);
+            return Ok(result);
+        }
+
         #region CreateWarranty
         /// <summary>
         /// Create new warranty.

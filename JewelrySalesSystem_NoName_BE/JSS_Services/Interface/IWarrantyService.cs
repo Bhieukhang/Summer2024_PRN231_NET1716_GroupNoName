@@ -18,5 +18,7 @@ namespace JSS_Services.Interface
 
         Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> list, string phone);
         Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request);
+
+        Task<WarrantyResponse> GetDetailById(Guid id);
     }
 }

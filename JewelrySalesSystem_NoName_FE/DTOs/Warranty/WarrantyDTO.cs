@@ -13,6 +13,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Warranty
         public Guid ConditionnWarrantyId { get; set; }
         public string Note { get; set; }
         public Guid? OrderDetailId { get; set; }
+        public string ProductName { get; set; }
         public List<ConditionMap> ConditionMap { get; set; }
         public ConditionWarranty ConditionWarranty { get; set; }
         //public string OrderDetail { get; set; }

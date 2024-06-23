@@ -43,8 +43,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Ngày bắt đầu bảo hành<span class="required">*</span></label>
-                                    <input type="date" class="form-control" id="DateOfPurchase_@order.ProductId" 
-                                    onchange="setExpirationMinDate('@order.ProductId')" required />
+                                    <input type="date" class="form-control" id="DateOfPurchase_@order.ProductId"
+                                           onchange="setExpirationMinDate('@order.ProductId')" required />
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Ngày hết hạn<span class="required">*</span></label>
@@ -63,7 +63,7 @@
                         }
                         <div class="form-group row justify-content-end">
                             <div class="col-auto">
-                                <a asp-page="./Index" class="btn btn-danger">Hủy</a>
+                                <button class="btn btn-danger" id="cancelButton">Hủy</button>
                                 <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                var productId = "@order.ProductId";
+                            var productId = "@order.ProductId";
                 const dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
                 if (dateOfPurchaseElement) {
                     dateOfPurchaseElement.value = today;
@@ -132,7 +132,7 @@
             </text>
         }
 
-                document.getElementById('createWarrantyButton').disabled = true;
+            document.getElementById('createWarrantyButton').disabled = true;
             validateForm();
 
             // Đóng modal khi nhấn vào các nút với data-bs-dismiss="modal"
@@ -143,6 +143,10 @@
                         conditionModal.hide();
                     }
                 });
+            });
+
+            document.getElementById('cancelButton').addEventListener('click', function () {
+                window.location.href = '/Manager/Warranty/CreateWarranties';
             });
         });
 
@@ -157,9 +161,9 @@
                 const row = document.createElement('tr');
                 const isChecked = productSelectedConditions.includes(condition.Id);
                 row.innerHTML = `
-                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
-                            <td>${condition.Condition}</td>
-                        `;
+                                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
+                                    <td>${condition.Condition}</td>
+                                `;
                 tableBody.appendChild(row);
             });
 
@@ -235,7 +239,7 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                                var productId = "@order.ProductId";
+                                            var productId = "@order.ProductId";
 
                 var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
                 var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
@@ -267,9 +271,9 @@
                     formValid = false;
                 }
             </text>
-            }
+        }
 
-                if (formValid) {
+                        if (formValid) {
                 var customerPhone = document.getElementById("customerPhone").value;
                 var phoneArray = customerPhone.split(',').map(phone => phone.trim()).filter(phone => phone !== "");
                 customerPhone = phoneArray[0]; // Chỉ lấy số điện thoại đầu tiên

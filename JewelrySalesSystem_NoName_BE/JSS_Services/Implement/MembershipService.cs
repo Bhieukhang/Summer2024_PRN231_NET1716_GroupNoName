@@ -7,6 +7,7 @@ using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
@@ -17,7 +18,8 @@ namespace JSS_Services.Implement
 {
     public class MembershipService : BaseService<MembershipService>, IMembershipService
     {
-        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<MembershipService> logger) : base(unitOfWork, logger)
+        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, 
+            ILogger<MembershipService> logger) : base(unitOfWork, logger)
         {
         }
 
@@ -45,6 +47,7 @@ namespace JSS_Services.Implement
         public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
         {
             var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
+            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId); 
             var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id == id);
             if (member == null)
             {
@@ -58,7 +61,8 @@ namespace JSS_Services.Implement
                 RedeemPoint = member.RedeemPoint,
                 UserId = member.UserId,
                 UsedMoney = member.UsedMoney,
-                Deflag = member.Deflag
+                Deflag = member.Deflag,
+                Level = memberType.Type
             };
             return new ProfileResponse(user.Phone, user.Dob, user.Address, user.ImgUrl, membershipResponse);
         }

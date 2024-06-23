@@ -25,6 +25,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
+                                    <th>Sản phẩm</th>
                                     <th> Ngày mua </th>
                                     <th> Ngày hết hạn </th>
                                     <th> Giai đoạn </th>
@@ -36,6 +37,7 @@
                                 @foreach (var warranty in Model.WarrantyList)
                                 {
                                     <tr>
+                                        <td> @warranty.ProductName</td>
                                         <td> @warranty.DateOfPurchase.ToString("dd-MM-yyyy") </td>
                                         <td> @warranty.ExpirationDate.ToString("dd-MM-yyyy") </td>
                                         <td> @warranty.Period </td>
@@ -52,6 +54,62 @@
                                             {
                                                 <label class="badge badge-warning">Đang bảo hành</label>
                                             }
+                                        </td>
+                                        <!-- Modal -->
+                                        <td>
+                                            <i class="fa fa-eye menu-icon" data-toggle="modal" data-target="#warranty"></i>
+                                            <div class="modal fade" id="warranty" tabindex="-1" role="dialog" aria-labelledby="warrantyLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h4 class="card-title">Thông tin bảo hành</h4>
+                                                                <div class="form-group row">
+                                                                    <label for="purchaseDate" class="col-sm-3 col-form-label">Ngày mua</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="purchaseDate" placeholder="Ngày mua" value="@warranty?.DateOfPurchase.ToString("dd-MM-yyyy")" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="expirationDate" class="col-sm-3 col-form-label">Ngày hết hạn</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="expirationDate" placeholder="Ngày hết hạn" value="@warranty?.ExpirationDate.ToString("dd-MM-yyyy")" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="period" class="col-sm-3 col-form-label">Giai đoạn</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="period" placeholder="Giai đoạn" value="@($"{warranty?.Period} tháng")" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="status" class="col-sm-3 col-form-label">Trạng thái</label>
+                                                                    <div class="col-sm-9">
+                                                                        @if (warranty?.Status?.Equals("Active") == true)
+                                                                        {
+                                                                            <label class="badge badge-success">@warranty.Status</label>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <label class="badge badge-danger">@warranty?.Status ?? "N/A"</label>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label for="conditionWarranty" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" class="form-control" id="conditionWarranty" placeholder="Điều kiện bảo hành" value="@warranty?.ConditionWarranty?.Condition" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*    Modal *@
                                         </td>
                                         <td>
                                             <a asp-page="./UpdateWarranty" asp-route-id="@warranty.Id" class="btn btn-primary">Cập nhật</a>
