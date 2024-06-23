@@ -33,7 +33,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "B?n c?n ??ng nh?p!.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -47,11 +47,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy c?p trái phép. Xin vui lòng ??ng nh?p l?i.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await response.Content.ReadAsStringAsync());
+                RoleList = RoleList.Where(r => !AccountDAO.ExcludedRoleIds.Contains(r.Id)).ToList();
 
                 return Page();
             }
@@ -67,7 +68,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "B?n c?n ??ng nh?p!";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -78,9 +79,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
+                var checkPhoneUrl = $"{ApiPath.AccountList}/CheckPhone/{Account.Phone}";
+                var phoneCheckResponse = await client.GetAsync(checkPhoneUrl);
+                if (!phoneCheckResponse.IsSuccessStatusCode)
+                {
+                    var responseBody = await phoneCheckResponse.Content.ReadAsStringAsync();
+                    ModelState.AddModelError("Account.Phone", responseBody);
+                    return Page();
+                }
+
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
+                    ModelState.AddModelError(string.Empty, "T?p ?ã t?i lên quá l?n.");
                     return Page();
                 }
 
@@ -129,24 +139,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy c?p trái phép. Xin vui lòng ??ng nh?p l?i.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The new account is created successfully!";
+                    TempData["SuccessMessage"] = "Tài kho?n m?i ???c t?o thành công!";
                     return RedirectToPage("./ListAccount");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while adding the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"?ã x?y ra l?i khi thêm tài kho?n. Mã tr?ng thái: {response.StatusCode}, Ph?n h?i: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"?ã x?y ra l?i: {ex.Message}");
             }
 
             return Page();

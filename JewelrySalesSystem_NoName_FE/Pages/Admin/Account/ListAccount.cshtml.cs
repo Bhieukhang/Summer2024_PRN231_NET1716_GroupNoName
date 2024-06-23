@@ -49,7 +49,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             }
 
             Page = currentPage ?? 1;
-            Size = 2;
+            Size = 5;
             SearchTerm = searchTerm;
             FilterRoleId = filterRoleId;
             FilterDeflag = filterDeflag;

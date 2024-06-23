@@ -206,6 +206,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             {
                 return NotFound("Role not found.");
             }
+
             var account = new Account
             {
                 FullName = accountRequest.FullName,
@@ -218,25 +219,57 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 RoleId = accountRequest.RoleId,
                 InsDate = accountRequest.InsDate
             };
-            var createdAccount = await _accountService.CreateAccountAsync(account, stream, "uploadedFileName");
-            if (createdAccount == null)
+
+            try
             {
+                var createdAccount = await _accountService.CreateAccountAsync(account, stream, "uploadedFileName");
+                if (createdAccount == null)
+                {
+                    return StatusCode(500, "An error occurred while creating the account.");
+                }
+
+                return Ok(new AccountResponse(
+                    createdAccount.Id,
+                    createdAccount.FullName,
+                    createdAccount.Phone,
+                    createdAccount.Dob,
+                    createdAccount.Password,
+                    createdAccount.Address,
+                    createdAccount.ImgUrl,
+                    createdAccount.Status,
+                    createdAccount.Deflag,
+                    createdAccount.RoleId,
+                    createdAccount.InsDate,
+                    createdAccount.UpsDate
+                ));
+            }
+            catch (Exception ex)
+            {
+                //if (ex.Message.Contains("Số điện thoại đã tồn tại"))
+                //{
+                //    return BadRequest("Số điện thoại đã tồn tại. Vui lòng sử dụng số điện thoại khác.");
+                //}
                 return StatusCode(500, "An error occurred while creating the account.");
             }
-            return Ok(new AccountResponse(
-                createdAccount.Id,
-                createdAccount.FullName,
-                createdAccount.Phone,
-                createdAccount.Dob,
-                createdAccount.Password,
-                createdAccount.Address,
-                createdAccount.ImgUrl,
-                createdAccount.Status,
-                createdAccount.Deflag,
-                createdAccount.RoleId,
-                createdAccount.InsDate,
-                createdAccount.UpsDate
-            ));
+        }
+
+        #region CheckPhone
+        /// <summary>
+        /// Check phone.
+        /// </summary>
+        /// <param name="pohone">The phone existed in the data.</param>
+        /// <returns>CheckPhone.</returns>
+        #endregion
+        [Authorize]
+        [HttpGet(ApiEndPointConstant.Account.CheckPhoneEndpoint)]
+        public async Task<ActionResult> CheckPhoneAsync(string phone)
+        {
+            var phoneExists = await _accountService.IsPhoneExistsAsync(phone);
+            if (phoneExists)
+            {
+                return BadRequest("Số điện thoại đã tồn tại. Vui lòng sử dụng số điện thoại khác.");
+            }
+            return Ok();
         }
 
         #region AccountProfile

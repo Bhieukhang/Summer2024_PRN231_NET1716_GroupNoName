@@ -64,6 +64,7 @@
             //public const string AccountsWithDeflagFalseEndpoint = AccountEndpoint + "/DeflagFalse";
             public const string FilteredAccountsEndpoint = AccountEndpoint + "/Filtered";
             public const string UpdateDeflagEndpoint = AccountEndpoint + "/UpdateDeflag/{id}";
+            public const string CheckPhoneEndpoint = AccountEndpoint + "/CheckPhone/{phone}";
         }
 
         public static class Role

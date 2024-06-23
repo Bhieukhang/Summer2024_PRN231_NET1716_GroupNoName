@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Membership;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Membership;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +59,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
                 return RedirectToPage("/Auth/Login");
             }
 
+            if (UserMoney < 0 || UserMoney >= 1_000_000_000)
+            {
+                TempData["ErrorMessage"] = "Số tiền sử dụng phải nằm trong khoảng từ 0 đến dưới 1 tỷ.";
+                return Page();
+            }
+
             var url = $"{ApiPath.MembershipUserMoney}?userId={userId}&userMoney={UserMoney}";
 
             try
@@ -69,18 +75,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "C?p nh?t s? ti?n s? d?ng th�nh c�ng.";
+                    TempData["SuccessMessage"] = "Cập nhật số tiền sử dụng thành công.";
                     return RedirectToPage("./ListMembership");
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "C?p nh?t s? ti?n s? d?ng th?t b?i.";
+                    TempData["ErrorMessage"] = "Cập nhật số tiền sử dụng thất bại.";
                     return Page();
                 }
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "C� l?i x?y ra khi c?p nh?t s? ti?n s? d?ng.";
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật số tiền sử dụng.";
                 return Page();
             }
         }

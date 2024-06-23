@@ -10,7 +10,8 @@
                 <h4 class="page-title"> Chỉnh sửa Hồ sơ </h4>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <!-- Thêm -->
+                        <li class="breadcrumb-item"><a href="@Url.Page("./Profile")">Hồ Sơ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa Hồ sơ</li>
                     </ol>
                 </nav>
             </div>
@@ -29,11 +30,6 @@
                                     <label asp-for="accountProfile.Dob" class="control-label">Ngày tháng năm sinh</label>
                                     <input asp-for="accountProfile.Dob" class="form-control" type="date" />
                                     <span asp-validation-for="accountProfile.Dob" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="accountProfile.Password" class="control-label">Mật khẩu</label>
-                                    <input asp-for="accountProfile.Password" class="form-control" type="password" />
-                                    <span asp-validation-for="accountProfile.Password" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="accountProfile.Address" class="control-label">Địa chỉ</label>
