@@ -2,6 +2,8 @@ using JewelrySalesSystem_NoName_FE.DTOs.Discounts;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
 {
@@ -23,8 +25,21 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
                 Search = search;
 
                 var token = HttpContext.Session.GetString("Token") ?? "";
-                var promotions = await ApiClient.GetAsync<List<DiscountDTO>>($"{ApiPath.Discount}?search={Search}", token);
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
+                var roleClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+
+                string apiUrl = $"{ApiPath.Discount}?search={Search}";
+
+                
+
+                var promotions = await ApiClient.GetAsync<List<DiscountDTO>>(apiUrl, token);
+                // If the role is 2, modify the API URL to filter by status
+                if (roleClaim.Value == "Manager")
+                {
+                    promotions = promotions.Where(i => i.Status == "Pending").ToList();
+                }
                 // Calculate pages
                 TotalRecord = promotions.Count;
                 TotalPages = (int)Math.Ceiling(TotalRecord / (double)PageSize);
