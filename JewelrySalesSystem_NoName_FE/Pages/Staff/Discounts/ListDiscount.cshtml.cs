@@ -15,6 +15,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
         public int PageSize { get; private set; } = 5;
         public int TotalRecord { get; private set; } = 0;
         public string? Search { get; private set; } = string.Empty;
+        public bool? IsManager { get; private set; } = false;
 
         public async Task<IActionResult> OnGetAsync(int? currentPage, int? pageSize, string? search)
         {
@@ -38,6 +39,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
                 // If the role is 2, modify the API URL to filter by status
                 if (roleClaim.Value == "Manager")
                 {
+                    IsManager = true;
                     promotions = promotions.Where(i => i.Status == "Pending").ToList();
                 }
                 // Calculate pages
