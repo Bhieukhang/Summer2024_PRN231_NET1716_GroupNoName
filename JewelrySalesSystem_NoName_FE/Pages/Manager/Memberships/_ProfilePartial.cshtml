@@ -1,9 +1,9 @@
 ﻿@model JewelrySalesSystem_NoName_FE.DTOs.Account.ProfileDTO
 
 <div>
-    <div class="form-group row">
-        <img src="@Model.ImgUrl" class="me-2" alt="@Model.Membership.Name">
-    </div>
+    @*     <div class="form-group row">
+    <img src="@Model.ImgUrl" class="me-2" alt="@Model.Membership.Name">
+    </div> *@
     <div class="form-group row">
         <label for="memberName" class="col-sm-3 col-form-label">Thành viên</label>
         <div class="col-sm-9">
@@ -16,23 +16,39 @@
             <input type="text" class="form-control" id="memberPhone" value="@Model.Phone" readonly>
         </div>
     </div>
-    <div class="form-group row">
-        <label for="memberDob" class="col-sm-3 col-form-label">Ngày sinh</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="memberDob" value="@Model.Dob.ToString("dd-MM-yyyy")" readonly>
-        </div>
+    @*     <div class="form-group row">
+    <label for="memberAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
+    <div class="col-sm-9">
+    <input type="text" class="form-control" id="memberAddress" value="@Model.Address" readonly>
     </div>
-    <div class="form-group row">
-        <label for="memberAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="memberAddress" value="@Model.Address" readonly>
-        </div>
-    </div>
+    </div> *@
     <div class="form-group row">
         <label for="memberLevel" class="col-sm-3 col-form-label">Mức độ</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="memberLevel" value="@Model.Membership.Level" readonly>
-        </div>
+        @if (@Model.Membership.Level.Equals("NewMember"))
+        {
+            <div class="col-sm-9">
+                <label class="badge badge-success">Thành viên mới</label>
+            </div>
+        }
+        else if (@Model.Membership.Level.Equals("Gold"))
+        {
+            <div class="col-sm-9">
+                <label class="badge badge-warning">Thành viên vàng</label>
+            </div>
+        }
+        else if (@Model.Membership.Level.Equals("Bronze"))
+        {
+            <div class="col-sm-9">
+                <label class="badge badge-info">Thành viên đồng</label>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-9">
+                <label class="badge badge-secondary">Thành viên bạc</label>
+            </div>
+
+        }
     </div>
     <div class="form-group row">
         <label for="memberUserMoney" class="col-sm-3 col-form-label">Tiêu dùng</label>

@@ -18,7 +18,7 @@
 
         public double? TotalPrice { get; set; }
         public string ProductName { get; set; }
-
+        public int? PeriodWarranty { get; set; }
         public Guid OrderId { get; set; }
 
         public Guid ProductId { get; set; }

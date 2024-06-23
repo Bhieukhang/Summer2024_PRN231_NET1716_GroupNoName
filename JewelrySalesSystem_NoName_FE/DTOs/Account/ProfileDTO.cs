@@ -5,9 +5,9 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
     public class ProfileDTO
     {
         public string Phone { get; set; }
-        public DateTime Dob {  get; set; }
-        public string Address { get; set; }
-        public string ImgUrl { get; set; }
+        public DateTime? Dob {  get; set; }
+        public string? Address { get; set; }
+        public string? ImgUrl { get; set; }
         public MembershipProfile Membership {  get; set; } = new MembershipProfile();
 
     }
@@ -15,7 +15,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public int Level { get; set; }
+        public string Level { get; set; }
         public double Point { get; set; }
         public double RedeemPoint { get; set; }
         public Guid UserId { get; set; }

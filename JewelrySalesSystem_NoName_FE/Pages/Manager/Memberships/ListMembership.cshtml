@@ -60,10 +60,9 @@
                         <thead>
                             <tr>
                                 <th>Tên</th>
-                                <th>Mức độ</th>
-                                <th>Điểm</th>
-                                <th>Điểm tích lũy</th>
-                                <th>Tiền</th>
+@*                                 <th>Điểm</th>
+                                <th>Điểm tích lũy</th> *@
+                                <th>Tiền</th> 
                                 <th></th>
                             </tr>
                         </thead>
@@ -72,9 +71,9 @@
                             {
                                 <tr>
                                     <td>@membership.Name</td>
-                                    <td>@membership.Level</td>
+                                  @*   <td>@membership.Level</td>
                                     <td>@membership.Point</td>
-                                    <td>@membership.RedeemPoint</td>
+                                    <td>@membership.RedeemPoint</td> *@
                                     <td>@membership.UsedMoney</td>
                                     <td>
                                         <button type="button" class="btn btn-link btn-view-details text-dark" data-userid="@membership.UserId">

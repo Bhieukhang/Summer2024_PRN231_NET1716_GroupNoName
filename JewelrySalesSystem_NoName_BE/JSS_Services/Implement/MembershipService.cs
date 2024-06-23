@@ -7,8 +7,10 @@ using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +18,8 @@ namespace JSS_Services.Implement
 {
     public class MembershipService : BaseService<MembershipService>, IMembershipService
     {
-        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<MembershipService> logger) : base(unitOfWork, logger)
+        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, 
+            ILogger<MembershipService> logger) : base(unitOfWork, logger)
         {
         }
 
@@ -44,6 +47,7 @@ namespace JSS_Services.Implement
         public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
         {
             var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
+            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId); 
             var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id == id);
             if (member == null)
             {
@@ -57,7 +61,8 @@ namespace JSS_Services.Implement
                 RedeemPoint = member.RedeemPoint,
                 UserId = member.UserId,
                 UsedMoney = member.UsedMoney,
-                Deflag = member.Deflag
+                Deflag = member.Deflag,
+                Level = memberType.Type
             };
             return new ProfileResponse(user.Phone, user.Dob, user.Address, user.ImgUrl, membershipResponse);
         }
@@ -128,10 +133,9 @@ namespace JSS_Services.Implement
 
         public async Task<SearchAccountResponse> CreateMembership(string phone, string name)
         {
-            Guid idAccount = Guid.NewGuid();
             var account = new Account()
             {
-                Id = idAccount,
+                Id = Guid.NewGuid(),
                 FullName = name,
                 Phone = phone,
                 Dob = null,
@@ -151,20 +155,19 @@ namespace JSS_Services.Implement
                 {
                     Id = Guid.NewGuid(),
                     Name = name,
-                    //Level = "Đồng",
                     Point = 0,
                     RedeemPoint = 0,
-                    UserId = idAccount,
+                    UserId = account.Id,
                     UsedMoney = 0,
                     Deflag = true,
-                    //MemberTypeId = ""
+                    MemberTypeId = Guid.Parse("18095960-ACB3-4FD4-BCD3-646D9DF3E6E1")
                 };
                 _unitOfWork.GetRepository<Membership>().InsertAsync(member);
 
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (isSuccessful == false) return null;
             }
-            return new SearchAccountResponse(idAccount, account.FullName, account.Phone);
+            return new SearchAccountResponse(account.Id, account.FullName, account.Phone);
         }
     }
 }
