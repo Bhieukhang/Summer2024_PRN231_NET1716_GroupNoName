@@ -25,6 +25,7 @@
             public const string WarrantyEndpoint = ApiEndpoint + "/warranty";
             public const string WarrantyEndpointNo = ApiEndpoint + "/warrantyno";
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/{id}";
+            public const string WarrantyConditionEndpoint = WarrantyEndpoint + "/{id}/conditions";
         }
 
         public static class PurchasePrice

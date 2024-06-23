@@ -42,8 +42,9 @@
                                     <input type="text" class="form-control" value="@order.ProductName" readonly />
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="control-label">Ngày mua<span class="required">*</span></label>
-                                    <input type="date" class="form-control" value="@order.InsDate" id="DateOfPurchase_@order.ProductId" onchange="setExpirationMinDate('@order.ProductId')" required />
+                                    <label class="control-label">Ngày bắt đầu bảo hành<span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="DateOfPurchase_@order.ProductId"
+                                           onchange="setExpirationMinDate('@order.ProductId')" required />
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Ngày hết hạn<span class="required">*</span></label>
@@ -51,7 +52,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Thời hạn (tháng)<span class="required">*</span></label>
-                                    <input type="number" class="form-control" id="Period_@order.ProductId" required />
+                                    <input type="number" class="form-control" id="Period_@order.ProductId" value="@order.PeriodWarranty" required />
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-gradient-secondary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
@@ -62,7 +63,7 @@
                         }
                         <div class="form-group row justify-content-end">
                             <div class="col-auto">
-                                <a asp-page="./Index" class="btn btn-danger">Hủy</a>
+                                <button class="btn btn-danger" id="cancelButton">Hủy</button>
                                 <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
                             </div>
                         </div>
@@ -78,13 +79,13 @@
     </div>
 </div>
 
-<!-- The Modal -->
+<!-- The Modal Condition Warranty-->
 <div class="modal fade" id="conditionModal" tabindex="-1" aria-labelledby="conditionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="conditionModalLabel">Chọn điều kiện bảo hành</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
             </div>
             <div class="modal-body">
                 <table class="table table-striped">
@@ -115,7 +116,38 @@
         let selectedConditionsMap = {};
 
         document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+
+        @foreach (var order in Model.ListOrder)
+        {
+            <text>
+                            var productId = "@order.ProductId";
+                const dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+                if (dateOfPurchaseElement) {
+                    dateOfPurchaseElement.value = today;
+                    dateOfPurchaseElement.setAttribute('min', today);
+                    setExpirationMinDate(productId); // Set initial min expiration date
+                }
+            </text>
+        }
+
             document.getElementById('createWarrantyButton').disabled = true;
+            validateForm();
+
+            // Đóng modal khi nhấn vào các nút với data-bs-dismiss="modal"
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const conditionModal = bootstrap.Modal.getInstance(document.getElementById('conditionModal'));
+                    if (conditionModal) {
+                        conditionModal.hide();
+                    }
+                });
+            });
+
+            document.getElementById('cancelButton').addEventListener('click', function () {
+                window.location.href = '/Manager/Warranty/CreateWarranties';
+            });
         });
 
         async function loadConditions(productId) {
@@ -129,9 +161,9 @@
                 const row = document.createElement('tr');
                 const isChecked = productSelectedConditions.includes(condition.Id);
                 row.innerHTML = `
-                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
-                    <td>${condition.Condition}</td>
-                `;
+                                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
+                                    <td>${condition.Condition}</td>
+                                `;
                 tableBody.appendChild(row);
             });
 
@@ -207,7 +239,7 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                        var productId = "@order.ProductId";
+                                            var productId = "@order.ProductId";
 
                 var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
                 var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
@@ -241,8 +273,12 @@
             </text>
         }
 
-            if (formValid) {
+                        if (formValid) {
                 var customerPhone = document.getElementById("customerPhone").value;
+                var phoneArray = customerPhone.split(',').map(phone => phone.trim()).filter(phone => phone !== "");
+                customerPhone = phoneArray[0]; // Chỉ lấy số điện thoại đầu tiên
+
+                console.log("customerPhone:", customerPhone);
                 var hiddenInput = document.createElement("input");
                 hiddenInput.type = "hidden";
                 hiddenInput.name = "SerializedWarranties";
@@ -260,23 +296,9 @@
                 alert("Please fill out all required fields.");
             }
         }
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const now = new Date();
-            const today = now.toISOString().split('T')[0];
-
-        @foreach (var order in Model.ListOrder)
-        {
-            <text>
-                        var productId = "@order.ProductId";
-                document.getElementById(`DateOfPurchase_${productId}`).setAttribute('min', today);
-                setExpirationMinDate(productId); // Set initial min expiration date
-            </text>
-        }
-                validateForm();
-        });
-
     </script>
 }
+
 
 <style>
     .required {

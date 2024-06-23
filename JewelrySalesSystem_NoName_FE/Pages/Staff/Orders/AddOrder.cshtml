@@ -62,7 +62,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    <button type="button" name="action" value="create" id="createMemberBtn" class="btn btn-secondary mt-0 btn-block text-center">
+                                    <button type="button" name="action" value="create" id="createMemberBtn" class="btn btn-secondary mt-0 btn-block text-center" hidden>
                                     Tạo thành viên mới
                                     </button>
                                 </div>
@@ -225,10 +225,12 @@
                     // Xử lý khi thành công
                     $('#customerName').val(response.name);
                     messageContainer.removeClass('error').addClass('success').html('<span>' + response.message + '</span>');
+                    $('#createMemberBtn').prop('hidden', true);
                 } else {
                     // Xử lý khi không thành công
                     messageContainer.removeClass('success').addClass('error').html('<span>' + response.message + '</span>');
-                }
+                     $('#createMemberBtn').prop('hidden', !response.showCreateButton);
+                  }
                 },
                 error: function () {
                     // Xử lý lỗi

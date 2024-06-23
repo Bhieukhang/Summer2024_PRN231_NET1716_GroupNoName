@@ -44,7 +44,9 @@ namespace JSS_Services.Implement
             IPaginate<WarrantyResponse> ListWarranties =
             await _unitOfWork.GetRepository<Warranty>().GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
-                                                    x.Deflag, x.Status, x.Note),
+                                                    x.Deflag, x.Status, x.Note, x.OrderDetail.Product.ProductName),
+                include: x => x.Include(w => w.OrderDetail)
+                                .ThenInclude(w => w.Product),
                 page: page,
                 size: size
                 );
@@ -140,9 +142,23 @@ namespace JSS_Services.Implement
                 throw new Exception("Commit failed, no rows affected.");
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate, 
+            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate,
                 warranty.Period, warranty.Deflag, warranty.Status, warranty.Note);
         }
 
+        public async Task<WarrantyResponse> GetDetailById(Guid id)
+        {
+            var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.Id == id,
+                                include: w => w.Include(w => w.WarrantyMappingConditions)
+                                                .ThenInclude(w => w.ConditionWarranty)
+                                                .Include(w => w.OrderDetail)
+                                                .ThenInclude(w => w.Product));
+            List<ConditionWarrantiesList> listCondition = war.WarrantyMappingConditions
+       .Select(wmc => new ConditionWarrantiesList(wmc.ConditionWarranty))
+       .ToList();
+            return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period,
+                                        war.Deflag, war.Status, war.Note, war.OrderDetail.Product.ProductName,
+                                        listCondition);
+        }
     }
 }

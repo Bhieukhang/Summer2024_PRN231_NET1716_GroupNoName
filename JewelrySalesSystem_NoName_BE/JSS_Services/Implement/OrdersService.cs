@@ -126,12 +126,12 @@ namespace JSS_Services.Implement
                 product.Quantity = product.Quantity - orderDetail.Quantity;
                 _unitOfWork.GetRepository<Product>().UpdateAsync(product);
             }
-            
+
 
             //Update usermoney for membership
-            //var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
-            //membership.UsedMoney += order.TotalPrice;
-            //_unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            membership.UsedMoney += order.TotalPrice;
+            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
 
             //Transaction
             Transaction tran = new Transaction()
@@ -350,7 +350,8 @@ namespace JSS_Services.Implement
                         ProductId = item.ProductId,
                         ProductName = item.Product.ProductName,
                         InsDate= item.InsDate,
-                        OrderDetailId = item.Id
+                        OrderDetailId = item.Id,
+                        PeriodWarranty = item.Product.PeriodWarranty,
                     };
                     listDetail.Add(o);
                 }

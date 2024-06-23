@@ -20,11 +20,23 @@ namespace JSS_BusinessObjects.Payload.Response
             UsedMoney = userMoney;
             Deflag = deflag;
         }
+        public MembershipResponse(Guid id, string? name, int? point, int? redeemPoint, Guid userId, double? userMoney,
+            bool? deflag, string level) 
+        {
+            Id = id;
+            Name = name;
+            Point = point;
+            RedeemPoint = redeemPoint;
+            UserId = userId;
+            UsedMoney = userMoney;
+            Deflag = deflag;
+            Level = level;
+        }
         public Guid Id { get; set; }
 
         public string? Name { get; set; }
 
-        public int? Level { get; set; }
+        public string Level { get; set; }
 
         public int? Point { get; set; }
 

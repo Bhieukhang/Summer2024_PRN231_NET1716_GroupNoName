@@ -25,7 +25,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty item.</returns>
         // POST: api/v1/condition
         #endregion
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff, Manager")]
         [HttpPost(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyEndpoint)]
         public async Task<ActionResult> PostConditionWarranty([FromBody] ConditionWarrantyRequest conditionData)
         {
@@ -47,7 +47,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty list.</returns>
         // POST: api/v1/condition
         #endregion
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff, Manager")]
         [HttpGet(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyEndpoint)]
         public async Task<ActionResult> GetListConditionWarranties(int page, int size)
         {
@@ -64,7 +64,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>Condition warranty item.</returns>
         // POST: api/v1/condition
         #endregion
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff, Manager")]
         [HttpGet(ApiEndPointConstant.ConditionWarranty.ConditionWarrantyByIdEndpoint)]
         public async Task<ActionResult> GetConditionWarrantyDetail(Guid id)
         {
