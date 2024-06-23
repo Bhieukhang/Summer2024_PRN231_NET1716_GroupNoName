@@ -47,8 +47,8 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="AddPromotionRequest.Deflag" class="control-label">Deflag</label> <br/>
-                        <input asp-for="AddPromotionRequest.Deflag" type="radio" value="true" /> On
-                        <input asp-for="AddPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Off<br />
+                        <input asp-for="AddPromotionRequest.Deflag" type="radio" value="true" /> Hoạt động 
+                        <input asp-for="AddPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Không hoạt động<br />
                         <span asp-validation-for="AddPromotionRequest.Deflag" class="text-danger"></span>
                     </div>
                     @if (!String.IsNullOrEmpty(Model.ErrorMessage))
