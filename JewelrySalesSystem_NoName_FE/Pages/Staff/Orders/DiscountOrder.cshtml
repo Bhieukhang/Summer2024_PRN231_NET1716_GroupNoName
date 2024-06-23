@@ -1,0 +1,43 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.DiscountOrderModel
+@{
+}
+<form method="post">
+    <div>
+        <label asp-for="DiscountRequest.OrderId"></label>
+        <input asp-for="DiscountRequest.OrderId" />
+        <span asp-validation-for="DiscountRequest.OrderId"></span>
+    </div>
+    <div>
+        <label asp-for="DiscountRequest.ManagerId"></label>
+        <input asp-for="DiscountRequest.ManagerId" />
+        <span asp-validation-for="DiscountRequest.ManagerId"></span>
+    </div>
+    <div>
+        <label asp-for="DiscountRequest.PercentDiscount"></label>
+        <input asp-for="DiscountRequest.PercentDiscount" />
+        <span asp-validation-for="DiscountRequest.PercentDiscount"></span>
+    </div>
+    <div>
+        <label asp-for="DiscountRequest.Description"></label>
+        <input asp-for="DiscountRequest.Description" />
+        <span asp-validation-for="DiscountRequest.Description"></span>
+    </div>
+    <div>
+        <label asp-for="DiscountRequest.ConditionDiscount"></label>
+        <input asp-for="DiscountRequest.ConditionDiscount" />
+        <span asp-validation-for="DiscountRequest.ConditionDiscount"></span>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ResponseMessage))
+{
+    <div>
+        <strong>@Model.ResponseMessage</strong>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

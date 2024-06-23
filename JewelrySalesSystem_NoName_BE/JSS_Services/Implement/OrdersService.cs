@@ -278,7 +278,8 @@ namespace JSS_Services.Implement
         }
         public async Task<IEnumerable<OrderResponse>> GetAllOrders()
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(orderBy: o => o.OrderByDescending(o => o.InsDate));
+            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
+                orderBy: o => o.OrderByDescending(o => o.InsDate));
 
 
             // Chuyển đổi danh sách đơn hàng sang danh sách OrderResponse

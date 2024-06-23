@@ -11,22 +11,43 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Danh sách đơn hàng</h4>
-                        <form method="get">
-                            <div class="form-group">
-                                <label for="OrderId">Order ID</label>
-                                <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập ID đơn hàng"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="CustomerId">Customer ID</label>
-                                <input type="text" class="form-control" id="CustomerId" name="CustomerId" value="@Model.SearchCriteria.CustomerId" placeholder="Nhập mã khách hàng"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="StartDate">Start Date</label>
-                                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
-                            </div>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
+                        <div class="container">
+                            <div class="row">
+                                <!-- Table 1 -->
+                                <div class="col-md-6 mb-4 shadow-box shadow rounded">
+                                    <form method="get">
+                                        <div class="form-group">
+                                            <label for="OrderId">Mã đơn hàng</label>
+                                            <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập mã đơn hàng" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="CustomerId">Mã khách hàng</label>
+                                            <input type="text" class="form-control" id="CustomerId" name="CustomerId" value="@Model.SearchCriteria.CustomerId" placeholder="Nhập mã khách hàng" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="StartDate">Ngày bắt đầu</label>
+                                            <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    </form>
+                                </div>
 
+                                <!-- Table 2 -->
+                                <div class="col-md-6 mb-4 shadow-box shadow rounded">
+                                    <div class="form-group col-md-8">
+                                        <label for="CustomerPhone">Số điện thoại của khách hàng</label>
+                                        <input type="text" class="form-control" id="CustomerPhone" name="CustomerPhone" value="" placeholder="Nhập số điện thoại của khách hàng" />
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <button type="button" name="action" value="search" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center"
+                                                onclick="handleCustomer()">
+                                            Tìm kiếm
+                                        </button>
+                                    </div>
+                                    <!-- Add any additional form groups or content here -->
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="thead-dark">
@@ -86,3 +107,40 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function handleCustomer() {
+            var phone = $('#CustomerPhone').val();
+            console.log("Phone: ", phone);
+            $.ajax({
+                url: '/Staff/Orders/ListOrder?handler=FilterOrder',
+                type: 'GET',
+                data: { phone: phone },
+                success: function (response) {
+                    if (response.success) {
+                        // Xử lý dữ liệu trả về, ví dụ hiển thị danh sách đơn hàng
+                        console.log(response.data);
+                    } else {
+                        // Xử lý lỗi nếu có
+                        console.error(response.message);
+                    }
+                },
+                error: function () {
+                    // Xử lý lỗi khi gọi API không thành công
+                    alert('Đã xảy ra lỗi khi xử lý yêu cầu.');
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .shadow-box {
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+        border-radius: 10px; 
+        margin-bottom: 20px; 
+    }
+</style>
