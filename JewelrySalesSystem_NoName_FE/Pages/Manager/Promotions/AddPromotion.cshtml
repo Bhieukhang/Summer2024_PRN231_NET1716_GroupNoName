@@ -51,6 +51,18 @@
                         <input asp-for="AddPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Không hoạt động<br />
                         <span asp-validation-for="AddPromotionRequest.Deflag" class="text-danger"></span>
                     </div>
+
+                    <div class="form-group">
+                        @foreach(var item in Model.Products)
+                        {
+                            <div>
+                                <input type="checkbox" name="ProductId" value="@item.Id" class="form-control" placeholder="Enter End Date" />
+                                <span class="ms-2">@item.ProductName</span>
+                            </div>
+                        }
+                    </div>
+                    
+
                     @if (!String.IsNullOrEmpty(Model.ErrorMessage))
                     {
                         <span class="text-danger mb-3">@Model.ErrorMessage</span>

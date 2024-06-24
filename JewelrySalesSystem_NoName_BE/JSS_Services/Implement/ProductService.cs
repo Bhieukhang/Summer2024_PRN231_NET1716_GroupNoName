@@ -1,18 +1,12 @@
 ﻿using Firebase.Storage;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
-using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
@@ -63,6 +57,12 @@ namespace JSS_Services.Implement
                 page: page,
                 size: size);
             return list;
+        }
+
+        public async Task<IEnumerable<Product>> GetAsync()
+        {
+            var products = await _unitOfWork.GetRepository<Product>().GetListAsync();
+            return products;
         }
 
         public async Task<Product> GetProductByIdAsync(Guid id)
