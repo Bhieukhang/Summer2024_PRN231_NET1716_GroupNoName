@@ -355,6 +355,9 @@ public partial class JewelrySalesSystemContext : DbContext
             entity.ToTable("Warranty");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CodeWarranty)
+                .HasMaxLength(5)
+                .IsFixedLength();
             entity.Property(e => e.DateOfPurchase).HasColumnType("datetime");
             entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.Phone).HasMaxLength(50);

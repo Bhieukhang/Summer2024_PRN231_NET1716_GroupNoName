@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using HOP.Bussiness.Constants;
 using JewelrySalesSysmte_NoName_BE;
 using JewelrySalesSystem_NoName_BE;
+using JSS_BusinessObjects.SignalR;
 using JSS_BusinessObjects.ZaloPay.Config;
 using System.Text.Json.Serialization;
 
@@ -18,14 +19,21 @@ try
     {
        
         Credential = GoogleCredential.FromFile($"{currentDirectory}\\jssimage-253a4-firebase-adminsdk-1ppe4-784c0284ad.json")
-    }); 
+    });
 
     // Add services to the container.
     builder.Services.AddCors(options =>
     {
         options.AddPolicy(name: CorsConstant.PolicyName,
-            policy => { policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod(); });
+           policy =>
+           {
+               policy.WithOrigins("https://localhost:7016") 
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials(); 
+           });
     });
+
 
     builder.Services.AddControllers().AddJsonOptions(x =>
     {
@@ -42,6 +50,7 @@ try
     builder.Services.AddConfigSwagger();
     builder.Services.AddSingletonJson();
     builder.Services.AddJwtValidation(configuration);
+    builder.Services.AddSignalRServices();
     // Add JWT Authentication Middleware - This code will intercept HTTP request and validate the JWT.
     //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     //    opt => {
@@ -76,26 +85,23 @@ try
     app.UseMiddleware<AuthorizationHandlingMiddleware>();
 
     app.UseCors(CorsConstant.PolicyName);
-    //app.UseHttpsRedirection();
     app.UseHttpsRedirection();
-    app.Use(async (context, next) =>
-    {
-        await next();
-        if (context.Response.StatusCode == (int)System.Net.HttpStatusCode.Unauthorized)
-        {
-            await context.Response.WriteAsync("Token Validation Has Failed. Request Access Denied");
-        }
-    });
 
-    //need to sperate middleware for each api
+    app.UseRouting();
+    app.UseCors("CorsPolicy");
     app.UseAuthentication();
     app.UseAuthorization();
 
-    app.MapControllers();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapHub<SignalRServer>("/signalrServer");
+    });
 
     app.Run();
 }
 catch (Exception ex)
 {
-    throw new Exception("Stop program because of exception");
+    Console.Error.WriteLine($"Exception: {ex.Message}\nStack Trace: {ex.StackTrace}");
+    throw;
 }

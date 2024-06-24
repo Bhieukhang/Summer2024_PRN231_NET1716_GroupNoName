@@ -72,6 +72,7 @@
         public const string OrderListPromotion = url + "/api/v1/orderlist";
         public const string OrderListDetail = url + "/api/v1/order/detail";
         public const string SearchOrders = url + "/api/v1/order/GetListOrders/search";
+        public const string SearchOrderCustomer = OrderCreate + "/customer";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";
