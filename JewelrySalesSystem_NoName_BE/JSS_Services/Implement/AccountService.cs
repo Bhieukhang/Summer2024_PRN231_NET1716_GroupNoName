@@ -144,7 +144,6 @@ namespace JSS_Services.Implement
 
                 account.Deflag = true;
                 await accountRepository.InsertAsync(account);
-                //await _unitOfWork.CommitAsync();
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
                 {
@@ -158,6 +157,13 @@ namespace JSS_Services.Implement
                 _logger.LogError(ex, "Error occurred while creating account");
                 throw;
             }
+        }
+
+        public async Task<bool> IsPhoneExistsAsync(string phone)
+        {
+            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var existingAccount = await accountRepository.FirstOrDefaultAsync(a => a.Phone == phone);
+            return existingAccount != null;
         }
 
         public async Task<Account> UpdateAccountAsync(Guid id, Account account, Stream imageStream, string imageName)
@@ -193,7 +199,6 @@ namespace JSS_Services.Implement
                 _account.UpsDate = DateTime.UtcNow;
 
                 accountRepository.UpdateAsync(_account);
-                //await _unitOfWork.CommitAsync();
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful) return null;
 
