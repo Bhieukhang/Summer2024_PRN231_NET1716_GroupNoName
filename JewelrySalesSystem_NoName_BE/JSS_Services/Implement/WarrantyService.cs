@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -83,10 +84,9 @@ namespace JSS_Services.Implement
                     Phone = phone,
                     Status = "Active",
                     Note = item.Note,
-                    //ConditionWarrantyId = Guid.NewGuid(),
+                    CodeWarranty = RandomCode.GenerateRandomCode(5).ToUpper()
                 };
                 await _unitOfWork.GetRepository<Warranty>().InsertAsync(warranty);
-                //var conditionId = item.ConditionMap.ConditionWarrantyId;
                 foreach (var map in item.ConditionMap)
                 {
                     WarrantyMappingCondition condition = new WarrantyMappingCondition()

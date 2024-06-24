@@ -23,6 +23,8 @@ public partial class Warranty
 
     public string? Note { get; set; }
 
+    public string? CodeWarranty { get; set; }
+
     public virtual OrderDetail OrderDetail { get; set; } = null!;
 
     public virtual ICollection<WarrantyMappingCondition> WarrantyMappingConditions { get; } = new List<WarrantyMappingCondition>();
