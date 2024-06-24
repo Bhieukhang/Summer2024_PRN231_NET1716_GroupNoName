@@ -39,9 +39,6 @@
                         <thead>
                             <tr>
                                 <th>Tên</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,16 +46,16 @@
                             {
                                 <tr>
                                     <td>@item.Name</td>
-                                    <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td>
-                                    <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                    @* <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
+                                    @* <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
                                             <i class="mdi mdi-file-check btn-icon-append"></i>
                                             Chỉnh sửa
                                         </a>
-                                    </td>
-                                    <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
+                                    </td> *@
+                                    @* <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
                                         <i class="mdi mdi-delete"></i>
                                     Xóa    
-                                    </a></td>
+                                    </a></td> *@
                                 </tr>
                             }
                         </tbody>
