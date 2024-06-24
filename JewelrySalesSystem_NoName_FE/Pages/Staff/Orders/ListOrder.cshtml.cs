@@ -17,7 +17,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
         public IList<OrderDTO> OrderList { get; set; } = new List<OrderDTO>();
         public IList<OrderDTO> FilteredOrderList { get; set; } = new List<OrderDTO>();
-
+        public OrderForCustomer CustomerOrder { get; set; }
         [BindProperty(SupportsGet = true)]
         public SearchCriteriaDTO SearchCriteria { get; set; } = new SearchCriteriaDTO();
 
@@ -57,9 +57,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 filteredOrders = filteredOrders.Where(o => o.Id == SearchCriteria.OrderId.Value);
             }
 
-            //if (SearchCriteria.CustomerId.HasValue)
+            //if (!string.IsNullOrEmpty(SearchCriteria.CustomerPhone))
             //{
-            //    filteredOrders = filteredOrders.Where(o => o.CustomerId == SearchCriteria.CustomerId.Value);
+            //    filteredOrders = filteredOrders.Where(o => o.CustomerPhone == SearchCriteria.CustomerPhone);
             //}
 
             if (SearchCriteria.StartDate.HasValue)
@@ -69,8 +69,45 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             FilteredOrderList = filteredOrders.ToList();
         }
-    }
 
+        public async Task<IActionResult> OrderCustomer(string phone)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var apiUrl = $"{ApiPath.SearchOrderCustomer}?phone={phone}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                CustomerOrder = JsonConvert.DeserializeObject<OrderForCustomer>(jsonResponse);
+                return new JsonResult(new { success = true, data = CustomerOrder });
+            }
+            else
+            {
+                return new JsonResult(new { success = false, message = "Khách hàng hiện tại không có đơn hàng đã mua" });
+            }
+        }
+
+        public async Task<IActionResult> OnGetFilterOrderAsync(string phone)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var apiUrl = $"{ApiPath.SearchOrderCustomer}?phone={phone}";
+            var response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                CustomerOrder = JsonConvert.DeserializeObject<OrderForCustomer>(jsonResponse);
+                return new JsonResult(new { success = true, data = CustomerOrder });
+            }
+            else
+            {
+                return new JsonResult(new { success = false, message = "Khách hàng hiện tại không có đơn hàng đã mua" });
+            }
+        }
+    }
     public class SearchCriteriaDTO
     {
         public Guid? OrderId { get; set; }
@@ -78,3 +115,4 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public DateTime? StartDate { get; set; }
     }
 }
+

@@ -2,8 +2,10 @@
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_BusinessObjects.SignalR;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -12,10 +14,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountService _discountService;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
-        public DiscountController(IDiscountService discountService)
+        public DiscountController(IDiscountService discountService, IHubContext<SignalRServer> hubContext)
         {
             _discountService = discountService;
+            _hubContext = hubContext;
         }
 
         #region ConfirmDiscountToManager
@@ -30,6 +34,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
 
             var confirmDiscount = await _discountService.ConfirmDiscountToManager(confirmData);
+            await _hubContext.Clients.All.SendAsync("ReceiveDiscountNotification", confirmDiscount);
             return confirmDiscount;
         }
 
@@ -112,6 +117,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                     Message = "Update discount successful",
                     Success = true
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
+        public async Task<ActionResult> FindDiscountById(Guid id)
+        {
+            try
+            {
+                var response = await _discountService.FindAsync(id);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Discount data has been updated.");
+                return Ok(response);
             }
             catch (Exception ex)
             {

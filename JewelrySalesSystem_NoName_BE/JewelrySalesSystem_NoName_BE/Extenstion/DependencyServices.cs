@@ -37,6 +37,13 @@ namespace JewelrySalesSystem_NoName_BE
             return services;
         }
 
+        public static IServiceCollection AddSignalRServices(this IServiceCollection services)
+        {
+            services.AddSignalR();
+            return services;
+        }
+
+
         private static string GetConnectionString()
         {
             IConfigurationRoot config = new ConfigurationBuilder()
@@ -104,19 +111,6 @@ namespace JewelrySalesSystem_NoName_BE
                     }
                 };
             });
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //   .AddJwtBearer(options =>
-            //   {
-            //   options.TokenValidationParameters = new TokenValidationParameters
-            //   {
-            //       ValidateIssuerSigningKey = true,
-            //       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-            //       ValidateIssuer = false,
-            //       ValidateAudience = false,
-            //       ValidateLifetime = true,
-            //       ClockSkew = TimeSpan.Zero
-            //    };
-            //});
             return services;
         }
 
