@@ -1,5 +1,8 @@
+using JewelrySalesSystem_NoName_FE.DTOs.Discounts;
+using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Text;
 using System.Text.Json;
 
@@ -19,6 +22,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
         public string ResponseMessage { get; set; }
 
+        public IActionResult OnGetPartialView()
+        {
+            return new PartialViewResult
+            {
+                ViewName = "_DiscountOrder",
+                ViewData = new ViewDataDictionary<DiscountOrderModel>(ViewData, this)
+            };
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -30,7 +42,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             var jsonContent = JsonSerializer.Serialize(DiscountRequest);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("https://localhost:44318/api/v1/discount/confirm", content);
+            var response = await client.PostAsync($"{ApiPath.DiscountConfirm}", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -45,12 +57,5 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         }
     }
 
-    public class DiscountRequest
-    {
-        public string OrderId { get; set; }
-        public string ManagerId { get; set; }
-        public int PercentDiscount { get; set; }
-        public string Description { get; set; }
-        public int ConditionDiscount { get; set; }
-    }
+    
 }

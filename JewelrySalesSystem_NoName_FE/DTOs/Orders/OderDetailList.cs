@@ -28,4 +28,14 @@
         public Guid OrderDetailId { get; set; }
 
     }
+
+    public class OrderDetailProccess
+    {
+        public Guid Id { get; set; }
+        public double? Amount { get; set; }
+
+        public int? Quantity { get; set; }
+        public string ProductName { get; set; }
+        public double ProcessPrice { get; set; }
+    }
 }

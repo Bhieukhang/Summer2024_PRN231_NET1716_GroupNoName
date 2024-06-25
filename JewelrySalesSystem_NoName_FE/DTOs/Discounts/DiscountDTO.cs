@@ -27,4 +27,13 @@
         public int? LevelDiscount { get; set; }
 
     }
+
+    public class DiscountRequest
+    {
+        public string OrderId { get; set; }
+        public string? ManagerId { get; set; }
+        public int PercentDiscount { get; set; }
+        public string? Description { get; set; }
+        public int? ConditionDiscount { get; set; }
+    }
 }

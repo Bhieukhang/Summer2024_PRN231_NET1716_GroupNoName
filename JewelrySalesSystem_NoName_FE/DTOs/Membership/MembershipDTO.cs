@@ -18,4 +18,14 @@
 
         public bool? Deflag { get; set; }
     }
+
+    public class MembershipInfo
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Type { get; set; }
+        public double UserMoney { get; set; }
+        public double PercentDiscount { get; set; }
+    }
 }

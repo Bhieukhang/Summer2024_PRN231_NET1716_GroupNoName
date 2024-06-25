@@ -200,12 +200,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// List order detail search by id customer 
         /// </summary>
         /// <returns>List order detail<returns>
-        // POST: api/v1/order/order/detail
+        // POST: api/v1/order/detail
         #endregion
         [HttpGet(ApiEndPointConstant.Order.OrderListDetail)]
         public async Task<ActionResult> GetListOrderDetailById(Guid id)
         {
             var result = await _service.GetListOrderDetailByIdAsync(id);
+            var item = JsonConvert.SerializeObject(result, Formatting.Indented);
+            return Ok(item);
+        }
+
+        #region GetOrderOption
+        /// <summary>
+        /// List order detail search by id order 
+        /// </summary>
+        /// <returns>List order detail<returns>
+        // POST: api/v1/order/option
+        #endregion
+        [HttpGet(ApiEndPointConstant.Order.OrderDiscount)]
+        public async Task<ActionResult> GetOrderOption(Guid id)
+        {
+            var result = await _service.GetOrderDetail(id);
             var item = JsonConvert.SerializeObject(result, Formatting.Indented);
             return Ok(item);
         }

@@ -1,4 +1,5 @@
 ﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,6 @@ namespace JSS_Services.Interface
         public Task<int> GetActiveMembershipCountAsync();
         public Task<int> GetUnavailableMembership();
         public Task<SearchAccountResponse> CreateMembership(string phone, string name);
+        public Task<MembershipInfo> GetInfoMembership(string phone);
     }
 }

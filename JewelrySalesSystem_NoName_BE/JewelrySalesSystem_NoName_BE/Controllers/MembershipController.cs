@@ -165,5 +165,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var result = JsonConvert.SerializeObject(membership, Formatting.Indented);
             return Ok(result);
         }
+
+        #region GetInfoMembership
+        /// <summary>
+        /// Information customer and membership order.
+        /// </summary>
+        /// <returns>Membership information.</returns>
+        // GET: api/v1/membership/phone
+        #endregion
+        [HttpGet(ApiEndPointConstant.Membership.MembershipOrder)]
+        public async Task<IActionResult> GetInfoMembership(string phone)
+        {
+            var member = await _service.GetInfoMembership(phone);
+            var result = JsonConvert.SerializeObject(member, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }

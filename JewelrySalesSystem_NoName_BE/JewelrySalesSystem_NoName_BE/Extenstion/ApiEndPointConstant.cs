@@ -137,6 +137,7 @@
             public const string MembershipTotal = MembershipEndpoint + "/total";
             public const string MembershipActive = MembershipEndpoint + "/active";
             public const string MembershipUnActive = MembershipEndpoint + "/unavailable";
+            public const string MembershipOrder = MembershipEndpoint + "/phone";
         }
 
         public static class Order
@@ -154,6 +155,7 @@
             public const string OrderEndpointList = ApiEndpoint + "/orderlist";
             public const string OrderListCusomerPhone = OrderEndpoint + "/customer";
             public const string OrderListDetail = OrderEndpoint + "/detail";
+            public const string OrderDiscount = OrderEndpoint + "/option";
         }
         public static class Discount
         {

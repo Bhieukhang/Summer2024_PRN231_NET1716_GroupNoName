@@ -9,7 +9,7 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h3 class="page-title"> Đơn hàng </h3>
+                <h3 class="page-title"> Tạo đơn hàng - Bước 1 </h3>
             </div>
             <div class="row">
                 <!-- Left side: Product list -->
@@ -69,6 +69,13 @@
                                 <div class="col-md-6 text-right">
                                     <button type="button" name="action" value="search" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center">Tìm kiếm</button>
                                 </div>
+                            </div>
+                            <div>
+                                <h5>Chiết khấu</h5>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#discountModal" 
+                                data-order-id="123" data-manager-id="456">
+                            Open Discount Form
+                                </button>
                             </div>
                             <h4 class="card-title mt-4">Tổng tiền: <span id="totalPrice">0</span></h4>
                             <h4 class="card-title">Khuyến mãi giảm: <span id="totalDiscount">0</span></h4>
@@ -176,6 +183,23 @@
             </div>
         </div>
     </div>
+
+  <!-- Modal Discount -->
+<div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="discountModalLabel">Discount Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="discountFormContent">
+                <!-- Nội dung form sẽ được load vào đây -->
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>
@@ -642,6 +666,25 @@
                         }
                 });
             });
+
+           $('#discountModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var modal = $(this);
+            var orderId = button.data('order-id');
+            var managerId = button.data('manager-id');
+
+            $.ajax({
+                url: '@Url.Page("DiscountForm")', // Đường dẫn đến Razor Page Partial
+                type: 'GET',
+                data: {
+                    orderId: orderId,
+                    managerId: managerId
+                },
+                success: function(result) {
+                    modal.find('#discountFormContent').html(result);
+                }
+            });
+        });
         });
     </script>
 }

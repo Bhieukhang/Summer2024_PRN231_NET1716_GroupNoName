@@ -1,0 +1,247 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.OptionOrderModel
+@{
+}
+@Html.AntiForgeryToken()
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title"> Tạo đơn hàng - Bước 2 (Tùy chọn) </h3>
+            </div>
+            <div class="row" style="height: 100%;">
+                <!-- Left side: Product list -->
+                <div class="col-md-7 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Trang sức</h4>
+                            <div class="container">
+                                <table class="table table-bordered">
+                                    <tbody id="productTableBody">
+                                        <!-- Các sản phẩm sẽ được thêm vào đây -->
+                                        @foreach (var order in Model.orderDetailProccesses)
+                                        {
+                                            <div class="form-group row">
+                                                <div class="col-md-4">
+                                                    <label class="control-label">Mã sản phẩm</label>
+                                                    <input type="text" class="form-control" value="@order.ProductName" readonly />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="control-label">Số lượng</label>
+                                                    <input type="text" class="form-control" value="@order.Quantity" readonly />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="control-label">Giá thi công</label>
+                                                    <input type="text" class="form-control" value="@order.ProcessPrice" readonly />
+                                                </div>
+                                            </div>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Customer and Order details -->
+                <div class="col-md-5 grid-margin stretch-card" style="display: flex; flex-direction: column;">
+                    <div class="card" style="flex-grow: 1;">
+                        <div class="card-body">
+                            <h4 class="card-title">Thông tin thành viên</h4>
+                            @* Hiển thị lỗi *@
+                            <div id="message-container"></div>
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Cột bên trái -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Số điện thoại</label>
+                                            <input type="text" id="customerPhone" name="phone" class="form-control" placeholder="Nhập số điện thoại" value="@Model.member.Phone" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tên khách hàng</label>
+                                            <input type="text" id="customerName" name="fullName" class="form-control" placeholder="Nhập tên khách hàng" value="@Model.member.Name" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Cột bên phải -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Mức độ</label>
+                                            @if (@Model.member.Type == "NewMember")
+                                            {
+                                                <input type="text" class="form-control" value="Thành viên mới" readonly>
+                                                <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
+                                            }
+                                            else if (Model.member.Type == "Bronze")
+                                            {
+                                                <input type="text" class="form-control" value="Thành viên đồng" readonly>
+                                                <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
+                                            }
+                                            else if (Model.member.Type == "Silve")
+                                            {
+                                                <input type="text" class="form-control" value="Thành viên bạc" readonly>
+                                                <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control" value="Thành viên vàng" readonly>
+                                                <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
+                                            }
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tích lũy</label>
+                                            <input type="text" id="usedMoney" name="usedMoney" class="form-control" value="@Model.member.UserMoney" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <labl>Chiết khấu đề xuất</labl>
+                                            <input type="text" id="percentDiscount" name="percentDiscount" class="form-control" value="@Model.member.PercentDiscount">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <labl>Ghi chú</labl>
+                                            <textarea type="text" id="description" name="description" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-6 text-left">
+                                            <button type="button" class="btn custom-button" id="requestDiscountBtn"
+                                                    data-order-id="DA2FB219-1936-4264-9603-7FF5A78B1427"
+                                                    data-manager-id="00000000-0000-0000-0000-000000000000" style="white-space: nowrap;">
+                                                Yêu cầu chiết khấu
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <button type="button" class="btn btn-gradient-secondary" data-toggle="modal" data-target="#replyDiscountModal">
+                                                Phản hồi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group"></div>
+                                    <div class="col-md-12">
+                                        <!-- Customer Information -->
+                                        <input type="hidden" id="orderId" value="@Model.OrderProccess.OrderId">
+                                        <input type="hidden" id="managerId" value="00000000-0000-0000-0000-000000000000">
+                                        <!-- Customer Information -->
+                                        <h4 class="card-title">
+                                            Tổng tiền (tạm tính): @Model.OrderProccess.TotalPrice
+                                            <span id="totalPrice" value="@Model.OrderProccess.TotalPrice">Đ</span>
+                                        </h4>
+                                        <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount">0</span></h4>
+                                        <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable">0</span></h4>
+                                        <div class="form-group">
+                                            <h4 for="paymentMethod">Phương thức thanh toán</h4>
+                                            <div class="select-wrapper">
+                                                <select class="form-control" id="paymentMethod" style="height: 2.5rem;">
+                                                    <option value="" disabled selected>Chọn phương thức thanh toán</option>
+                                                    <option value="transfer">Chuyển khoản</option>
+                                                    <option value="cash">Thanh toán bằng tiền mặt</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <input type="hidden" id="requestVerificationToken" value="">
+                                                <button id="createOrderBtn" class="btn btn-success" style="white-space: nowrap;">Hoàn thành</button>
+                                                <div class="form-group"></div>
+                                                <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Discount -->
+        <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="discountModalLabel">Discount Form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="discountFormContent">
+                        <!-- Nội dung form sẽ được load vào đây -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#requestDiscountBtn').click(function () {
+                const orderId = $('#orderId').val();
+                const managerId = $('#managerId').val();
+                const percentDiscount = $('#percentDiscount').val();
+                const description = $('#description').val();
+                const token = $('input[name="__RequestVerificationToken"]').val();
+
+                const discountRequest = {
+                    OrderId: orderId,
+                    ManagerId: managerId || "00000000-0000-0000-0000-000000000000",
+                    PercentDiscount: parseInt(percentDiscount, 10),
+                    Description: description,
+                    ConditionDiscount: 0
+                };
+
+                console.log("Discount request: ", discountRequest);
+
+                $.ajax({
+                    url: '/Staff/Orders/OptionOrder?handler=SendRequirement',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(discountRequest),
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    success: function (response) {
+                        if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error Status:', textStatus);
+                        console.error('Error Thrown:', errorThrown);
+                        console.error('Error Response:', jqXHR.responseText);
+                        alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .custom-button {
+        background: rgb(23,131,240);
+        background: linear-gradient(0deg, rgba(23,131,240,1) 10%, rgba(49,82,192,0.9960434857536765) 73%);
+        border: none;
+        color: white;
+    }
+
+        .custom-button:hover {
+            background: linear-gradient(0deg, rgba(100,49,192,0.9960434857536765) 27%, rgba(23,131,240,1) 100%);
+        }
+</style>
