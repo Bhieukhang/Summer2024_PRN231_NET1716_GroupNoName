@@ -32,5 +32,7 @@ namespace JewelrySalesSystem_NoName_FE.Requests.Promotions
 
         [Required(ErrorMessage = "Please choose Deflag.")]
         public bool? Deflag { get; set; } = true;
+
+        public List<string>? ProductId { get; set; }
     }
 }

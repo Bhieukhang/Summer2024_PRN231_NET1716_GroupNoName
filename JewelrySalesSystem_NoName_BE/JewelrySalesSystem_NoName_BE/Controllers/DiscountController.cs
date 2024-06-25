@@ -2,8 +2,10 @@
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_BusinessObjects.SignalR;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -12,10 +14,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountService _discountService;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
-        public DiscountController(IDiscountService discountService)
+        public DiscountController(IDiscountService discountService, IHubContext<SignalRServer> hubContext)
         {
             _discountService = discountService;
+            _hubContext = hubContext;
         }
 
         #region ConfirmDiscountToManager
@@ -30,7 +34,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         {
 
             var confirmDiscount = await _discountService.ConfirmDiscountToManager(confirmData);
+            await _hubContext.Clients.All.SendAsync("ReceiveDiscountNotification", confirmDiscount);
             return confirmDiscount;
+        }
+
+
+        /// <summary>
+        /// Get all discounts
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(ApiEndPointConstant.Discount.DiscountEndpoint)]
+        public async Task<ActionResult> GetDiscounts(string search = "")
+        {
+            try
+            {
+                var response = await _discountService.GetAsync(search);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -59,6 +83,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
         /// <summary>
         /// Manager accept discount
@@ -89,6 +114,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             try
             {
                 var response = await _discountService.FindAsync(id);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Discount data has been updated.");
                 return Ok(response);
             }
             catch (Exception ex)
@@ -97,23 +123,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
         }
 
-
-        /// <summary>
-        /// Get all discounts
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet(ApiEndPointConstant.Discount.DiscountEndpoint)]
-        public async Task<ActionResult> GetDiscounts(string search = "")
-        {
-            try
-            {
-                var response = await _discountService.GetAsync(search);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
     }
 }

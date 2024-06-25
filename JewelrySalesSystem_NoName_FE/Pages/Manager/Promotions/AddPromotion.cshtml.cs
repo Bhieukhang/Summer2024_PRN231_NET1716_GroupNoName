@@ -1,3 +1,4 @@
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Requests.Promotions;
 using JewelrySalesSystem_NoName_FE.Responses;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -14,9 +15,27 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         [BindProperty]
         public string? ErrorMessage { get; set; }
 
-        public IActionResult OnGet()
+        [BindProperty]
+        public List<ProductDTO> Products { get; set; } = new();
+
+        public async Task<IActionResult> OnGet()
         {
-            ErrorMessage = string.Empty;
+            try
+            {
+                var token = HttpContext.Session.GetString("Token");
+                if (string.IsNullOrEmpty(token))
+                {
+                    TempData["ErrorMessage"] = "You need to login first.";
+                    return RedirectToPage("/Auth/Login");
+                }
+                Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
+                ErrorMessage = string.Empty;
+               
+            }
+            catch (Exception ex)
+            {
+
+            }
             return Page();
         }
 

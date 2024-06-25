@@ -15,6 +15,7 @@
         public string? Status { get; set; }
 
         public double? ConditionDiscount { get; set; }
+        public string? Note { get; set; }
 
     }
 }

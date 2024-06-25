@@ -43,6 +43,7 @@
 
         //Product
         public const string ProductList = url + "/api/v1/Product";
+        public const string AllProductEndpoint = url + "/api/v1/Product/All";
         public const string ProductDetails = url + "/api/v1/Product/id";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
@@ -72,6 +73,7 @@
         public const string OrderListPromotion = url + "/api/v1/orderlist";
         public const string OrderListDetail = url + "/api/v1/order/detail";
         public const string SearchOrders = url + "/api/v1/order/GetListOrders/search";
+        public const string SearchOrderCustomer = OrderCreate + "/customer";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";

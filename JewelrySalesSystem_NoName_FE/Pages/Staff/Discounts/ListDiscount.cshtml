@@ -30,7 +30,7 @@
                     </a>
                 </div>
             }
-            
+
         </div>
         <form method="get" id="form-search">
             <div class="form-group">
@@ -65,9 +65,10 @@
                                     <th> Description </th>
                                     <th> Condition Discount </th>
                                     <th> Ins Date - Ups Date </th>
+                                    <th> Note </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tableBody">
                                 @foreach (var discount in Model.Discounts)
                                 {
                                     <tr>
@@ -77,11 +78,25 @@
                                         </td>
                                         <td>@discount.OrderId</td>
                                         <td>@discount.ManagerId</td>
-                                        <td><span class="badge @(discount.Status == "Pending"  ? "badge-info" : "badge-success")">@discount.Status</span></td>
+                                        <td>
+                                            @if (discount.Status == "Pending")
+                                            {
+                                                <span class="badge badge-info">@discount.Status</span>
+                                            }
+                                            @if (discount.Status == "Accepted")
+                                            {
+                                                <span class="badge badge-success">@discount.Status</span>
+                                            }
+                                            @if (discount.Status == "Denied")
+                                            {
+                                                <span class="badge badge-danger">@discount.Status</span>
+                                            }
+                                        </td>
                                         <td>@discount.PercentDiscount</td>
                                         <td>@discount.Description</td>
                                         <td>@discount.ConditionDiscount</td>
                                         <td>@discount.InsDate - @discount.UpsDate</td>
+                                        <td>@discount.Note</td>
                                     </tr>
                                 }
                             </tbody>
@@ -134,20 +149,84 @@
     </div>
 </div>
 
-<script>
-    const inputSearch = document.getElementById('input-search');
-    const formSearch = document.getElementById('form-search');
-    var timeout = setTimeout(function () { }, 0);
-    window.addEventListener("load", (event) => {
-        const end = inputSearch.value.length;
-        inputSearch.setSelectionRange(end, end);
-        // 👇 scroll to the bottom if a textarea has long text
-        inputSearch.focus()
-    });
-    inputSearch.addEventListener('keypress', () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(function () { formSearch.submit(); }, 3000)
-    });
-</script>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        const inputSearch = document.getElementById('input-search');
+        const formSearch = document.getElementById('form-search');
+        var timeout = setTimeout(function () { }, 0);
+        window.addEventListener("load", (event) => {
+            const end = inputSearch.value.length;
+            inputSearch.setSelectionRange(end, end);
+            // 👇 scroll to the bottom if a textarea has long text
+            inputSearch.focus()
+        });
+        inputSearch.addEventListener('keypress', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () { formSearch.submit(); }, 3000)
+        });
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:44318/signalrServer")
+                .build();
+
+
+            connection.start().then(() => {
+                console.log("SignalR Connected.");
+            }).catch(err => console.error(err.toString()));
+
+            connection.on("ReceiveDiscountNotification", function (message) {
+                console.log("Received message: " + message);
+                // Cập nhật lại danh sách discounts khi có thay đổi
+                loadData();
+            });
+
+            function loadData() {
+                fetch('https://localhost:44318/api/v1/discount')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Data:" + data);
+                        refreshDiscountsTable(data);
+                    })
+                    .catch(error => console.error('Error fetching data: ', error));
+
+            }
+
+            function refreshDiscountsTable(data) {
+                // Assuming data is the JSON object you provided
+                var discounts = data['$values'];
+
+                // Ensure discounts is an array before calling forEach
+                if (Array.isArray(discounts)) {
+                    // Clear existing table rows (optional, depending on your UI requirements)
+                    tableBody.innerHTML = '';
+
+                    discounts.forEach(discount => {
+                        var row = `<tr>
+                                                   <td>${discount.id}</td>
+                                                   <td>${discount.percentDiscount}</td>
+                                                   <td>${discount.description}</td>
+                                                   <td>${discount.status}</td>
+                                                   <td>${discount.insDate}</td>
+                                                   <td>${discount.upsDate}</td>
+                                               </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                } else {
+                    console.error('Received data is not an array: ', discounts);
+                }
+            }
+
+
+            // Gọi hàm loadData khi trang được load
+            loadData();
+        });
+    </script>
+}
 
