@@ -30,5 +30,10 @@ namespace JewelrySalesSystem_NoName_FE.Requests.Promotions
 
         [Required]
         public bool? Deflag { get; set; }
+
+        public string? ProductJson { get; set; }
+        public List<Guid>? ProductIds { get; set; }
+        public List<ProductConditionGroup>? ProductConditionGroups { get; set; }
+
     }
 }

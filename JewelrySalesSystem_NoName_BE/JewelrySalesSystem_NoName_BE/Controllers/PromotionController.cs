@@ -14,10 +14,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
+        private readonly IProductService _productService;
 
-        public PromotionController(IPromotionService PromotionService)
+        public PromotionController(IPromotionService PromotionService, IProductService productService)
         {
             _promotionService = PromotionService;
+            _productService = productService;
         }
 
         #region GetAllPromotions
@@ -102,6 +104,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 });
             }
 
+            await _productService.DeleteProductConditionGroup(promotion.Id);
+            foreach(var item in promotionRequest.ProductIds ?? new())
+            {
+                await _productService.AddProductConditionGroup(item, promotion.Id);
+            }
+
             return Ok(new ApiResponse
             {
                 Message = "Update success",
@@ -143,6 +151,12 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                     Success = false
                 });
             }
+
+            foreach (var item in promotionRequest.ProductIds ?? new())
+            {
+                await _productService.AddProductConditionGroup(item, createdPromotion.Id);
+            }
+
             return Ok(new ApiResponse
             {
                 Message = "Create success",

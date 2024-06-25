@@ -294,5 +294,29 @@ namespace JSS_Services.Implement
         {
             return (product.ImportPrice ?? 0) * goldRate + (product.ProcessPrice ?? 0) + (product.Tax ?? 0);
         }
+
+        public async Task AddProductConditionGroup(Guid productId, Guid promotionId)
+        {
+            var condition = new ProductConditionGroup()
+            {
+                Id = Guid.NewGuid(),
+                InsDate = DateTime.Now,
+                ProductId = productId,
+                PromotionId = promotionId,
+                Quantity = 1,
+            };
+
+            await _unitOfWork.GetRepository<ProductConditionGroup>().InsertAsync(condition);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteProductConditionGroup(Guid promotionId)
+        {
+            var range = await _unitOfWork.GetRepository<ProductConditionGroup>().GetListAsync();
+            range = range.Where(x => x.Id == promotionId).ToList();
+
+            await _unitOfWork.GetRepository<ProductConditionGroup>().DeleteRangeAsync(range);
+            await _unitOfWork.CommitAsync();
+        }
     }
 }

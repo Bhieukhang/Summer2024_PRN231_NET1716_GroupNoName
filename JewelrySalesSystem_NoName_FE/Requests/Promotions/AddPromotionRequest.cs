@@ -33,6 +33,8 @@ namespace JewelrySalesSystem_NoName_FE.Requests.Promotions
         [Required(ErrorMessage = "Please choose Deflag.")]
         public bool? Deflag { get; set; } = true;
 
-        public List<string>? ProductId { get; set; }
+        [Required(ErrorMessage = "Please select at least on product.")]
+        public string? ProductJson { get; set; }
+        public List<Guid>? ProductIds { get; set; }
     }
 }

@@ -56,9 +56,22 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="EditPromotionRequest.Deflag" class="control-label">Deflag</label> <br />
-                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="true" /> On
-                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Off<br />
+                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="true" /> Hoạt động
+                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Không hoạt động<br />
                             <span asp-validation-for="EditPromotionRequest.Deflag" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label fw-bold">Chọn sản phẩm để sử dụng khuyến mãi</label> <br />
+                            <div class="row">
+                                @foreach (var item in Model.Products)
+                                {
+                                    <div class="col-sm-12 col-lg-4">
+                                        <input checked=" @(Model.EditPromotionRequest?.ProductConditionGroups?.Where(x => x.Id == item.Id)!= null ? "checked" : "")" type="checkbox" name="ProductId" value="@item.Id" class="form-checkbox" />
+                                        <span class="ms-2">@item.ProductName</span>
+                                    </div>
+                                }
+                                <input type="hidden" asp-for="EditPromotionRequest.ProductJson" id="product-json" />
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12 d-flex flex-row justify-content-start">

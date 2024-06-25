@@ -4,6 +4,7 @@ using JewelrySalesSystem_NoName_FE.Responses;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json.Linq;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 {
@@ -46,6 +47,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 if (AddPromotionRequest == null) throw new Exception("Promotion data is invalid.");
                 var token = HttpContext.Session.GetString("Token") ?? "";
 
+                var list = (AddPromotionRequest.ProductJson ?? "").Split(" ");
+                List<Guid> guids = new List<Guid>();
+                foreach (var item in list)
+                {
+                    guids.Add(Guid.Parse(item));
+                }
+                AddPromotionRequest.ProductIds = guids;
+
                 var response = await ApiClient.PostAsync<ApiResponse>($"{ApiPath.Promotion}", AddPromotionRequest, token);
                 if (!response.Success) throw new Exception(response.Message);
 
@@ -56,6 +65,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 ModelState.AddModelError(string.Empty, ex.Message);
                 Console.WriteLine(ex.ToString());
                 ErrorMessage = ex.Message;
+                var token = HttpContext.Session.GetString("Token");
+                Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
                 return Page();
             }
         }
