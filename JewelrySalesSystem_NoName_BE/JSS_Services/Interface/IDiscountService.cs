@@ -11,5 +11,6 @@ namespace JSS_Services.Interface
         Task<bool> AcceptDiscountAsync(DiscountRequest request);
         Task<Discount> FindAsync(Guid id);
         Task<IEnumerable<Discount>> GetAsync(string search);
+        Task<DiscountResponse> GetDiscountAccept(Guid id);
     }
 }

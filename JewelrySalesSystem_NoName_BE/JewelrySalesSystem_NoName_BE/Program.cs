@@ -28,6 +28,7 @@ try
            policy =>
            {
                policy.WithOrigins("https://localhost:7016") 
+                     .WithOrigins("https://localhost:44328")
                      .AllowAnyHeader()
                      .AllowAnyMethod()
                      .AllowCredentials(); 

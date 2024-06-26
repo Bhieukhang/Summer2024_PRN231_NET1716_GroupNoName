@@ -19,5 +19,10 @@ namespace JSS_BusinessObjects.SignalR
         {
             await Clients.All.SendAsync("ReceiveDiscountNotification", discount);
         }
+
+        public async Task DiscountAccpetNotification(DiscountResponse discount)
+        {
+            await Clients.All.SendAsync("DiscountAccpetNotification", discount);
+        }
     }
 }

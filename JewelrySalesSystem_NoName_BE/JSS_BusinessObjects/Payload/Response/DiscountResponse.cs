@@ -8,6 +8,7 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class DiscountResponse
     {
+        public DiscountResponse() { }
         public DiscountResponse(Guid id, Guid orderId, Guid managerId, int? percentDiscount, string? description,
             double? conditionDiscount, string? status, string? note)
         {

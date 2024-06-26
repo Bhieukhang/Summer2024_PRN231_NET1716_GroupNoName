@@ -115,13 +115,15 @@
                                     <div class="col-md-12 row">
                                         <div class="col-md-6 text-left">
                                             <button type="button" class="btn custom-button" id="requestDiscountBtn"
-                                                    data-order-id="DA2FB219-1936-4264-9603-7FF5A78B1427"
+                                                    data-order-id="@Model.OrderProccess.OrderId"
                                                     data-manager-id="00000000-0000-0000-0000-000000000000" style="white-space: nowrap;">
                                                 Yêu cầu chiết khấu
                                             </button>
                                         </div>
                                         <div class="col-md-6 text-right">
-                                            <button type="button" class="btn btn-gradient-secondary" data-toggle="modal" data-target="#replyDiscountModal">
+                                            <button type="button" class="btn btn-gradient-secondary" data-toggle="modal" data-target="#discountModal"
+                                                    data-id="@Model.OrderProccess.OrderId">
+                                                <!-- Sử dụng orderId từ Model -->
                                                 Phản hồi
                                             </button>
                                         </div>
@@ -166,19 +168,23 @@
             </div>
         </div>
 
-
-        <!-- Modal Discount -->
+        @*  Modal Discount Reply *@
         <div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="discountModalLabel">Discount Form</h5>
+                        <h5 class="modal-title" id="discountModalLabel">Thông tin chi tiết Discount</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="discountFormContent">
-                        <!-- Nội dung form sẽ được load vào đây -->
+                    <div class="modal-body">
+                        <div id="discountContent">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
@@ -187,7 +193,10 @@
 </body>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
     <script>
+
+        //Create discount to send Manager
         $(document).ready(function () {
             $('#requestDiscountBtn').click(function () {
                 const orderId = $('#orderId').val();
@@ -229,7 +238,108 @@
                     }
                 });
             });
+
+            $('#discountModal').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget);
+                let discountId = button.data('id');
+                loadDiscountData(discountId);
+            });
+
+            //Receive discount from Manager
+            function loadDiscountData(id) {
+                $.ajax({
+                    url: 'https://localhost:44318/api/v1/discount/accepted',
+                    type: 'GET',
+                    data: { id: id },
+                    success: function (data) {
+                        console.log("Load tới  loadDiscountData ");
+                        if (typeof data === 'string') {
+                            try {
+                                data = JSON.parse(data);
+                            } catch (e) {
+                                console.error('Error parsing data:', e);
+                                $('#discountContent').html('<p>Error: Unable to parse data from server</p>');
+                                return;
+                            }
+                        } else if (data.message === 'Chưa có phản hồi từ quản lí') {
+                            $('#discountContent').html('<p><strong>Chưa có phản hồi từ quản lí</strong></p>');
+                            return;
+                        }
+
+                        // Check if the data represents an empty object
+                        if (isEmptyObject(data)) {
+                            $('#discountContent').html('<p><strong>Chưa có phản hồi từ quản lí</strong></p>');
+                        } else {
+                            console.log('Data fields:', data, data.Id, data.Status, data.Note);
+                            let statusMessage;
+                            if (data.Status === 'Accepted') {
+                                statusMessage = 'Phần trăm chiết khấu được chấp nhận';
+                                // Calculate the discounts
+                                let totalPrice = parseFloat('@Model.OrderProccess.TotalPrice');
+                                let discountPercent = parseFloat(data.PercentDiscount) / 100;
+                                let totalDiscount = totalPrice * discountPercent;
+                                let totalPayable = totalPrice - totalDiscount;
+
+
+                                $('#totalPayable').text(totalPayable.toLocaleString() + ' Đ');
+                                $('#totalDiscount').text(totalDiscount.toLocaleString() + ' Đ');
+                            } else if (data.Status === 'Rejected') {
+                                statusMessage = 'Phần trăm chiết khấu không được chấp nhận';
+                            } else {
+                                statusMessage = data.Status;
+                            }
+
+                            // Hiển thị dữ liệu thực tế
+                            let html = '<ul class="list-group">';
+                            html += `<li class="list-group-item"><strong>ID:</strong> ${data.Id}</li>`;
+                            html += `<li class="list-group-item"><strong>Trạng thái:</strong> ${statusMessage}</li>`;
+                            html += `<li class="list-group-item"><strong>Phần trăm:</strong> ${data.PercentDiscount}</li>`;
+                            if (data.Note) {
+                                html += `<li class="list-group-item"><strong>Note:</strong> ${data.Note}</li>`;
+                            } else {
+                                html += `<li class="list-group-item"><strong>Note:</strong> Không có ghi chú</li>`;
+                            }
+                            html += '</ul>';
+                            $('#discountContent').html(html);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error loading discount data', error);
+                        $('#discountContent').html('<p>Error loading data</p>');
+                    }
+                });
+            }
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://localhost:44318/signalrServer")
+                .build();
+            const debouncedLoadDiscountData = debounce(loadDiscountData, 3000);
+
+            connection.on("DiscountAccpetNotification", function () {
+                console.log('Discount status changed');
+                debouncedLoadDiscountData(orderId);
+            });
+
+            connection.start().then(function () {
+                console.log('SignalR connected.');
+            }).catch(function (err) {
+                console.error('SignalR connection error:', err.toString());
+            });
+
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            function isEmptyObject(obj) {
+                return Object.keys(obj).every(key => obj[key] === null || obj[key] === "" || obj[key] === "00000000-0000-0000-0000-000000000000");
+            }
         });
+
+
     </script>
 }
 

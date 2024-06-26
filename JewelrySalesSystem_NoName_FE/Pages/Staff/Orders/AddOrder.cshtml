@@ -70,17 +70,10 @@
                                     <button type="button" name="action" value="search" id="searchCustomerBtn" class="btn btn-primary mt-0 btn-block text-center">Tìm kiếm</button>
                                 </div>
                             </div>
-                            <div>
-                                <h5>Chiết khấu</h5>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#discountModal" 
-                                data-order-id="123" data-manager-id="456">
-                            Open Discount Form
-                                </button>
-                            </div>
                             <h4 class="card-title mt-4">Tổng tiền: <span id="totalPrice">0</span></h4>
                             <h4 class="card-title">Khuyến mãi giảm: <span id="totalDiscount">0</span></h4>
-                            <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable">0</span></h4>
-                            <div class="form-group">
+                            <h4 class="card-title">Tổng tiền cần thanh toán (tạm tính): <span id="totalPayable">0</span></h4>
+                            @* <div class="form-group">
                                 <h4 for="paymentMethod">Phương thức thanh toán</h4>
                                 <div class="select-wrapper">
                                     <select class="form-control" id="paymentMethod" style="height: 2.5rem;">
@@ -89,7 +82,7 @@
                                         <option value="cash">Thanh toán bằng tiền mặt</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> *@
                            <div class="container">
                                 <div class="row">
                                     <input type="hidden" id="requestVerificationToken" value="">
