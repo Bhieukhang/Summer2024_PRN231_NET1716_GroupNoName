@@ -27,6 +27,10 @@ namespace JSS_Services.Implement
         {
             return await _unitOfWork.GetRepository<OrderDetail>().GetListAsync();
         }
+        public async Task<OrderDetail> GetOrderDetailByOrderIdAsync(Guid id)
+        {
+            return await _unitOfWork.GetRepository<OrderDetail>().FirstOrDefaultAsync(a => a.OrderId == id);
+        }
 
     }
 }

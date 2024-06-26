@@ -14,6 +14,10 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         public List<OrderDetailDTO> Details { get; set; }
         public Guid Id { get; set; }
         public DateTime? InsDate { get; set; }
+        public Guid? CustomerId { get; set; }
+        public string? Type { get; set; }
+        public List<OrderDetailDTO> OrderDetails { get; set; }
+        public Guid ProductId { get; set; }
     }
 
     public class OrderDetailDTO
@@ -22,6 +26,11 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         public double Amount { get; set; }
         public int Quantity { get; set; }
         public Guid ProductId { get; set; }
+
+        public Guid Id { get; set; }
+        public DateTime InsDate { get; set; }
+        public Guid OrderId { get; set; }
+      
     }
 
     public class CheckPromotionRequest
