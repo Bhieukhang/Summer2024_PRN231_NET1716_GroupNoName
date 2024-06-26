@@ -166,6 +166,7 @@
         {
             public const string OrderDetailEndpoint = ApiEndpoint + "/OrderDetail";
             public const string OrderDetailByIdEndpoint = OrderDetailEndpoint + "/id";
+            public const string OrderDetailByOrderIdEndpoint = OrderDetailEndpoint + "/OrderID/id";
 
         }
 

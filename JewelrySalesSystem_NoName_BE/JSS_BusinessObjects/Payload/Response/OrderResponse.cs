@@ -32,6 +32,22 @@ namespace JSS_BusinessObjects.Payload.Response
             TotalPrice = totalPrice;
             MaterialProcessPrice = materialProcessPrice;
         }
+
+        public OrderResponse(Guid id, Guid customerId, string? fullName, string? phone, string? address, string? imgURL, string? type, DateTime? insDate, double? totalPrice,
+       double? materialProcessPrice, Guid? discount)
+        {
+            Id = id;
+            CustomerId = customerId;
+            FullName = fullName;
+            Phone = phone;
+            Address = address;
+            ImgURL = imgURL;
+            Type = type;
+            InsDate = insDate;
+            TotalPrice = totalPrice;
+            MaterialProcessPrice = materialProcessPrice;
+            Discount = discount;
+        }
         public Guid Id { get; set; }
 
         public Guid CustomerId { get; set; }
@@ -47,6 +63,10 @@ namespace JSS_BusinessObjects.Payload.Response
         public virtual Guid? Discount { get; set; } = null!;
 
         public virtual Guid? Promotion { get; set; }
+        public string? FullName { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public string? ImgURL { get; set; }
     }
 
     public class CustomerOrderResponse

@@ -53,6 +53,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             return Ok(orderDetail);
         }
+        #region GetOrderDetailById
+        /// <summary>
+        /// Get a orderDetail by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the OrderDetail to retrieve.</param>
+        /// <returns>The OrderDetail with the specified ID.</returns>
+        /// GET : api/OrderDetail
+        #endregion
+        [HttpGet(ApiEndPointConstant.OrderDetail.OrderDetailByOrderIdEndpoint)]
+        // [ProducesResponseType(typeof(OrderDetailsResponse), StatusCodes.Status200OK)]
+        public async Task<ActionResult<OrderDetail>> GetOrderDetailByOrderIdAsync(Guid id)
+        {
+            var orderDetail = await _orderDetailService.GetOrderDetailByOrderIdAsync(id);
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderDetail);
+        }
 
     }
 }

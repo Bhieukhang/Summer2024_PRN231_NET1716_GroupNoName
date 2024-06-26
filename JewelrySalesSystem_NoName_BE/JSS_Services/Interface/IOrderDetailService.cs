@@ -11,5 +11,6 @@ namespace JSS_Services.Interface
     {
         Task<IEnumerable<OrderDetail>> GetAllOrderDetailsAsync();
         Task<OrderDetail> GetOrderDetailByIdAsync(Guid id);
+        Task<OrderDetail> GetOrderDetailByOrderIdAsync(Guid id);
     }
 }
