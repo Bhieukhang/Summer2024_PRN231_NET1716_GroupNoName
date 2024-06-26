@@ -85,8 +85,8 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
         [HttpPost(ApiEndPointConstant.Warranty.WarrantyEndpoint)]
         public async Task<ActionResult> CreateWarranty([FromBody] List<WarrantyRequest> warranty, [FromQuery] string phone)
         {
-            
-            
+
+
             var newWarranty = await _service.CreateWarranty(warranty, phone);
             var result = JsonConvert.SerializeObject(newWarranty, Formatting.Indented);
             return Ok(result);

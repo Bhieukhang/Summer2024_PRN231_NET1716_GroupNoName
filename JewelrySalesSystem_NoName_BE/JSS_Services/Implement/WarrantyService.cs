@@ -106,7 +106,6 @@ namespace JSS_Services.Implement
             {
                 throw new Exception("Commit failed, no rows affected.");
             }
-
             return listWarranty;
         }
 

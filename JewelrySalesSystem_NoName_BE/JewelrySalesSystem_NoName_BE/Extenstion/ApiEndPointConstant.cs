@@ -64,6 +64,7 @@
             //public const string AccountsWithDeflagFalseEndpoint = AccountEndpoint + "/DeflagFalse";
             public const string FilteredAccountsEndpoint = AccountEndpoint + "/Filtered";
             public const string UpdateDeflagEndpoint = AccountEndpoint + "/UpdateDeflag/{id}";
+            public const string CheckPhoneEndpoint = AccountEndpoint + "/CheckPhone/{phone}";
         }
 
         public static class Role
@@ -88,12 +89,15 @@
         public static class Product
         {
             public const string ProductEndpoint = ApiEndpoint + "/Product";
+            public const string AllProductEndpoint = ApiEndpoint + "/Product/All";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
             public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string ProductItemByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion/item";
 
+            public const string SearchAndFilterProductEndpoint = ProductEndpoint + "/searchAndFilter";
+            public const string ProductAutocompleteEndpoint = ProductEndpoint + "/autocomplete";
 
             // Do Huu Thuan
             public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";
@@ -104,6 +108,8 @@
         {
             public const string PromotionEndpoint = ApiEndpoint + "/Promotion";
             public const string PromotionByIdEndpoint = PromotionEndpoint + "/id";
+            public const string PromotionGroupEndpoint = PromotionEndpoint + "/group";
+
         }
         public static class Dashboard
         {
@@ -158,6 +164,14 @@
             public const string OrderDiscount = OrderEndpoint + "/option";
             public const string OrderUpdate = OrderEndpoint + "/update";
         }
+        //  Do Huu Thuan
+        public static class OrderDetail
+        {
+            public const string OrderDetailEndpoint = ApiEndpoint + "/OrderDetail";
+            public const string OrderDetailByIdEndpoint = OrderDetailEndpoint + "/id";
+
+        }
+
         public static class Discount
         {
             public const string DiscountConfirmEndpoint = ApiEndpoint + "/discount/confirm";

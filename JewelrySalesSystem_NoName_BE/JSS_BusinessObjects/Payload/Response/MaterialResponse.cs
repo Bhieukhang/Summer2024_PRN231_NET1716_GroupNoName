@@ -9,10 +9,11 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class MaterialResponse
     {
-        public MaterialResponse(Guid id, string? materialName)
+        public MaterialResponse(Guid id, string? materialName, DateTime? insDate)
         {
             Id = id;
             MaterialName = materialName;
+            InsDate = insDate;
         }
         public Guid Id { get; set; }
 

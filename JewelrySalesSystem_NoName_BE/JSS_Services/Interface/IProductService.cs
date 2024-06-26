@@ -15,17 +15,19 @@ namespace JSS_Services.Interface
         //Do huu Thuan
         Task<int> GetTotalSubProductAsync();
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
-        Task<IEnumerable<Product>> GetAllProductsAsync();
-
         Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size);
-
+        Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size);
         Task<Product> GetProductByIdAsync(Guid id);
-        Task<Product> GetProductByCodeAsync(string code);
+        Task<IEnumerable<Product>> GetAsync();
         Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName);
         Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName);
         Task<bool> DeleteProductAsync(Guid id);
+        Task AddProductConditionGroup(Guid productId, Guid promotionId);
+        Task DeleteProductConditionGroup( Guid promotionId);
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
         Task<ProductMapPromotionItem> GetPromotionByCode(string productCode);
+        Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query);
+
 
     }
 }

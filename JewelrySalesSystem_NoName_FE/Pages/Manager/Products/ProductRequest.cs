@@ -1,4 +1,5 @@
 ﻿
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,8 +22,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public string Code { get; set; }
         public string ImgProduct { get; set; }
         public double? Tax { get; set; }
+        public int? PeriodWarranty { get; set; }
         public CategoryDTO? Category { get; set; }
-        public SubProductsDTO?SubProductsDTO { get; set; }
+        public MaterialDTO? Material { get; set; }
+        public SubProductsDTO? SubProductsDTO { get; set; }
 
         [NotMapped] 
         public bool DeflagChecked

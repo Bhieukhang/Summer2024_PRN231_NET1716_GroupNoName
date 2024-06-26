@@ -45,6 +45,7 @@ namespace JSS_Services.Implement
             discountItem.ConditionDiscount = request.ConditionDiscount;
             discountItem.Description = request.Description;
             discountItem.UpsDate = DateTime.Now;
+            discountItem.Note = request.Note;
             _unitOfWork.GetRepository<Discount>().UpdateAsync(discountItem);
             return await _unitOfWork.CommitAsync() > 0;
         }

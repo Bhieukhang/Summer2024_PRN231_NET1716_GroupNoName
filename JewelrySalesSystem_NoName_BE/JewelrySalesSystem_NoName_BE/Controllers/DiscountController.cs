@@ -41,6 +41,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return confirmDiscount;
         }
 
+
+        /// <summary>
+        /// Get all discounts
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(ApiEndPointConstant.Discount.DiscountEndpoint)]
+        public async Task<ActionResult> GetDiscounts(string search = "")
+        {
+            try
+            {
+                var response = await _discountService.GetAsync(search);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Staff create new discount
         /// </summary>
@@ -109,22 +128,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
 
         /// <summary>
-        /// Get all discounts
+        /// Get all discounts accepted
         /// </summary>
         /// <returns></returns>
-        [HttpGet(ApiEndPointConstant.Discount.DiscountEndpoint)]
-        public async Task<ActionResult> GetDiscounts(string search = "")
-        {
-            try
-            {
-                var response = await _discountService.GetAsync(search);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
         [HttpGet(ApiEndPointConstant.Discount.DiscountAccepted)]
         public async Task<ActionResult> GetDiscountAccept(Guid id)

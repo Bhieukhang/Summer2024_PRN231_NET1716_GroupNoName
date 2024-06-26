@@ -9,5 +9,6 @@ namespace JSS_Services.Interface
         Task<Promotion> CreatePromotionAsync(Promotion newData);
         Task<Promotion> GetPromotionByIdAsync(Guid id);
         Task<Promotion> UpdatePromotionAsync(Promotion updatedData);
+        Task<List<ProductConditionGroup>> GetPromotionGroups(Guid id);
     }
 }

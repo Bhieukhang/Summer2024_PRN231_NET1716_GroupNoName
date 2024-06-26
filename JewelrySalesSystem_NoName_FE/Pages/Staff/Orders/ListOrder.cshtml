@@ -11,7 +11,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Danh sách đơn hàng</h4>
-                        <div class="container">
+                        <form method="get">
+                            <div class="form-group">
+                                <label for="OrderId">Order ID</label>
+                                <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập ID đơn hàng" />
+                            </div>
+                            <div class="form-group">
+                                <label for="StartDate">Start Date</label>
+                                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                       @*  <div class="container">
                             <div class="row">
                                 <!-- Table 1 -->
                                 <div class="col-md-6 mb-4 shadow-box shadow rounded">
@@ -47,7 +58,7 @@
                                     <!-- Add any additional form groups or content here -->
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="thead-dark">

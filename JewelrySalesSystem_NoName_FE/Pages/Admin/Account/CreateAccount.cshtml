@@ -9,7 +9,8 @@
                 <h3 class="page-title"> Thêm tài khoản </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        @*Thêm*@
+                        <li class="breadcrumb-item"><a href="@Url.Page("./ListAccount")">Danh sách tài khoản</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Thêm tài khoản</li>
                     </ol>
                 </nav>
             </div>
@@ -26,7 +27,7 @@
                                     <span asp-validation-for="Account.FullName" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Account.Phone" class="control-label"></label>
+                                    <label asp-for="Account.Phone" class="control-label">Số điện thoại</label>
                                     <input asp-for="Account.Phone" class="form-control" placeholder="Nhập số điện thoại" />
                                     <span asp-validation-for="Account.Phone" class="text-danger"></span>
                                 </div>
@@ -42,7 +43,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Account.Password" class="control-label">Mật khẩu</label>
-                                    <input asp-for="Account.Password" type="password" class="form-control" />
+                                    <div class="input-group">
+                                        <input asp-for="Account.Password" type="password" class="form-control" id="passwordField" />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <span asp-validation-for="Account.Password" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -67,3 +75,20 @@
         </div>
     </div>
 </body>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            var passwordField = document.getElementById('passwordField');
+            var passwordFieldType = passwordField.getAttribute('type');
+            if (passwordFieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+                this.innerHTML = '<i class="fa fa-eye-slash"></i>';
+            } else {
+                passwordField.setAttribute('type', 'password');
+                this.innerHTML = '<i class="fa fa-eye"></i>';
+            }
+        });
+    </script>
+}

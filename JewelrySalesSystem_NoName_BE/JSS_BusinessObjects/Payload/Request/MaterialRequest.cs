@@ -10,11 +10,5 @@ namespace JSS_BusinessObjects.Payload.Request
     public class MaterialRequest
     {
         public string? MaterialName { get; set; }
-
-        public double? Weight { get; set; }
-
-        public DateTime? InsDate { get; set; }
-
-        public Guid ProductMaterialId { get; set; }
     }
 }

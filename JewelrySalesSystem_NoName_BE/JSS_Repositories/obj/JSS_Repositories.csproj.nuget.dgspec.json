@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {}
+    "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+    "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
         "projectName": "JSS_BusinessObjects",
-        "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -57,6 +57,10 @@
               "target": "Package",
               "version": "[1.0.3, )"
             },
+            "Microsoft.AspNetCore.SignalR.Core": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -98,14 +102,14 @@
         }
       }
     },
-    "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
+    "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
         "projectName": "JSS_DataAccessObjects",
-        "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -126,8 +130,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
-                "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
+              "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
               }
             }
           }
@@ -166,14 +170,14 @@
         }
       }
     },
-    "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
+    "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
         "projectName": "JSS_Repositories",
-        "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\JSS_Repositories.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_Repositories\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -194,11 +198,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
-                "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
+              "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_BusinessObjects\\JSS_BusinessObjects.csproj"
               },
-              "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
-                "projectPath": "C:\\Users\\ADMIN\\Downloads\\p\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj"
+              "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\Downloads\\Supports\\PRN231\\RazorPages\\Project1\\JewelrySalesSystem_NoName_BE\\JSS_DataAccessObjects\\JSS_DataAccessObjects.csproj"
               }
             }
           }

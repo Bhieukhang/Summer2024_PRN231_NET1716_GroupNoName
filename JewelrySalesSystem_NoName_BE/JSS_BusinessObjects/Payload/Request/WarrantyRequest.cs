@@ -15,7 +15,7 @@ namespace JSS_BusinessObjects.Payload.Request
         public int? Period { get; set; }
         public Guid ConditionWarrantyId { get; set; }
         public Guid? OrderDetailId { get; set; }
-        public string? Note {  get; set; }
+        public string? Note { get; set; }
         public List<ConditionMap> ConditionMap { get; set; }
     }
 

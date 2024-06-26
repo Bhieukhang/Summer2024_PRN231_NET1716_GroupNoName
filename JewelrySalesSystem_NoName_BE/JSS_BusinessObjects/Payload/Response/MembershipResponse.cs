@@ -10,7 +10,7 @@ namespace JSS_BusinessObjects.Payload.Response
     {
         public MembershipResponse() { }
         public MembershipResponse(Guid id, string? name, int? point, int? redeemPoint, Guid userId, double? userMoney,
-                                    bool? deflag)
+            bool? deflag)
         {
             Id = id;
             Name = name;

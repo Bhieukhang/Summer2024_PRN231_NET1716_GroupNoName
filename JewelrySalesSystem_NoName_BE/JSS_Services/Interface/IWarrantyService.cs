@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Interface
 {
-    public interface IWarrantyService 
+    public interface IWarrantyService
     {
         public Task<WarrantyResponse> GetWarrantyDetail(Guid id);
         public Task<IPaginate<WarrantyResponse>> GetWarranties(int page, int size);

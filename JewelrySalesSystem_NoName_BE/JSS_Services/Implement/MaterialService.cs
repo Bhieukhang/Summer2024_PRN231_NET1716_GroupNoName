@@ -40,7 +40,7 @@ namespace JSS_Services.Implement
             await _unitOfWork.GetRepository<Material>().InsertAsync(mate);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
-            return new MaterialResponse(mate.Id, mate.MaterialName);
+            return new MaterialResponse(mate.Id, mate.MaterialName, mate.InsDate);
         }
 
         public async Task<Material> UpdateMaterialAsync(Guid id, Material updatedData)

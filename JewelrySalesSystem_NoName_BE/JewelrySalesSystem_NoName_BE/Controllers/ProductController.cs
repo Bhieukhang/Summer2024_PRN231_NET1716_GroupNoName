@@ -26,6 +26,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             _categoryService = categoryService;
         }
 
+        #region AutocompleteProducts
+        /// <summary>
+        /// Autocomplete products based on a query string.
+        /// </summary>
+        /// <param name="query">The query string to search for products.</param>
+        /// <returns>List of products matching the query.</returns>
+        /// GET : api/Product/autocomplete
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductAutocompleteEndpoint)]
+        public async Task<ActionResult<IEnumerable<ProductResponse>>> AutocompleteProducts(string query)
+        {
+            var results = await _productService.AutocompleteProductsAsync(query);
+            return Ok(results);
+        }
+
         #region GetAllProducts
         /// <summary>
         /// Get all products.
@@ -39,10 +54,16 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         [HttpGet(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync(int page, int size)
         {
-            //var products = await _productService.GetAllProductsAsync(page, size);
             var list = await _productService.GetAllProductsAsync(page, size);
             var products = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(products);
+        }
+
+        [HttpGet(ApiEndPointConstant.Product.AllProductEndpoint)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
+        {
+            var list = await _productService.GetAsync();
+            return Ok(list);
         }
 
         #region GetProductById
@@ -75,7 +96,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product/subid
         #endregion
-     //   [Authorize(Roles = "Admin, Manager, Staff")]
+        //[Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductBySubIdEndpoint)]
         public async Task<IActionResult> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
@@ -85,43 +106,32 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         }
 
 
-        #region SearchProductByCode
+        #region SearchAndFilterProducts
         /// <summary>
-        /// Search a product by its code.
+        /// Search a product by its code or get products by category and material.
         /// </summary>
         /// <param name="code">The code of the product to search.</param>
-        /// <returns>The product with the specified code.</returns>
-        /// GET : api/Product/search
+        /// <param name="categoryId">The ID of the category to filter by.</param>
+        /// <param name="materialId">The ID of the material to filter by.</param>
+        /// <param name="page">Page number for pagination.</param>
+        /// <param name="size">Page size for pagination.</param>
+        /// <returns>List of filtered products or a single product with the specified code.</returns>
+        /// GET : api/Product/searchAndFilter
         #endregion
-        [HttpGet(ApiEndPointConstant.Product.ProductByCodeEndpoint)]
-        public async Task<ActionResult<Product>> SearchProductByCode(string code)
+        [HttpGet(ApiEndPointConstant.Product.SearchAndFilterProductEndpoint)]
+        public async Task<ActionResult> SearchAndFilterProducts(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
         {
-            var product = await _productService.GetProductByCodeAsync(code);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            var result = await _productService.SearchAndFilterProductsAsync(code, categoryId, materialId, page, size);
 
-            var searchproduct = new Product
+            if (!string.IsNullOrEmpty(code))
             {
-                Id = product.Id,
-                ProductName = product.ProductName,
-                Description = product.Description,
-                Code = product.Code,
-                Deflag = product.Deflag,
-                ImportPrice = product.ImportPrice,
-                InsDate = product.InsDate,
-                ProcessPrice = product.ProcessPrice,
-                SellingPrice = product.SellingPrice,
-                Size = product.Size,
-                Tax = product.Tax,
-                Quantity = product.Quantity,
-                ImgProduct = product.ImgProduct,
-                CategoryId = product.CategoryId,
-                MaterialId = product.MaterialId,
-                Category = product.Category,
-            };
-            return Ok(searchproduct);
+                if (result.Items.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(result.Items.FirstOrDefault());
+            }
+            return Ok(result);
         }
 
         #region CreateProduct
@@ -161,6 +171,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 InsDate = productRequest.InsDate,
                 MaterialId = productRequest.MaterialId,
                 Tax = productRequest.Tax,
+                PeriodWarranty = productRequest.PeriodWarranty,
                 SubId = productRequest.SubId,
             };
 
@@ -187,7 +198,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.Deflag,
                 createdProduct.Tax,
                 createdProduct.SubId,
-                createdProduct.Category
+                createdProduct.Category,
+                createdProduct.Material,
+                createdProduct.PeriodWarranty
             ));
         }
 
@@ -241,6 +254,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 InsDate = productRequest.InsDate,
                 MaterialId = productRequest.MaterialId,
                 Tax = productRequest.Tax,
+                PeriodWarranty = productRequest.PeriodWarranty,
                 SubId = productRequest.SubId,
             };
 
@@ -267,7 +281,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.Deflag,
                 updatedProduct.Tax,
                 updatedProduct.SubId,
-                updatedProduct.Category
+                updatedProduct.Category,
+                updatedProduct.Material,
+                updatedProduct.PeriodWarranty
             ));
         }
 

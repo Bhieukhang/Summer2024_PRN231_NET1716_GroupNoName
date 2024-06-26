@@ -27,7 +27,7 @@ try
         options.AddPolicy(name: CorsConstant.PolicyName,
            policy =>
            {
-               policy.WithOrigins("https://localhost:7016") 
+               policy.WithOrigins("https://localhost:7016")
                      .WithOrigins("https://localhost:44328")
                      .AllowAnyHeader()
                      .AllowAnyMethod()

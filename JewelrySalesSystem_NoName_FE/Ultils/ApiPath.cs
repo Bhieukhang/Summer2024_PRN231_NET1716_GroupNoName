@@ -25,6 +25,7 @@
 
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
+        public const string PromotionGroup = url + "/api/v1/Promotion/group";
 
         //Discount
         public const string Discount = url + "/api/v1/discount";
@@ -40,8 +41,12 @@
         //Category
         public const string CategoryList = url + "/api/v1/Category";
 
+        //Material
+        public const string MaterialList = url + "/api/v1/Material";
+
         //Product
         public const string ProductList = url + "/api/v1/Product";
+        public const string AllProductEndpoint = url + "/api/v1/Product/All";
         public const string ProductDetails = url + "/api/v1/Product/id";
         public const string ProductCodeGetListPromoton = url + "/api/v1/Product/code/promotion";
 
