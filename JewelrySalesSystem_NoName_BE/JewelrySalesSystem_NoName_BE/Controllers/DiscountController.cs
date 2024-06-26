@@ -6,6 +6,9 @@ using JSS_BusinessObjects.SignalR;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -107,6 +110,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
         public async Task<ActionResult> FindDiscountById(Guid id)
         {
@@ -122,6 +126,42 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
         }
 
-        
+
+        /// <summary>
+        /// Get all discounts
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(ApiEndPointConstant.Discount.DiscountEndpoint)]
+        public async Task<ActionResult> GetDiscounts(string search = "")
+        {
+            try
+            {
+                var response = await _discountService.GetAsync(search);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(ApiEndPointConstant.Discount.DiscountAccepted)]
+        public async Task<ActionResult> GetDiscountAccept(Guid id)
+        {
+            try
+            {
+                var result = await _discountService.GetDiscountAccept(id);
+                if (result.Id == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    return Ok(new { message = "Chưa có phản hồi từ quản lí" });
+                }
+                var response = JsonConvert.SerializeObject(result, Formatting.Indented);
+                await _hubContext.Clients.All.SendAsync("DiscountAccpetNotification", response);
+                return Ok(response);
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

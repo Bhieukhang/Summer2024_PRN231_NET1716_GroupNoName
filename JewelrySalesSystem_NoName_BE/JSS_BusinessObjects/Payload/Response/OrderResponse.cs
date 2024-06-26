@@ -1,4 +1,5 @@
 ﻿using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,5 +72,22 @@ namespace JSS_BusinessObjects.Payload.Response
         }
         public Guid OrderId { get; set; }
         public List<OrderDetailResponse> ListOrder = new List<OrderDetailResponse>();
+    }
+
+    public class OrderProccess
+    {
+        public Guid OrderId { get; set; }
+        public double TotalPrice { get; set; }
+        public List<OrderDetailProccess> Details { get; set; }
+    }
+
+    public class OrderDetailProccess
+    {
+        public Guid Id { get; set; }
+        public double? Amount { get; set; }
+
+        public int? Quantity { get; set; }
+        public string ProductName { get; set; }
+        public double ProcessPrice { get; set; }
     }
 }

@@ -21,13 +21,15 @@
         public const string MembershipActive = url + "/api/v1/membership/active";
         public const string MembershipUnActive = url + "/api/v1/membership/unavailable";
         public const string MembershipUserMoney = url + "/api/v1/membership/userMoney";
+        public const string MembershipInfoOrder = url + "/api/v1/membership/phone";
 
         //Promotion
         public const string Promotion = url + "/api/v1/Promotion";
         public const string PromotionGroup = url + "/api/v1/Promotion/group";
 
-        //Promotion
+        //Discount
         public const string Discount = url + "/api/v1/discount";
+        public const string DiscountConfirm = Discount + "/confirm";
 
         //Transaction
         public const string Transaction = url + "/api/v1/Transaction";
@@ -75,6 +77,7 @@
         public const string OrderListDetail = url + "/api/v1/order/detail";
         public const string SearchOrders = url + "/api/v1/order/GetListOrders/search";
         public const string SearchOrderCustomer = OrderCreate + "/customer";
+        public const string OrderOption = OrderCreate + "/option";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";

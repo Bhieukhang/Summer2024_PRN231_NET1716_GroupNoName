@@ -1,5 +1,6 @@
 ﻿using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
@@ -18,7 +19,7 @@ namespace JSS_Services.Implement
 {
     public class MembershipService : BaseService<MembershipService>, IMembershipService
     {
-        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, 
+        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
             ILogger<MembershipService> logger) : base(unitOfWork, logger)
         {
         }
@@ -47,7 +48,7 @@ namespace JSS_Services.Implement
         public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
         {
             var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
-            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId); 
+            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
             var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id == id);
             if (member == null)
             {
@@ -168,6 +169,24 @@ namespace JSS_Services.Implement
                 if (isSuccessful == false) return null;
             }
             return new SearchAccountResponse(account.Id, account.FullName, account.Phone);
+        }
+
+        public async Task<MembershipInfo> GetInfoMembership(string phone)
+        {
+            var account = await _unitOfWork.GetRepository<Account>()
+                            .FirstOrDefaultAsync(m => m.Phone == phone);
+            var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(m => m.UserId == account.Id);
+            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
+            MembershipInfo mem = new MembershipInfo()
+            {
+                Id = member.Id,
+                Name = member.Name,
+                Phone = account.Phone,
+                Type = memberType.Type,
+                UserMoney = (double)member.UsedMoney,
+                PercentDiscount = (double)memberType.PercentDiscount
+            };
+            return mem;
         }
     }
 }

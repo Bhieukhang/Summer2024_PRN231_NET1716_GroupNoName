@@ -43,4 +43,6 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public Guid ProductId { get; set; }
     }
+        
+   
 }

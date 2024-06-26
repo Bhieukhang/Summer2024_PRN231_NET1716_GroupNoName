@@ -56,7 +56,8 @@ namespace JSS_Services.Implement
             return a.Where(i => (i.Description ?? "").Contains(search)).ToList();
         }
 
-        public async Task<Discount> FindAsync(Guid id) => await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<Discount> FindAsync(Guid id) => await _unitOfWork.GetRepository<Discount>()
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task<DiscountResponse> ConfirmDiscountToManager(DiscountRequest confirm)
         {
@@ -80,6 +81,18 @@ namespace JSS_Services.Implement
                                     discountItem.Description, discountItem.ConditionDiscount, discountItem.Status, discountItem.Note);
         }
 
+        public async Task<DiscountResponse> GetDiscountAccept(Guid id)
+        {
+            var discount = await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(a => a.OrderId == id 
+                                                                    && a.Status == DiscountStatus.Accepted);
+            if (discount == null)
+            {
+                return new DiscountResponse { };
+            }
+            return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
+                discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
+
+        }
         public static class DiscountStatus
         {
             public const string Pending = "Pending";
