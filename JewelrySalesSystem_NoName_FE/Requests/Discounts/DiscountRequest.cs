@@ -17,5 +17,6 @@ namespace JewelrySalesSystem_NoName_FE.Requests.Discounts
         [Required] public string? Description { get; set; }
 
         [Required] public double? ConditionDiscount { get; set; }
+        public string? Note { get; set; }
     }
 }

@@ -1,18 +1,12 @@
 ﻿using Firebase.Storage;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
-using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
@@ -63,6 +57,12 @@ namespace JSS_Services.Implement
                 page: page,
                 size: size);
             return list;
+        }
+
+        public async Task<IEnumerable<Product>> GetAsync()
+        {
+            var products = await _unitOfWork.GetRepository<Product>().GetListAsync();
+            return products;
         }
 
         public async Task<Product> GetProductByIdAsync(Guid id)
@@ -305,6 +305,28 @@ namespace JSS_Services.Implement
             );
 
             return products;
+        public async Task AddProductConditionGroup(Guid productId, Guid promotionId)
+        {
+            var condition = new ProductConditionGroup()
+            {
+                Id = Guid.NewGuid(),
+                InsDate = DateTime.Now,
+                ProductId = productId,
+                PromotionId = promotionId,
+                Quantity = 1,
+            };
+
+            await _unitOfWork.GetRepository<ProductConditionGroup>().InsertAsync(condition);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteProductConditionGroup(Guid promotionId)
+        {
+            var range = await _unitOfWork.GetRepository<ProductConditionGroup>().GetListAsync();
+            range = range.Where(x => x.PromotionId == promotionId).ToList();
+
+            await _unitOfWork.GetRepository<ProductConditionGroup>().DeleteRangeAsync(range);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

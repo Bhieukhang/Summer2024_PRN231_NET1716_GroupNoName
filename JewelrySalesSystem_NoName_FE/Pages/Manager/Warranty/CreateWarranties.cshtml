@@ -18,7 +18,7 @@
         }
         else
         {
-           @*  <div class="alert alert-danger">@TempData["FailMessage"]</div> *@
+            <div class="alert alert-danger">@TempData["FailMessage"]</div>
         }
         @if (Model.ListOrder != null && Model.ListOrder.Count > 0)
         {
@@ -163,9 +163,9 @@
                 const row = document.createElement('tr');
                 const isChecked = productSelectedConditions.includes(condition.Id);
                 row.innerHTML = `
-                                    <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
-                                    <td>${condition.Condition}</td>
-                                `;
+                            <td><input type="checkbox" class="condition-checkbox" data-id="${condition.Id}" ${isChecked ? 'checked' : ''}></td>
+                            <td>${condition.Condition}</td>
+                        `;
                 tableBody.appendChild(row);
             });
 
@@ -276,7 +276,7 @@
             </text>
         }
 
-                            if (formValid) {
+                    if (formValid) {
                 var customerPhone = document.getElementById("customerPhone").value;
                 var phoneArray = customerPhone.split(',').map(phone => phone.trim()).filter(phone => phone !== "");
                 customerPhone = phoneArray[0]; // Chỉ lấy số điện thoại đầu tiên

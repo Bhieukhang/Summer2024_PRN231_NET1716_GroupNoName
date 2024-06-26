@@ -107,7 +107,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
         [HttpGet(ApiEndPointConstant.Discount.DiscountByIdEndpoint)]
         public async Task<ActionResult> FindDiscountById(Guid id)
         {

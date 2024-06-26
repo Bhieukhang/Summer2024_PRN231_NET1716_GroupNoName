@@ -59,6 +59,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(products);
         }
 
+        [HttpGet(ApiEndPointConstant.Product.AllProductEndpoint)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
+        {
+            var list = await _productService.GetAsync();
+            return Ok(list);
+        }
+
         #region GetProductById
         /// <summary>
         /// Get a product by its ID.

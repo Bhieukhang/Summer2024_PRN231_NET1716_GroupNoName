@@ -89,6 +89,7 @@
         public static class Product
         {
             public const string ProductEndpoint = ApiEndpoint + "/Product";
+            public const string AllProductEndpoint = ApiEndpoint + "/Product/All";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
             public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
@@ -105,6 +106,8 @@
         {
             public const string PromotionEndpoint = ApiEndpoint + "/Promotion";
             public const string PromotionByIdEndpoint = PromotionEndpoint + "/id";
+            public const string PromotionGroupEndpoint = PromotionEndpoint + "/group";
+
         }
         public static class Dashboard
         {

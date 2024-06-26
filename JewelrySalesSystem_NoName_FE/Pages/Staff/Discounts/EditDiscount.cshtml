@@ -6,6 +6,14 @@
     var user = HttpContextAccessor?.HttpContext?.User;
     var userRole = user?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 }
+@if (Model.DiscountRequest.Status != "Deined")
+{
+    <style>
+        #reason-why-deined {
+            display: none;
+        }
+    </style>
+}
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -13,7 +21,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Chỉnh sửa chiết khấu</h4>
-                <form class="forms-sample" method="post" enctype="multipart/form-data">
+                <form id="form-submit" class="forms-sample" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="DiscountRequest.Id" />
                     <div class="form-group">
                         <label asp-for="DiscountRequest.OrderId" class="control-label">Order Id</label>
@@ -42,15 +50,23 @@
                         <span asp-validation-for="DiscountRequest.ConditionDiscount" class="text-danger"></span>
                     </div>
 
-                    @if(userRole == "Manager")
+                    @if (userRole == "Manager")
                     {
                         <div class="form-group">
                             <label asp-for="DiscountRequest.Status" class="control-label">Status</label> <br />
-                            <input asp-for="DiscountRequest.Status" type="radio" value="Pending" /> Pending
-                            <input asp-for="DiscountRequest.Status" type="radio" value="Accepted" class="ms-3" /> Accepted<br />
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Pending" onclick="showReason('false');" /> Pending
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Accepted" onclick="showReason('false');" class="ms-3" /> Accepted
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Denied" onclick="showReason('true');" class="ms-3" /> Denied<br />
                             <span asp-validation-for="DiscountRequest.Status" class="text-danger"></span>
                         </div>
-                    } else
+
+                        <div class="form-group" id="reason-why-deined">
+                            <label asp-for="DiscountRequest.Note" class="control-label">Reason why deined?</label>
+                            <input id="reason-input" asp-for="DiscountRequest.Note" class="form-control" placeholder="Enter reason why deined" />
+                            <span asp-validation-for="DiscountRequest.Note" class="text-danger"></span>
+                        </div>
+                    }
+                    else
                     {
                         <input asp-for="DiscountRequest.Status" type="hidden" value="Pending" class="ms-3" />
                     }
@@ -67,7 +83,7 @@
                                 <i class="bi bi-arrow-left"></i>
                                 <span>Trở về</span>
                             </a>
-                            <button type="submit" class="btn btn-primary ">
+                            <button type="button" onclick="preSubmit();" class="btn btn-primary ">
                                 <i class="bi bi-pencil"></i>
                                 <span>Lưu</span>
                             </button>
@@ -78,4 +94,27 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function showReason(status) {
+        var reason = document.getElementById("reason-why-deined");
+        if (status === "true") {
+            reason.style.display = "block";
+        } else {
+            reason.style.display = "none";
+        }
+    }
+
+    function preSubmit() {
+        var reason = document.getElementById("reason-why-deined");
+        var input = document.getElementById("reason-input");
+        var form = document.getElementById("form-submit");
+        if (reason.style.display === "block" && input.value.trim() === "") {
+            window.alert("Please enter reason to deined!");
+        } else {
+            form.submit();
+        }
+    }
+</script>
 
