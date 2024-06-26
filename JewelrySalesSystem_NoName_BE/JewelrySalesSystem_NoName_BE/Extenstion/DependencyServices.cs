@@ -60,6 +60,7 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMembershipService, MembershipService>();
             services.AddScoped<IOrderService, OrdersService>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
             services.AddScoped<IConditionWarrantyServicecs, ConditionWarrantyService>();
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<IDiscountService, DiscountService>();
@@ -71,6 +72,7 @@ namespace JewelrySalesSystem_NoName_BE
             services.AddScoped<ISubProductsService, SubProductsService>();
             services.AddScoped<IProcessPriceService, ProcessPriceService>();
             services.AddScoped<IPurchasePriceService, PurchasePriceService>();
+           
             return services;
         }
 
