@@ -305,6 +305,8 @@ namespace JSS_Services.Implement
             );
 
             return products;
+
+        }
         public async Task AddProductConditionGroup(Guid productId, Guid promotionId)
         {
             var condition = new ProductConditionGroup()
