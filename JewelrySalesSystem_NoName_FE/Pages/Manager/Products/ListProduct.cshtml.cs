@@ -70,8 +70,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var productResponse = await client.GetStringAsync(url);
+                Console.WriteLine($"API Response: {productResponse}");
+
+
                 var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
-                TotalPages = paginateResult.TotalPages;
+                if (paginateResult != null)
+                {
+                    TotalPages = paginateResult.TotalPages;
+                    productList = paginateResult.Items;
+                }
+                else
+                {
+                    productList = new List<ProductDTO>();
+                }
 
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
                 if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -88,7 +99,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     return RedirectToPage("/Auth/Login");
                 }
                 mateList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());
-                productList = paginateResult.Items;
 
                 ViewData["SelectedCategory"] = SelectedCategory;
                 ViewData["SelectedMaterial"] = SelectedMaterial;

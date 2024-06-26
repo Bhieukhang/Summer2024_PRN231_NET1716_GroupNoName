@@ -94,6 +94,7 @@
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string SearchAndFilterProductEndpoint = ProductEndpoint + "/searchAndFilter";
+            public const string ProductAutocompleteEndpoint = ProductEndpoint + "/autocomplete";
 
             // Do Huu Thuan
             public const string ProductBySubIdEndpoint = ProductEndpoint + "/subid";

@@ -26,6 +26,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             _categoryService = categoryService;
         }
 
+        #region AutocompleteProducts
+        /// <summary>
+        /// Autocomplete products based on a query string.
+        /// </summary>
+        /// <param name="query">The query string to search for products.</param>
+        /// <returns>List of products matching the query.</returns>
+        /// GET : api/Product/autocomplete
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductAutocompleteEndpoint)]
+        public async Task<ActionResult<IEnumerable<ProductResponse>>> AutocompleteProducts(string query)
+        {
+            var results = await _productService.AutocompleteProductsAsync(query);
+            return Ok(results);
+        }
+
         #region GetAllProducts
         /// <summary>
         /// Get all products.

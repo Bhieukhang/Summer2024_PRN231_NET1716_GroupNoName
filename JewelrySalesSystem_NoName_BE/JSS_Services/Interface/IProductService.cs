@@ -22,6 +22,8 @@ namespace JSS_Services.Interface
         Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName);
         Task<bool> DeleteProductAsync(Guid id);
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
-   
+        Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query);
+
+
     }
 }

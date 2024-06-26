@@ -25,7 +25,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public int? PeriodWarranty { get; set; }
         public CategoryDTO? Category { get; set; }
         public MaterialDTO? Material { get; set; }
-        public SubProductsDTO?SubProductsDTO { get; set; }
+        public SubProductsDTO? SubProductsDTO { get; set; }
 
         [NotMapped] 
         public bool DeflagChecked

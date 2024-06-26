@@ -18,7 +18,7 @@
         }
         else
         {
-            <div class="alert-danger">@TempData["FailMessage"]</div>
+           @*  <div class="alert alert-danger">@TempData["FailMessage"]</div> *@
         }
         @if (Model.ListOrder != null && Model.ListOrder.Count > 0)
         {
@@ -63,7 +63,7 @@
                         }
                         <div class="form-group row justify-content-end">
                             <div class="col-auto">
-                                <button class="btn btn-danger" id="cancelButton">Hủy</button>
+                                <a asp-page="./Index" class="btn btn-danger">Hủy</a>
                                 <button type="submit" class="btn btn-primary" id="createWarrantyButton" disabled onclick="submitForm(event)">Hoàn tất</button>
                             </div>
                         </div>
@@ -122,17 +122,19 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                            var productId = "@order.ProductId";
-                const dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
-                if (dateOfPurchaseElement) {
-                    dateOfPurchaseElement.value = today;
-                    dateOfPurchaseElement.setAttribute('min', today);
-                    setExpirationMinDate(productId); // Set initial min expiration date
-                }
+                    (function () {
+                        var productId = "@order.ProductId";
+                        var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+                        if (dateOfPurchaseElement) {
+                            dateOfPurchaseElement.value = today;
+                            dateOfPurchaseElement.setAttribute('min', today);
+                            setExpirationMinDate(productId); // Set initial min expiration date
+                        }
+                    })();
             </text>
         }
 
-            document.getElementById('createWarrantyButton').disabled = true;
+                document.getElementById('createWarrantyButton').disabled = true;
             validateForm();
 
             // Đóng modal khi nhấn vào các nút với data-bs-dismiss="modal"
@@ -239,41 +241,42 @@
         @foreach (var order in Model.ListOrder)
         {
             <text>
-                                            var productId = "@order.ProductId";
+                    (function () {
+                        var productId = "@order.ProductId";
+                        var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
+                        var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
+                        var periodElement = document.getElementById(`Period_${productId}`);
+                        var selectedConditionsElement = document.getElementById(`SelectedConditions_${productId}`);
 
-                var dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
-                var expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
-                var periodElement = document.getElementById(`Period_${productId}`);
-                var selectedConditionsElement = document.getElementById(`SelectedConditions_${productId}`);
+                        if (dateOfPurchaseElement && expirationDateElement && periodElement && selectedConditionsElement) {
+                            var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
+                            var expirationDate = formatDate(expirationDateElement.value);
+                            var period = periodElement.value;
+                            var selectedConditions = selectedConditionsMap[productId] || [];
 
-                if (dateOfPurchaseElement && expirationDateElement && periodElement && selectedConditionsElement) {
-                    var dateOfPurchase = formatDate(dateOfPurchaseElement.value);
-                    var expirationDate = formatDate(expirationDateElement.value);
-                    var period = periodElement.value;
-                    var selectedConditions = selectedConditionsMap[productId] || [];
+                            if (!dateOfPurchase || !expirationDate || !period || selectedConditions.length === 0) {
+                                formValid = false;
+                            } else {
+                                var conditionIds = selectedConditions;
 
-                    if (!dateOfPurchase || !expirationDate || !period || selectedConditions.length === 0) {
-                        formValid = false;
-                    } else {
-                        var conditionIds = selectedConditions;
+                                var warranty = {
+                                    dateOfPurchase: dateOfPurchase,
+                                    expirationDate: expirationDate,
+                                    period: period,
+                                    orderDetailId: "@order.OrderDetailId",
+                                    conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
+                                };
 
-                        var warranty = {
-                            dateOfPurchase: dateOfPurchase,
-                            expirationDate: expirationDate,
-                            period: period,
-                            orderDetailId: "@order.OrderDetailId",
-                            conditionMap: conditionIds.map(id => ({ conditionWarrantyId: id }))
-                        };
-
-                        warranties.push(warranty);
-                    }
-                } else {
-                    formValid = false;
-                }
+                                warranties.push(warranty);
+                            }
+                        } else {
+                            formValid = false;
+                        }
+                    })();
             </text>
         }
 
-                        if (formValid) {
+                            if (formValid) {
                 var customerPhone = document.getElementById("customerPhone").value;
                 var phoneArray = customerPhone.split(',').map(phone => phone.trim()).filter(phone => phone !== "");
                 customerPhone = phoneArray[0]; // Chỉ lấy số điện thoại đầu tiên
@@ -299,10 +302,8 @@
     </script>
 }
 
-
 <style>
     .required {
         color: red;
     }
-
 </style>

@@ -294,5 +294,17 @@ namespace JSS_Services.Implement
         {
             return (product.ImportPrice ?? 0) * goldRate + (product.ProcessPrice ?? 0) + (product.Tax ?? 0);
         }
+
+        public async Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query)
+        {
+            var products = await _unitOfWork.GetRepository<Product>().GetListAsync(
+                selector: p => new ProductResponse(p.Id, p.ImgProduct, p.ProductName, p.Description, p.Size, p.SellingPrice, p.Quantity,
+                                                   p.CategoryId, p.MaterialId, p.Code, p.ImportPrice, p.InsDate, p.ProcessPrice, p.Deflag, p.Tax, p.SubId, p.Category, p.Material, p.PeriodWarranty),
+                predicate: p => p.ProductName.Contains(query) || p.Code.Contains(query),
+                orderBy: p => p.OrderBy(p => p.ProductName)
+            );
+
+            return products;
+        }
     }
 }

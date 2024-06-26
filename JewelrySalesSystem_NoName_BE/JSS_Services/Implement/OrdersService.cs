@@ -128,9 +128,9 @@ namespace JSS_Services.Implement
             }
 
             //Update usermoney for membership
-            //var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
-            //membership.UsedMoney += order.TotalPrice;
-            //_unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            membership.UsedMoney += order.TotalPrice;
+            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
 
             //Transaction
             Transaction tran = new Transaction()
