@@ -26,5 +26,6 @@ namespace JSS_Services.Interface
         Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone);
         Task<OrderDetailList> GetListOrderDetailByIdAsync(Guid id);
         Task<OrderProccess> GetOrderDetail(Guid orderId);
+        Task<OrderResponseUpdate> UpdateOrder(Guid orderId, OrderUpdate data);
     }
 }

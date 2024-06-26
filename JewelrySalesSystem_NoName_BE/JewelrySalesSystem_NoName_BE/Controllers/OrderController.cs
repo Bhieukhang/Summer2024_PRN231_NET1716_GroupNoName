@@ -197,10 +197,10 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
         #region GetListOrderDetailById
         /// <summary>
-        /// List order detail search by id customer 
+        /// Get list order
         /// </summary>
-        /// <returns>List order detail<returns>
-        // POST: api/v1/order/detail
+        /// <returns>Order item in stall.</returns>
+        // GET: api/v1/order/detail
         #endregion
         [HttpGet(ApiEndPointConstant.Order.OrderListDetail)]
         public async Task<ActionResult> GetListOrderDetailById(Guid id)
@@ -214,13 +214,28 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <summary>
         /// List order detail search by id order 
         /// </summary>
-        /// <returns>List order detail<returns>
-        // POST: api/v1/order/option
+        /// <returns>List order detail.<returns>
+        // GET: api/v1/order/option
         #endregion
         [HttpGet(ApiEndPointConstant.Order.OrderDiscount)]
         public async Task<ActionResult> GetOrderOption(Guid id)
         {
             var result = await _service.GetOrderDetail(id);
+            var item = JsonConvert.SerializeObject(result, Formatting.Indented);
+            return Ok(item);
+        }
+
+        #region UpdateOrder
+        /// <summary>
+        /// Update order in stall - step 2 (Optional).
+        /// </summary>
+        /// <returns>Order item in stall.</returns>
+        // POST: api/v1/order/update
+        #endregion
+        [HttpPut(ApiEndPointConstant.Order.OrderUpdate)]
+        public async Task<ActionResult> UpdateOrder(Guid id, OrderUpdate data)
+        {
+            var result = await _service.UpdateOrder(id, data);
             var item = JsonConvert.SerializeObject(result, Formatting.Indented);
             return Ok(item);
         }

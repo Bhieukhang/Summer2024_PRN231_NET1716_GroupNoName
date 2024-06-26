@@ -37,7 +37,20 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         [BindProperty]
         public OrderDTO orderData { get; set; }
 
-        public async Task<JsonResult> OnGetProductAsync(string productCode)
+        //public async Task<JsonResult> OnGetProductAsync(string productCode)
+        //{
+        //    var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
+        //    var response = await _httpClient.GetStringAsync(apiUrl);
+        //    var product = JsonConvert.DeserializeObject<ProductResponse>(response);
+        //    if (product.Product.Quantity < 1)
+        //    {
+        //        TempData["OutOfProduct"] = "Sản phẩm tạm thời hết";
+        //    }
+        //    listPromotions = product.Promotions.ToList();
+        //    return new JsonResult(product);
+        //}
+
+        public async Task<JsonResult> OnGetPromotionAsync(string productCode)
         {
             var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
             var response = await _httpClient.GetStringAsync(apiUrl);
@@ -144,10 +157,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 var orderData = JsonConvert.DeserializeObject<OrderDTO>(body);
                 Console.WriteLine($"Data order: {orderData}");
 
-                //if (orderData == null || string.IsNullOrEmpty(orderData.CustomerPhone) || orderData.TotalPrice == null || orderData.Details.Count == 0)
-                //{
-                //    return BadRequest(new { message = "Invalid order data" });
-                //}
                 var token = HttpContext.Session.GetString("Token");
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -172,7 +181,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 var orderId = (string)jsonResponse.Id;
                 var phone = orderData.CustomerPhone;
 
-                var redirectUrl = $"/Manager/Warranty/CreateWarranties?orderId={orderId}&phone={phone}";
+                var redirectUrl = $"/Staff/Orders/OptionOrder?orderId={orderId}&phone={phone}";
 
                 Console.WriteLine(redirectUrl);
                 return new JsonResult(new { redirectUrl });

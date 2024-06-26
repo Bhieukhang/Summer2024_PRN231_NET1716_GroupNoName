@@ -25,6 +25,7 @@ namespace JSS_Services.Interface
         Task<Product> UpdateProductAsync(Guid id, Product updatedData, Stream imageStream, string imageName);
         Task<bool> DeleteProductAsync(Guid id);
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
-   
+        Task<ProductMapPromotionItem> GetPromotionByCode(string productCode);
+
     }
 }

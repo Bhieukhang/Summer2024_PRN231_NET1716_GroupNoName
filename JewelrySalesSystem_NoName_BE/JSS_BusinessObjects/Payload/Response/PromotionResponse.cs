@@ -18,4 +18,23 @@ namespace JSS_BusinessObjects.Payload.Response
             Product = new ProductResponse();
         }
     }
+
+    public class ProductMapPromotionItem
+    {
+        public ProductMapPromotionItem()
+        {
+            Promotions = new List<Promotion>();
+        }
+        public string ProductCode { get; set; }
+        public List<Promotion> Promotions { get; set; }
+    }
+
+    public class PromotionItem
+    {
+        public Guid PromotionId { get; set; }
+        public string PromotionName { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int? Percentage { get; set; }
+    }
 }

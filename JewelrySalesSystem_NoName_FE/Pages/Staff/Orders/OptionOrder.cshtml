@@ -15,6 +15,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Trang sức</h4>
+                            <p><em>Chỉ gia công kim cương và giá gia công là cố định. Nếu khách hàng không gia công có thể bỏ qua mục này</em></p>
                             <div class="container">
                                 <table class="table table-bordered">
                                     <tbody id="productTableBody">
@@ -26,13 +27,19 @@
                                                     <label class="control-label">Mã sản phẩm</label>
                                                     <input type="text" class="form-control" value="@order.ProductName" readonly />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-2">
                                                     <label class="control-label">Số lượng</label>
                                                     <input type="text" class="form-control" value="@order.Quantity" readonly />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label class="control-label">Giá thi công</label>
                                                     <input type="text" class="form-control" value="@order.ProcessPrice" readonly />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Gia công</label>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" id="process-price" value="@order.ProcessPrice" class="form-check-input process-checkbox">
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -102,7 +109,8 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <labl>Chiết khấu đề xuất</labl>
-                                            <input type="text" id="percentDiscount" name="percentDiscount" class="form-control" value="@Model.member.PercentDiscount">
+                                            <input type="text" id="percentDiscount" name="percentDiscount" class="form-control"
+                                                   value="@Model.member.PercentDiscount">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -139,6 +147,7 @@
                                             <span id="totalPrice" value="@Model.OrderProccess.TotalPrice">Đ</span>
                                         </h4>
                                         <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount">0</span></h4>
+                                        <h4 class="card-title">Giá thi công: <span id="totalProccess">0</span></h4>
                                         <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable">0</span></h4>
                                         <div class="form-group">
                                             <h4 for="paymentMethod">Phương thức thanh toán</h4>
@@ -198,12 +207,77 @@
 
         //Create discount to send Manager
         $(document).ready(function () {
+            var totalProccess = 0;
+            var discountIdAccepted = null;
+            const token = $('input[name="__RequestVerificationToken"]').val();
+            function updateTotalPayable() {
+                var totalPriceStr = $('#totalPrice').attr('value');
+                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
+                if (isNaN(totalPrice)) {
+                    console.error("Invalid total price:", totalPriceStr);
+                    totalPrice = 0;
+                }
+
+                var totalDiscountStr = $('#totalDiscount').text();
+                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
+                if (isNaN(totalDiscount)) {
+                    console.error("Invalid total discount:", totalDiscountStr);
+                    totalDiscount = 0;
+                }
+
+                var totalPayable = totalPrice - totalDiscount + totalProccess;
+                if (isNaN(totalPayable)) {
+                    console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
+                    totalPayable = 0;
+                }
+
+                $('#totalPayable').text(totalPayable.toLocaleString('vi-VN') + 'Đ');
+            }
+
+            // Update the total process price when checkboxes are toggled
+            $('.process-checkbox').change(function () {
+                var processPriceStr = $(this).val();
+                console.log("Giá thi công:", processPriceStr);
+                var processPrice = parseFloat(processPriceStr.replace(/[^0-9.-]+/g, ""));
+                if (isNaN(processPrice)) {
+                    console.error("Invalid process price:", processPriceStr);
+                    processPrice = 0;
+                }
+
+                if (this.checked) {
+                    totalProccess += processPrice;
+                } else {
+                    totalProccess -= processPrice;
+                }
+
+                $('#totalProccess').text(totalProccess.toLocaleString() + 'Đ');
+                updateTotalPayable();
+            });
+
+            function updateTotalPayable() {
+                var totalPriceStr = $('#totalPrice').attr('value');
+                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
+
+                var totalDiscountStr = $('#totalDiscount').text();
+                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
+
+                var totalPayable = totalPrice - totalDiscount + totalProccess;
+
+                if (isNaN(totalPayable)) {
+                    console.error("Invalid total payable:", totalPriceStr, totalDiscountStr, totalProccess);
+                    totalPayable = 0;
+                }
+
+                $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
+            }
+
+
             $('#requestDiscountBtn').click(function () {
                 const orderId = $('#orderId').val();
                 const managerId = $('#managerId').val();
                 const percentDiscount = $('#percentDiscount').val();
                 const description = $('#description').val();
-                const token = $('input[name="__RequestVerificationToken"]').val();
+                // const token = $('input[name="__RequestVerificationToken"]').val();
 
                 const discountRequest = {
                     OrderId: orderId,
@@ -270,6 +344,7 @@
                         if (isEmptyObject(data)) {
                             $('#discountContent').html('<p><strong>Chưa có phản hồi từ quản lí</strong></p>');
                         } else {
+                            discountIdAccepted = data.Id;
                             console.log('Data fields:', data, data.Id, data.Status, data.Note);
                             let statusMessage;
                             if (data.Status === 'Accepted') {
@@ -278,7 +353,7 @@
                                 let totalPrice = parseFloat('@Model.OrderProccess.TotalPrice');
                                 let discountPercent = parseFloat(data.PercentDiscount) / 100;
                                 let totalDiscount = totalPrice * discountPercent;
-                                let totalPayable = totalPrice - totalDiscount;
+                                let totalPayable = totalPrice - totalDiscount + totalProccess;
 
 
                                 $('#totalPayable').text(totalPayable.toLocaleString() + ' Đ');
@@ -337,6 +412,39 @@
             function isEmptyObject(obj) {
                 return Object.keys(obj).every(key => obj[key] === null || obj[key] === "" || obj[key] === "00000000-0000-0000-0000-000000000000");
             }
+
+            $('#createOrderBtn').click(function () {
+                var discountId = $('#totalDiscount').text().replace(/[^0-9.-]+/g, "") || null;
+                var totalPrice = parseFloat($('#totalPrice').attr('value').replace(/[^0-9.-]+/g, ""));
+                var materialProcessPrice = parseFloat($('#totalProccess').text().replace(/[^0-9.-]+/g, ""));
+                var orderId = $('#orderId').val();
+                console.log("Discount + total + proccess", discountId, totalPrice, materialProcessPrice);
+                var orderDetails = {
+                    DiscountId: discountIdAccepted,
+                    TotalPrice: totalPrice,
+                    MaterialProcessPrice: materialProcessPrice,
+                    OrderId: orderId
+                };
+                console.log("Dữ liệu cập nhật order: ", orderDetails);
+                // Gửi yêu cầu POST đến API
+                $.ajax({
+                    type: 'PUT',
+                    url: '/Staff/Orders/OptionOrder?handler=CompleteOrder',
+                    data: JSON.stringify(orderDetails),
+                    contentType: 'application/json',
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    success: function (response) {
+                        alert('Order updated successfully');
+                        window.location.href = response.redirectUrl;
+                    },
+                    error: function (error) {
+                        alert('Error updating order: ' + error.responseText);
+                    }
+                });
+
+            });
         });
 
 
@@ -351,7 +459,13 @@
         color: white;
     }
 
-        .custom-button:hover {
+    .custom-button:hover {
             background: linear-gradient(0deg, rgba(100,49,192,0.9960434857536765) 27%, rgba(23,131,240,1) 100%);
         }
+
+    .form-check {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>

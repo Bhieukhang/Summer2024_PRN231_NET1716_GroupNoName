@@ -92,7 +92,7 @@
             public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
-
+            public const string ProductItemByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion/item";
 
 
             // Do Huu Thuan
@@ -156,6 +156,7 @@
             public const string OrderListCusomerPhone = OrderEndpoint + "/customer";
             public const string OrderListDetail = OrderEndpoint + "/detail";
             public const string OrderDiscount = OrderEndpoint + "/option";
+            public const string OrderUpdate = OrderEndpoint + "/update";
         }
         public static class Discount
         {

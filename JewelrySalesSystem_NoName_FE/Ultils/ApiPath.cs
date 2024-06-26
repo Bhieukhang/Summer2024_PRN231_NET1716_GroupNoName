@@ -73,6 +73,7 @@
         public const string SearchOrders = url + "/api/v1/order/GetListOrders/search";
         public const string SearchOrderCustomer = OrderCreate + "/customer";
         public const string OrderOption = OrderCreate + "/option";
+        public const string OrderUpdate = OrderCreate + "/update";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";
