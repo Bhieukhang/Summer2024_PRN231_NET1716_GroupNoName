@@ -24,6 +24,12 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(a => a.Id.Equals(id));
         }
 
+        public async Task<List<ProductConditionGroup>> GetPromotionGroups(Guid id)
+        {
+            var a = await _unitOfWork.GetRepository<ProductConditionGroup>().GetListAsync();
+            return a.Where(x => x.PromotionId.Equals(id)).ToList();
+        }
+
         public async Task<Promotion> CreatePromotionAsync(Promotion newData)
         {
             

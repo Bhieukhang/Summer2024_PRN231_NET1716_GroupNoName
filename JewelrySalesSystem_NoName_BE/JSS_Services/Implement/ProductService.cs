@@ -313,7 +313,7 @@ namespace JSS_Services.Implement
         public async Task DeleteProductConditionGroup(Guid promotionId)
         {
             var range = await _unitOfWork.GetRepository<ProductConditionGroup>().GetListAsync();
-            range = range.Where(x => x.Id == promotionId).ToList();
+            range = range.Where(x => x.PromotionId == promotionId).ToList();
 
             await _unitOfWork.GetRepository<ProductConditionGroup>().DeleteRangeAsync(range);
             await _unitOfWork.CommitAsync();

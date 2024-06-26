@@ -1,4 +1,5 @@
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.DTOs.Promotions;
 using JewelrySalesSystem_NoName_FE.Requests.Promotions;
 using JewelrySalesSystem_NoName_FE.Responses;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -16,6 +17,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         [BindProperty]
         public List<ProductDTO> Products { get; set; } = new();
 
+        [BindProperty]
+
+        public List<GroupDTO> Groups { get; set; } = new();
+
         public async Task<IActionResult> OnGet(Guid promotionId)
         {
             try
@@ -30,6 +35,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                     return RedirectToPage("/Auth/Login");
                 }
                 Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
+                Groups = await ApiClient.GetAsync<List<GroupDTO>>($"{ApiPath.PromotionGroup}?id={promotionId}", token);
             }
             catch (Exception ex)
             {
@@ -44,7 +50,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
             try
             {
                 if (EditPromotionRequest == null) throw new Exception("Promotion data is invalid.");
-
+                var list = (EditPromotionRequest.ProductJson ?? "").Split(" ");
+                List<Guid> guids = new List<Guid>();
+                foreach (var item in list)
+                {
+                    guids.Add(Guid.Parse(item));
+                }
+                EditPromotionRequest.ProductIds = guids;
                 var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token);
                 if (!response.Success) throw new Exception(response.Message);
 

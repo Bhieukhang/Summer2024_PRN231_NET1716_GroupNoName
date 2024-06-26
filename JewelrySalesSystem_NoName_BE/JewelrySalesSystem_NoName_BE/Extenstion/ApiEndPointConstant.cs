@@ -104,6 +104,8 @@
         {
             public const string PromotionEndpoint = ApiEndpoint + "/Promotion";
             public const string PromotionByIdEndpoint = PromotionEndpoint + "/id";
+            public const string PromotionGroupEndpoint = PromotionEndpoint + "/group";
+
         }
         public static class Dashboard
         {

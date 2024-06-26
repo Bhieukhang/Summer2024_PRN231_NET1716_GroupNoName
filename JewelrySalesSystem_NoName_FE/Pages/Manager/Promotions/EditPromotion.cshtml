@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Chỉnh sửa khuyến mãi</h4>
-                    <form class="forms-sample" method="post" enctype="multipart/form-data">
+                    <form id="form-submit" class="forms-sample" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <input asp-for="EditPromotionRequest.Id" class="form-control" type="hidden" />
                         </div>
@@ -66,7 +66,7 @@
                                 @foreach (var item in Model.Products)
                                 {
                                     <div class="col-sm-12 col-lg-4">
-                                        <input checked=" @(Model.EditPromotionRequest?.ProductConditionGroups?.Where(x => x.Id == item.Id)!= null ? "checked" : "")" type="checkbox" name="ProductId" value="@item.Id" class="form-checkbox" />
+                                        <input @(Model.Groups.Any(x => x.ProductId == item.Id) ? "checked" : "") type="checkbox" name="ProductId" value="@item.Id" class="form-checkbox" />
                                         <span class="ms-2">@item.ProductName</span>
                                     </div>
                                 }
@@ -80,7 +80,7 @@
                                     <i class="bi bi-arrow-left"></i>
                                     <span>Trở về</span>
                                 </a>
-                                <button type="submit" class="btn btn-primary ">
+                                <button type="button" onclick="preSubmit();" class="btn btn-primary ">
                                     <i class="bi bi-pencil"></i>
                                     <span>Lưu</span>
                                 </button>
@@ -100,3 +100,21 @@
     </div>
 </div>
 
+<script>
+
+    function preSubmit() {
+        var productIds = document.getElementsByName('ProductId');
+        var listProduct = "";
+
+        for (var i = 0; i < productIds.length; i++) {
+            if (productIds[i].checked) {
+                listProduct += productIds[i].value + " ";
+            }
+        }
+        console.log(listProduct);
+        document.getElementById('product-json').value = listProduct.trim();
+        document.getElementById('form-submit').submit();
+
+
+    }
+</script>

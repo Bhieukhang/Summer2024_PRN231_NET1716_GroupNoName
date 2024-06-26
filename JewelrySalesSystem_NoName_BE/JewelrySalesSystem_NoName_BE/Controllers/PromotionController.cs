@@ -57,6 +57,17 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(promotion);
         }
 
+        [HttpGet(ApiEndPointConstant.Promotion.PromotionGroupEndpoint)]
+        public async Task<IActionResult> GetPromotionGroups(Guid id)
+        {
+            var groups = await _promotionService.GetPromotionGroups(id);
+            if (groups == null)
+            {
+                return NotFound();
+            }
+            return Ok(groups);
+        }
+
         #region UpdatePromotion
         /// <summary>
         /// Update a Promotion by its ID.
