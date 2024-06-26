@@ -161,6 +161,14 @@
             public const string OrderListDetail = OrderEndpoint + "/detail";
             public const string OrderDiscount = OrderEndpoint + "/option";
         }
+        //  Do Huu Thuan
+        public static class OrderDetail
+        {
+            public const string OrderDetailEndpoint = ApiEndpoint + "/OrderDetail";
+            public const string OrderDetailByIdEndpoint = OrderDetailEndpoint + "/id";
+
+        }
+
         public static class Discount
         {
             public const string DiscountConfirmEndpoint = ApiEndpoint + "/discount/confirm";
