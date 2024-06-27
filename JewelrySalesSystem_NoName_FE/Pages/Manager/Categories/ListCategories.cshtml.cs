@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.Ultils;
+﻿using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -71,7 +71,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Category not found.");
+                ModelState.AddModelError(string.Empty, "Không tìm thấy loại trang sức.");
                 cateList = new List<CategoryDTO>();
             }
             return Page();

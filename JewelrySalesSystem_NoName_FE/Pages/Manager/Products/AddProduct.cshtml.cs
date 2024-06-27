@@ -1,4 +1,4 @@
-using Firebase.Storage;
+﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -34,7 +34,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -51,12 +51,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
                 if (mateResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
                 
@@ -76,7 +76,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -90,7 +90,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
+                    ModelState.AddModelError(string.Empty, "Dung lượng file upload quá nặng !.");
                     return Page();
                 }
 
@@ -140,13 +140,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Jewelry is added successfully!";
+                    TempData["SuccessMessage"] = "Trang sức mới được thêm thành công !";
                     return RedirectToPage("./ListProduct");
                 }
                 else

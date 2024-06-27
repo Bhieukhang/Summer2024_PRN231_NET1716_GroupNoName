@@ -1,28 +1,27 @@
-﻿using Firebase.Storage;
-using JewelrySalesSystem_NoName_FE.DTOs.Material;
+using Firebase.Storage;
+using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
 {
-    public class EditProductModel : PageModel
+    public class EditCategoryModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly string _bucket;
 
         [BindProperty]
-        public ProductDTO Product { get; set; }
+        public DiamondDTO Diamond { get; set; }
 
         [BindProperty]
         public IFormFile Image { get; set; }
-        public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
-        public IList<MaterialDTO> MaterialList { get; set; } = new List<MaterialDTO>();
 
-        public EditProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public EditCategoryModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
@@ -34,7 +33,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -43,24 +42,16 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
+                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
                 var response = await client.GetAsync(apiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
 
-                Product = JsonConvert.DeserializeObject<ProductDTO>(await response.Content.ReadAsStringAsync());
-
-                var categoryApiUrl = $"{ApiPath.CategoryList}";
-                var categoryResponse = await client.GetAsync(categoryApiUrl);
-                CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
-
-                var materialApiUrl = $"{ApiPath.MaterialList}";
-                var materialResponse = await client.GetAsync(materialApiUrl);
-                MaterialList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());
+                Diamond = JsonConvert.DeserializeObject<DiamondDTO>(await response.Content.ReadAsStringAsync());
 
                 return Page();
             }
@@ -76,7 +67,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -89,7 +80,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "Dung lượng file quá lớn !");
+                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
                     return Page();
                 }
 
@@ -102,51 +93,51 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                         Image.CopyTo(stream);
                         stream.Seek(0, SeekOrigin.Begin);
                         var uploadTask = storage.Child("uploads").Child(uniqueFileName).PutAsync(stream);
-                        Product.ImgProduct = await uploadTask;
+                        Diamond.ImageDiamond = await uploadTask;
 
                         stream.Seek(0, SeekOrigin.Begin);
-                        Product.ImgProduct = Convert.ToBase64String(stream.ToArray());
+                        Diamond.ImageDiamond = Convert.ToBase64String(stream.ToArray());
                     }
                 }
 
-                var productRequest = new ProductRequest
+                Diamond.UpsDate = DateTime.Now;
+
+                var diamond = new DiamondDTO
                 {
-                    ProductName = Product.ProductName,
-                    Description = Product.Description,
-                    SellingPrice = Product.SellingPrice,
-                    Size = Product.Size,
-                    ImportPrice = Product.ImportPrice,
-                    Deflag = Product.Deflag,
-                    CategoryId = Product.CategoryId,
-                    Quantity = Product.Quantity,
-                    ProcessPrice = Product.ProcessPrice,
-                    MaterialId = Product.MaterialId,
-                    Code = Product.Code,
-                    ImgProduct = Product.ImgProduct,
-                    Tax = Product.Tax
+                    Code = Diamond.Code,
+                    DiamondName = Diamond.DiamondName,
+                    Carat = Diamond.Carat,
+                    Color = Diamond.Color,
+                    Clarity = Diamond.Clarity,
+                    Cut = Diamond.Cut,
+                    ImageDiamond = Diamond.ImageDiamond,
+                    Price = Diamond.Price,
+                    Quantity = Diamond.Quantity,
+                    InsDate = Diamond.InsDate,
+                    UpsDate = Diamond.UpsDate,
                 };
 
-                var json = JsonConvert.SerializeObject(productRequest);
+                var json = JsonConvert.SerializeObject(diamond);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var apiUrl = $"{ApiPath.ProductList}/id?id={id}";
+                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
                 var response = await client.PutAsync(apiUrl, content);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "Trang sức " + productRequest.Code + "được cập nhật thành công !";
-                    return RedirectToPage("./ListProduct");
+                    TempData["SuccessMessage"] = "The Diamond is updated successfully!";
+                    return RedirectToPage("./ListDiamond");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the diamond. Status Code: {response.StatusCode}, Response: {responseBody}");
                 }
             }
             catch (Exception ex)

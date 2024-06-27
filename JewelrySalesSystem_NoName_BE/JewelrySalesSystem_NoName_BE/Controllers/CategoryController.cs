@@ -67,7 +67,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created category.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPost(ApiEndPointConstant.Category.CategoryEndpoint)]
         public async Task<ActionResult<CategoryResponse>> CreateCategoryAsync(CategoryRequest category)
         {
@@ -89,7 +89,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated category.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPut(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<ActionResult<Category>> UpdateCategoryAsync(Guid id, Category category)
         {
@@ -110,7 +110,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>A response indicating the result of the delete operation.</returns>
         /// POST : api/Category
         #endregion
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpDelete(ApiEndPointConstant.Category.CategoryByIdEndpoint)]
         public async Task<IActionResult> DeleteCategoryAsync(Guid id)
         {

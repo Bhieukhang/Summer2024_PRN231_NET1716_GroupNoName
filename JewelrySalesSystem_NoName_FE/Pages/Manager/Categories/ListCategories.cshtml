@@ -1,67 +1,39 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Categories.ListCategoriesModel
 @{
+    ViewData["Title"] = "Danh sách loại trang sức";
 }
+
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title"> DANH SÁCH LOẠI TRANG SỨC </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/Manager/Products/AddProduct">
-                            <span class="menu-title"></span>
-                            <button type="button" class="btn btn-gradient-primary btn-fw">
-                                <i class="mdi mdi-plus"></i>
-                                Thêm loại trang sức
-                            </button>
-                        </a>
-                    </li>
-                </ol>
-            </nav>
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <h3 class="page-title">Danh sách loại trang sức</h3>
+            <a class="nav-link" href="~/Manager/Categories/AddCategory">
+                <button type="button" class="btn btn-gradient-danger btn-fw">
+                    <i class="mdi mdi-plus"></i> Thêm loại trang sức
+                </button>
+            </a>
         </div>
-        @* <form method="post" asp-page-handler="Search">
-            <br />
-            <div class="form-group">
-                <input type="text" id="searchCode" name="SearchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" />
-                <span asp-validation-for="SearchCode" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-gradient-secondary btn-fw">
-                <i class="mdi mdi-magnify"></i>
-                Tìm Kiếm
-            </button>
-        </form> *@
-        <br/>
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Tên</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.cateList)
-                            {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    @* <td><a asp-page="./DetailsProduct" asp-route-id="@item.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
-                                    @* <td><a asp-page="./EditProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
-                                            <i class="mdi mdi-file-check btn-icon-append"></i>
-                                            Chỉnh sửa
-                                        </a>
-                                    </td> *@
-                                    @* <td><a asp-page="./DeleteProduct" asp-route-id="@item.Id" class="btn btn-outline-success btn-icon-text">
-                                        <i class="mdi mdi-delete"></i>
-                                    Xóa    
-                                    </a></td> *@
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        <br />
+        <div class="row">
+            @foreach (var item in Model.cateList)
+            {
+                <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <a asp-page="./EditCategory" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                    <i class="mdi mdi-file-check"></i> Chỉnh sửa
+                                </a>
+                                <a asp-page="./DeleteCategory" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="mdi mdi-delete-forever"></i> Xóa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
