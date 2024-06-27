@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 
@@ -41,7 +42,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         [BindProperty(SupportsGet = true)]
         public OrderProccess OrderProccess { get; set; } = new OrderProccess();
         public List<OrderDetailProccess> orderDetailProccesses { get; set; } = new List<OrderDetailProccess>();
-        public MembershipInfo member;
+        public MembershipInfo member { get; set; } = new MembershipInfo();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -100,6 +101,42 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 }
                 else
                 {
+                    ResponseMessage = $"Error: {response.ReasonPhrase}";
+                }
+
+                return new JsonResult(new { success = response.IsSuccessStatusCode, message = ResponseMessage });
+            }
+        }
+
+        public async Task<IActionResult> OnPutCompleteOrderAsync()
+        {
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var data = JsonConvert.DeserializeObject<OrderPatch>(body);
+                Console.WriteLine($"Data order: {data}");
+                var orderId = data.OrderId;
+
+                var token = HttpContext.Session.GetString("Token");
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                var response = await client.PutAsync($"{ApiPath.OrderUpdate}?id={orderId}", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var phone = (string)jsonResponse.Phone;
+
+                    var redirectUrl = $"/Manager/Warranty/CreateWarranties?orderId={orderId}&phone={phone}";
+                    Console.WriteLine(redirectUrl);
+                    return new JsonResult(new { redirectUrl });
+                }
+                else
+                {
+                    // Handle failure
                     ResponseMessage = $"Error: {response.ReasonPhrase}";
                 }
 

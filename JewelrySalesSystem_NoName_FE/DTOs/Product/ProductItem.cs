@@ -40,4 +40,10 @@
         public List<Promotion> Promotions { get; set; }
     }
 
+    public class ProductSearchCode
+    {
+        public string ProductCode { get; set; }
+        public List<Promotion> Promotions { get; set; }
+    }
+
 }

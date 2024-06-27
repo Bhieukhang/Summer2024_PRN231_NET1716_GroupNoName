@@ -43,6 +43,18 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public Guid ProductId { get; set; }
     }
-        
+
+    public class OrderUpdate
+    {
+        public Guid? DiscountId { set; get; }
+        public double? TotalPrice { get; set; }
+        public double? MaterialProcessPrice { get; set; }
+    }
+
+    public class OrderResponseUpdate
+    {
+        public string Phone { get; set; }
+        public Guid OrderId { get; set; }
+    }
    
 }

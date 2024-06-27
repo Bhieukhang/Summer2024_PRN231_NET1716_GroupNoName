@@ -48,11 +48,12 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Ngày hết hạn<span class="required">*</span></label>
-                                    <input type="date" class="form-control" id="ExpirationDate_@order.ProductId" required />
+                                    <input type="date" class="form-control" id="ExpirationDate_@order.ProductId" readonly required />
                                 </div>
                                 <div class="col-md-2">
                                     <label class="control-label">Thời hạn (tháng)<span class="required">*</span></label>
-                                    <input type="number" class="form-control" id="Period_@order.ProductId" value="@order.PeriodWarranty" required />
+                                    <input type="number" class="form-control" id="Period_@order.ProductId" value="@order.PeriodWarranty"
+                                           onchange="setExpirationDate('@order.ProductId')" required />
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-gradient-secondary mt-4" onclick="loadConditions('@order.ProductId')">Chọn điều kiện</button>
@@ -222,6 +223,7 @@
         function setExpirationMinDate(productId) {
             const dateOfPurchaseElement = document.getElementById(`DateOfPurchase_${productId}`);
             const expirationDateElement = document.getElementById(`ExpirationDate_${productId}`);
+            const periodElement = document.getElementById(`Period_${productId}`);
 
             if (dateOfPurchaseElement && expirationDateElement) {
                 const dateOfPurchase = dateOfPurchaseElement.value;
@@ -229,8 +231,24 @@
                     const minExpirationDate = addDays(dateOfPurchase, 10);
                     expirationDateElement.setAttribute('min', minExpirationDate);
                 }
+                const period = parseInt(periodElement.value);
+
+                if (dateOfPurchase && !isNaN(period)) {
+                    const expirationDate = addMonths(dateOfPurchase, period);
+                    expirationDateElement.value = expirationDate;
+                }
             }
         }
+        // function updateExpirationDate(productId) {
+        //     setExpirationMinDate(productId);
+        // }
+
+        function addMonths(date, months) {
+            const result = new Date(date);
+            result.setMonth(result.getMonth() + months);
+            return result.toISOString().split('T')[0];
+        }
+
 
         function submitForm(event) {
             event.preventDefault();

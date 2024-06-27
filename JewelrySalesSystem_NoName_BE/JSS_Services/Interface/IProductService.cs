@@ -25,6 +25,7 @@ namespace JSS_Services.Interface
         Task AddProductConditionGroup(Guid productId, Guid promotionId);
         Task DeleteProductConditionGroup( Guid promotionId);
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
+        Task<ProductMapPromotionItem> GetPromotionByCode(string productCode);
         Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query);
 
 

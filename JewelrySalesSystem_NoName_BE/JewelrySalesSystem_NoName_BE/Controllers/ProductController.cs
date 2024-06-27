@@ -323,6 +323,23 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(result);
         }
 
+        #region PromotionFromProductCode
+        /// <summary>
+        /// Search product code by product code to get promotion item
+        /// </summary>
+        /// <param name="productCode">The Product code of Product.</param>
+        /// <returns>Product code item and list promotion mapping product.</returns>
+        /// POST : api/Product
+        #endregion
+        [HttpGet((ApiEndPointConstant.Product.ProductItemByCodePromotionEndpoint))]
+        public async Task<IActionResult> PromotionFromProductCode(String productCode)
+        {
+            var listPromotion = await _productService.GetPromotionByCode(productCode);
+            var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);
+            return Ok(result);
+        }
+
+
         //DO Huu Thuan
         #region GetTotalSubProductAsync
         /// <summary>

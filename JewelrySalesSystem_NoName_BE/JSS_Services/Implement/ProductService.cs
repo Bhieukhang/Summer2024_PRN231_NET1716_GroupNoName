@@ -290,6 +290,37 @@ namespace JSS_Services.Implement
             return promotionMapProduct;
         }
 
+        public async Task<ProductMapPromotionItem> GetPromotionByCode(string productCode)
+        {
+            ProductMapPromotionItem promotionMapProduct = new ProductMapPromotionItem();
+
+            var productItem = await _unitOfWork.GetRepository<Product>()
+                                               .FirstOrDefaultAsync(p => p.Code == productCode,
+                                                                    include: p => p.Include(p => p.ProductConditionGroups));
+            if (productItem == null)
+            {
+                return promotionMapProduct;
+            }
+            promotionMapProduct.ProductCode = productItem.Code;
+            List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
+
+            foreach (var conditionGroup in listProductMapPromotion)
+            {
+                if (conditionGroup != null)
+                {
+                    var promotionItem = await _unitOfWork.GetRepository<Promotion>()
+                                                         .FirstOrDefaultAsync(p => p.Id == conditionGroup.PromotionId &&
+                                                                                   p.StartDate < DateTime.Now &&
+                                                                                   p.EndDate > DateTime.Now);
+                    if (promotionItem != null)
+                    {
+                        promotionMapProduct.Promotions.Add(promotionItem);
+                    }
+                }
+            }
+            return promotionMapProduct;
+        }
+
         private double? CalculateSellingPrice(Product product, double? goldRate)
         {
             return (product.ImportPrice ?? 0) * goldRate + (product.ProcessPrice ?? 0) + (product.Tax ?? 0);

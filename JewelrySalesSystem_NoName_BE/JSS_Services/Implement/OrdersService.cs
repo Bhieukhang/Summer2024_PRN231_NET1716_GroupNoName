@@ -147,7 +147,7 @@ namespace JSS_Services.Implement
             //Save order
             await _unitOfWork.GetRepository<Order>().InsertAsync(order);
             //Save transaction
-            _unitOfWork.GetRepository<Transaction>().InsertAsync(tran);
+            await _unitOfWork.GetRepository<Transaction>().InsertAsync(tran);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
@@ -402,6 +402,27 @@ namespace JSS_Services.Implement
                 _logger.LogError(ex, "Error occurred while getting the order by ID");
                 throw;
             }
+        }
+
+        public async Task<OrderResponseUpdate> UpdateOrder(Guid orderId, OrderUpdate data)
+        {
+            var orderItem = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(o => o.Id == orderId,
+                                    include: o => o.Include(o => o.Customer));
+            if (orderItem == null)
+            {
+                return new OrderResponseUpdate();
+            }
+            orderItem.DiscountId = data.DiscountId;
+            orderItem.MaterialProcessPrice = data.MaterialProcessPrice;
+            orderItem.TotalPrice = data.TotalPrice;
+
+            OrderResponseUpdate order = new OrderResponseUpdate();
+            order.OrderId = orderId;
+            order.Phone = orderItem.Customer.Phone;
+            _unitOfWork.GetRepository<Order>().UpdateAsync(orderItem);
+            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+            if (!isSuccessful) return null;
+            return order;
         }
     }
 }
