@@ -4,6 +4,7 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System;
 
 // DO huu Thuan
 
@@ -118,8 +119,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     ProcessPrice = Product.ProcessPrice,
                     MaterialId = Product.MaterialId,
                     Code = Product.Code,
+                    Tax = Product.Tax,
                     ImgProduct = Product.ImgProduct,
-                    Tax = Product.Tax
+                    PeriodWarranty = Product.PeriodWarranty,
+                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
+                 
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);

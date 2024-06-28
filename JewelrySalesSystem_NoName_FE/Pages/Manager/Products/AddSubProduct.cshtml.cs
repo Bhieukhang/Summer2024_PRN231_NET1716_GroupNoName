@@ -128,6 +128,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     ImgProduct = Product.ImgProduct,
                     Tax = Product.Tax,
                     SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
+                    PeriodWarranty = Product.PeriodWarranty,
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);
