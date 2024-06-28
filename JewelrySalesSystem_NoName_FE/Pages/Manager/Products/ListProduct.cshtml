@@ -56,47 +56,96 @@
             <div class="card">
                 <div class="card-body" id="autocomplete-suggestion">
                     <div class="row" id="productList">
-                        @foreach (var item in Model.productList)
+                        @if (Model.SearchCode == null)
                         {
+                            @foreach (var item in Model.productList)
+                            {
+                                <div class="col-md-3 d-flex align-items-stretch">
+                                    <div class="card product-card">
+                                        <img class="card-img-top product-image" src="@item.ImgProduct" alt="Card image cap">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">@item.ProductName</h5>
+                                            <p class="card-text">Code : <strong>@item.Code</strong></p>
+                                            <p class="card-text">Loại : <strong>@item.Category?.Name</strong></p>
+                                            <p class="card-text">Số Lượng : <strong>@item.Quantity</strong></p>
+                                            <p class="card-text">Giá Bán : <strong>@item.SellingPrice</strong></p>
+                                            <div class="mt-auto d-flex justify-content-between">
+                                                <a href="/Manager/Products/EditProduct?id=@item.Id" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#productModal-@item.Id" class="btn btn-outline-danger btn-fw">
+                                                    <i class="fa fa-eye menu-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="product-details">
+                                                    <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
+                                                    <div class="product-info">
+                                                        <h4>@item.ProductName</h4>
+                                                        <p><strong>Code :</strong> @item.Code</p>
+                                                        <p><strong>Chất liệu :</strong> @item.Material?.MaterialName</p>
+                                                        <p><strong>Mô tả :</strong> @item.Description</p>
+                                                        <p><strong>Kích thước :</strong> @item.Size</p>
+                                                        <p><strong>Số lượng :</strong> @item.Quantity</p>
+                                                        <p><strong>Giá Bán :</strong> @item.SellingPrice</p>
+                                                        <p><strong>Loại :</strong> @item.Category?.Name</p>
+                                                        <p><strong>Ngày nhập :</strong> @item.InsDate</p>
+                                                        <p><strong>Thời lượng bảo hành :</strong> @item.PeriodWarranty tháng</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        } else {
                             <div class="col-md-3 d-flex align-items-stretch">
                                 <div class="card product-card">
-                                    <img class="card-img-top product-image" src="@item.ImgProduct" alt="Card image cap">
+                                    <img class="card-img-top product-image" src="@Model.searchItem.ImgProduct" alt="Card image cap">
                                     <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title">@item.ProductName</h5>
-                                        <p class="card-text">Code : <strong>@item.Code</strong></p>
-                                        <p class="card-text">Loại : <strong>@item.Category?.Name</strong></p>
-                                        <p class="card-text">Số Lượng : <strong>@item.Quantity</strong></p>
-                                        <p class="card-text">Giá Bán : <strong>@item.SellingPrice</strong></p>
+                                        <h5 class="card-title">@Model.searchItem.ProductName</h5>
+                                        <p class="card-text">Code : <strong>@Model.searchItem.Code</strong></p>
+                                        <p class="card-text">Loại : <strong>@Model.searchItem.Category?.Name</strong></p>
+                                        <p class="card-text">Số Lượng : <strong>@Model.searchItem.Quantity</strong></p>
+                                        <p class="card-text">Giá Bán : <strong>@Model.searchItem.SellingPrice</strong></p>
                                         <div class="mt-auto d-flex justify-content-between">
-                                            <a href="/Manager/Products/EditProduct?id=@item.Id" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
-                                            <a data-bs-toggle="modal" data-bs-target="#productModal-@item.Id" class="btn btn-outline-danger btn-fw">
+                                            <a href="/Manager/Products/EditProduct?id=@Model.searchItem.Id" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#productModal-@Model.searchItem.Id" class="btn btn-outline-danger btn-fw">
                                                 <i class="fa fa-eye menu-icon"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
+                            <div class="modal fade" id="productModal-@Model.searchItem.Id" tabindex="-1" aria-labelledby="productModalLabel-@Model.searchItem.Id" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                            <h5 class="modal-title" id="productModalLabel-@Model.searchItem.Id">Chi tiết trang sức</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="product-details">
-                                                <img src="@item.ImgProduct" alt="Product Image" class="product-image" />
+                                                <img src="@Model.searchItem.ImgProduct" alt="Product Image" class="product-image" />
                                                 <div class="product-info">
-                                                    <h4>@item.ProductName</h4>
-                                                    <p><strong>Code :</strong> @item.Code</p>
-                                                    <p><strong>Chất liệu :</strong> @item.Material?.MaterialName</p>
-                                                    <p><strong>Mô tả :</strong> @item.Description</p>
-                                                    <p><strong>Kích thước :</strong> @item.Size</p>
-                                                    <p><strong>Số lượng :</strong> @item.Quantity</p>
-                                                    <p><strong>Giá Bán :</strong> @item.SellingPrice</p>
-                                                    <p><strong>Loại :</strong> @item.Category?.Name</p>
-                                                    <p><strong>Ngày nhập :</strong> @item.InsDate</p>
-                                                    <p><strong>Thời lượng bảo hành :</strong> @item.PeriodWarranty tháng</p>
+                                                    <h4>@Model.searchItem.ProductName</h4>
+                                                    <p><strong>Code :</strong> @Model.searchItem.Code</p>
+                                                    <p><strong>Chất liệu :</strong> @Model.searchItem.Material?.MaterialName</p>
+                                                    <p><strong>Mô tả :</strong> @Model.searchItem.Description</p>
+                                                    <p><strong>Kích thước :</strong> @Model.searchItem.Size</p>
+                                                    <p><strong>Số lượng :</strong> @Model.searchItem.Quantity</p>
+                                                    <p><strong>Giá Bán :</strong> @Model.searchItem.SellingPrice</p>
+                                                    <p><strong>Loại :</strong> @Model.searchItem.Category?.Name</p>
+                                                    <p><strong>Ngày nhập :</strong> @Model.searchItem.InsDate</p>
+                                                    <p><strong>Thời lượng bảo hành :</strong> @Model.searchItem.PeriodWarranty tháng</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,7 +153,9 @@
                                 </div>
                             </div>
                         }
+
                     </div>
+
                     <nav aria-label="Page navigation example" style="padding-top:50px">
                         <ul class="pagination justify-content-end">
                             <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
@@ -193,11 +244,11 @@
                                 suggestionItem.classList.add("autocomplete-item");
 
                                 suggestionItem.innerHTML = `
-                                    <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
-                                    <div class="product-details-search">
-                                        <h5 class="product-name-search">${item.productName}</h5>
-                                        <p class="product-code-search">Code: <strong>${item.code}</strong></p>
-                                    </div>`;
+                                                    <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
+                                                    <div class="product-details-search">
+                                                        <h5 class="product-name-search">${item.productName}</h5>
+                                                        <p class="product-code-search">Code: <strong>${item.code}</strong></p>
+                                                    </div>`;
 
                                 suggestionItem.onclick = function () {
                                     document.getElementById("searchCode").value = item.code;
@@ -337,8 +388,8 @@
             }
 
             .product-details -search
-                display: flex;
-                flex-direction: column;
+            display: flex;
+            flex-direction: column;
             }
 
             .product-name-search {

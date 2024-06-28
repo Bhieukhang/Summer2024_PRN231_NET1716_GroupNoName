@@ -30,6 +30,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
         public IList<MaterialDTO> mateList { get; set; } = new List<MaterialDTO>();
+        public ProductDTO searchItem = new ProductDTO();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
@@ -72,16 +73,23 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var productResponse = await client.GetStringAsync(url);
                 Console.WriteLine($"API Response: {productResponse}");
 
-
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
-                if (paginateResult != null)
+                if (searchCode != null)
                 {
-                    TotalPages = paginateResult.TotalPages;
-                    productList = paginateResult.Items;
+                    var result = JsonConvert.DeserializeObject<ProductDTO>(productResponse);
+                    searchItem = result;
                 }
                 else
                 {
-                    productList = new List<ProductDTO>();
+                    var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
+                    if (paginateResult != null)
+                    {
+                        TotalPages = paginateResult.TotalPages;
+                        productList = paginateResult.Items;
+                    }
+                    else
+                    {
+                        productList = new List<ProductDTO>();
+                    }
                 }
 
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
