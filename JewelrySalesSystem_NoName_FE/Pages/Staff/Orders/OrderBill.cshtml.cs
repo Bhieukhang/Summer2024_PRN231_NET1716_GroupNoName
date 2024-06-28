@@ -5,8 +5,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 {
     public class OrderBillModel : PageModel
     {
-        public void OnGet()
-        {
-        }
+
+        [BindProperty]
+        public string? SearchCode { get; set; }
     }
 }

@@ -210,6 +210,7 @@
             var totalProccess = 0;
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
+            
             function updateTotalPayable() {
                 var totalPriceStr = $('#totalPrice').attr('value');
                 var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
@@ -288,7 +289,7 @@
                 };
 
                 console.log("Discount request: ", discountRequest);
-
+                console.log("Token create: ", token);
                 $.ajax({
                     url: '/Staff/Orders/OptionOrder?handler=SendRequirement',
                     type: 'POST',
