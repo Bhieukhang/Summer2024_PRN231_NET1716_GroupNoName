@@ -1,6 +1,7 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Staff.Menu.MenuModel
 @{
+    ViewData["Title"] = "Diamond Price List";
 }
 <div class="main-panel">
     <div class="content-wrapper">
@@ -8,134 +9,102 @@
             <div class="col-12 grid-margin">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Giá Kim Cương 3LY6 </h4>
+                        <h4 class="card-title text-center">Bảng giá kim cương giá phổ thông </h4>
                         <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        
-                                        <th> 3.6 mm </th>
-                                        <th>IF </th>
-                                        <th>VVS1</th>
-                                        <th>VVS2 </th>
-                                        <th>VS1 </th>
-                                        <th>VS2 </th>
+                            <table class="table table-bordered table-hover">
+                                <thead class="thead-dark">
+                                    <tr class="text-center">
+                                        <th>Size (mm)</th>
+                                        <th>Clarity</th>
+                                        <th>D</th>
+                                        <th>E</th>
+                                        <th>F</th>
+                                        <th>G</th>
+                                        <th>H</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td> D </td>
-                                        <td>15,500,000 </td>
-                                        <td>13,900,000 </td>
-                                        <td> 12,900,000 </td>
-                                        <td>11,000,000 </td>
-                                        <td>10,500,000 </td>
-                                    </tr>
-                                    <tr>
-                                        <td> E </td>
+                                    <!-- 3.5 mm -->
+                                    <tr class="text-center">
+                                        <td rowspan="3">3.5</td>
+                                        <td>IF</td>
+                                        <td>15,500,000</td>
                                         <td>14,500,000</td>
-                                        <td>14,500,000 </td>
-                                        <td> 12,400,000 </td>
-                                        <td>10,500,000 </td>
-                                        <td>10,100,000 </td>
+                                        <td>13,900,000</td>
+                                        <td>13,500,000</td>
+                                        <td>13,000,000</td>
                                     </tr>
-                                    <tr>
-                                        <td> F </td>
-                                        <td>13,900,000 </td>
-                                        <td>13,400,000 </td>
-                                        <td> 11,600,000 </td>
-                                        <td>10,100,000 </td>
-                                        <td> 9,500,000 </td>
+                                    <tr class="text-center">
+                                        <td>VVS1</td>
+                                        <td>13,900,000</td>
+                                        <td>13,500,000</td>
+                                        <td>13,000,000</td>
+                                        <td>12,500,000</td>
+                                        <td>12,000,000</td>
                                     </tr>
-                            </table>
-                            
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">Giá Kim Cương 4LY5 </h4>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead >
-                                    <tr>
-
-                                        <th> 3.6 mm </th>
-                                        <th>IF </th>
-                                        <th>VVS1</th>
-                                        <th>VVS2 </th>
-                                        <th>VS1 </th>
-                                        <th>VS2 </th>
+                                    <tr class="text-center">
+                                        <td>VVS2</td>
+                                        <td>12,900,000</td>
+                                        <td>12,500,000</td>
+                                        <td>12,000,000</td>
+                                        <td>11,500,000</td>
+                                        <td>11,000,000</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td> D </td>
-                                        <td>15,500,000 </td>
-                                        <td>13,900,000 </td>
-                                        <td> 12,900,000 </td>
-                                        <td>11,000,000 </td>
-                                        <td>10,500,000 </td>
-                                    </tr>
-                                    <tr>
-                                        <td> E </td>
+                                    <!-- 4.0 mm -->
+                                    <tr class="text-center">
+                                        <td rowspan="3">4.0</td>
+                                        <td>IF</td>
+                                        <td>17,000,000</td>
+                                        <td>16,000,000</td>
+                                        <td>15,500,000</td>
+                                        <td>15,000,000</td>
                                         <td>14,500,000</td>
-                                        <td>14,500,000 </td>
-                                        <td> 12,400,000 </td>
-                                        <td>10,500,000 </td>
-                                        <td>10,100,000 </td>
                                     </tr>
-                                    <tr>
-                                        <td> F </td>
-                                        <td>13,900,000 </td>
-                                        <td>13,400,000 </td>
-                                        <td> 11,600,000 </td>
-                                        <td>10,100,000 </td>
-                                        <td> 9,500,000 </td>
+                                    <tr class="text-center">
+                                        <td>VVS1</td>
+                                        <td>15,000,000</td>
+                                        <td>14,500,000</td>
+                                        <td>14,000,000</td>
+                                        <td>13,500,000</td>
+                                        <td>13,000,000</td>
                                     </tr>
+                                    <tr class="text-center">
+                                        <td>VVS2</td>
+                                        <td>14,000,000</td>
+                                        <td>13,500,000</td>
+                                        <td>13,000,000</td>
+                                        <td>12,500,000</td>
+                                        <td>12,000,000</td>
+                                    </tr>
+                                    <!-- 4.5 mm -->
+                                    <tr class="text-center">
+                                        <td rowspan="3">4.5</td>
+                                        <td>IF</td>
+                                        <td>20,000,000</td>
+                                        <td>19,000,000</td>
+                                        <td>18,500,000</td>
+                                        <td>18,000,000</td>
+                                        <td>17,500,000</td>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td>VVS1</td>
+                                        <td>18,000,000</td>
+                                        <td>17,500,000</td>
+                                        <td>17,000,000</td>
+                                        <td>16,500,000</td>
+                                        <td>16,000,000</td>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td>VVS2</td>
+                                        <td>17,000,000</td>
+                                        <td>16,500,000</td>
+                                        <td>16,000,000</td>
+                                        <td>15,500,000</td>
+                                        <td>15,000,000</td>
+                                    </tr>
+                                    <!-- Add more rows as needed -->
+                                </tbody>
                             </table>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">Giá Kim Cương 4LY5 </h4>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-
-                                            <th> 3.6 mm </th>
-                                            <th>IF </th>
-                                            <th>VVS1</th>
-                                            <th>VVS2 </th>
-                                            <th>VS1 </th>
-                                            <th>VS2 </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td> D </td>
-                                            <td>15,500,000 </td>
-                                            <td>13,900,000 </td>
-                                            <td> 12,900,000 </td>
-                                            <td>11,000,000 </td>
-                                            <td>10,500,000 </td>
-                                        </tr>
-                                        <tr>
-                                            <td> E </td>
-                                            <td>14,500,000</td>
-                                            <td>14,500,000 </td>
-                                            <td> 12,400,000 </td>
-                                            <td>10,500,000 </td>
-                                            <td>10,100,000 </td>
-                                        </tr>
-                                        <tr>
-                                            <td> F </td>
-                                            <td>13,900,000 </td>
-                                            <td>13,400,000 </td>
-                                            <td> 11,600,000 </td>
-                                            <td>10,100,000 </td>
-                                            <td> 9,500,000 </td>
-                                        </tr>
-                                </table>
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -143,3 +112,54 @@
         </div>
     </div>
 </div>
+
+<style>
+    .main-panel {
+        padding: 20px;
+    }
+
+    .content-wrapper {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .card {
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .table th {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
