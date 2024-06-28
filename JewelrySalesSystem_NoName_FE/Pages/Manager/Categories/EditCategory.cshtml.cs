@@ -1,34 +1,34 @@
 using Firebase.Storage;
+using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
 {
-    public class AddSubProductModel : PageModel
+    public class EditCategoryModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly string _bucket;
 
         [BindProperty]
-        public ProductDTO Product { get; set; }
+        public DiamondDTO Diamond { get; set; }
 
         [BindProperty]
         public IFormFile Image { get; set; }
-        public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
-        public IList<SubProductsDTO> SubProductList { get; set; } = new List<SubProductsDTO>();
 
-        public AddSubProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public EditCategoryModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _bucket = _configuration["Firebase:Bucket"];
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -42,24 +42,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var categoryApiUrl = $"{ApiPath.CategoryList}";
-                var subProductApiUrl = $"{ApiPath.SubProductList}";
-
-                var response = await client.GetAsync(categoryApiUrl);
-                var subResponse = await client.GetAsync(subProductApiUrl);
+                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
+                var response = await client.GetAsync(apiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
-                if (subResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
-                    return RedirectToPage("/Auth/Login");
-                }
-                CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await response.Content.ReadAsStringAsync());
-                SubProductList = JsonConvert.DeserializeObject<List<SubProductsDTO>>(await response.Content.ReadAsStringAsync());
+
+                Diamond = JsonConvert.DeserializeObject<DiamondDTO>(await response.Content.ReadAsStringAsync());
+
                 return Page();
             }
             catch (Exception ex)
@@ -69,7 +62,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(Guid id)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -100,42 +93,35 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                         Image.CopyTo(stream);
                         stream.Seek(0, SeekOrigin.Begin);
                         var uploadTask = storage.Child("uploads").Child(uniqueFileName).PutAsync(stream);
-                        Product.ImgProduct = await uploadTask;
+                        Diamond.ImageDiamond = await uploadTask;
 
                         stream.Seek(0, SeekOrigin.Begin);
-                        Product.ImgProduct = Convert.ToBase64String(stream.ToArray());
+                        Diamond.ImageDiamond = Convert.ToBase64String(stream.ToArray());
                     }
                 }
 
-                Product.Id = Guid.NewGuid();
-                Product.InsDate = DateTime.Now;
-                Product.Deflag = true;
+                Diamond.UpsDate = DateTime.Now;
 
-                var productRequest = new ProductRequest
+                var diamond = new DiamondDTO
                 {
-                    ProductName = Product.ProductName,
-                    Description = Product.Description,
-                    SellingPrice = Product.SellingPrice,
-                    Size = Product.Size,
-                    ImportPrice = Product.ImportPrice,
-                    InsDate = Product.InsDate,
-                    Deflag = Product.Deflag,
-                    CategoryId = Product.CategoryId,
-                    Quantity = Product.Quantity,
-                    ProcessPrice = Product.ProcessPrice,
-                    MaterialId = Product.MaterialId,
-                    Code = Product.Code,
-                    ImgProduct = Product.ImgProduct,
-                    Tax = Product.Tax,
-                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
-                    PeriodWarranty = Product.PeriodWarranty,
+                    Code = Diamond.Code,
+                    DiamondName = Diamond.DiamondName,
+                    Carat = Diamond.Carat,
+                    Color = Diamond.Color,
+                    Clarity = Diamond.Clarity,
+                    Cut = Diamond.Cut,
+                    ImageDiamond = Diamond.ImageDiamond,
+                    Price = Diamond.Price,
+                    Quantity = Diamond.Quantity,
+                    InsDate = Diamond.InsDate,
+                    UpsDate = Diamond.UpsDate,
                 };
 
-                var json = JsonConvert.SerializeObject(productRequest);
+                var json = JsonConvert.SerializeObject(diamond);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var apiUrl = $"{ApiPath.ProductList}";
-                var response = await client.PostAsync(apiUrl, content);
+                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
+                var response = await client.PutAsync(apiUrl, content);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -145,13 +131,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Jewelry is added successfully!";
-                    return RedirectToPage("./ListSubProduct");
+                    TempData["SuccessMessage"] = "The Diamond is updated successfully!";
+                    return RedirectToPage("./ListDiamond");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while adding the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the diamond. Status Code: {response.StatusCode}, Response: {responseBody}");
                 }
             }
             catch (Exception ex)

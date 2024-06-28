@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.DTOs;
+﻿using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -39,7 +39,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -87,7 +87,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
                 if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
                 cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
@@ -95,7 +95,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var materialResponse = await client.GetAsync(ApiPath.MaterialList);
                 if (materialResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
                 mateList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());

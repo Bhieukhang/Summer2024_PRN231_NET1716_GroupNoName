@@ -10,6 +10,7 @@ using JSS_Services.Interface;
 using JSS_Repositories;
 using JSS_DataAccessObjects;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSS_Services.Implement
 {
@@ -27,6 +28,13 @@ namespace JSS_Services.Implement
         {
             return await _unitOfWork.GetRepository<OrderDetail>().GetListAsync();
         }
-
+        public async Task<OrderDetail> GetOrderDetailByOrderIdAsync(Guid id)
+        {
+            return await _unitOfWork.GetRepository<OrderDetail>().FirstOrDefaultAsync(
+                predicate: a => a.OrderId == id,
+                include: q => q
+                .Include(od => od.Order)
+                .Include(od => od.Product));
+        }
     }
 }
