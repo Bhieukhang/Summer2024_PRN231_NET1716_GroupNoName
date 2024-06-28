@@ -66,7 +66,11 @@ public interface IGenericRepository<T> : IDisposable where T : class
 
     void DeleteAsync(T entity);
     Task DeleteRangeAsync(IEnumerable<T> entities);
-    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
+    Task<T> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, 
+        Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
     Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);
+ 
 }
 

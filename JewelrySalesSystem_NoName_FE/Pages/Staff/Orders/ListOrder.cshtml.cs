@@ -18,6 +18,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
         public IList<OrderDTO> OrderList { get; set; } = new List<OrderDTO>();
         public IList<OrderDTO> FilteredOrderList { get; set; } = new List<OrderDTO>();
+        public IList<OrderDetailList> OrderDetailList { get; set; } = new List<OrderDetailList>();
         public OrderForCustomer CustomerOrder { get; set; }
 
         [BindProperty(SupportsGet = true)]
@@ -103,8 +104,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 return new JsonResult(new { success = false, message = "Error retrieving order details." });
             }
         }
-    
-}
+    }
 
     public class SearchCriteriaDTO
     {
