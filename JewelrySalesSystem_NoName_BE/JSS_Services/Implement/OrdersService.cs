@@ -154,9 +154,10 @@ namespace JSS_Services.Implement
             return new OrderResponse(order.Id, order.CustomerId, order.Type, order.InsDate, order.TotalPrice,
                                      order.MaterialProcessPrice, order.DiscountId);
         }
-        public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? id, Guid? customerId, DateTime? startDate)
+        public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? id, DateTime? insDate, string? phone)
         {
             var orderRepository = _unitOfWork.GetRepository<Order>();
+            var accountRepository = _unitOfWork.GetRepository<Account>();
 
             var predicate = PredicateBuilder.New<Order>(true);
 
@@ -165,14 +166,21 @@ namespace JSS_Services.Implement
                 predicate = predicate.And(o => o.Id == id.Value);
             }
 
-            if (customerId.HasValue)
+            if (insDate.HasValue)
             {
-                predicate = predicate.And(o => o.CustomerId == customerId.Value);
+                var startOfDay = insDate.Value.Date;
+                var endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+                predicate = predicate.And(o => o.InsDate >= startOfDay && o.InsDate <= endOfDay);
             }
 
-            if (startDate.HasValue)
+            if (!string.IsNullOrEmpty(phone))
             {
-                predicate = predicate.And(o => o.InsDate >= startDate.Value);
+                var customerIds = await accountRepository.GetListAsync(
+                    predicate: a => a.Phone == phone
+                    );
+                var customerIdList = customerIds.Select(a => a.Id).ToList();
+
+                predicate = predicate.And(o => customerIdList.Contains(o.CustomerId));
             }
 
             var orders = await orderRepository.GetListAsync(predicate: predicate);
