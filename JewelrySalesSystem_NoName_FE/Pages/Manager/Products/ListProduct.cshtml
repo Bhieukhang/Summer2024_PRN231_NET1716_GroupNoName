@@ -22,35 +22,52 @@
                 </button>
             </div>
         </div>
-        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
-            <div class="col-md-4 autocomplete">
-                <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
-                <input type="text" id="searchCode" name="searchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
-                       onkeyup="autocompleteSearch(this.value)" value="@Model.SearchCode" />
+        @* <div class="col-md-4 autocomplete">
+        <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
+        <input type="text" id="searchCode" name="searchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
+        onkeyup="autocompleteSearch(this.value)" value="@Model.SearchCode" />
 
-                <span asp-validation-for="SearchCode" class="text-danger"></span>
-                <div id="autocomplete-list" class="autocomplete-items"></div>
-            </div>
-            <div class="col-md-4">
-                <label for="selectedCategory" class="form-label">Chọn loại</label>
-                <select class="form-control" id="selectedCategory" name="selectedCategory" asp-for="SelectedCategory" asp-items="@(new SelectList(Model.cateList, "Id", "Name"))">
-                    <option value="">-- Chọn loại --</option>
+        <span asp-validation-for="SearchCode" class="text-danger"></span>
+        <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div> *@
+        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm" id="filterForm">
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="categoryId" class="form-control" onchange="filterProducts()">
+                    <option value="">All</option>
+                    @foreach (var category in Model.cateList)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
                 </select>
             </div>
-            <div class="col-md-4">
-                <label for="selectedMaterial" class="form-label">Chọn chất liệu</label>
-                <select class="form-control" id="selectedMaterial" name="selectedMaterial" asp-for="SelectedMaterial" asp-items="@(new SelectList(Model.mateList, "Id", "MaterialName"))">
-                    <option value="">-- Chọn chất liệu --</option>
+            <div class="form-group">
+                <label for="material">Material</label>
+                <select id="material" name="materialId" class="form-control" onchange="filterProducts()">
+                    <option value="">All</option>
+                    @foreach (var material in Model.mateList)
+                    {
+                        <option value="@material.Id">@material.MaterialName</option>
+                    }
                 </select>
             </div>
-            <div class="col-md-12 d-flex justify-content-end">
+        </form>
+        <br />
+        <div class="d-flex justify-content-between">
+            <form method="get" id="searchForm" onsubmit="searchByCode(event)">
+                <div class="input-group autocomplete">
+                    <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
+                    <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
+                           onkeyup="autocompleteSearch(this.value)" />
+
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
                 <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
                     <i class="mdi mdi-magnify"></i>
                     Tìm Kiếm
                 </button>
-            </div>
-        </form>
-        <br />
+            </form>
+        </div>
         <div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -106,7 +123,9 @@
                                     </div>
                                 </div>
                             }
-                        } else {
+                        }
+                        else
+                        {
                             <div class="col-md-3 d-flex align-items-stretch">
                                 <div class="card product-card">
                                     <img class="card-img-top product-image" src="@Model.searchItem.ImgProduct" alt="Card image cap">
@@ -155,20 +174,13 @@
                         }
 
                     </div>
-
                     <nav aria-label="Page navigation example" style="padding-top:50px">
-                        <ul class="pagination justify-content-end">
-                            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page - 1)" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Trước</a>
+                        <ul class="pagination justify-content-end" id="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);" onclick="changePage('prev')" tabindex="-1">Trước</a>
                             </li>
-                            @for (var i = 1; i <= Model.TotalPages; i++)
-                            {
-                                <li class="page-item @(Model.Page == i ? "active" : "")">
-                                    <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@i" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size">@i</a>
-                                </li>
-                            }
-                            <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListProduct" asp-route-currentPage="@(Model.Page + 1)" asp-route-searchCode="@Model.SearchCode" asp-route-selectedCategory="@Model.SelectedCategory" asp-route-selectedMaterial="@Model.SelectedMaterial" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Sau</a>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);" onclick="changePage('next')">Sau</a>
                             </li>
                         </ul>
                     </nav>
@@ -244,11 +256,11 @@
                                 suggestionItem.classList.add("autocomplete-item");
 
                                 suggestionItem.innerHTML = `
-                                                    <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
-                                                    <div class="product-details-search">
-                                                        <h5 class="product-name-search">${item.productName}</h5>
-                                                        <p class="product-code-search">Code: <strong>${item.code}</strong></p>
-                                                    </div>`;
+                                                              <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
+                                                              <div class="product-details-search">
+                                                              <h5 class="product-name-search">${item.productName}</h5>
+                                                              <p class="product-code-search">Code: <strong>${item.code}</strong></p>
+                                                               </div>`;
 
                                 suggestionItem.onclick = function () {
                                     document.getElementById("searchCode").value = item.code;
@@ -260,6 +272,139 @@
                         })
                         .catch(error => console.error('Error fetching autocomplete data:', error));
                 }
+
+                function getQueryParams() {
+                    const params = {};
+                    const queryString = window.location.search.substring(1);
+                    const regex = /([^&=]+)=([^&]*)/g;
+                    let m;
+                    while ((m = regex.exec(queryString))) {
+                        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+                    }
+                    return params;
+                }
+
+                function updateQueryString(params) {
+                    const query = Object.keys(params)
+                        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+                        .join('&');
+                    history.pushState(null, null, `?${query}`);
+                }
+
+                function changePage(page) {
+                    const params = getQueryParams();
+                    const currentPage = parseInt(params.page) || 1;
+                    if (page === 'prev') {
+                        if (currentPage > 1) {
+                            params.page = currentPage - 1;
+                        }
+                    } else if (page === 'next') {
+                        params.page = currentPage + 1;
+                    } else {
+                        params.page = page;
+                    }
+                    updateQueryString(params);
+                    filterProducts();
+                }
+
+                function generatePagination(totalPages, currentPage) {
+                    const pagination = document.getElementById("pagination");
+                    pagination.innerHTML = `
+                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                <a class="page-link" href="javascript:void(0);" onclick="changePage('prev')" tabindex="-1">Trước</a>
+                            </li>
+                        `;
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        pagination.innerHTML += `
+                                <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                    <a class="page-link" href="javascript:void(0);" onclick="changePage(${i})">${i}</a>
+                                </li>
+                            `;
+                    }
+
+                    pagination.innerHTML += `
+                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                <a class="page-link" href="javascript:void(0);" onclick="changePage('next')">Sau</a>
+                            </li>
+                        `;
+                }
+
+                function filterProducts() {
+                    const params = getQueryParams();
+                    const categoryId = params.categoryId || document.getElementById("category").value;
+                    const materialId = params.materialId || document.getElementById("material").value;
+                    const page = params.page || 1;
+
+                    fetch(`https://localhost:44318/api/v1/Product/filter?categoryId=${categoryId}&materialId=${materialId}&page=${page}&size=12`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const productList = document.getElementById("productList");
+                            productList.innerHTML = "";
+
+                            if (!data.items || !Array.isArray(data.items.$values)) {
+                                console.error('Expected data.items.$values to be an array, but got:', data.items);
+                                return;
+                            }
+
+                            data.items.$values.forEach(item => {
+                                productList.innerHTML += `
+                                        <div class="col-md-3 d-flex align-items-stretch">
+                                            <div class="card product-card">
+                                                <img class="card-img-top product-image" src="${item.imgProduct}" alt="Card image cap">
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">${item.productName}</h5>
+                                                    <p class="card-text">Code : <strong>${item.code}</strong></p>
+                                                    <p class="card-text">Loại : <strong>${item.category?.name}</strong></p>
+                                                    <p class="card-text">Số Lượng : <strong>${item.quantity}</strong></p>
+                                                    <p class="card-text">Giá Bán : <strong>${item.sellingPrice}</strong></p>
+                                                    <div class="mt-auto d-flex justify-content-between">
+                                                        <a href="/Manager/Products/EditProduct?id=${item.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#productModal-${item.id}" class="btn btn-outline-danger btn-fw">
+                                                            <i class="fa fa-eye menu-icon"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="productModal-${item.id}" tabindex="-1" aria-labelledby="productModalLabel-${item.id}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="productModalLabel-${item.id}">Chi tiết trang sức</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="product-details">
+                                                            <img src="${item.imgProduct}" alt="Product Image" class="product-image" />
+                                                            <div class="product-info">
+                                                                <h4>${item.productName}</h4>
+                                                                <p><strong>Code :</strong> ${item.code}</p>
+                                                                <p><strong>Chất liệu :</strong> ${item.material?.materialName}</p>
+                                                                <p><strong>Mô tả :</strong> ${item.description}</p>
+                                                                <p><strong>Kích thước :</strong> ${item.size}</p>
+                                                                <p><strong>Số lượng :</strong> ${item.quantity}</p>
+                                                                <p><strong>Giá Bán :</strong> ${item.sellingPrice}</p>
+                                                                <p><strong>Loại :</strong> ${item.category?.name}</p>
+                                                                <p><strong>Ngày nhập :</strong> ${item.insDate}</p>
+                                                                <p><strong>Thời lượng bảo hành :</strong> ${item.periodWarranty} tháng</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                            });
+
+                            generatePagination(data.totalPages, parseInt(page));
+                        })
+                        .catch(error => console.error('Error fetching filtered products:', error));
+                }
+                document.addEventListener('DOMContentLoaded', () => {
+                    filterProducts();
+                });
+
             </script>
         }
         <style>
