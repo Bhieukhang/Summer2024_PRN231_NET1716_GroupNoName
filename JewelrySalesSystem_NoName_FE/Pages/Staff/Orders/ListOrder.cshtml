@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
+        @* <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
             <div class="col-md-6">
                 <label for="OrderId" class="form-label">Order ID</label>
                 <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập ID đơn hàng" />
@@ -27,7 +27,7 @@
                     Tìm Kiếm
                 </button>
             </div>
-        </form>
+        </form> *@
 
         <br />
 
@@ -46,7 +46,7 @@
                                 </tr>
                             </thead>
                             <tbody id="orderListBody">
-                                @foreach (var order in Model.FilteredOrderList)
+                                @foreach (var order in Model.OrderList)
                                 {
                                     <tr>
                                         <td>@order.Id</td>
