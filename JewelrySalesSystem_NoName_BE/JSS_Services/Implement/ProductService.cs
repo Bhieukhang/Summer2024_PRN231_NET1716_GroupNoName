@@ -129,8 +129,10 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size)
         {
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
-                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+                selector: x => new ProductResponse(
+                x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId,
+                x.Category.Name, x.Material, x.PeriodWarranty),
                 predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page ?? 1,

@@ -5,6 +5,7 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 {
@@ -34,8 +35,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? currentPage, string? searchCode, string? selectedCategory, string? selectedMaterial)
+        public async Task<IActionResult> OnGetAsync(int? page, string? searchCode, string? selectedCategory, string? selectedMaterial)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -44,7 +46,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 return RedirectToPage("/Auth/Login");
             }
 
-            Page = currentPage ?? 1;
+            Page = page ?? 1;
             Size = 12;
             SearchCode = searchCode;
             SelectedCategory = selectedCategory;
