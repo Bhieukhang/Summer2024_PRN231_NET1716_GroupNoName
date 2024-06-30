@@ -24,21 +24,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
         {
             try
             {
-                if (DiscountRequest == null) throw new Exception("Discount data is invalid.");
-                var token = HttpContext.Session.GetString("Token") ?? "";
+                if(ModelState.IsValid)
+                {
+                    if (DiscountRequest == null) throw new Exception("Discount data is invalid.");
+                    var token = HttpContext.Session.GetString("Token") ?? "";
 
-                var response = await ApiClient.PostAsync<ApiResponse>($"{ApiPath.Discount}", DiscountRequest, token);
-                if (!response.Success) throw new Exception(response.Message);
+                    var response = await ApiClient.PostAsync<ApiResponse>($"{ApiPath.Discount}", DiscountRequest, token);
+                    if (!response.Success) throw new Exception(response.Message);
 
-                return RedirectToPage("ListDiscount");
+                    return RedirectToPage("ListDiscount");
+                }
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 Console.WriteLine(ex.ToString());
                 ErrorMessage = ex.Message;
-                return Page();
             }
+            return Page();
         }
 
     }

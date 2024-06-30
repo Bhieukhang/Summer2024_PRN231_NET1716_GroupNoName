@@ -69,20 +69,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
         #region SearchOrders
         /// <summary>
-        /// Search orders by ID, customer ID, and start date.
+        /// Tìm kiếm đơn hàng theo ID, ngày chèn và số điện thoại của khách hàng.
         /// </summary>
-        /// <param name="id">The order ID to search for.</param>
-        /// <param name="customerId">The customer ID to search for.</param>
-        /// <param name="startDate">The start date to search for.</param>
-        /// <returns>List of orders that match the search criteria.</returns>
+        /// <param name="id">ID đơn hàng cần tìm kiếm.</param>
+        /// <param name="insDate">Ngày chèn cần tìm kiếm.</param>
+        /// <param name="phone">Số điện thoại của khách hàng cần tìm kiếm.</param>
+        /// <returns>Danh sách các đơn hàng phù hợp với tiêu chí tìm kiếm.</returns>
         // GET: api/Order/Search
         #endregion
         //[Authorize(Roles = "Staff, Manager")]
         [HttpGet(ApiEndPointConstant.Order.SearchOrderEndpoint)]
         [ProducesResponseType(typeof(IEnumerable<OrderResponse>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SearchOrders([FromQuery] Guid? id, [FromQuery] Guid? customerId, [FromQuery] DateTime? startDate)
+        public async Task<IActionResult> SearchOrders([FromQuery] Guid? id, [FromQuery] DateTime? insDate, [FromQuery] string? phone)
         {
-            var orders = await _service.SearchOrders(id, customerId, startDate);
+            var orders = await _service.SearchOrders(id, insDate, phone);
             return Ok(orders);
         }
 
