@@ -9,8 +9,8 @@ namespace JewelrySalesSystem_NoName_FE.Ultils
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var response = await client.GetAsync(apiUrl);
+            client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 
             if (response.IsSuccessStatusCode)
             {
@@ -45,6 +45,7 @@ namespace JewelrySalesSystem_NoName_FE.Ultils
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 
             var content = new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json");
 
@@ -65,6 +66,7 @@ namespace JewelrySalesSystem_NoName_FE.Ultils
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
 
             var content = new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json");
 

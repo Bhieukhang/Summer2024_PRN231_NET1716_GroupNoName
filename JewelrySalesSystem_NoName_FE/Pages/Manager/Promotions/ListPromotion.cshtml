@@ -30,13 +30,13 @@
         </div>
         <form method="get" id="form-search">
             <div class="form-group">
-                <label asp-for="Search" class="control-label">Search</label>
+                <label asp-for="Search" class="control-label">Tìm kiếm khuyến mãi</label>
               <div class="row">
                     <div class="col-sm-12 col-lg-10">
-                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Enter key word to search" />
+                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Nhập từ khóa để tìm kiếm" />
                     </div>
                     <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
-                        <button class="btn btn-secondary" type="submit">Search</button>
+                        <button class="btn btn-secondary" type="submit">Tìm kiếm</button>
                     </div>
               </div>
             </div>
@@ -53,14 +53,12 @@
                             <thead>
                                 <tr>
                                     <th> STT </th>
-                                    <th> Name </th>
-                                    <th> Deflag </th>
-                                    <th> Type </th>
-                                    <th> Description </th>
-                                    <th> Product Quantity </th>
-                                    <th> Percentage </th>
-                                    <th> Ins Date - Ups Date </th>
-                                    <th> Start Date - End Date </th>
+                                    <th> Tiêu đề </th>
+                                    <th> Loại </th>
+                                    <th> Mô tả </th>
+                                    <th> Số lượng sản phẩm </th>
+                                    <th> Phần trăm </th>
+                                    <th> Thời gian hoạt động </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,12 +69,10 @@
                                         <td title="@promotion.PromotionName" data-bs-toggle="tooltip" data-bs-placement="top">
                                             <a href="PromotionDetails?promotionId=@promotion.Id"> @promotion.PromotionName</a>
                                         </td>
-                                        <td>@(promotion.Deflag == true ? "Hoạt động" : "Không hoạt động")</td>
                                         <td><span class="badge badge-info">@promotion.Type</span></td>
                                         <td>@promotion.Description</td>
                                         <td>@promotion.ProductQuantity</td>
                                         <td><span>@promotion.Percentage</span>%</td>
-                                        <td>@promotion.InsDate - @promotion.UpsDate</td>
                                         <td>@promotion.StartDate - @promotion.EndDate</td>
                                     </tr>
                                 }

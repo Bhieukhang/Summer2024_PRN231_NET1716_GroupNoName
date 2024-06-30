@@ -22,47 +22,45 @@
             <div class="card-body">
                 <h4 class="card-title">Chỉnh sửa chiết khấu</h4>
                 <form id="form-submit" class="forms-sample" method="post" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="DiscountRequest.Id" />
                     <div class="form-group">
-                        <label asp-for="DiscountRequest.OrderId" class="control-label">Order Id</label>
-                        <input asp-for="DiscountRequest.OrderId" class="form-control" placeholder="Enter order id" />
-                        <span asp-validation-for="DiscountRequest.OrderId" class="text-danger"></span>
+                        <label asp-for="DiscountRequest.Id" class="control-label">Mã chiết khấu</label>
+                        <input asp-for="DiscountRequest.Id" class="form-control" readonly />
                     </div>
                     <div class="form-group">
-                        <label asp-for="DiscountRequest.ManagerId" class="control-label">Manager Id</label>
-                        <input asp-for="DiscountRequest.ManagerId" class="form-control" placeholder="Enter manager id" />
-                        <span asp-validation-for="DiscountRequest.ManagerId" class="text-danger"></span>
+                        <label asp-for="DiscountRequest.OrderId" class="control-label">Mã hóa đơn</label>
+                        <input asp-for="DiscountRequest.OrderId" class="form-control" placeholder="Nhập mã hóa đơn" />
+                        <span asp-validation-for="DiscountRequest.OrderId" class="text-danger d-block mt-1"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="DiscountRequest.PercentDiscount" class="control-label">Percent Discount</label>
-                        <input asp-for="DiscountRequest.PercentDiscount" type="number" max="99999" class="form-control" placeholder="Enter PercentDiscount" />
-                        <span asp-validation-for="DiscountRequest.PercentDiscount" class="text-danger"></span>
+                        <label asp-for="DiscountRequest.PercentDiscount" class="control-label">Phần trăm giảm giá</label>
+                        <input asp-for="DiscountRequest.PercentDiscount" type="number" max="99999" class="form-control" placeholder="Nhập % giảm giá" />
+                        <span asp-validation-for="DiscountRequest.PercentDiscount" class="text-danger d-block mt-1"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="DiscountRequest.Description" class="control-label">Description</label>
-                        <input asp-for="DiscountRequest.Description" class="form-control" placeholder="Enter Description" />
-                        <span asp-validation-for="DiscountRequest.Description" class="text-danger"></span>
+                        <label asp-for="DiscountRequest.Description" class="control-label">Mô tả</label>
+                        <textarea style="height: 150px;" asp-for="DiscountRequest.Description" class="form-control" placeholder="Nhập mô tả"></textarea>
+                        <span asp-validation-for="DiscountRequest.Description" class="text-danger d-block mt-1"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="DiscountRequest.ConditionDiscount" class="control-label">Condition Discount</label>
-                        <input asp-for="DiscountRequest.ConditionDiscount" type="number" max="100" class="form-control" placeholder="Enter Condition Discount" />
-                        <span asp-validation-for="DiscountRequest.ConditionDiscount" class="text-danger"></span>
+                        <label asp-for="DiscountRequest.ConditionDiscount" class="control-label">Điều kiện giảm giá</label>
+                        <input asp-for="DiscountRequest.ConditionDiscount" type="number" max="100" class="form-control" placeholder="Nhập điều kiện giảm giá" />
+                        <span asp-validation-for="DiscountRequest.ConditionDiscount" class="text-danger d-block mt-1"></span>
                     </div>
 
                     @if (userRole == "Manager")
                     {
                         <div class="form-group">
-                            <label asp-for="DiscountRequest.Status" class="control-label">Status</label> <br />
-                            <input asp-for="DiscountRequest.Status" type="radio" value="Pending" onclick="showReason('false');" /> Pending
-                            <input asp-for="DiscountRequest.Status" type="radio" value="Accepted" onclick="showReason('false');" class="ms-3" /> Accepted
-                            <input asp-for="DiscountRequest.Status" type="radio" value="Denied" onclick="showReason('true');" class="ms-3" /> Denied<br />
+                            <label asp-for="DiscountRequest.Status" class="control-label">Trạng thái</label> <br />
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Pending" onclick="showReason('false');" /> Chờ phản hổi
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Accepted" onclick="showReason('false');" class="ms-3" /> Chấp nhận
+                            <input asp-for="DiscountRequest.Status" type="radio" value="Denied" onclick="showReason('true');" class="ms-3" /> Từ chối<br />
                             <span asp-validation-for="DiscountRequest.Status" class="text-danger"></span>
                         </div>
 
                         <div class="form-group" id="reason-why-deined">
-                            <label asp-for="DiscountRequest.Note" class="control-label">Reason why deined?</label>
-                            <input id="reason-input" asp-for="DiscountRequest.Note" class="form-control" placeholder="Enter reason why deined" />
+                            <label asp-for="DiscountRequest.Note" class="control-label">Lý do từ chối?</label>
+                            <input id="reason-input" asp-for="DiscountRequest.Note" class="form-control" placeholder="Nhập lý do từ chối" />
                             <span asp-validation-for="DiscountRequest.Note" class="text-danger"></span>
                         </div>
                     }
@@ -73,10 +71,10 @@
 
                     @if (!String.IsNullOrEmpty(Model.ErrorMessage))
                     {
-                        <span class="text-danger mb-3">@Model.ErrorMessage</span>
+                        <span class="text-danger d-block">@Model.ErrorMessage</span>
                     }
 
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-sm-12 d-flex flex-row justify-content-start">
                             <a href="ListDiscount" class="btn btn-secondary me-3">
 
@@ -110,7 +108,7 @@
         var reason = document.getElementById("reason-why-deined");
         var input = document.getElementById("reason-input");
         var form = document.getElementById("form-submit");
-        if (reason.style.display === "block" && input.value.trim() === "") {
+        if (reason?.style?.display === "block" && input?.value?.trim() === "") {
             window.alert("Please enter reason to deined!");
         } else {
             form.submit();
