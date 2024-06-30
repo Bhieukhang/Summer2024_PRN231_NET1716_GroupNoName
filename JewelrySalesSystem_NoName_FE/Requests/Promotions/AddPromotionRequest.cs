@@ -4,36 +4,30 @@ namespace JewelrySalesSystem_NoName_FE.Requests.Promotions
 {
     public class AddPromotionRequest
     {
-        [Required(ErrorMessage = "Please enter Promotion Name.")]
-        [StringLength(100, ErrorMessage = "Please enter value less then 100 characters.")]
+        [Required(ErrorMessage = "Nhập tiêu đề khuyến mãi.")]
+        [StringLength(100, ErrorMessage = "Tiêu đề khuyến mãi nhỏ hơn 100 ký tự.")]
         public string? PromotionName { get; set; }
 
         [Required(ErrorMessage = "Please enter Type.")]
-        [StringLength(100, ErrorMessage = "Please enter value less then 100 characters.")]
         public string? Type { get; set; }
 
-        [Required(ErrorMessage = "Please enter Description.")]
-        [StringLength(1000, ErrorMessage = "Please enter value less then 1000 characters.")]
+        [Required(ErrorMessage = "Nhập mô tả khuyến mãi.")]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Please enter Product Quantity.")]
-        [Range(0, 99999, ErrorMessage = "Please enter number between 0 - 99999.")]
-        public int? ProductQuantity { get; set; }
+        [Range(1, 99999, ErrorMessage = "Hãy nhập số từ 1 đến 99999.")]
+        public int? ProductQuantity { get; set; } = 1;
 
-        [Required(ErrorMessage = "Please enter Percentage.")]
-        [Range(1, 100, ErrorMessage = "Please enter number between 1 - 100.")]
+        [Required(ErrorMessage = "Nhập % khuyến mãi.")]
+        [Range(1, 100, ErrorMessage = "Hãy nhập số từ 1 đến 100.")]
         public int? Percentage { get; set; }
 
-        [Required(ErrorMessage = "Please choose Start Date.")]
         public DateTime? StartDate { get; set; }
 
-        [Required(ErrorMessage = "Please choose End Date.")]
+        [Required(ErrorMessage = "Chọn ngày kết thúc.")]
         public DateTime? EndDate { get; set; }
 
-        [Required(ErrorMessage = "Please choose Deflag.")]
-        public bool? Deflag { get; set; } = true;
-
-        [Required(ErrorMessage = "Please select at least on product.")]
+        [Required(ErrorMessage = "Hãy chọn ít nhất 1 sản phẩm.")]
         public string? ProductJson { get; set; }
         public List<Guid>? ProductIds { get; set; }
     }

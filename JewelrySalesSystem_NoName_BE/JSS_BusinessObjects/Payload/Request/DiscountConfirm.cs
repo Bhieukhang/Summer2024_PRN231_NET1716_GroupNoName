@@ -6,7 +6,7 @@
 
         public Guid OrderId { get; set; }
 
-        public Guid ManagerId { get; set; }
+        public Guid? ManagerId { get; set; }
 
         public int? PercentDiscount { get; set; }
 
