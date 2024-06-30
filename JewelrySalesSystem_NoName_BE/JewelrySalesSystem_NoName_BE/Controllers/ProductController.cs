@@ -235,8 +235,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.Deflag,
                 createdProduct.Tax,
                 createdProduct.SubId,
-                createdProduct.Category,
-                createdProduct.Material,
+                new CategoryResponse(
+                    createdProduct.Category.Id,
+                    createdProduct.Category.Name
+                    ),
+                new MaterialResponse(
+                    createdProduct.Material.Id,
+                    createdProduct.Material.MaterialName,
+                    createdProduct.Material.InsDate
+                    ),
                 createdProduct.PeriodWarranty
             ));
         }
@@ -318,8 +325,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.Deflag,
                 updatedProduct.Tax,
                 updatedProduct.SubId,
-                updatedProduct.Category,
-                updatedProduct.Material,
+                new CategoryResponse(
+                    updatedProduct.Category.Id,
+                    updatedProduct.Category.Name
+                    ),
+                new MaterialResponse(
+                    updatedProduct.Material.Id,
+                    updatedProduct.Material.MaterialName,
+                    updatedProduct.Material.InsDate
+                    ),
                 updatedProduct.PeriodWarranty
             ));
         }

@@ -22,17 +22,9 @@
                 </button>
             </div>
         </div>
-        @* <div class="col-md-4 autocomplete">
-        <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
-        <input type="text" id="searchCode" name="searchCode" class="form-control" asp-for="SearchCode" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
-        onkeyup="autocompleteSearch(this.value)" value="@Model.SearchCode" />
-
-        <span asp-validation-for="SearchCode" class="text-danger"></span>
-        <div id="autocomplete-list" class="autocomplete-items"></div>
-        </div> *@
-        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm" id="filterForm">
-            <div class="form-group">
-                <label for="category">Category</label>
+        <div class="row g-3 bg-light p-4 rounded shadow-sm" id="filterForm">
+            <div class="col-md-6">
+                <label for="category" class="form-label">LOẠI</label>
                 <select id="category" name="categoryId" class="form-control" onchange="filterProducts()">
                     <option value="">All</option>
                     @foreach (var category in Model.cateList)
@@ -41,8 +33,8 @@
                     }
                 </select>
             </div>
-            <div class="form-group">
-                <label for="material">Material</label>
+            <div class="col-md-6">
+                <label for="material" class="form-label">CHẤT LIỆU</label>
                 <select id="material" name="materialId" class="form-control" onchange="filterProducts()">
                     <option value="">All</option>
                     @foreach (var material in Model.mateList)
@@ -51,15 +43,28 @@
                     }
                 </select>
             </div>
-        </form>
+        </div>
+
+        <div class="mt-3">
+            <form method="get" id="searchForm" onsubmit="searchProductByCode(); return false;">
+                <div class="input-group">
+                    <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
+                           onkeyup="autocompleteSearch(this.value)" />
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                    <button type="submit" class="btn btn-gradient-secondary">
+                        <i class="mdi mdi-magnify"></i>
+                        Tìm Kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
         <br />
-        <div class="d-flex justify-content-between">
-            <form method="get" id="searchForm" onsubmit="searchByCode(event)">
+        @* <div class="d-flex justify-content-between">
+            <form method="get" id="searchForm" onsubmit="searchProductByCode(); return false;">
                 <div class="input-group autocomplete">
                     <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
                     <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
                            onkeyup="autocompleteSearch(this.value)" />
-
                     <div id="autocomplete-list" class="autocomplete-items"></div>
                 </div>
                 <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
@@ -67,9 +72,10 @@
                     Tìm Kiếm
                 </button>
             </form>
-        </div>
+        </div> *@
+        <div id="resultContainer"></div>
         <div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
-        <div class="col-lg-12 grid-margin stretch-card">
+        <div class="col-lg-12 grid-margin stretch-card" id="uiProduct">
             <div class="card">
                 <div class="card-body" id="autocomplete-suggestion">
                     <div class="row" id="productList">
@@ -174,7 +180,7 @@
                         }
 
                     </div>
-                    <nav aria-label="Page navigation example" style="padding-top:50px">
+                    <nav aria-label="Page navigation example" style="padding-top:50px" id="ui">
                         <ul class="pagination justify-content-end" id="pagination">
                             <li class="page-item">
                                 <a class="page-link" href="javascript:void(0);" onclick="changePage('prev')" tabindex="-1">Trước</a>
@@ -256,11 +262,12 @@
                                 suggestionItem.classList.add("autocomplete-item");
 
                                 suggestionItem.innerHTML = `
-                                                              <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
-                                                              <div class="product-details-search">
-                                                              <h5 class="product-name-search">${item.productName}</h5>
-                                                              <p class="product-code-search">Code: <strong>${item.code}</strong></p>
-                                                               </div>`;
+                                    <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
+                                    <div class="product-details-search">
+                                        <h5 class="product-name-search">${item.productName}</h5>
+                                        <p class="product-code-search">Code: <strong>${item.code}</strong></p>
+                                    </div>
+                                `;
 
                                 suggestionItem.onclick = function () {
                                     document.getElementById("searchCode").value = item.code;
@@ -271,6 +278,70 @@
                             });
                         })
                         .catch(error => console.error('Error fetching autocomplete data:', error));
+                }
+
+                function searchProductByCode() {
+                    const searchCode = document.getElementById("searchCode").value;
+                    if (searchCode) {
+                        fetch(`https://localhost:44318/api/v1/Product/code?code=${searchCode}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Data: ", data);
+                                updateUI(data);
+                            })
+                            .catch(error => console.error('Error fetching product data:', error));
+                    }
+                }
+                function updateUI(data) {
+                    const resultContainer = document.getElementById("resultContainer");
+                    const productListContainer = document.getElementById("productList");
+                    const paginationContainer = document.getElementById("pagination");
+                    const uiContainer = document.getElementById("ui");
+                    const uiProductContainer = document.getElementById("uiProduct");
+
+                    // Ẩn danh sách sản phẩm
+                    if (productListContainer) {
+                        productListContainer.style.display = 'none';
+                    }
+
+                    // Ẩn phân trang
+                    if (paginationContainer) {
+                        paginationContainer.style.display = 'none';
+                    }
+                    if (uiContainer) {
+                        uiContainer.style.display = 'none';
+                    }
+                    if (uiProductContainer) {
+                        uiProductContainer.style.display = 'none';
+                    }
+
+                    resultContainer.innerHTML = '';
+
+                    if (data) {
+                        const productInfo = `
+                                        <div class="col-md-3 d-flex align-items-stretch">
+                                                <div class="card product-card">
+                                                    <img class="card-img-top product-image" src="${data.imgProduct}" alt="Card image cap">
+                                                    <div class="card-body d-flex flex-column">
+                                                        <h5 class="card-title">${data.productName} </h5>
+                                                        <p class="card-text">Code : <strong>${data.code} </strong></p>
+                                                        <p class="card-text">Loại : <strong>${data.category?.name} </strong></p>
+                                                        <p class="card-text">Số Lượng : <strong>${data.quantity} </strong></p>
+                                                        <p class="card-text">Giá Bán : <strong>${data.sellingPrice} </strong></p>
+                                                        <div class="mt-auto d-flex justify-content-between">
+                                                                            <a href="/Manager/Products/EditProduct?id=${data.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                                            <a data-bs-toggle="modal" data-bs-target="#productModal-${data.id}" class="btn btn-outline-danger btn-fw">
+                                                                <i class="fa fa-eye menu-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        `;
+                        resultContainer.innerHTML = productInfo;
+                    } else {
+                        resultContainer.innerHTML = '<p>No product found.</p>';
+                    }
                 }
 
                 function getQueryParams() {
