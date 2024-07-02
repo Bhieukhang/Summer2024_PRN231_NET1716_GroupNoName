@@ -1,10 +1,12 @@
-﻿using JSS_BusinessObjects.Models;
+﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
+using static JSS_BusinessObjects.AppConstant;
 
 namespace JSS_Services.Implement
 {
@@ -61,19 +63,23 @@ namespace JSS_Services.Implement
 
         public async Task<DiscountResponse> ConfirmDiscountToManager(DiscountRequest confirm)
         {
+            if (confirm.OrderId == null) { }
+            var checkOrder = await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(o => o.OrderId == confirm.OrderId);
+            if (checkOrder != null) { throw new AppConstant.MessageError((int)AppConstant.ErrCode.Conflict, AppConstant.ErrMessage.DiscountExit); }
             Discount discountItem = new Discount()
             {
                 Id = Guid.NewGuid(),
                 OrderId = confirm.OrderId,
                 ManagerId = confirm.ManagerId,
                 PercentDiscount = confirm.PercentDiscount,
-                Description = confirm.Description,
+                Description = "Chiết khấu đơn" + confirm.OrderId,
                 ConditionDiscount = confirm.ConditionDiscount,
                 Status = "Pending",
                 Note = null,
                 InsDate = DateTime.Now,
                 UpsDate = DateTime.Now,
             };
+               
             await _unitOfWork.GetRepository<Discount>().InsertAsync(discountItem);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;

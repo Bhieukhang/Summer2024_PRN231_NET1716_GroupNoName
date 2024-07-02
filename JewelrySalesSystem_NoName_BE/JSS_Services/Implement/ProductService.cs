@@ -130,9 +130,9 @@ namespace JSS_Services.Implement
         {
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
                 selector: x => new ProductResponse(
-                x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity, x.CategoryId,
                 x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId,
-                x.Category.Name, x.Material, x.PeriodWarranty),
+                x.Category, x.Material, x.PeriodWarranty),
                 predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page ?? 1,

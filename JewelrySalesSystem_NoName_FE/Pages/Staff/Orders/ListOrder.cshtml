@@ -50,7 +50,7 @@
                                 {
                                     <tr>
                                         <td>@order.Id</td>
-                                        <td>@order.TotalPrice</td>
+                                        <td class="total-price" data-total-price="@order.TotalPrice">@order.TotalPrice</td>
                                         <td>@order.InsDate</td>
                                         <td>
                                             <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId')">Xem chi tiết</button>
@@ -72,7 +72,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                       
+
 
                                                 </div>
                                             </div>
@@ -112,6 +112,16 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const totalPriceElements = document.querySelectorAll('.total-price');
+
+            totalPriceElements.forEach(element => {
+                const rawPrice = element.getAttribute('data-total-price');
+                const formattedPrice = new Intl.NumberFormat().format(rawPrice);
+                element.textContent = formattedPrice;
+            });
+        });
+
         async function fetchOrderDetails(orderId, productId) {
             try {
                 // Fetch order details
@@ -123,30 +133,30 @@
 
                     // Format order and product details HTML
                     const detailsHtml = `
-                            <div style="padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
-                                <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">Thông tin đơn hàng</h5>
-                                <p><strong>Mã đơn hàng:</strong> ${orderDetails.order.id}</p>
-                                <p><strong>Mã khách hàng:</strong> ${orderDetails.order.customerId}</p>
-                                <p><strong>Ngày mua:</strong> ${orderDetails.order.insDate}</p>
-                                <p><strong>Hình thức mua:</strong> ${orderDetails.order.type}</p>
-                                <p><strong>Giá:</strong> ${orderDetails.amount}</p>
-                                <p><strong>Số lượng:</strong> ${orderDetails.quantity}</p>
-                                <p><strong>Giảm giá:</strong> ${orderDetails.discount}</p>
-                                <p><strong>Tổng giá trị:</strong> ${orderDetails.totalPrice}</p>
-                                <p><strong>Ngày mua hàng:</strong> ${new Date(orderDetails.insDate).toLocaleString()}</p>
-                                <p><strong>Mã sản phẩm:</strong> ${orderDetails.productId}</p>
+                                    <div style="padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                                        <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;"><i>Thông tin đơn hàng</i></h5>
+                                        <p><strong>Mã đơn hàng:</strong> ${orderDetails.order.id}</p>
+                                        <p><strong>Mã khách hàng:</strong> ${orderDetails.order.customerId}</p>
+                                        <p><strong>Ngày mua:</strong> ${orderDetails.order.insDate}</p>
+                                        <p><strong>Hình thức mua:</strong> ${orderDetails.order.type}</p>
+                                        <p><strong>Giá:</strong> ${orderDetails.amount}</p>
+                                        <p><strong>Số lượng:</strong> ${orderDetails.quantity}</p>
+                                        <p><strong>Giảm giá:</strong> ${orderDetails.discount}</p>
+                                        <p><strong>Tổng giá trị:</strong> ${orderDetails.totalPrice}</p>
+                                        <p><strong>Ngày mua hàng:</strong> ${new Date(orderDetails.insDate).toLocaleString()}</p>
+                                        <p><strong>Mã sản phẩm:</strong> ${orderDetails.productId}</p>
 
-                                <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">Chi tiết sản phẩm</h5>
-                                <p><strong>Mã sản phẩm:</strong> ${orderDetails.product.id}</p>
-                                <p><strong>Tên sản phẩm:</strong> ${orderDetails.product.productName}</p>
-                                <p><strong>Mô tả:</strong> ${orderDetails.product.description}</p>
-                                <p><strong>Kích thước:</strong> ${orderDetails.product.size}</p>
-                                <p><strong>Giá:</strong> ${orderDetails.product.sellingPrice}</p>
-                                <p><strong>Mã code:</strong> ${orderDetails.product.code}</p>
-                                <p><strong>Hình ảnh sản phẩm:</strong></p>
-                                <img src="${orderDetails.product.imgProduct}" alt="${orderDetails.product.productName}" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
-                            </div>
-                        `;
+                                        <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;"><i>Chi tiết sản phẩm</i></h5>
+                                        <p><strong>Mã sản phẩm:</strong> ${orderDetails.product.id}</p>
+                                        <p><strong>Tên sản phẩm:</strong> ${orderDetails.product.productName}</p>
+                                        <p><strong>Mô tả:</strong> ${orderDetails.product.description}</p>
+                                        <p><strong>Kích thước:</strong> ${orderDetails.product.size}</p>
+                                        <p><strong>Giá:</strong> ${orderDetails.product.sellingPrice}</p>
+                                        <p><strong>Mã code:</strong> ${orderDetails.product.code}</p>
+                                        <p><strong>Hình ảnh sản phẩm:</strong></p>
+                                        <img src="${orderDetails.product.imgProduct}" alt="${orderDetails.product.productName}" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
+                                    </div>
+                                `;
 
                     // Display the details in the modal body
                     document.getElementById(`orderDetailsContent-${orderId}`).innerHTML = detailsHtml;
@@ -170,43 +180,43 @@
                 if (orderResponse.ok) {
                     const orderDetails = orderResult;
 
-                   // const currentDate = new Date().toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, "$3-$1-$2 $4-$5-$6");
+                    // const currentDate = new Date().toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, "$3-$1-$2 $4-$5-$6");
 
-const currentDate = new Date().toLocaleString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-}).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, "$3-$1-$2 $4-$5-$6");
+                    const currentDate = new Date().toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, "$3-$1-$2 $4-$5-$6");
 
                     // Format order and product details HTML for export
                     const detailsHtml = `
-                            <div style="padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
-                                <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">Cửa hàng Jewelry Hồ Chí Minh - Ngày: ${currentDate}</h5>
-                                <p><strong>Mã đơn hàng:</strong> ${orderDetails.order.id}</p>
-                                <p><strong>Ngày mua hàng:</strong> ${new Date(orderDetails.insDate).toLocaleString()}</p>
-                                <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">Chi tiết sản phẩm</h5>
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr style="border-bottom: 1px solid #ddd;">
-                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Tên sản phẩm</strong></td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Mô tả</strong></td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Số lượng</strong></td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;"><strong>Giá</strong></td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #ddd;">
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.productName}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.description}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.quantity}</td>
-                                        <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.sellingPrice}</td>
-                                    </tr>
-                                </table>
-                                <h5 style="padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px; text-align: right;">Giảm giá: ${orderDetails.discount}</h5>
-                                <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px; text-align: right;">Tổng giá trị: ${orderDetails.totalPrice}</h5>
-                            </div>
-                        `;  
-                        // Display the details in the modal body
+                                    <div style="padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                                        <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">Cửa hàng Jewelry Hồ Chí Minh - Ngày: ${currentDate}</h5>
+                                        <p><strong>Mã đơn hàng:</strong> ${orderDetails.order.id}</p>
+                                        <p><strong>Ngày mua hàng:</strong> ${new Date(orderDetails.insDate).toLocaleString()}</p>
+                                        <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">Chi tiết sản phẩm</h5>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid #ddd;">
+                                                <td style="border: 1px solid #ddd; padding: 8px;"><strong>Tên sản phẩm</strong></td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;"><strong>Mô tả</strong></td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;"><strong>Số lượng</strong></td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;"><strong>Giá</strong></td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #ddd;">
+                                                <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.productName}</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.description}</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.quantity}</td>
+                                                <td style="border: 1px solid #ddd; padding: 8px;">${orderDetails.product.sellingPrice}</td>
+                                            </tr>
+                                        </table>
+                                        <h5 style="padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px; text-align: right;">Giảm giá: ${orderDetails.discount}</h5>
+                                        <h5 style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px; text-align: right;">Tổng giá trị: ${orderDetails.totalPrice}</h5>
+                                    </div>
+                                `;
+                    // Display the details in the modal body
                     document.getElementById(`orderExportContent-${orderId}`).innerHTML = detailsHtml;
 
                     // Add export button dynamically
@@ -230,39 +240,39 @@ const currentDate = new Date().toLocaleString('en-US', {
 
 
 
-      
 
-    function exportToPDF(orderId) {
-    try {
-        const doc = new jsPDF();
 
-        // Lấy nội dung của modal
-        const modalContent = document.getElementById(`orderDetailsContent-${orderId}`);
-        const contentHeight = modalContent.clientHeight;
-        const contentWidth = modalContent.clientWidth;
+        function exportToPDF(orderId) {
+            try {
+                const doc = new jsPDF();
 
-        // Chuyển đổi nội dung của modal thành hình ảnh
-        html2canvas(modalContent, {
-            scrollX: 0,
-            scrollY: -window.scrollY,
-            scale: 1,
-            width: contentWidth,
-            height: contentHeight,
-            logging: true,
-            useCORS: true,
-        }).then((canvas) => {
-            // Chuyển đổi hình ảnh thành PDF
-            const imgData = canvas.toDataURL('image/png');
-            doc.addImage(imgData, 'PNG', 0, 0);
+                // Lấy nội dung của modal
+                const modalContent = document.getElementById(`orderDetailsContent-${orderId}`);
+                const contentHeight = modalContent.clientHeight;
+                const contentWidth = modalContent.clientWidth;
 
-            // Tải xuống tệp PDF
-            const currentDate = new Date().toLocaleDateString('en-US').replaceAll('/', '-');
-            doc.save(`order_details_${orderId}_${currentDate}.docx`);
-        });
-    } catch (error) {
-        console.error('Error exporting to PDF:', error);
-    }
-}
+                // Chuyển đổi nội dung của modal thành hình ảnh
+                html2canvas(modalContent, {
+                    scrollX: 0,
+                    scrollY: -window.scrollY,
+                    scale: 1,
+                    width: contentWidth,
+                    height: contentHeight,
+                    logging: true,
+                    useCORS: true,
+                }).then((canvas) => {
+                    // Chuyển đổi hình ảnh thành PDF
+                    const imgData = canvas.toDataURL('image/png');
+                    doc.addImage(imgData, 'PNG', 0, 0);
+
+                    // Tải xuống tệp PDF
+                    const currentDate = new Date().toLocaleDateString('en-US').replaceAll('/', '-');
+                    doc.save(`order_details_${orderId}_${currentDate}.docx`);
+                });
+            } catch (error) {
+                console.error('Error exporting to PDF:', error);
+            }
+        }
 
 
 
@@ -272,7 +282,7 @@ const currentDate = new Date().toLocaleString('en-US', {
 
 
 
-    
+
 }
 
 <style>
