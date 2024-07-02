@@ -81,7 +81,50 @@
                 </div>
             </div>
         </div>
+        <canvas id="transactionChart" width="400" height="200"></canvas>
     </div>
 </div>
 
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/api/transactions');
+            const data = await response.json();
+            return data;
+        }
+
+        async function createChart() {
+            const data = await fetchData();
+            const labels = data.map(t => new Date(t.insDate).toLocaleDateString());
+            const prices = data.map(t => t.totalPrice);
+
+            const ctx = document.getElementById('transactionChart').getContext('2d');
+            const transactionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Price',
+                        data: prices,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        createChart();
+    </script>
+}
 <script src="~/assets/js/dashboard.js"></script>
