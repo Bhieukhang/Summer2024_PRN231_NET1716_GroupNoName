@@ -1,7 +1,40 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Admin.Statics.DashboardModel
+@using Newtonsoft.Json
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Statics.DashboardModel
+
 @{
+    var currentYear = DateTime.Now.Year;
+    var minYear = currentYear - 5;
+
+    var data = new List<double>();
+    var monthly = Model.DashboardData.MonthlyRevenue;
+    for (var i = 1; i <= 12; i++)
+    {
+        if (monthly.Any(x => x.Month == i))
+        {
+            data.Add(monthly.FirstOrDefault(x => x.Month == i)?.Value ?? 0);
+        }
+        else
+        {
+            data.Add(0);
+        }
+    }
+
+    string json = JsonConvert.SerializeObject(data);
+
+
 }
+<script src="~/lib/chart.js/chart.esm.min.js"></script>
+<script src="~/lib/chart.js/chart.min.js"></script>
+<script src="~/lib/chart.js/helpers.esm.min.js"></script>
+
+<style>
+    #myChart {
+        background-color: white;
+        width: 100%;
+        margin: 10px 20px;
+    }
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
@@ -13,7 +46,7 @@
             <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item active" aria-current="page">
-                        <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                        <span></span>Tổng quan <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
                     </li>
                 </ul>
             </nav>
@@ -24,10 +57,10 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Total Revenue <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                            Tổng doanh thu <i class="mdi mdi-chart-line mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">$ @Model.DashboardData?.TotalRevenue</h2>
-                        <h6 class="card-text">Increased by 60%</h6>
+                        <h6 class="card-text">Tăng 60%</h6>
                     </div>
                 </div>
             </div>
@@ -36,10 +69,10 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Total Promotion <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+                            Tổng khuyến mãi <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">@Model.DashboardData?.TotalPromotion</h2>
-                        <h6 class="card-text">Decreased by 10%</h6>
+                        <h6 class="card-text">Tăng 10%</h6>
                     </div>
                 </div>
             </div>
@@ -48,40 +81,90 @@
                     <div class="card-body">
                         <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Total Orders <i class="mdi mdi-diamond mdi-24px float-end"></i>
+                            Tổng đơn đặt hàng <i class="mdi mdi-diamond mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">95,5741</h2>
-                        <h6 class="card-text">Increased by 5%</h6>
+                        <h6 class="card-text">Tăng 5%</h6>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row mb-3 d-flex align-items-center">
+            <div class="col-sm-12 col-lg-8">
+                <h6>Tổng doanh thu theo từng năm: </h6>
+            </div>
+            <div class="text-end col-sm-12 col-lg-4">
+                <form method="get" id="form-year">
+                    <select onchange="searchRevenue();" name="year" class="form-select">
+                        @for (var i = minYear; i <= currentYear; i++)
+                        {
+                            @if (i == Model.Year)
+                            {
+                                <option selected="selected" value="@i">@("Năm " + i)</option>
+                            }
+                            else
+                            {
+                                <option value="@i">@("Năm " + i)</option>
+                            }
+                        }
+                    </select>
+                </form>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="clearfix">
-                            <h4 class="card-title float-start">Visit And Sales Statistics</h4>
-                            <div id="visit-sale-chart-legend"
-                                 class="rounded-legend legend-horizontal legend-top-right float-end"></div>
-                        </div>
-                        <canvas id="visit-sale-chart" class="mt-4"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Traffic Sources</h4>
-                        <div class="doughnutjs-wrapper d-flex justify-content-center">
-                            <canvas id="traffic-chart"></canvas>
-                        </div>
-                        <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
-                    </div>
-                </div>
-            </div>
+            <canvas id="myChart"></canvas>
         </div>
     </div>
 </div>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chartLabels = [];
+    for (var i = 1; i <= 12; i++) {
+        chartLabels.push("Tháng " + i);
+    }
+
+    function searchRevenue() {
+        document.getElementById('form-year').submit();
+    }
+
+    var myChart = new Chart(ctx, {
+        type: 'bar', // or 'line', 'pie', etc.
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: '$',
+                data: JSON.parse('@Html.Raw(json)'),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(99, 255, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
 <script src="~/assets/js/dashboard.js"></script>

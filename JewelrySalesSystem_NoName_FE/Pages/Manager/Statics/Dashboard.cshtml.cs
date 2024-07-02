@@ -10,12 +10,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Statics
         [BindProperty]
         public DashboardDTO DashboardData { get; set; } = new();
 
-        public async Task<IActionResult> OnGetAsync()
+        [BindProperty]
+        public int Year { get; set; } = DateTime.Now.Year;
+
+        public async Task<IActionResult> OnGetAsync(int year)
         {
             try
             {
+                if(year != 0) Year = year;
+
                 var token = HttpContext.Session.GetString("Token") ?? "";
-                DashboardData = await ApiClient.GetAsync<DashboardDTO>($"{ApiPath.Dashboard}", token);
+                DashboardData = await ApiClient.GetAsync<DashboardDTO>($"{ApiPath.Dashboard}?year={Year}", token);
             }
             catch (Exception ex)
             {

@@ -135,7 +135,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             {
                 return Ok(new ApiResponse
                 {
-                    Message = "StartDate > EndDate",
+                    Message = "Ngày kết thúc phải sau ngày bắt đầu.",
                     Success = false
                 });
             }
