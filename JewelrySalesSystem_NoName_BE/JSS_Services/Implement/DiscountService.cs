@@ -71,7 +71,7 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 OrderId = confirm.OrderId,
-                ManagerId = account.ManagerId,
+                ManagerId = (Guid)confirm.ManagerId,
                 PercentDiscount = confirm.PercentDiscount,
                 Description = "Chiết khấu đơn" + confirm.OrderId,
                 ConditionDiscount = confirm.ConditionDiscount,
