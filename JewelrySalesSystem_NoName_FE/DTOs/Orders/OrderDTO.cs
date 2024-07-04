@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Account;
+using System.ComponentModel.DataAnnotations;
 
 namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
 {
@@ -18,6 +19,8 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         public string? Type { get; set; }
         public List<OrderDetailDTO> OrderDetails { get; set; }
         public Guid ProductId { get; set; }
+        public AccountDAO Phone { get; set; }
+
     }
 
     public class OrderDetailDTO
