@@ -12,7 +12,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
 
         [Required(ErrorMessage = "Yêu cầu nhập số điện thoại.")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
-        public string Phone { get; set; } = null!;
+        public string? Phone { get; set; } = null!;
 
         //[Required(ErrorMessage = "Yêu cầu nhập ngày sinh.")]
         //[DataType(DataType.Date)]
