@@ -5,6 +5,6 @@ namespace JSS_Services.Interface
 {
     public interface IDashboardService
     {
-        Task<DashboardRequest> GetDashboardsAsync();
+        Task<DashboardRequest> GetDashboardsAsync(int year);
     }
 }

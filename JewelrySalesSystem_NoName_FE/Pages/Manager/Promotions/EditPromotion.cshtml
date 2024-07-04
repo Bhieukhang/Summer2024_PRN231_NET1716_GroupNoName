@@ -2,6 +2,12 @@
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions.EditPromotionModel
 @{
 }
+
+<style>
+    .form-check-input {
+        border: 0.5px solid;
+    }
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
 
@@ -15,63 +21,57 @@
                             <input asp-for="EditPromotionRequest.Id" class="form-control" type="hidden" />
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.PromotionName" class="control-label">PromotionName</label>
-                            <input asp-for="EditPromotionRequest.PromotionName" class="form-control" placeholder="Promotion Name" />
-                            <span asp-validation-for="EditPromotionRequest.PromotionName" class="text-danger"></span>
+                            <label asp-for="EditPromotionRequest.PromotionName" class="control-label">Tiêu đề khuyến mãi</label>
+                            <input asp-for="EditPromotionRequest.PromotionName" class="form-control" placeholder="Nhập tiêu đề khuyến mãi" />
+                            <span asp-validation-for="EditPromotionRequest.PromotionName" class="text-danger d-block mt-1"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.PromotionName" class="control-label">PromotionName</label>
-                            <input asp-for="EditPromotionRequest.PromotionName" class="form-control" placeholder="Promotion Name" />
-                            <span asp-validation-for="EditPromotionRequest.PromotionName" class="text-danger"></span>
+                            <label asp-for="EditPromotionRequest.Type" class="control-label">Loại khuyến mãi</label>
+                            <select asp-for="EditPromotionRequest.Type" class="form-select" placeholder="Chọn loại khuyến mãi">
+                                <option value="Product">Product</option>
+                            </select>
+                            <span asp-validation-for="EditPromotionRequest.Type" class="text-danger d-block mt-1"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.Type" class="control-label">Type</label>
-                            <input asp-for="EditPromotionRequest.Type" class="form-control" placeholder="Enter Type" />
-                            <span asp-validation-for="EditPromotionRequest.Type" class="text-danger"></span>
+                            <label asp-for="EditPromotionRequest.Description" class="control-label">Mô tả</label>
+                            <textarea style="height: 150px;" asp-for="EditPromotionRequest.Description" class="form-control" placeholder="Nhập mô tả khuyến mãi"></textarea>
+                            <span asp-validation-for="EditPromotionRequest.Description" class="text-danger d-block mt-1"></span>
+                        </div>
+                        <div class="form-group d-none">
+                            <label asp-for="EditPromotionRequest.ProductQuantity" class="control-label">Số lượng sản phẩm</label>
+                            <input asp-for="EditPromotionRequest.ProductQuantity" type="number" max="99999" class="form-control" placeholder="Nhập số lượng sản phẩm" />
+                            <span asp-validation-for="EditPromotionRequest.ProductQuantity" class="text-danger d-block mt-1"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.Description" class="control-label">Description</label>
-                            <input asp-for="EditPromotionRequest.Description" class="form-control" placeholder="Enter Description" />
-                            <span asp-validation-for="EditPromotionRequest.Description" class="text-danger"></span>
+                            <label asp-for="EditPromotionRequest.Percentage" class="control-label">Phần trăm khuyến mãi</label>
+                            <input asp-for="EditPromotionRequest.Percentage" type="number" max="100" class="form-control" placeholder="Nhập phần trăm khuyến mãi" />
+                            <span asp-validation-for="EditPromotionRequest.Percentage" class="text-danger d-block mt-1"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.ProductQuantity" class="control-label">Product Quantity</label>
-                            <input asp-for="EditPromotionRequest.ProductQuantity" type="number" max="99999" class="form-control" placeholder="Enter Product Quantity" />
-                            <span asp-validation-for="EditPromotionRequest.ProductQuantity" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EditPromotionRequest.Percentage" class="control-label">Percentage</label>
-                            <input asp-for="EditPromotionRequest.Percentage" type="number" max="100" class="form-control" placeholder="Enter Percentage" />
-                            <span asp-validation-for="EditPromotionRequest.Percentage" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EditPromotionRequest.StartDate" class="control-label">Start Date</label>
-                            <input asp-for="EditPromotionRequest.StartDate" type="datetime-local" class="form-control" placeholder="Enter Start Date" />
+                            <label asp-for="EditPromotionRequest.StartDate" class="control-label">Ngày bắt đầu</label>
+                            <input asp-for="EditPromotionRequest.StartDate" type="date" readonly class="form-control" />
                             <span asp-validation-for="EditPromotionRequest.StartDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="EditPromotionRequest.EndDate" class="control-label">End Date</label>
-                            <input asp-for="EditPromotionRequest.EndDate" type="datetime-local" class="form-control" placeholder="Enter End Date" />
-                            <span asp-validation-for="EditPromotionRequest.EndDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="EditPromotionRequest.Deflag" class="control-label">Deflag</label> <br />
-                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="true" /> Hoạt động
-                            <input asp-for="EditPromotionRequest.Deflag" type="radio" value="false" class="ms-3" /> Không hoạt động<br />
-                            <span asp-validation-for="EditPromotionRequest.Deflag" class="text-danger"></span>
+                            <label asp-for="EditPromotionRequest.EndDate" class="control-label">Ngày kết thúc</label>
+                            <input asp-for="EditPromotionRequest.EndDate" type="datetime-local" class="form-control" placeholder="Chọn ngày kết thúc" />
+                            <span asp-validation-for="EditPromotionRequest.EndDate" class="text-danger d-block mt-1"></span>
                         </div>
                         <div class="form-group">
                             <label class="control-label fw-bold">Chọn sản phẩm để sử dụng khuyến mãi</label> <br />
-                            <div class="row">
-                                @foreach (var item in Model.Products)
-                                {
-                                    <div class="col-sm-12 col-lg-4">
-                                        <input @(Model.Groups.Any(x => x.ProductId == item.Id) ? "checked" : "") type="checkbox" name="ProductId" value="@item.Id" class="form-checkbox" />
-                                        <span class="ms-2">@item.ProductName</span>
-                                    </div>
-                                }
-                                <input type="hidden" asp-for="EditPromotionRequest.ProductJson" id="product-json" />
-                            </div>
+                            @if (Model?.Products != null)
+                            {
+                                <div class="row">
+                                    @foreach (var item in Model.Products)
+                                    {
+                                        <div class="col-sm-12 col-lg-4">
+                                            <input @(Model.Groups.Any(x => x.ProductId == item.Id) ? "checked" : "") type="checkbox" name="ProductId" value="@item.Id" class="form-check-input" />
+                                            <span class="ms-2">@item.ProductName</span>
+                                        </div>
+                                    }
+                                    <input type="hidden" asp-for="EditPromotionRequest.ProductJson" id="product-json" />
+                                </div>
+                            }
                         </div>
                         <div class="row">
                             <div class="col-sm-12 d-flex flex-row justify-content-start">
@@ -113,6 +113,10 @@
         }
         console.log(listProduct);
         document.getElementById('product-json').value = listProduct.trim();
+        if (listProduct.trim() === "") {
+            window.alert("Hãy chọn ít nhất 1 sản phẩm");
+            return;
+        };
         document.getElementById('form-submit').submit();
 
 

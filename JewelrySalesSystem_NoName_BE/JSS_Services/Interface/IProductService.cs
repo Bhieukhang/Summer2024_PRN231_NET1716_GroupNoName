@@ -12,11 +12,13 @@ namespace JSS_Services.Interface
 {
     public interface IProductService
     {
-        //Do huu Thuan
+        //Do huu Thuan  
         Task<int> GetTotalSubProductAsync();
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
         Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size);
-        Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size);
+        Task<ProductResponse> SearchProductByCodeAsync(string code);
+        Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size);
+        //Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size);
         Task<Product> GetProductByIdAsync(Guid id);
         Task<IEnumerable<Product>> GetAsync();
         Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName);

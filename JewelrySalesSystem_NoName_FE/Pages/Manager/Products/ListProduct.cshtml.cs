@@ -30,6 +30,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
         public IList<MaterialDTO> mateList { get; set; } = new List<MaterialDTO>();
+        public ProductDTO searchItem = new ProductDTO();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
@@ -49,45 +50,38 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             SelectedCategory = selectedCategory;
             SelectedMaterial = selectedMaterial;
 
-            var url = $"{ApiPath.ProductList}/searchAndFilter?page={Page}&size={Size}";
-
-            if (!string.IsNullOrEmpty(SearchCode))
-            {
-                url += $"&code={SearchCode}";
-            }
-            if (!string.IsNullOrEmpty(SelectedCategory))
-            {
-                url += $"&categoryId={SelectedCategory}";
-            }
-            if (!string.IsNullOrEmpty(SelectedMaterial))
-            {
-                url += $"&materialId={SelectedMaterial}";
-            }
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             try
             {
-                var client = _httpClientFactory.CreateClient("ApiClient");
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var productResponse = await client.GetStringAsync(url);
-                Console.WriteLine($"API Response: {productResponse}");
-
-
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(productResponse);
-                if (paginateResult != null)
+                if (!string.IsNullOrEmpty(SearchCode))
                 {
-                    TotalPages = paginateResult.TotalPages;
-                    productList = paginateResult.Items;
+                    var searchUrl = $"{ApiPath.ProductList}/code?code={SearchCode}";
+                    var productResponse = await client.GetStringAsync(searchUrl);
+                    searchItem = JsonConvert.DeserializeObject<ProductDTO>(productResponse);
                 }
                 else
                 {
-                    productList = new List<ProductDTO>();
+                    var filterUrl = $"{ApiPath.ProductList}/filter?categoryId={SelectedCategory}&materialId={SelectedMaterial}&page={Page}&size={Size}";
+                    var filterResponse = await client.GetStringAsync(filterUrl);
+                    var paginateResult = JsonConvert.DeserializeObject<Paginate<ProductDTO>>(filterResponse);
+
+                    if (paginateResult != null)
+                    {
+                        TotalPages = paginateResult.TotalPages;
+                        productList = paginateResult.Items;
+                    }
+                    else
+                    {
+                        productList = new List<ProductDTO>();
+                    }
                 }
 
                 var categoryResponse = await client.GetAsync(ApiPath.CategoryList);
                 if (categoryResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực! Hãy login lại.";
                     return RedirectToPage("/Auth/Login");
                 }
                 cateList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
@@ -95,7 +89,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var materialResponse = await client.GetAsync(ApiPath.MaterialList);
                 if (materialResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực! Hãy login lại.";
                     return RedirectToPage("/Auth/Login");
                 }
                 mateList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());

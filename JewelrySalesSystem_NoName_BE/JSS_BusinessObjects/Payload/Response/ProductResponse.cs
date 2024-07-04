@@ -13,7 +13,7 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, 
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, 
-            string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId, Category? category, Material? material, int? periodWarranty)
+            string? code, double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, Guid? subId, CategoryResponse? category, MaterialResponse? material, int? periodWarranty)
         {
             Id = id;
             ImgProduct = imgProduct;
@@ -37,7 +37,7 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
-            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId, Category? category, Material? material, int? periodWarranty)
+            double? importPrice, DateTime? insDate, double? processPrice, bool? deflag, double? tax, Guid? subId, CategoryResponse? category, MaterialResponse? material, int? periodWarranty)
         {
             Id = id;
             ImgProduct = imgProduct;
@@ -91,7 +91,7 @@ namespace JSS_BusinessObjects.Payload.Response
         public double? Tax { get; set; }
         public Guid? SubId { get; set; }
         public int? PeriodWarranty { get; set; }
-        public virtual Category? Category { get; set; }
-        public virtual Material? Material { get; set; }
+        public virtual CategoryResponse? Category { get; set; }
+        public virtual MaterialResponse? Material { get; set; }
     }
 }

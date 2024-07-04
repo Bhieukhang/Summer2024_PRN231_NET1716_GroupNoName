@@ -106,32 +106,69 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         }
 
 
-        #region SearchAndFilterProducts
+        //#region SearchAndFilterProducts
+        ///// <summary>
+        ///// Search a product by its code or get products by category and material.
+        ///// </summary>
+        ///// <param name="code">The code of the product to search.</param>
+        ///// <param name="categoryId">The ID of the category to filter by.</param>
+        ///// <param name="materialId">The ID of the material to filter by.</param>
+        ///// <param name="page">Page number for pagination.</param>
+        ///// <param name="size">Page size for pagination.</param>
+        ///// <returns>List of filtered products or a single product with the specified code.</returns>
+        ///// GET : api/Product/searchAndFilter
+        //#endregion
+        //[HttpGet(ApiEndPointConstant.Product.SearchAndFilterProductEndpoint)]
+        //public async Task<ActionResult> SearchAndFilterProducts(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
+        //{
+        //    var result = await _productService.SearchAndFilterProductsAsync(code, categoryId, materialId, page, size);
+
+        //    if (!string.IsNullOrEmpty(code))
+        //    {
+        //        if (result.Items.Count == 0)
+        //        {
+        //            return NotFound();
+        //        }
+        //        return Ok(result.Items.FirstOrDefault());
+        //    }
+        //    return Ok(result);
+        //}
+
+        #region SearchProductByCode
         /// <summary>
-        /// Search a product by its code or get products by category and material.
+        /// Search a product by its code.
         /// </summary>
         /// <param name="code">The code of the product to search.</param>
+        /// <returns>Product with code.</returns>
+        /// GET : api/Product/searchAndFilter
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByCodeEndpoint)]
+        public async Task<IActionResult> SearchProductByCode(string code)
+        {
+            var product = await _productService.SearchProductByCodeAsync(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+        #region FilterProducts
+        /// <summary>
+        /// Get products by category and material.
+        /// </summary>
         /// <param name="categoryId">The ID of the category to filter by.</param>
         /// <param name="materialId">The ID of the material to filter by.</param>
         /// <param name="page">Page number for pagination.</param>
         /// <param name="size">Page size for pagination.</param>
-        /// <returns>List of filtered products or a single product with the specified code.</returns>
-        /// GET : api/Product/searchAndFilter
+        /// <returns>List of filtered products.</returns>
+        /// GET : api/Product/filter
         #endregion
-        [HttpGet(ApiEndPointConstant.Product.SearchAndFilterProductEndpoint)]
-        public async Task<ActionResult> SearchAndFilterProducts(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
+        [HttpGet(ApiEndPointConstant.Product.FilterProductEndpoint)]
+        public async Task<IActionResult> FilterProducts(Guid? categoryId, Guid? materialId, int? page, int? size)
         {
-            var result = await _productService.SearchAndFilterProductsAsync(code, categoryId, materialId, page, size);
-
-            if (!string.IsNullOrEmpty(code))
-            {
-                if (result.Items.Count == 0)
-                {
-                    return NotFound();
-                }
-                return Ok(result.Items.FirstOrDefault());
-            }
-            return Ok(result);
+            var products = await _productService.FilterProductsAsync(categoryId, materialId, page, size);
+            return Ok(products);
         }
 
         #region CreateProduct
@@ -198,8 +235,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdProduct.Deflag,
                 createdProduct.Tax,
                 createdProduct.SubId,
-                createdProduct.Category,
-                createdProduct.Material,
+                new CategoryResponse(
+                    createdProduct.Category.Id,
+                    createdProduct.Category.Name
+                    ),
+                new MaterialResponse(
+                    createdProduct.Material.Id,
+                    createdProduct.Material.MaterialName,
+                    createdProduct.Material.InsDate
+                    ),
                 createdProduct.PeriodWarranty
             ));
         }
@@ -281,8 +325,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 updatedProduct.Deflag,
                 updatedProduct.Tax,
                 updatedProduct.SubId,
-                updatedProduct.Category,
-                updatedProduct.Material,
+                new CategoryResponse(
+                    updatedProduct.Category.Id,
+                    updatedProduct.Category.Name
+                    ),
+                new MaterialResponse(
+                    updatedProduct.Material.Id,
+                    updatedProduct.Material.MaterialName,
+                    updatedProduct.Material.InsDate
+                    ),
                 updatedProduct.PeriodWarranty
             ));
         }

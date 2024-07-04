@@ -2,6 +2,7 @@
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions.PromotionDetailsModel
 @{
     var promotion = Model?.Promotion;
+    var index = 1;
 }
 
 <div class="main-panel">
@@ -15,56 +16,65 @@
                 {
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Name: </span>
+                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Tiêu đề: </span>
                             <span> @promotion?.PromotionName</span>
-                        </div>
-                    </div> <div class="row mb-3">
-                        <div>
-                            <span class="fw-bold"><i class="bi bi-power me-1"></i> Deflag: </span>
-                            <span>
-                                @(promotion?.Deflag == true ? "On" : "Off")
-                            </span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-tag me-1"></i> Type: </span>
+                            <span class="fw-bold"><i class="bi bi-tag me-1"></i> Loại: </span>
                             <span><span class="badge badge-info">@promotion?.Type</span></span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Description: </span>
+                            <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Mô tả: </span>
                             <span>@promotion?.Description</span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-archive me-1"></i> Product Quantity: </span>
+                            <span class="fw-bold"><i class="bi bi-archive me-1"></i> Số lượng sản phẩm: </span>
                             <span>@promotion?.ProductQuantity</span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-percent me-1"></i> Percentage: </span>
+                            <span class="fw-bold"><i class="bi bi-percent me-1"></i> Phần trăm: </span>
                             <span><span>@promotion?.Percentage</span>%</span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Ins Date - Ups Date: </span>
+                            <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Ngày chỉnh sửa: </span>
                             <span>@promotion?.InsDate - @promotion?.UpsDate</span>
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-calendar-check me-1"></i> Start Date - End Date: </span>
+                            <span class="fw-bold"><i class="bi bi-calendar-check me-1"></i> Thời gian hoạt động: </span>
                             <span>@promotion?.StartDate - @promotion?.EndDate</span>
                         </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="mb-2">
+                            <span class="fw-bold"><i class="bi bi-list me-1"></i> Danh sách sản phẩm sử dụng khuyến mãi: </span>
+                        </div>
+
+                        @foreach (var item in Model.Products)
+                        {
+                            @if (Model.Groups.Any(x => x.ProductId == item.Id))
+                            {
+                                <div class="col-sm-12 col-lg-3">
+                                    <span>@($"{index++}. ")</span>
+                                    <span>@item.ProductName</span>
+                                </div>
+                            }
+                        }
                     </div>
 
                     <div class="row">

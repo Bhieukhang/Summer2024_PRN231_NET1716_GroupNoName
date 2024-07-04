@@ -37,13 +37,13 @@
         </div>
         <form method="get" id="form-search">
             <div class="form-group">
-                <label asp-for="Search" class="control-label">Search</label>
+                <label asp-for="Search" class="control-label">Tìm kiếm</label>
                 <div class="row">
                     <div class="col-sm-12 col-lg-10">
-                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Enter key word to search" />
+                        <input id="input-search" asp-for="Search" class="form-control" autofocus placeholder="Nhập từ khóa để tìm kiếm" />
                     </div>
                     <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
-                        <button class="btn btn-secondary" type="submit">Search</button>
+                        <button class="btn btn-secondary" type="submit">Tìm kiếm</button>
                     </div>
                 </div>
             </div>
@@ -60,15 +60,13 @@
                             <thead>
                                 <tr>
                                     <th> STT </th>
-                                    <th> Id </th>
-                                    <th> Order Id </th>
-                                    <th> Manager Id </th>
-                                    <th> Status </th>
-                                    <th> Percent Discount </th>
-                                    <th> Description </th>
-                                    <th> Condition Discount </th>
-                                    <th> Ins Date - Ups Date </th>
-                                    <th> Note </th>
+                                    <th>Mã khuyến mãi</th>
+                                    <th> Mã hóa đơn </th>
+                                    <th> Trạng thái </th>
+                                    <th> Phần trăm giám giá </th>
+                                    <th> Mô tả </th>
+                                    <th> Điều kiện giảm giá </th>
+                                    <th> Phản hồi </th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
@@ -80,25 +78,23 @@
                                             <a href="DiscountDetails?discountId=@discount.Id"> @discount.Id</a>
                                         </td>
                                         <td>@discount.OrderId</td>
-                                        <td>@discount.ManagerId</td>
                                         <td>
                                             @if (discount.Status == "Pending")
                                             {
-                                                <span class="badge badge-info">@discount.Status</span>
+                                                <span class="badge badge-info">Chờ phản hồi</span>
                                             }
                                             @if (discount.Status == "Accepted")
                                             {
-                                                <span class="badge badge-success">@discount.Status</span>
+                                                <span class="badge badge-success">Chấp nhận</span>
                                             }
                                             @if (discount.Status == "Denied")
                                             {
-                                                <span class="badge badge-danger">@discount.Status</span>
+                                                <span class="badge badge-danger">Từ chối</span>
                                             }
                                         </td>
                                         <td>@discount.PercentDiscount</td>
                                         <td>@discount.Description</td>
                                         <td>@discount.ConditionDiscount</td>
-                                        <td>@discount.InsDate - @discount.UpsDate</td>
                                         <td>@discount.Note</td>
                                     </tr>
                                 }
@@ -201,7 +197,7 @@
 
             }
 
-            
+
 
 
             // Gọi hàm loadData khi trang được load
