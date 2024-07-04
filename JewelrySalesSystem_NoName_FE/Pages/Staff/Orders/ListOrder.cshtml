@@ -229,12 +229,8 @@
         async function fetchAccountDetails(customerId) {
             try {
                 // Replace 'your-auth-token' with the actual token you use for authentication
-                const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4ZDcwMGEzLTFjZDgtNGE5OC04OWMxLWViMjdkZTBiZTVhNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLEkOG7lyBI4buvdSBUaHXhuq1uIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMzMzODg4MjU3IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3RhZmYiLCJJbWdVcmwiOiJodHRwczovL2ZpcmViYXNlc3RvcmFnZS5nb29nbGVhcGlzLmNvbS92MC9iL3dlYmlkLTZjODA5LmFwcHNwb3QuY29tL28vYS5qcGc_YWx0PW1lZGlhJnRva2VuPWZmMjQyZWE3LThhM2EtNDE1OS1iYWRiLTFkMWRiYmQxODFhNiIsImV4cCI6MTcyMDA5NzczNX0.48r6u6O3l4MW9synwKSa_Pe7-tMnoIpb3j-zqangl60';
-                const accountResponse = await fetch(`https://localhost:44318/api/v1/Account/id?id=${customerId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
+               // const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4ZDcwMGEzLTFjZDgtNGE5OC04OWMxLWViMjdkZTBiZTVhNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLEkOG7lyBI4buvdSBUaHXhuq1uIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMzMzODg4MjU3IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3RhZmYiLCJJbWdVcmwiOiJodHRwczovL2ZpcmViYXNlc3RvcmFnZS5nb29nbGVhcGlzLmNvbS92MC9iL3dlYmlkLTZjODA5LmFwcHNwb3QuY29tL28vYS5qcGc_YWx0PW1lZGlhJnRva2VuPWZmMjQyZWE3LThhM2EtNDE1OS1iYWRiLTFkMWRiYmQxODFhNiIsImV4cCI6MTcyMDA5NzczNX0.48r6u6O3l4MW9synwKSa_Pe7-tMnoIpb3j-zqangl60';
+                const accountResponse = await fetch(`https://localhost:44318/api/v1/Account/id?id=${customerId}`);
                 const accountResult = await accountResponse.json();
 
                 if (accountResponse.ok) {
