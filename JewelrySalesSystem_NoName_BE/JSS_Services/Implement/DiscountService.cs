@@ -18,11 +18,13 @@ namespace JSS_Services.Implement
 
         public async Task<bool> CreateDiscountAsync(DiscountRequest request)
         {
+            var account = await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync();
+
             var discountItem = new Discount()
             {
                 Id = Guid.NewGuid(),
                 OrderId = request.OrderId,
-                ManagerId = request.ManagerId,
+                ManagerId = account.ManagerId,
                 PercentDiscount = request.PercentDiscount,
                 Description = request.Description,
                 ConditionDiscount = request.ConditionDiscount,
@@ -42,7 +44,6 @@ namespace JSS_Services.Implement
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
             discountItem.Status = request.Status;
             discountItem.OrderId = request.OrderId;
-            discountItem.ManagerId = request.ManagerId;
             discountItem.PercentDiscount = request.PercentDiscount;
             discountItem.ConditionDiscount = request.ConditionDiscount;
             discountItem.Description = request.Description;
@@ -70,7 +71,7 @@ namespace JSS_Services.Implement
             {
                 Id = Guid.NewGuid(),
                 OrderId = confirm.OrderId,
-                ManagerId = confirm.ManagerId,
+                ManagerId = account.ManagerId,
                 PercentDiscount = confirm.PercentDiscount,
                 Description = "Chiết khấu đơn" + confirm.OrderId,
                 ConditionDiscount = confirm.ConditionDiscount,

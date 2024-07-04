@@ -12,28 +12,47 @@
             </div>
         </div>
 
-        <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
-            <div class="col-md-6">
-                <label for="OrderId" class="form-label">Order ID</label>
-                <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập ID đơn hàng" />
-            </div>
-            <div class="col-md-6">
-                <label for="StartDate" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-12 d-flex justify-content-end">
-                <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
-                    <i class="mdi mdi-magnify"></i>
-                    Tìm Kiếm
-                </button>
-            </div>
-        </form>
+        @* <form method="get" class="row g-3 bg-light p-4 rounded shadow-sm">
+        <div class="col-md-6">
+        <label for="OrderId" class="form-label">Order ID</label>
+        <input type="text" class="form-control" id="OrderId" name="OrderId" value="@Model.SearchCriteria.OrderId" placeholder="Nhập ID đơn hàng" />
+        </div>
+        <div class="col-md-6">
+        <label for="StartDate" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.SearchCriteria.StartDate?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+        <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
+        <i class="mdi mdi-magnify"></i>
+        Tìm Kiếm
+        </button>
+        </div>
+        </form> *@
 
         <br />
 
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
+                    <div class="order-list">
+                        <h2>Danh Sách Đơn Hàng</h2>
+                        <form id="searchForm">
+                            <div class="form-group">
+                                <label for="order-id">Mã đơn hàng</label>
+                                <input type="text" id="orderId" placeholder="Mã đơn hàng" value="@Model.OrderId">
+                            </div>
+                            <div class="form-group">
+                                <label for="date">Ngày</label>
+                                <input type="date" id="insDate" placeholder="dd/mm/yyyy" value="@Model.InsDate?.ToString("yyyy-MM-dd")">
+                                <button type="button" class="clear-button" onclick="clearDate()">X</button>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Số điện thoại</label>
+                                <input type="text" id="phone" placeholder="Số điện thoại" value="@Model.Phone">
+                            </div>
+                            <button type="button" class="search-button" onclick="applyFilters()">Tìm kiếm</button>
+                        </form>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead class="thead-dark">
@@ -46,7 +65,62 @@
                                 </tr>
                             </thead>
                             <tbody id="orderListBody">
-                                @foreach (var order in Model.FilteredOrderList)
+                                @if (Model.OrderList != null && Model.OrderList.Count > 0)
+                                {
+                                    @foreach (var order in Model.OrderList)
+                                    {
+                                        <tr>
+                                            <td>@order.Id</td>
+                                            <td>@order.TotalPrice</td>
+                                            <td>@order.InsDate</td>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId')">Xem chi tiết</button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrder('@order.Id', '@order.ProductId')">Xuất</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Order Details Modal -->
+                                        <div class="modal fade" id="orderDetailsModal-@order.Id" tabindex="-1" aria-labelledby="orderDetailsModalLabel-@order.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="orderDetailsModalLabel-@order.Id">Chi tiết đơn hàng - Mã đơn hàng: @order.Id</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="orderDetailsContent-@order.Id">
+                                                        <!-- Order details will be dynamically inserted here -->
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Order Export Modal -->
+                                        <div class="modal fade" id="orderExportModal-@order.Id" tabindex="-1" aria-labelledby="orderExportModalLabel-@order.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="orderExportModalLabel-@order.Id">Xuất PDF - Mã đơn hàng: @order.Id</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="orderExportContent-@order.Id">
+                                                        <!-- Order export content will be dynamically inserted here -->
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <!-- Export PDF button will be inserted dynamically -->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
                                 {
                                     <tr>
                                         <td>@order.Id</td>
@@ -121,6 +195,25 @@
                 element.textContent = formattedPrice;
             });
         });
+        function applyFilters() {
+            var orderId = document.getElementById("orderId").value;
+            var insDate = document.getElementById("insDate").value;
+            var phone = document.getElementById("phone").value;
+            var url = `./ListOrder?`;
+            if (orderId) {
+                url += `&OrderId=${orderId}`;
+            }
+            if (insDate) {
+                url += `&InsDate=${insDate}`;
+            }
+            if (phone) {
+                url += `&Phone=${phone}`;
+            }
+            window.location.href = url;
+        }
+        function clearDate() {
+            document.getElementById("insDate").value = "";
+        }
 
         async function fetchOrderDetails(orderId, productId) {
             try {
@@ -368,5 +461,66 @@
 
     .modal-dialog.modal-sm {
         max-width: 500px;
+    }
+
+    .search-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .search-button:hover {
+            background: linear-gradient(90deg, #feb47b, #ff7e5f);
+        }
+
+    .clear-button {
+        margin-left: 10px;
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .clear-button:hover {
+            color: #000;
+        }
+
+    .order-list h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            flex: 0 0 100px;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .order-list {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 </style>

@@ -49,26 +49,29 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
             var token = HttpContext.Session.GetString("Token") ?? "";
             try
             {
-                if (EditPromotionRequest == null) throw new Exception("Promotion data is invalid.");
-                var list = (EditPromotionRequest.ProductJson ?? "").Split(" ");
-                List<Guid> guids = new List<Guid>();
-                foreach (var item in list)
+                if(ModelState.IsValid)
                 {
-                    guids.Add(Guid.Parse(item));
-                }
-                EditPromotionRequest.ProductIds = guids;
-                var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token);
-                if (!response.Success) throw new Exception(response.Message);
+                    if (EditPromotionRequest == null) throw new Exception("Promotion data is invalid.");
+                    var list = (EditPromotionRequest.ProductJson ?? "").Split(" ");
+                    List<Guid> guids = new List<Guid>();
+                    foreach (var item in list)
+                    {
+                        guids.Add(Guid.Parse(item));
+                    }
+                    EditPromotionRequest.ProductIds = guids;
+                    var response = await ApiClient.PutAsync<ApiResponse>($"{ApiPath.Promotion}", EditPromotionRequest, token);
+                    if (!response.Success) throw new Exception(response.Message);
 
-                return RedirectToPage("ListPromotion");
+                    return RedirectToPage("ListPromotion");
+                }
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 Console.WriteLine(ex.ToString());
-                Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
-                return Page();
             }
+            Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
+            return Page();
         }
     }
 }

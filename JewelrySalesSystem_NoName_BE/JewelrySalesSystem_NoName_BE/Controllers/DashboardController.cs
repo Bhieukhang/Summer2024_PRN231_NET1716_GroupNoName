@@ -27,13 +27,13 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
         [Authorize(Roles = "Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Dashboard.DashboardEndpoint)]
-        public async Task<ActionResult<DashboardRequest>> GetDashboardsAsync()
+        public async Task<ActionResult<DashboardRequest>> GetDashboardsAsync(int year)
         {
-            var Dashboards = await _dashboardService.GetDashboardsAsync();
+            var Dashboards = await _dashboardService.GetDashboardsAsync(year);
             return Ok(Dashboards);
         }
 
-        
+
 
     }
 }
