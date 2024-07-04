@@ -114,6 +114,11 @@ namespace JSS_Services.Implement
 
         public async Task<ProductResponse> SearchProductByCodeAsync(string code)
         {
+            if (string.IsNullOrEmpty(code) || code.Length < 8)
+            {
+                return null;
+            }
+
             var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
                 p => p.Code == code,
                 include: s => s.Include(p => p.Category).Include(c => c.Material)
@@ -302,9 +307,8 @@ namespace JSS_Services.Implement
             ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
-                                                           productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag, productItem.Tax, productItem.SubId, new CategoryResponse(productItem.Category.Id, productItem.Category.Name),
-                    new MaterialResponse(productItem.Material.Id, productItem.Material.MaterialName, productItem.Material.InsDate), productItem.PeriodWarranty);
+                                                           productItem.ImportPrice, productItem.ProcessPrice,
+                                                           productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category, productItem.Material, productItem.PeriodWarranty);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 

@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.OrderBillModel
 @{
 }
@@ -46,4 +46,59 @@
             </div>
         </div>
     </div>
+</div> *@
+
+@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.OrderBillModel
+@{
+}
+<div class="col-md-4 autocomplete">
+    <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
+    <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
+           onkeyup="autocompleteSearch(this.value)" value="@Model.SearchCode" />
+    <div id="autocomplete-list" class="autocomplete-items"></div>
 </div>
+
+<div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
+
+
+@section Scripts {
+    <script>
+        function autocompleteSearch(query) {
+            console.log(query);
+            if (query.length == 0) {
+                document.getElementById("autocomplete-list").innerHTML = "";
+                return;
+            }
+
+            fetch(`https://localhost:44318/api/v1/Product/autocomplete?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Data: ", data);
+                    let autocompleteList = document.getElementById("autocomplete-list");
+                    autocompleteList.innerHTML = "";
+
+                    data['$values'].forEach(item => {
+                        console.log("Item", item);
+                        let suggestionItem = document.createElement("div");
+                        suggestionItem.classList.add("autocomplete-item");
+
+                        suggestionItem.innerHTML = `
+                                            <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
+                                            <div class="product-details-search">
+                                                <h5 class="product-name-search">${item.productName}</h5>
+                                                <p class="product-code-search">Code: <strong>${item.code}</strong></p>
+                                            </div>`;
+
+                        suggestionItem.onclick = function () {
+                            document.getElementById("searchCode").value = item.code;
+                            autocompleteList.innerHTML = "";
+                        };
+
+                        autocompleteList.appendChild(suggestionItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching autocomplete data:', error));
+        }
+    </script>
+}
