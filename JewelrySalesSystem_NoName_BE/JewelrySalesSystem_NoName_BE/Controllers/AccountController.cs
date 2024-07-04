@@ -16,7 +16,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+  //  [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -100,7 +100,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         // GET: api/Account/{id}
         #endregion
         // [HttpGet("{id}")]
-        [Authorize]
+     //   [Authorize]
         [HttpGet(ApiEndPointConstant.Account.AccountByIdEndpoint)]
         public async Task<ActionResult<Account>> GetAccountByIdAsync(Guid id)
         {

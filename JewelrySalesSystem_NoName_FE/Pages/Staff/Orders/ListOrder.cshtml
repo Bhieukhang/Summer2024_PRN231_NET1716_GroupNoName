@@ -60,6 +60,7 @@
                                     <th>Mã</th>
                                     <th>Tổng giá trị</th>
                                     <th>Ngày mua hàng</th>
+                                    <th>Mã Khách Hàng</th>
                                     <th>Xem chi tiết</th>
                                     <th>Xuất đơn hàng</th>
                                 </tr>
@@ -67,15 +68,24 @@
                             <tbody id="orderListBody">
                                 @if (Model.OrderList != null && Model.OrderList.Count > 0)
                                 {
+
                                     @foreach (var order in Model.OrderList)
                                     {
                                         <tr>
                                             <td>@order.Id</td>
                                             <td>@order.TotalPrice</td>
                                             <td>@order.InsDate</td>
+                                            <td>@order.CustomerId</td>
+
+                                            
+
+                          @*                   <td>@(order.Phone != null ? order.Phone.Phone : "N/A")</td> *@
+                                        
                                             <td>
-                                                <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId')">Xem chi tiết</button>
-                                            </td>
+                                                <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId', '@order.CustomerId')">Xem chi tiết</button>
+                                          @*       <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId', '@order.CustomerId')">Xem chi tiết</button>
+                                         *@    </td>
+
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrder('@order.Id', '@order.ProductId')">Xuất</button>
                                             </td>
@@ -215,7 +225,10 @@
             document.getElementById("insDate").value = "";
         }
 
-        async function fetchOrderDetails(orderId, productId) {
+
+
+
+        async function fetchOrderDetails(orderId, productId, customerId) {
             try {
                 // Fetch order details
                 const orderResponse = await fetch(`https://localhost:44318/api/v1/OrderDetail/OrderID/id?id=${orderId}`);
@@ -224,6 +237,8 @@
                 if (orderResponse.ok) {
                     const orderDetails = orderResult;
 
+                    const phone = await fetchAccountDetails(customerId);
+                    const purchaseType = orderDetails.order.type === 'BUY' ? 'Mua sản phẩm' : 'Bán';
                     // Format order and product details HTML
                     const detailsHtml = `
                                     <div style="padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
@@ -263,6 +278,28 @@
                 console.error('Error fetching order or product details:', error);
             }
         }
+
+
+        async function fetchAccountDetails(customerId) {
+            try {
+                // Replace 'your-auth-token' with the actual token you use for authentication
+               // const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4ZDcwMGEzLTFjZDgtNGE5OC04OWMxLWViMjdkZTBiZTVhNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiLEkOG7lyBI4buvdSBUaHXhuq1uIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiIwMzMzODg4MjU3IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3RhZmYiLCJJbWdVcmwiOiJodHRwczovL2ZpcmViYXNlc3RvcmFnZS5nb29nbGVhcGlzLmNvbS92MC9iL3dlYmlkLTZjODA5LmFwcHNwb3QuY29tL28vYS5qcGc_YWx0PW1lZGlhJnRva2VuPWZmMjQyZWE3LThhM2EtNDE1OS1iYWRiLTFkMWRiYmQxODFhNiIsImV4cCI6MTcyMDA5NzczNX0.48r6u6O3l4MW9synwKSa_Pe7-tMnoIpb3j-zqangl60';
+                const accountResponse = await fetch(`https://localhost:44318/api/v1/Account/id?id=${customerId}`);
+                const accountResult = await accountResponse.json();
+
+                if (accountResponse.ok) {
+                    return accountResult.phone;
+                } else {
+                    console.error('Failed to fetch account details');
+                    return 'N/A';
+                }
+            } catch (error) {
+                console.error('Error fetching account details:', error);
+                return 'N/A';
+            }
+        }
+
+
 
         async function fetchOrder(orderId, productId) {
             try {
