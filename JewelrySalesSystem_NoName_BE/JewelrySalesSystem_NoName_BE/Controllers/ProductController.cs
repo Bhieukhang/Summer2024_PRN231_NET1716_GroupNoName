@@ -367,7 +367,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [HttpGet((ApiEndPointConstant.Product.ProductByCodePromotionEndpoint))]
-        public async Task<IActionResult> ListPromotionFromProductCode(String productCode)
+        public async Task<IActionResult> ListPromotionFromProductCode(string productCode)
         {
             var listPromotion = await _productService.GetPromotionByProductCode(productCode);
             var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);
@@ -383,7 +383,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// POST : api/Product
         #endregion
         [HttpGet((ApiEndPointConstant.Product.ProductItemByCodePromotionEndpoint))]
-        public async Task<IActionResult> PromotionFromProductCode(String productCode)
+        public async Task<IActionResult> PromotionFromProductCode(string productCode)
         {
             var listPromotion = await _productService.GetPromotionByCode(productCode);
             var result = JsonConvert.SerializeObject(listPromotion, Formatting.Indented);

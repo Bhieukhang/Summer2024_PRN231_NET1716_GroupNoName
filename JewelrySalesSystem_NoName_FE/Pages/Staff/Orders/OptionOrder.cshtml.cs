@@ -101,7 +101,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
                 }
                 else
                 {
-                    ResponseMessage = $"Error: {response.ReasonPhrase}";
+                    ResponseMessage = $"{response.StatusCode}";
                 }
 
                 return new JsonResult(new { success = response.IsSuccessStatusCode, message = ResponseMessage });

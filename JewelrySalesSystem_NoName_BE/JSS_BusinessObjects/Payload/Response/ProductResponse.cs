@@ -9,59 +9,59 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class ProductResponse
     {
-        private Category? category;
-        private Material? material;
+        //private Category? category;
+        //private Material? material;
 
         public ProductResponse() { }
 
-        public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, 
-            double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, 
-            string? code, double? importPrice, double? processPrice, bool? deflag, Guid? subId,
-            Category? category, Material? material, int? periodWarranty)
-        {
-            Id = id;
-            ImgProduct = imgProduct;
-            ProductName = productName;
-            Description = description;
-            Size = size;
-            SellingPrice = sellingPrice;
-            Quantity = quantity;
-            CategoryId = categoryId;
-            MaterialId = materialId;
-            Code = code;
-            ImportPrice = importPrice;
-            ProcessPrice = processPrice;
-            Deflag = deflag;
-            SubId = subId;
-            Category1 = category;
-            Material1 = material;
-            PeriodWarranty = periodWarranty;
-        }
+        //public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size, 
+        //    double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, 
+        //    string? code, double? importPrice, double? processPrice, bool? deflag, Guid? subId,
+        //    Category? category, Material? material, int? periodWarranty)
+        //{
+        //    Id = id;
+        //    ImgProduct = imgProduct;
+        //    ProductName = productName;
+        //    Description = description;
+        //    Size = size;
+        //    SellingPrice = sellingPrice;
+        //    Quantity = quantity;
+        //    CategoryId = categoryId;
+        //    MaterialId = materialId;
+        //    Code = code;
+        //    ImportPrice = importPrice;
+        //    ProcessPrice = processPrice;
+        //    Deflag = deflag;
+        //    SubId = subId;
+        //    Category1 = category;
+        //    Material1 = material;
+        //    PeriodWarranty = periodWarranty;
+        //}
 
-        public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, 
-            double? size, double? sellingPrice, int? quantity, Guid? categoryId,
-            Guid? materialId, string? code, double? importPrice, double? processPrice, 
-            bool? deflag, double? tax, Guid? subId, Category? category, Material? material, int? periodWarranty)
-        {
-            Id=id;
-            ImgProduct=imgProduct;
-            ProductName=productName;
-            Description=description;
-            Size=size;
-            SellingPrice=sellingPrice;
-            Quantity=quantity;
-            CategoryId=categoryId;
-            MaterialId=materialId;
-            Code=code;
-            ImportPrice=importPrice;
-            ProcessPrice=processPrice;
-            Deflag=deflag;
-            Tax=tax;
-            SubId=subId;
-            this.category=category;
-            this.material=material;
-            PeriodWarranty=periodWarranty;
-        }
+        //public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, 
+        //    double? size, double? sellingPrice, int? quantity, Guid? categoryId,
+        //    Guid? materialId, string? code, double? importPrice, double? processPrice, 
+        //    bool? deflag, double? tax, Guid? subId, Category? category, Material? material, int? periodWarranty)
+        //{
+        //    Id=id;
+        //    ImgProduct=imgProduct;
+        //    ProductName=productName;
+        //    Description=description;
+        //    Size=size;
+        //    SellingPrice=sellingPrice;
+        //    Quantity=quantity;
+        //    CategoryId=categoryId;
+        //    MaterialId=materialId;
+        //    Code=code;
+        //    ImportPrice=importPrice;
+        //    ProcessPrice=processPrice;
+        //    Deflag=deflag;
+        //    Tax=tax;
+        //    SubId=subId;
+        //    this.category=category;
+        //    this.material=material;
+        //    PeriodWarranty=periodWarranty;
+        //}
 
         public ProductResponse(Guid id, string? imgProduct, string? productName, string? description, double? size,
             double? sellingPrice, int? quantity, Guid? categoryId, Guid? materialId, string? code,
@@ -120,8 +120,6 @@ namespace JSS_BusinessObjects.Payload.Response
         public double? Tax { get; set; }
         public Guid? SubId { get; set; }
         public int? PeriodWarranty { get; set; }
-        public virtual Category? Category1 { get; set; }
-        public virtual Material? Material1 { get; set; }
         public virtual CategoryResponse? Category { get; set; }
         public virtual MaterialResponse? Material { get; set; }
     }

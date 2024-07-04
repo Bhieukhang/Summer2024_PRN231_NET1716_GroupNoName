@@ -9,13 +9,13 @@ namespace JSS_BusinessObjects.Payload.Response
 {
     public class ProductMapPromotion
     {
-        public ProductResponse Product { get; set; }
+        public ProResponse Product { get; set; }
         public List<Promotion> Promotions { get; set; }
 
         public ProductMapPromotion()
         {
             Promotions = new List<Promotion>();
-            Product = new ProductResponse();
+            Product = new ProResponse();
         }
     }
 
