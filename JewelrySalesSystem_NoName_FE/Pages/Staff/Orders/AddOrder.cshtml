@@ -18,8 +18,11 @@
                         <div class="card-body">
                             <h4 class="card-title">Trang sức<span class="required">*</span></h4>
                             <div class="form-group row">
-                                <div class="col-sm-7">
-                                    <input type="text" id="productCode" class="form-control" placeholder="Nhập mã sản phẩm">
+                                <div class="col-sm-7 autocomplete">
+                                 <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" 
+                                       autocomplete="off" onkeyup="autocompleteSearch(this.value)" value="" />
+                                      <div id="searchResults" class="dropdown-menu" style="width: 100%; display: none;"></div>
+                                      <div id="autocomplete-list" class="autocomplete-items"></div>
                                 </div>
                                 <div class="col-sm-5">
                                     <button id="addProductBtn" class="btn btn-primary">Thêm sản phẩm</button>
@@ -27,7 +30,7 @@
                             </div>
                             <div class="container">
                                 <table class="table table-bordered">
-                                    <thead>
+                                    <thead id="productTableHead" style="display: none;">
                                         <tr>
                                             <th>Mã sản phẩm</th>
                                             <th>Tên sản phẩm</th>
@@ -73,16 +76,7 @@
                             <h4 class="card-title mt-4">Tổng tiền: <span id="totalPrice">0</span></h4>
                             <h4 class="card-title">Khuyến mãi giảm: <span id="totalDiscount">0</span></h4>
                             <h4 class="card-title">Tổng tiền cần thanh toán (tạm tính): <span id="totalPayable">0</span></h4>
-                            @* <div class="form-group">
-                                <h4 for="paymentMethod">Phương thức thanh toán</h4>
-                                <div class="select-wrapper">
-                                    <select class="form-control" id="paymentMethod" style="height: 2.5rem;">
-                                        <option value="" disabled selected>Chọn phương thức thanh toán</option>
-                                        <option value="transfer">Chuyển khoản</option>
-                                        <option value="cash">Thanh toán bằng tiền mặt</option>
-                                    </select>
-                                </div>
-                            </div> *@
+
                            <div class="container">
                                 <div class="row">
                                     <input type="hidden" id="requestVerificationToken" value="">
@@ -198,7 +192,42 @@
 </body>
 
 @section Scripts {
-    <script>
+     <script>
+        function autocompleteSearch(query) {
+            console.log(query);
+            if (query.length == 0) {
+                document.getElementById("autocomplete-list").innerHTML = "";
+                return;
+            }
+
+            fetch(`https://localhost:44318/api/v1/Product/autocomplete?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    let autocompleteList = document.getElementById("autocomplete-list");
+                    autocompleteList.innerHTML = "";
+
+                    data['$values'].forEach(item => {
+                        let suggestionItem = document.createElement("div");
+                        suggestionItem.classList.add("autocomplete-item");
+
+                        suggestionItem.innerHTML = `
+                                            <img class="product-image-search" src="${item.imgProduct}" alt="Product image">
+                                            <div class="product-details-search">
+                                                <h5 class="product-name-search">${item.productName}</h5>
+                                                <p class="product-code-search">Code: <strong>${item.code}</strong></p>
+                                            </div>`;
+
+                        suggestionItem.onclick = function () {
+                            document.getElementById("searchCode").value = item.code;
+                            autocompleteList.innerHTML = "";
+                        };
+
+                        autocompleteList.appendChild(suggestionItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching autocomplete data:', error));
+        }
+
         $(function () {
             var token = $('input[name="__RequestVerificationToken"]').val();
                 $('#requestVerificationToken').val(token);
@@ -264,8 +293,9 @@
                 return formattedAmount;
             }
 
+
             $('#addProductBtn').click(function () {
-                var productCode = $('#productCode').val().trim();
+                var productCode = $('#searchCode').val().trim();
 
                 $.ajax({
                     url: '/Staff/Orders/AddOrder?handler=Product',
@@ -313,6 +343,9 @@
                                 $('#productCode').val('');
                                 updateTotalPrice();
 
+                                if ($('#productTableBody tr').length > 0) {
+                                        $('#productTableHead').show();
+                                }
                                 // Thêm sự kiện kiểm tra số lượng nhập vào
                                 $('.quantity-input').on('change', function () {
                                     var maxQuantity = parseInt($(this).attr('max'));
@@ -682,7 +715,7 @@
     </script>
 }
 <style>
-    #message-container {
+   #message-container {
     font-weight: bold;
     padding: 10px;
     margin-top: 10px;
@@ -699,4 +732,66 @@
 .required {
     color: red;
 }
+
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.autocomplete-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.autocomplete-item:hover {
+    background-color: #e9e9e9;
+}
+
+.product-image-search {
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.product-details-search {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name-search {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.product-code-search {
+    font-size: 0.875rem;
+    margin: 0;
+    color: #495057;
+}
+
 </style>

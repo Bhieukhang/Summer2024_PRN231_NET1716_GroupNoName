@@ -16,7 +16,7 @@
                 @TempData["SuccessMessage"]
             </div>
         }
-        else
+        else if (TempData["FailMessage"] != null)
         {
             <div class="alert alert-danger">@TempData["FailMessage"]</div>
         }

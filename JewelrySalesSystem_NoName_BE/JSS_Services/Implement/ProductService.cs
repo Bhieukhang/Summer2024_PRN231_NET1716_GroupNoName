@@ -28,7 +28,8 @@ namespace JSS_Services.Implement
 
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
                 selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity
-                , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+                , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, new CategoryResponse(x.Category.Id, x.Category.Name),
+                    new MaterialResponse(x.Material.Id, x.Material.MaterialName, x.Material.InsDate), x.PeriodWarranty),
                 predicate: x => x.SubId == subId,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -51,7 +52,8 @@ namespace JSS_Services.Implement
         {
             IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
                 selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
-                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, new CategoryResponse(x.Category.Id, x.Category.Name),
+                    new MaterialResponse(x.Material.Id, x.Material.MaterialName, x.Material.InsDate), x.PeriodWarranty),
                 predicate: x => x.Deflag == true,
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -70,44 +72,81 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
+        //public async Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
+        //{
+        //    if (!string.IsNullOrEmpty(code))
+        //    {
+        //        var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
+        //            p => p.Code == code,
+        //            include: s => s.Include(p => p.Category).Include(c => c.Material)
+        //        );
+
+        //        var productList = new List<ProductResponse>();
+        //        if (product != null)
+        //        {
+        //            productList.Add(new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
+        //            product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, product.Category, product.Material, product.PeriodWarranty));
+        //        }
+
+        //        var paginatedProductList = new Paginate<ProductResponse>
+        //        {
+        //            Items = productList,
+        //            Total = productList.Count,
+        //            Page = 1,
+        //            Size = 12,
+        //            TotalPages = productList.Count
+        //        };
+
+        //        return paginatedProductList;
+        //    }
+        //    else
+        //    {
+        //        IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
+        //            selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+        //                x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
+        //            predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
+        //            orderBy: x => x.OrderByDescending(x => x.Id),
+        //            page: page ?? 1,
+        //            size: size ?? 12);
+        //        return list;
+        //    }
+        //}
+
+        public async Task<ProductResponse> SearchProductByCodeAsync(string code)
         {
-            if (!string.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(code) || code.Length < 8)
             {
-                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
-                    p => p.Code == code,
-                    include: s => s.Include(p => p.Category).Include(c => c.Material)
-                );
-
-                var productList = new List<ProductResponse>();
-                if (product != null)
-                {
-                    productList.Add(new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
-                    product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, product.Category, product.Material, product.PeriodWarranty));
-                }
-
-                var paginatedProductList = new Paginate<ProductResponse>
-                {
-                    Items = productList,
-                    Total = productList.Count,
-                    Page = 1,
-                    Size = 12,
-                    TotalPages = productList.Count
-                };
-
-                return paginatedProductList;
+                return null;
             }
-            else
+
+            var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
+                p => p.Code == code,
+                include: s => s.Include(p => p.Category).Include(c => c.Material)
+            );
+
+            if (product != null)
             {
-                IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                    selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
-                        x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, x.Category, x.Material, x.PeriodWarranty),
-                    predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
-                    orderBy: x => x.OrderByDescending(x => x.Id),
-                    page: page ?? 1,
-                    size: size ?? 12);
-                return list;
+                return new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
+                product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, new CategoryResponse(product.Category.Id, product.Category.Name),
+                    new MaterialResponse(product.Material.Id, product.Material.MaterialName, product.Material.InsDate), product.PeriodWarranty);
             }
+
+            return null;
+        }
+
+        public async Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size)
+        {
+            var productRepository = _unitOfWork.GetRepository<Product>();
+
+            var products = await productRepository.GetList(
+                selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, new CategoryResponse(x.Category.Id, x.Category.Name), 
+                    new MaterialResponse(x.Material.Id, x.Material.MaterialName, x.Material.InsDate), x.PeriodWarranty),
+                predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page ?? 1,
+                size: size ?? 12);
+            return products;
         }
 
         public async Task<Product> CreateProductAsync(Product newData, Stream imageStream, string imageName)
@@ -268,7 +307,7 @@ namespace JSS_Services.Implement
             ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
-                                                           productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
+                                                           productItem.ImportPrice, productItem.ProcessPrice,
                                                            productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category, productItem.Material, productItem.PeriodWarranty);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
@@ -330,7 +369,8 @@ namespace JSS_Services.Implement
         {
             var products = await _unitOfWork.GetRepository<Product>().GetListAsync(
                 selector: p => new ProductResponse(p.Id, p.ImgProduct, p.ProductName, p.Description, p.Size, p.SellingPrice, p.Quantity,
-                                                   p.CategoryId, p.MaterialId, p.Code, p.ImportPrice, p.InsDate, p.ProcessPrice, p.Deflag, p.Tax, p.SubId, p.Category, p.Material, p.PeriodWarranty),
+                                                   p.CategoryId, p.MaterialId, p.Code, p.ImportPrice, p.InsDate, p.ProcessPrice, p.Deflag, p.Tax, p.SubId, new CategoryResponse(p.Category.Id, p.Category.Name),
+                    new MaterialResponse(p.Material.Id, p.Material.MaterialName, p.Material.InsDate), p.PeriodWarranty),
                 predicate: p => p.ProductName.Contains(query) || p.Code.Contains(query),
                 orderBy: p => p.OrderBy(p => p.ProductName)
             );

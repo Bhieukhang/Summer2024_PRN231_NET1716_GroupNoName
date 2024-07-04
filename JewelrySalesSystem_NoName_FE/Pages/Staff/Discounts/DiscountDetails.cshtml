@@ -15,60 +15,63 @@
                 {
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Id: </span>
+                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Mã chiết khấu: </span>
                             <span> @discount?.Id</span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Order Id: </span>
+                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Mã hóa đơn: </span>
                             <span> @discount?.OrderId</span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-feather me-1"></i> Manager Id: </span>
-                            <span> @discount?.ManagerId</span>
+                            <span class="fw-bold "><i class="bi bi-power me-1"></i> Trạng thái: </span>
+                            @if (discount?.Status == "Pending")
+                            {
+                                <span class="badge badge-info">Chờ phản hồi</span>
+                            }
+                            @if (discount?.Status == "Accepted")
+                            {
+                                <span class="badge badge-success">Chấp nhận</span>
+                            }
+                            @if (discount?.Status == "Denied")
+                            {
+                                <span class="badge badge-danger">Từ chối</span>
+                            }
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold "><i class="bi bi-power me-1"></i> Status: </span>
-                            <span class="badge badge-info">
-                                @(discount?.Status)
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div>
-                            <span class="fw-bold"><i class="bi bi-percent me-1"></i> Percent Discount: </span>
+                            <span class="fw-bold"><i class="bi bi-percent me-1"></i> Phần trăm giảm giá: </span>
                             <span>@discount?.PercentDiscount<span>%</span></span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Description: </span>
+                            <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Mô tả: </span>
                             <span>@discount?.Description</span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-archive me-1"></i>Condition Discount: </span>
+                            <span class="fw-bold"><i class="bi bi-archive me-1"></i>Điều kiện giám giá: </span>
                             <span>@discount?.ConditionDiscount</span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-tag me-1"></i> Note: </span>
+                            <span class="fw-bold"><i class="bi bi-tag me-1"></i> Phản hồi từ quản lý: </span>
                             <span><span>@discount?.Note</span></span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div>
-                            <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Ins Date - Ups Date: </span>
+                            <span class="fw-bold"><i class="bi bi-calendar me-1"></i> Ngày chỉnh sửa: </span>
                             <span>@discount?.InsDate - @discount?.UpsDate</span>
                         </div>
                     </div>

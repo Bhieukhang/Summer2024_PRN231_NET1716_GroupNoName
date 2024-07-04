@@ -1,11 +1,14 @@
-﻿using JewelrySalesSystem_NoName_FE.DTOs.Account;
+﻿using JewelrySalesSystem_NoName_FE.DTOs;
+using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Orders;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Drawing;
 using System.Text;
 using System.Xml.Linq;
 
@@ -36,21 +39,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
         public IList<Promotion> listPromotions { get; set; } = new List<Promotion>();
         [BindProperty]
         public OrderDTO orderData { get; set; }
+        [BindProperty]
+        public string? SearchCode { get; set; }
 
-        //public async Task<JsonResult> OnGetProductAsync(string productCode)
-        //{
-        //    var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
-        //    var response = await _httpClient.GetStringAsync(apiUrl);
-        //    var product = JsonConvert.DeserializeObject<ProductResponse>(response);
-        //    if (product.Product.Quantity < 1)
-        //    {
-        //        TempData["OutOfProduct"] = "Sản phẩm tạm thời hết";
-        //    }
-        //    listPromotions = product.Promotions.ToList();
-        //    return new JsonResult(product);
-        //}
-
-        public async Task<JsonResult> OnGetPromotionAsync(string productCode)
+        public async Task<JsonResult> OnGetProductAsync(string productCode)
         {
             var apiUrl = $"{ApiPath.ProductCodeGetListPromoton}?productCode={productCode}";
             var response = await _httpClient.GetStringAsync(apiUrl);
@@ -62,6 +54,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             listPromotions = product.Promotions.ToList();
             return new JsonResult(product);
         }
+
 
         public async Task<IActionResult> OnGetHandleCustomerAsync(string phone, string fullName, string action)
         {

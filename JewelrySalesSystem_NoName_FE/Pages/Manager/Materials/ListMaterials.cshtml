@@ -1,0 +1,40 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Materials.ListMaterialsModel
+@{
+    ViewData["Title"] = "Danh sách chất liệu trang sức";
+}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <h3 class="page-title">Danh sách chất liệu trang sức</h3>
+            <a class="nav-link" href="~/Manager/Materials/AddMaterial">
+                <button type="button" class="btn btn-gradient-danger btn-fw">
+                    <i class="mdi mdi-plus"></i> Thêm chất liệu trang sức
+                </button>
+            </a>
+        </div>
+        <br />
+        <div class="row">
+            @foreach (var item in Model.mateList)
+            {
+                <div class="col-md-4 stretch-card grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">@item.MaterialName</h4>
+                            <h5 class="card-title">@item.InsDate</h5>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <a asp-page="./EditMaterial" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                    <i class="mdi mdi-file-check"></i> Chỉnh sửa
+                                </a>
+                                <a asp-page="./DeleteMaterial" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                    <i class="mdi mdi-delete-forever"></i> Xóa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
