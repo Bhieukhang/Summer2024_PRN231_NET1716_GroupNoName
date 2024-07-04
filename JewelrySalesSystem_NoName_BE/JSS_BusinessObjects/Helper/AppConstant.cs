@@ -30,6 +30,7 @@ public static class AppConstant
         Success = 200,
         Internal_Server_Error = 500,
         Membership_Not_Found = 404,
+        Conflict = 409,
     }
     public class ErrMessage
     {
@@ -41,6 +42,7 @@ public static class AppConstant
         public const string PromotionIllegal = "Khuyến mãi không hợp lệ";
         public const string MembershipNotFound = "Không tìm thấy thành viên này!";
         public const string MembershipNotRegister = "Khách hàng chưa đăng kí tài khoản (đã có tài khoản khác)!";
+        public const string DiscountExit = "Đơn hàng này đã có chiết khấu!";
     }
 }
 
