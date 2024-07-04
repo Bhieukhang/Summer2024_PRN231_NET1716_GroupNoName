@@ -114,6 +114,11 @@ namespace JSS_Services.Implement
 
         public async Task<ProductResponse> SearchProductByCodeAsync(string code)
         {
+            if (string.IsNullOrEmpty(code) || code.Length < 8)
+            {
+                return null;
+            }
+
             var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
                 p => p.Code == code,
                 include: s => s.Include(p => p.Category).Include(c => c.Material)
@@ -131,11 +136,12 @@ namespace JSS_Services.Implement
 
         public async Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size)
         {
-            IPaginate<ProductResponse> list = await _unitOfWork.GetRepository<Product>().GetList(
-                selector: x => new ProductResponse(
-                x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity, x.CategoryId,
-                x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.SubId,
-                x.Category, x.Material, x.PeriodWarranty),
+            var productRepository = _unitOfWork.GetRepository<Product>();
+
+            var products = await productRepository.GetList(
+                selector: x => new ProductResponse(x.Id, x.ImgProduct, x.ProductName, x.Description, x.Size, x.SellingPrice, x.Quantity,
+                    x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, new CategoryResponse(x.Category.Id, x.Category.Name), 
+                    new MaterialResponse(x.Material.Id, x.Material.MaterialName, x.Material.InsDate), x.PeriodWarranty),
                 predicate: x => (categoryId == null || x.CategoryId == categoryId) && (materialId == null || x.MaterialId == materialId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page ?? 1,
@@ -301,9 +307,8 @@ namespace JSS_Services.Implement
             ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
-                                                           productItem.ImportPrice, productItem.InsDate, productItem.ProcessPrice,
-                                                           productItem.Deflag, productItem.Tax, productItem.SubId, new CategoryResponse(productItem.Category.Id, productItem.Category.Name),
-                    new MaterialResponse(productItem.Material.Id, productItem.Material.MaterialName, productItem.Material.InsDate), productItem.PeriodWarranty);
+                                                           productItem.ImportPrice, productItem.ProcessPrice,
+                                                           productItem.Deflag, productItem.Tax, productItem.SubId, productItem.Category, productItem.Material, productItem.PeriodWarranty);
             promotionMapProduct.Product = productResponse;
             List<ProductConditionGroup> listProductMapPromotion = productItem.ProductConditionGroups.ToList();
 

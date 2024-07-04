@@ -41,8 +41,8 @@ public partial class ProductDTO
     public double? Tax { get; set; }
     [Required]
     public int? PeriodWarranty { get; set; }
-    public CategoryDTO Category { get; set; }
-    public MaterialDTO Material { get; set; }
+    public CategoryDTO? Category { get; set; }
+    public MaterialDTO? Material { get; set; }
 
     [NotMapped] 
     public bool DeflagChecked
