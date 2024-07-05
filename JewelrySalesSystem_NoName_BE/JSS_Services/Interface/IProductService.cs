@@ -29,7 +29,5 @@ namespace JSS_Services.Interface
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
         Task<ProductMapPromotionItem> GetPromotionByCode(string productCode);
         Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query);
-
-
     }
 }

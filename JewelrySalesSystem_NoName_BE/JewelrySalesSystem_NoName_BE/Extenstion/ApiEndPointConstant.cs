@@ -131,6 +131,8 @@
         {
             public const string DiamondEndpoint = ApiEndpoint + "/Diamond";
             public const string DiamondByDiamondIdEndpoint = DiamondEndpoint + "/id";
+            public const string DiamondByCodeEndpoint = DiamondEndpoint + "/code";
+            public const string DiamondAutocompleteEndpoint = DiamondEndpoint + "/autocomplete";
         }
         public static class Membership
         {

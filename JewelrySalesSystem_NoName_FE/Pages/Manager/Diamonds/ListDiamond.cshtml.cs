@@ -1,3 +1,4 @@
+﻿using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -20,10 +21,15 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
             _httpContextAccessor = httpContextAccessor;
         }
         [BindProperty]
-        //public string? SearchCode { get; set; }
+        public string? SearchCode { get; set; }
         public IList<DiamondDTO> diamondList { get; set; } = new List<DiamondDTO>();
+        public int Page { get; set; }
+        public int Size { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
+        public DiamondDTO searchItem = new DiamondDTO();
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int? page, string? searchCode)
         {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -32,18 +38,27 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
                 return RedirectToPage("/Auth/Login");
             }
 
+            Page = page ?? 1;
+            Size = 12;
+            SearchCode = searchCode;
+
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             try
             {
-                var client = _httpClientFactory.CreateClient("ApiClient");
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var diamondResponse = await client.GetAsync(ApiPath.DiamondList);
-                if (diamondResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (!string.IsNullOrEmpty(SearchCode))
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
-                    return RedirectToPage("/Auth/Login");
+                    var searchUrl = $"{ApiPath.ProductList}/code?code={SearchCode}";
+                    var diamondResponse = await client.GetStringAsync(searchUrl);
+                    searchItem = JsonConvert.DeserializeObject<DiamondDTO>(diamondResponse);
                 }
-                diamondList = JsonConvert.DeserializeObject<List<DiamondDTO>>(await diamondResponse.Content.ReadAsStringAsync());
+                else
+                {
+                    TempData["ErrorMessage"] = "Vui lòng nhập mã sản phẩm để tìm kiếm.";
+                    return Page();
+                }
+
                 return Page();
             }
             catch (Exception ex)

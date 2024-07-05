@@ -28,4 +28,8 @@ public partial class Diamond
     public DateTime? InsDate { get; set; }
 
     public DateTime? UpsDate { get; set; }
+
+    public int? PeriodWarranty { get; set; }
+
+    public bool? Deflag { get; set; }
 }

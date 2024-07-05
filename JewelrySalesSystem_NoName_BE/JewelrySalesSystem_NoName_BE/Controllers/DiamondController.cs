@@ -6,6 +6,8 @@ using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
@@ -22,6 +24,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             _diamondService = diamondService;
         }
 
+        #region AutocompleteProducts
+        /// <summary>
+        /// Autocomplete diamonds based on a query string.
+        /// </summary>
+        /// <param name="query">The query string to search for diamonds.</param>
+        /// <returns>List of diamonds matching the query.</returns>
+        /// GET : api/Diamond/autocomplete
+        #endregion
+        [HttpGet(ApiEndPointConstant.Diamond.DiamondAutocompleteEndpoint)]
+        public async Task<ActionResult<IEnumerable<DiamondResponse>>> AutocompleteDiamonds(string query)
+        {
+            var results = await _diamondService.AutocompleteDiamondsAsync(query);
+            return Ok(results);
+        }
+
         #region GetAllDiamonds
         /// <summary>
         /// Get all diamonds.
@@ -30,9 +47,10 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// GET : api/Diamond
         #endregion
         [HttpGet(ApiEndPointConstant.Diamond.DiamondEndpoint)]
-        public async Task<ActionResult<IEnumerable<Diamond>>> GetAllDiamondsAsync()
+        public async Task<ActionResult<IEnumerable<Diamond>>> GetAllDiamondsAsync(int page, int size)
         {
-            var diamonds = await _diamondService.GetAllDiamondsAsync();
+            var list = await _diamondService.GetAllDiamondsAsync(page, size);
+            var diamonds = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(diamonds);
         }
 
@@ -53,6 +71,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return NotFound();
             }
             return Ok(diamond);
+        }
+
+        #region SearchDiamondByCode
+        /// <summary>
+        /// Search a diamond by its code.
+        /// </summary>
+        /// <param name="code">The code of the diamond to search.</param>
+        /// <returns>Diamond with code.</returns>
+        /// GET : api/Diamond/search
+        #endregion
+        [HttpGet(ApiEndPointConstant.Diamond.DiamondByCodeEndpoint)]
+        public async Task<IActionResult> SearchDiamondByCode(string code)
+        {
+            var product = await _diamondService.SearchDiamondByCodeAsync(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
         }
 
         #region CreateDiamond
@@ -81,7 +118,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Cut = diamondRequest.Cut,
                 Price = diamondRequest.Price,
                 ImageDiamond = diamondRequest.ImageDiamond,
-                Quantity = diamondRequest.Quantity
+                Quantity = diamondRequest.Quantity,
+                Deflag = diamondRequest.Deflag,
+                PeriodWarranty = diamondRequest.PeriodWarranty,
             };
 
             var createdDiamond = await _diamondService.CreateDiamondAsync(diamond, stream, "uploadedFileName");
@@ -101,7 +140,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 createdDiamond.Price,
                 createdDiamond.ImageDiamond,
                 createdDiamond.Quantity,
-                createdDiamond.InsDate
+                createdDiamond.InsDate,
+                createdDiamond.PeriodWarranty,
+                createdDiamond.Deflag
             ));
         }
 
@@ -130,7 +171,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
 
             var diamond = new Diamond
             {
-                DiamondName = diamondRequest.ImageDiamond,
+                DiamondName = diamondRequest.DiamondName,
                 Code = diamondRequest.Code,
                 Carat = diamondRequest.Carat,
                 Color = diamondRequest.Color,
@@ -138,7 +179,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 Cut = diamondRequest.Cut,
                 Price = diamondRequest.Price,
                 ImageDiamond = diamondRequest.ImageDiamond,
-                Quantity = diamondRequest.Quantity
+                Quantity = diamondRequest.Quantity,
+                Deflag = diamondRequest.Deflag,
+                PeriodWarranty = diamondRequest.PeriodWarranty,
             };
 
             var updatedDiamond = await _diamondService.UpdateDiamondAsync(id, diamond, stream, "uploadedFileName");
@@ -158,7 +201,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                updatedDiamond.Price,
                updatedDiamond.ImageDiamond,
                updatedDiamond.Quantity,
-               updatedDiamond.InsDate
+               updatedDiamond.InsDate,
+               updatedDiamond.PeriodWarranty,
+               updatedDiamond.Deflag
            ));
         }
 

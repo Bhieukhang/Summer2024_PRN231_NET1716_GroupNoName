@@ -1,5 +1,7 @@
 ﻿using Firebase.Storage;
+using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
+using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
@@ -21,9 +23,47 @@ namespace JSS_Services.Implement
         {
         }
 
-        public async Task<IEnumerable<Diamond>> GetAllDiamondsAsync()
+        public async Task<IPaginate<DiamondResponse>> GetAllDiamondsAsync(int page, int size)
         {
-            return await _unitOfWork.GetRepository<Diamond>().GetListAsync();
+            IPaginate<DiamondResponse> list = await _unitOfWork.GetRepository<Diamond>().GetList(
+                selector: x => new DiamondResponse(x.Id, x.DiamondName, x.Code, x.Carat, x.Color, x.Clarity, x.Cut,
+                    x.Price, x.ImageDiamond, x.Quantity, x.InsDate, x.PeriodWarranty, x.Deflag),
+                predicate: x => x.Deflag == true,
+                orderBy: x => x.OrderByDescending(x => x.Id),
+                page: page,
+                size: size);
+            return list;
+        }
+
+        public async Task<DiamondResponse> SearchDiamondByCodeAsync(string code)
+        {
+            if (string.IsNullOrEmpty(code) || code.Length < 8)
+            {
+                return null;
+            }
+
+            var diamond = await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(
+                p => p.Code == code);
+
+            if (diamond != null)
+            {
+                return new DiamondResponse(diamond.Id, diamond.DiamondName, diamond.Code, diamond.Carat, diamond.Color, diamond.Clarity, diamond.Cut,
+                diamond.Price, diamond.ImageDiamond, diamond.Quantity, diamond.InsDate, diamond.PeriodWarranty, diamond.Deflag);
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<DiamondResponse>> AutocompleteDiamondsAsync(string query)
+        {
+            var diamonds = await _unitOfWork.GetRepository<Diamond>().GetListAsync(
+                selector: diamond => new DiamondResponse(diamond.Id, diamond.DiamondName, diamond.Code, diamond.Carat, diamond.Color, diamond.Clarity, diamond.Cut,
+                diamond.Price, diamond.ImageDiamond, diamond.Quantity, diamond.InsDate, diamond.PeriodWarranty, diamond.Deflag),
+                predicate: diamond => diamond.DiamondName.Contains(query) || diamond.Code.Contains(query),
+                orderBy: diamond => diamond.OrderBy(diamond => diamond.DiamondName)
+            );
+
+            return diamonds;
         }
 
         public async Task<Diamond> GetDiamondByIdAsync(Guid id)
@@ -76,6 +116,8 @@ namespace JSS_Services.Implement
                 existingDiamond.Cut = diamond.Cut ?? existingDiamond.Cut;
                 existingDiamond.Price = diamond.Price ?? existingDiamond.Price;
                 existingDiamond.Quantity = diamond.Quantity ?? existingDiamond.Quantity;
+                existingDiamond.PeriodWarranty = diamond.PeriodWarranty ?? existingDiamond.PeriodWarranty;
+                existingDiamond.Deflag = diamond.Deflag ?? existingDiamond.Deflag;
 
                 if (imageStream != null)
                 {

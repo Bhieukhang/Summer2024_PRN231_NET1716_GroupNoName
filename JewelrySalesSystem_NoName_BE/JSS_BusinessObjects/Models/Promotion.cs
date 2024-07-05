@@ -27,6 +27,8 @@ public partial class Promotion
 
     public string? ImgUrl { get; set; }
 
+    public bool? Deflag { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
     public virtual ICollection<ProductConditionGroup> ProductConditionGroups { get; } = new List<ProductConditionGroup>();

@@ -41,10 +41,10 @@
                                 <th></th>
                                 <th>Code</th>
                                 <th>Tên</th>
-                                <th>Carat</th>
-                                <th>Màu</th>
-                                <th>Độ trong</th>
-                                <th>Độ cắt</th>
+                                <th>Trọng lượng</th>
+                                <th>Màu sắc</th>
+                                <th>Độ tinh khiết</th>
+                                <th>Chất lượng cắt</th>
                                 <th>Số lượng</th>
                                 <th>Giá Bán</th>
                                 <th></th>
@@ -58,7 +58,7 @@
                                     <td><img src="@item.ImageDiamond"></td>
                                     <td>@item.Code</td>
                                     <td>@item.DiamondName</td>
-                                    <td>@item.Carat</td>
+                                    <td>@item.Carat carat</td>
                                     <td>@item.Color</td>
                                     <td>@item.Clarity</td>
                                     <td>@item.Cut</td>
@@ -89,10 +89,10 @@
                                                     <div class="diamond-info">
                                                         <h3>@item.DiamondName</h3>
                                                         <p><strong>Code :</strong> @item.Code</p>
-                                                        <p><strong>Carat :</strong> @item.Carat</p>
-                                                        <p><strong>Màu :</strong> @item.Color</p>
-                                                        <p><strong>Độ trong :</strong> @item.Clarity</p>
-                                                        <p><strong>Độ cắt :</strong> @item.Cut</p>
+                                                        <p><strong>Trọng lượng :</strong> @item.Carat carat</p>
+                                                        <p><strong>Màu sắc :</strong> @item.Color</p>
+                                                        <p><strong>Độ tinh khiết :</strong> @item.Clarity</p>
+                                                        <p><strong>Chất lượng cắt :</strong> @item.Cut</p>
                                                         <p><strong>Số lượng :</strong> @item.Quantity</p>
                                                         <p><strong>Giá Bán:</strong> @item.Price</p>
                                                     </div>
@@ -141,3 +141,271 @@
                 color: #495057;
             }
 </style>
+@* @{
+    int totalPages = Model.TotalPages;
+}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title display-4">DANH SÁCH KIM CƯƠNG</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Diamonds/AddDiamond">
+                                <span class="menu-title"></span>
+                                <button type="button" class="btn btn-gradient-primary btn-fw">
+                                    <i class="mdi mdi-plus"></i>
+                                    Thêm kim cương mới
+                                </button>
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="mt-3">
+                <form method="get" id="searchForm" onsubmit="searchDiamondByCode(); return false;">
+                    <div class="input-group">
+                        <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của kim cương cần tìm" autocomplete="off"
+                               onkeyup="autocompleteSearch(this.value)" />
+                        <div id="autocomplete-list" class="autocomplete-items"></div>
+                        <button type="submit" class="btn btn-gradient-secondary">
+                            <i class="mdi mdi-magnify"></i>
+                            Tìm Kiếm
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <br />
+
+            <div id="resultContainer"></div>
+            <div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
+            <div class="col-lg-12 grid-margin stretch-card" id="uiDiamond">
+                <div class="card">
+                    <div class="card-body" id="autocomplete-suggestion">
+                        <div class="row" id="diamondList">
+                            @if (Model.SearchCode == null)
+                            {
+                                @foreach (var item in Model.diamondList)
+                                {
+                                    <div class="col-md-3 d-flex align-items-stretch">
+                                        <div class="card diamond-card">
+                                            <img class="card-img-top diamond-image" src="@item.ImageDiamond" alt="Card image cap">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title">@item.DiamondName</h5>
+                                                <p class="card-text">Code : <strong>@item.Code</strong></p>
+                                                <p class="card-text">Trọng lượng : <strong>@item.Carat carat</strong></p>
+                                                <p class="card-text">Màu sắc : <strong>@item.Color</strong></p>
+                                                <p class="card-text">Độ tinh khiết : <strong>@item.Clarity</strong></p>
+                                                <p class="card-text">Chất lượng cắt : <strong>@item.Cut</strong></p>
+                                                <p class="card-text">Số lượng lượng cắt : <strong>@item.Cut</strong></p>
+                                                <p class="card-text">Giá Bán : <strong>@item.Price</strong></p>
+                                                <div class="mt-auto d-flex justify-content-between">
+                                                    <a href="/Manager/Diamonds/EditDiamond?id=@item.Id" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                    <a data-bs-toggle="modal" data-bs-target="#diamondModal-@item.Id" class="btn btn-outline-danger btn-fw">
+                                                        <i class="fa fa-eye menu-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="diamondModal-@item.Id" tabindex="-1" aria-labelledby="diamondModalLabel-@item.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="diamondModalLabel-@item.Id">Chi tiết trang sức</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="diamond-details">
+                                                        <img src="@item.ImageDiamond" alt="Diamond Image" class="diamond-image" />
+                                                        <div class="diamond-info">
+                                                            <h3>@item.DiamondName</h3>
+                                                            <p><strong>Code :</strong> @item.Code</p>
+                                                            <p><strong>Trọng lượng :</strong> @item.Carat carat</p>
+                                                            <p><strong>Màu sắc :</strong> @item.Color</p>
+                                                            <p><strong>Độ tinh khiết :</strong> @item.Clarity</p>
+                                                            <p><strong>Chất lượng cắt :</strong> @item.Cut</p>
+                                                            <p><strong>Số lượng :</strong> @item.Quantity</p>
+                                                            <p><strong>Giá Bán:</strong> @item.Price</p>
+                                                            <p><strong>Thời gian bảo hành :</strong> @item.PeriodWarranty</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-md-3 d-flex align-items-stretch">
+                                    <div class="card product-card">
+                                        <img class="card-img-top product-image" src="@Model.searchItem.ImageDiamond" alt="Card image cap">
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">@Model.searchItem.DiamondName</h5>
+                                            <p class="card-text">Code : <strong>@Model.searchItem.Code</strong></p>
+                                            <p class="card-text">Trọng lượng : <strong>@Model.searchItem.Carat</strong> carat</p>
+                                            <p class="card-text">Màu sắc : <strong>@Model.searchItem.Color</strong></p>
+                                            <p class="card-text">Độ tinh khiêts : <strong>@Model.searchItem.Clarity</strong></p>
+                                            <p class="card-text">Độ tinh khiêts : <strong>@Model.searchItem.Clarity</strong></p>
+                                            <div class="mt-auto d-flex justify-content-between">
+                                                <a href="/Manager/Products/EditProduct?id=@Model.searchItem.Id" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                <a data-bs-toggle="modal" data-bs-target="#productModal-@Model.searchItem.Id" class="btn btn-outline-danger btn-fw">
+                                                    <i class="fa fa-eye menu-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="productModal-@Model.searchItem.Id" tabindex="-1" aria-labelledby="productModalLabel-@Model.searchItem.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="productModalLabel-@Model.searchItem.Id">Chi tiết trang sức</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="product-details">
+                                                    <img src="@Model.searchItem.ImgProduct" alt="Product Image" class="product-image" />
+                                                    <div class="product-info">
+                                                        <h4>@Model.searchItem.ProductName</h4>
+                                                        <p><strong>Code :</strong> @Model.searchItem.Code</p>
+                                                        <p><strong>Chất liệu :</strong> @Model.searchItem.Material?.MaterialName</p>
+                                                        <p><strong>Mô tả :</strong> @Model.searchItem.Description</p>
+                                                        <p><strong>Kích thước :</strong> @Model.searchItem.Size</p>
+                                                        <p><strong>Số lượng :</strong> @Model.searchItem.Quantity</p>
+                                                        <p><strong>Giá Bán :</strong> @Model.searchItem.SellingPrice</p>
+                                                        <p><strong>Loại :</strong> @Model.searchItem.Category?.Name</p>
+                                                        <p><strong>Ngày nhập :</strong> @Model.searchItem.InsDate</p>
+                                                        <p><strong>Thời lượng bảo hành :</strong> @Model.searchItem.PeriodWarranty tháng</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        <nav aria-label="Page navigation example" style="padding-top:50px" id="ui">
+                            <ul class="pagination justify-content-end" id="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:void(0);" onclick="changePage('prev')" tabindex="-1">Trước</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:void(0);" onclick="changePage('next')">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="updateGoldRateModal" tabindex="-1" aria-labelledby="updateGoldRateModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateGoldRateModalLabel">Cập nhật tỉ giá vàng</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label for="goldRateInput" class="form-label">Tỉ giá vàng hiện tại (VNĐ/chỉ)</label>
+                                    <input type="number" class="form-control" id="goldRateInput" name="goldRate" value="@Model.GoldRate" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function autocompleteSearch(query) {
+                    if (query.length === 0) {
+                        document.getElementById("autocomplete-list").innerHTML = "";
+                        return;
+                    }
+
+                    fetch(`/api/products/search?query=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let autocompleteList = document.getElementById("autocomplete-list");
+                            autocompleteList.innerHTML = "";
+
+                            data.forEach(item => {
+                                let option = document.createElement("div");
+                                option.innerHTML = `
+                                                <div class="col-md-3 d-flex align-items-stretch">
+                                                    <div class="card product-card">
+                                                        <img class="card-img-top product-image" src="${item.imgProduct}" alt="Product image">
+                                                        <div class="card-body d-flex flex-column">
+                                                            <h5 class="card-title">${item.productName}</h5>
+                                                            <p class="card-text">Code : <strong>${item.code}</strong></p>
+                                                            <p class="card-text">Loại : <strong>${item.category?.name}</strong></p>
+                                                            <p class="card-text">Số Lượng : <strong>${item.quantity}</strong></p>
+                                                            <p class="card-text">Giá Bán : <strong>${item.sellingPrice}</strong></p>
+                                                            <div class="mt-auto d-flex justify-content-between">
+                                                                <a href="/Manager/Products/EditProduct?id=${item.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                                <a data-bs-toggle="modal" data-bs-target="#productModal-${item.id}" class="btn btn-outline-danger btn-fw">
+                                                                    <i class="fa fa-eye menu-icon"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+                                autocompleteList.appendChild(option);
+                            });
+                        });
+                }
+
+                function searchProductByCode() {
+                    let searchCode = document.getElementById('searchCode').value;
+                    fetch(`/api/products/search?query=${searchCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let resultContainer = document.getElementById('resultContainer');
+                            resultContainer.innerHTML = "";
+                            data.forEach(item => {
+                                resultContainer.innerHTML += `
+                                                <div class="col-md-3 d-flex align-items-stretch">
+                                                    <div class="card product-card">
+                                                        <img class="card-img-top product-image" src="${item.imgProduct}" alt="Product image">
+                                                        <div class="card-body d-flex flex-column">
+                                                            <h5 class="card-title">${item.productName}</h5>
+                                                            <p class="card-text">Code : <strong>${item.code}</strong></p>
+                                                            <p class="card-text">Loại : <strong>${item.category?.name}</strong></p>
+                                                            <p class="card-text">Số Lượng : <strong>${item.quantity}</strong></p>
+                                                            <p class="card-text">Giá Bán : <strong>${item.sellingPrice}</strong></p>
+                                                            <div class="mt-auto d-flex justify-content-between">
+                                                                <a href="/Manager/Products/EditProduct?id=${item.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
+                                                                <a data-bs-toggle="modal" data-bs-target="#productModal-${item.id}" class="btn btn-outline-danger btn-fw">
+                                                                    <i class="fa fa-eye menu-icon"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+                            });
+                        });
+                }
+
+                function changePage(direction) {
+                    let urlParams = new URLSearchParams(window.location.search);
+                    let page = parseInt(urlParams.get('page')) || 1;
+
+                    if (direction === 'next' && page < @totalPages) {
+                        page++;
+                    } else if (direction === 'prev' && page > 1) {
+                        page--;
+                    }
+
+                    urlParams.set('page', page);
+                    window.location.search = urlParams.toString();
+                }
+            </script>
+        </div>
+    </div> *@
