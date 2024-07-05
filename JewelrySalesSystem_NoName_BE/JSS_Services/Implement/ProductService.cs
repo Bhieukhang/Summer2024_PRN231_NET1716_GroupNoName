@@ -304,7 +304,7 @@ namespace JSS_Services.Implement
                 return promotionMapProduct;
             }
 
-            ProductResponse productResponse = new ProductResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
+            ProResponse productResponse = new ProResponse(productItem.Id, productItem.ImgProduct, productItem.ProductName, productItem.Description,
                                                            productItem.Size, productItem.SellingPrice, productItem.Quantity,
                                                            productItem.CategoryId, productItem.MaterialId, productItem.Code,
                                                            productItem.ImportPrice, productItem.ProcessPrice,

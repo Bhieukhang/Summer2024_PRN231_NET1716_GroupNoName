@@ -36,7 +36,6 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Giá sản phẩm</th>
                                             <th>Số lượng</th>
-                                            <th>Xóa</th>
                                         </tr>
                                     </thead>
                                     <tbody id="productTableBody">
@@ -113,6 +112,25 @@
             </div>
         </div>
     </div>
+
+     <!-- Modal Popup -->
+    <div class="modal fade" id="duplicateProductModal" tabindex="-1" aria-labelledby="duplicateProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="duplicateProductModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fa fa-times-circle-o" style="color: red; font-size: 50px; margin-right: 10px;"></i>
+                    <h3>Sản phẩm đã được thêm vào trước đó</h3>
+                </div>
+                <div class="modal-footer">
+                    @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                </div>
+            </div>
+        </div>
+    </div
 
     <!-- Modal Popup -->
     <div class="modal fade" id="outOfStockModal" tabindex="-1" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
@@ -305,6 +323,11 @@
                         console.log("Product load from addProduct: ", data);
                         console.log("Quantity product: ", data.product.quantity);
                         listPromotions = data.promotions;
+                        var existingProduct = $('#productTableBody tr.product-item[data-product-code="' + productCode + '"]');
+                        if (existingProduct.length > 0) {
+                            $('#duplicateProductModal').modal('show');
+                            return;
+                        }
                         if (data && data.product) {
                             if (data.product.quantity == 0) {
                                 // Hiển thị modal popup
@@ -313,6 +336,7 @@
                                 $('#notFoundModal').modal('show');
                             }
                             else {
+                                var sellingPriceFormatted = new Intl.NumberFormat().format(data.product.sellingPrice);
                                 var productRow = `
                                                          <tr data-product-id="${data.product.id}" data-product-code="${data.product.code}">
                                                             <td colspan="6" class="text-center" style="color: #a64dff; font-weight: bold;">Số lượng còn lại trong kho: ${data.product.quantity}</td>
@@ -320,7 +344,7 @@
                                                         <tr class="product-item" data-product-id="${data.product.id}" data-product-code="${data.product.code}">
                                                             <td>${data.product.code}</td>
                                                             <td>${data.product.productName}</td>
-                                                            <td>${data.product.sellingPrice}</td>
+                                                            <td data-raw-price="${data.product.sellingPrice}">${sellingPriceFormatted}</td>
                                                             <td>
                                                                 <input type="number" class="form-control quantity-input" value="1" min="1" max="${data.product.quantity}">
                                                             </td>
@@ -397,7 +421,7 @@
                 var total = 0;
                 $('#productTableBody .quantity-input').each(function () {
                     var quantity = $(this).val();
-                    var price = $(this).closest('tr').find('td:nth-child(3)').text();
+                    var price = parseFloat($(this).closest('tr').find('td:nth-child(3)').data('raw-price'));
                     total += quantity * price;
                 });
                 $('#totalPrice').text(total.toLocaleString() + ' Đ');
@@ -476,7 +500,7 @@
 
                     if (productItem.length > 0) {
                         // Correctly retrieve price and quantity
-                        var price = parseFloat(productItem.find('td:eq(2)').text().trim()); // Assuming sellingPrice is in the third <td>
+                       var price = parseFloat(productItem.find('td:eq(2)').data('raw-price'));
                         var quantity = parseInt(productItem.find('.quantity-input').val());
                         var discountAmount = price * quantity * (promotion.percentage / 100);  // Correcting discount calculation
 

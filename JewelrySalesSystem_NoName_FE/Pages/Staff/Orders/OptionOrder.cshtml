@@ -33,12 +33,14 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="control-label">Giá thi công</label>
-                                                    <input type="text" class="form-control" value="@order.ProcessPrice" readonly />
+                                                    <input type="hidden" id="originalProcessPrice" value="@order.ProcessPrice">
+                                                    <input type="text" id="formattedProcessPrice" class="form-control" readonly />
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="control-label">Gia công</label>
+                                                    <label class="control-label" for="process-price">Gia công</label>
                                                     <div class="form-check">
                                                         <input type="checkbox" id="process-price" value="@order.ProcessPrice" class="form-check-input process-checkbox">
+                                                        <label class="form-check-label" for="process-price"></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -76,28 +78,29 @@
                                             <label>Mức độ</label>
                                             @if (@Model.member.Type == "NewMember")
                                             {
-                                                <input type="text" class="form-control" value="Thành viên mới" readonly>
+                                                <input type="text" class="form-control" value="Thành viên mới" readonly style="background-color: green; color: white;">
                                                 <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
                                             }
                                             else if (Model.member.Type == "Bronze")
                                             {
-                                                <input type="text" class="form-control" value="Thành viên đồng" readonly>
+                                                <input type="text" class="form-control" value="Thành viên đồng" readonly style="background-color: 	rgb(96, 64, 32); color: white;">
                                                 <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
                                             }
                                             else if (Model.member.Type == "Silve")
                                             {
-                                                <input type="text" class="form-control" value="Thành viên bạc" readonly>
+                                                <input type="text" class="form-control" value="Thành viên bạc" readonly style="background-color: 	rgb(128, 128, 128); color: white;">
                                                 <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
                                             }
                                             else
                                             {
-                                                <input type="text" class="form-control" value="Thành viên vàng" readonly>
+                                                <input type="text" class="form-control" value="Thành viên vàng" readonly style="background-color: 	rgb(255, 255, 0); color: white;">
                                                 <input type="text" id="level" name="level" class="form-control" value="@Model.member.Type" readonly hidden>
                                             }
                                         </div>
                                         <div class="form-group">
                                             <label>Tích lũy</label>
-                                            <input type="text" id="usedMoney" name="usedMoney" class="form-control" value="@Model.member.UserMoney" readonly>
+                                            <input type="hidden" id="originalUserMoney" value="@Model.member.UserMoney">
+                                            <input type="text" id="usedMoney" name="usedMoney" class="form-control" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -108,30 +111,28 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <labl>Chiết khấu đề xuất</labl>
+                                            <labl>Chiết khấu đề xuất(%)</labl>
                                             <input type="text" id="percentDiscount" name="percentDiscount" class="form-control"
-                                                   value="@Model.member.PercentDiscount">
+                                                   value="@(Model.member.PercentDiscount * 100)">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <labl>Ghi chú</labl>
-                                            <textarea type="text" id="description" name="description" class="form-control"></textarea>
+                                            <textarea type="textarea" id="description" name="description" class="form-control"></textarea>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-12 row">
-                                        <div class="col-md-6 text-left">
+                                    <div class="col-md-12 row g-0">
+                                        <div class="col-md-6 text-left" style="padding-right: 5px;">
                                             <button type="button" class="btn custom-button" id="requestDiscountBtn"
                                                     data-order-id="@Model.OrderProccess.OrderId"
                                                     data-manager-id="00000000-0000-0000-0000-000000000000" style="white-space: nowrap;">
                                                 Yêu cầu chiết khấu
                                             </button>
                                         </div>
-                                        <div class="col-md-6 text-right">
+                                        <div class="col-md-6 text-right" style="padding-left: 50px;">
                                             <button type="button" class="btn btn-gradient-secondary" data-toggle="modal" data-target="#discountModal"
                                                     data-id="@Model.OrderProccess.OrderId">
-                                                <!-- Sử dụng orderId từ Model -->
                                                 Phản hồi
                                             </button>
                                         </div>
@@ -143,8 +144,7 @@
                                         <input type="hidden" id="managerId" value="00000000-0000-0000-0000-000000000000">
                                         <!-- Customer Information -->
                                         <h4 class="card-title">
-                                            Tổng tiền (tạm tính): @Model.OrderProccess.TotalPrice
-                                            <span id="totalPrice" value="@Model.OrderProccess.TotalPrice">Đ</span>
+                                            Tổng tiền (tạm tính): <span id="totalPrice" data-value="@Model.OrderProccess.TotalPrice">Đ</span>
                                         </h4>
                                         <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount">0</span></h4>
                                         <h4 class="card-title">Giá thi công: <span id="totalProccess">0</span></h4>
@@ -164,7 +164,7 @@
                                                 <input type="hidden" id="requestVerificationToken" value="">
                                                 <button id="createOrderBtn" class="btn btn-success" style="white-space: nowrap;">Hoàn thành</button>
                                                 <div class="form-group"></div>
-                                                <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button>
+                                                @*                                                 <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button> *@
                                             </div>
                                         </div>
                                     </div>
@@ -199,18 +199,69 @@
             </div>
         </div>
 
+
+        <!-- Modal Popup Discount Exit-->
+        <div class="modal fade" id="exitDiscountModal" tabindex="-1" aria-labelledby="exitDiscountModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exitDiscountModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3>Đơn hàng này đã có triết khấu</h3>
+                    </div>
+                    <div class="modal-footer">
+                        @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="successOrderModal" tabindex="-1" aria-labelledby="successOrderModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successOrderModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3>Đơn hàng đã được tạo</h3>
+                    </div>
+                    <div class="modal-footer">
+                        @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+
 </body>
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
     <script>
 
+        document.addEventListener("DOMContentLoaded", function () {
+            //Format: TotalPrice
+            var totalPriceElement = document.getElementById("totalPrice");
+            var totalPrice = totalPriceElement.getAttribute("data-value");
+            totalPrice = Number(totalPrice).toLocaleString();
+            totalPriceElement.textContent = totalPrice + ' Đ';
+            //Format: UserMoney
+            var originalUserMoney = document.getElementById("originalUserMoney").value;
+            var formattedUserMoney = parseFloat(originalUserMoney).toLocaleString();
+            document.getElementById("usedMoney").value = formattedUserMoney;
+            //Format: ProccessPrice
+            var originalProcessPrice = document.getElementById("originalProcessPrice").value;
+            var formattedProcessPrice = parseFloat(originalProcessPrice).toLocaleString();
+            document.getElementById("formattedProcessPrice").value = formattedProcessPrice;
+        });
         //Create discount to send Manager
         $(document).ready(function () {
             var totalProccess = 0;
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
-            
+
             function updateTotalPayable() {
                 var totalPriceStr = $('#totalPrice').attr('value');
                 var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
@@ -302,14 +353,12 @@
                         if (response.redirectUrl) {
                             window.location.href = response.redirectUrl;
                         } else {
-                            alert(response.message);
+                            $('#exitDiscountModal').modal('show');
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('Error Status:', textStatus);
-                        console.error('Error Thrown:', errorThrown);
-                        console.error('Error Response:', jqXHR.responseText);
-                        alert('Đã xảy ra lỗi khi tạo hóa đơn: ' + jqXHR.responseText);
+                        alert("Lỗi")
+
                     }
                 });
             });
@@ -415,8 +464,10 @@
             }
 
             $('#createOrderBtn').click(function () {
+                console.log("Chạy nè!!!", $('#totalDiscount').text(), $('#totalPrice'), $('#totalProccess').text());
                 var discountId = $('#totalDiscount').text().replace(/[^0-9.-]+/g, "") || null;
-                var totalPrice = parseFloat($('#totalPrice').attr('value').replace(/[^0-9.-]+/g, ""));
+                var totalPrice = parseFloat($('#totalPrice').attr('data-value').replace(/[^0-9.-]+/g, ""));
+
                 var materialProcessPrice = parseFloat($('#totalProccess').text().replace(/[^0-9.-]+/g, ""));
                 var orderId = $('#orderId').val();
                 console.log("Discount + total + proccess", discountId, totalPrice, materialProcessPrice);
@@ -437,7 +488,7 @@
                         'RequestVerificationToken': token
                     },
                     success: function (response) {
-                        alert('Order updated successfully');
+                        $('#successOrderModal').modal('show');
                         window.location.href = response.redirectUrl;
                     },
                     error: function (error) {
@@ -460,7 +511,7 @@
         color: white;
     }
 
-    .custom-button:hover {
+        .custom-button:hover {
             background: linear-gradient(0deg, rgba(100,49,192,0.9960434857536765) 27%, rgba(23,131,240,1) 100%);
         }
 
@@ -468,5 +519,15 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .form-check-input {
+        margin-right: 0.5em;
+    }
+
+    .green-background {
+        background-color: green;
+        color: white !important;
+        ;
     }
 </style>
