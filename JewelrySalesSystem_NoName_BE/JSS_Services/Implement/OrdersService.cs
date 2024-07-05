@@ -420,9 +420,24 @@ namespace JSS_Services.Implement
             {
                 return new OrderResponseUpdate();
             }
-            orderItem.DiscountId = data.DiscountId;
-            orderItem.MaterialProcessPrice = data.MaterialProcessPrice;
-            orderItem.TotalPrice = data.TotalPrice;
+            if (data.DiscountId == null)
+            {
+                orderItem.DiscountId = orderItem.DiscountId;
+            } 
+            if (data.MaterialProcessPrice == 0)
+            {
+                orderItem.MaterialProcessPrice = orderItem.MaterialProcessPrice;
+            }
+            if (data.TotalPrice == 0)
+            { 
+                orderItem.TotalPrice = orderItem.TotalPrice;
+            }
+            else
+            {
+                orderItem.DiscountId = data.DiscountId;
+                orderItem.MaterialProcessPrice = data.MaterialProcessPrice;
+                orderItem.TotalPrice = data.TotalPrice;
+            }
 
             OrderResponseUpdate order = new OrderResponseUpdate();
             order.OrderId = orderId;
