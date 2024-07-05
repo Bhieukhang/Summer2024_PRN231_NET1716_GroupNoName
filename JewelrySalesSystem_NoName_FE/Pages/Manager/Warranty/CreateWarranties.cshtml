@@ -31,7 +31,7 @@
                         <div class="form-group row">
                             <label for="customerPhone" class="col-sm-2 col-form-label">Số điện thoại:</label>
                             <div class="col-sm-2">
-                                <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required>
+                                <input type="text" id="customerPhone" name="CustomerPhone" class="form-control" value="@Model.Phone" required readonly>
                             </div>
                         </div>
                         @foreach (var order in Model.ListOrder)

@@ -34,7 +34,12 @@
                                                 <div class="col-md-3">
                                                     <label class="control-label">Giá thi công</label>
                                                     <input type="hidden" id="originalProcessPrice" value="@order.ProcessPrice">
-                                                    <input type="text" id="formattedProcessPrice" class="form-control" readonly />
+                                                    @{
+                                                        double processPrice = order.ProcessPrice;
+                                                        var formattedProcessPrice = processPrice != 0 ? string.Format(new System.Globalization.CultureInfo(""), "{0:N0}", processPrice) : "";
+                                                    }
+                                                    <input type="text" id="formattedProcessPrice" class="form-control" value="@formattedProcessPrice" readonly />
+
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="control-label" for="process-price">Gia công</label>
@@ -307,21 +312,39 @@
             });
 
             function updateTotalPayable() {
-                var totalPriceStr = $('#totalPrice').attr('value');
-                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
+                var totalPriceElem = $('#totalPrice');
+                var totalDiscountElem = $('#totalDiscount');
+                var totalProccessElem = $('#totalProccess');
 
-                var totalDiscountStr = $('#totalDiscount').text();
-                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
-
-                var totalPayable = totalPrice - totalDiscount + totalProccess;
-
-                if (isNaN(totalPayable)) {
-                    console.error("Invalid total payable:", totalPriceStr, totalDiscountStr, totalProccess);
-                    totalPayable = 0;
+                // Check if all required elements exist
+                if (!totalPriceElem.length || !totalDiscountElem.length || !totalProccessElem.length) {
+                    console.error("One or more elements not found:", totalPriceElem, totalDiscountElem, totalProccessElem);
+                    return;
                 }
 
+                // Get text content from elements
+                var totalPriceStr = totalPriceElem.text().trim();
+                var totalDiscountStr = totalDiscountElem.text().trim();
+                var totalProccessStr = totalProccessElem.text().trim();
+
+                // Convert strings to numbers
+                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
+                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
+                var totalProccess = parseFloat(totalProccessStr.replace(/[^0-9.-]+/g, ""));
+
+                // Check if conversion to numbers succeeded
+                if (isNaN(totalPrice) || isNaN(totalDiscount) || isNaN(totalProccess)) {
+                    console.error("Failed to parse numeric values.");
+                    return;
+                }
+
+                // Calculate total payable
+                var totalPayable = totalPrice - totalDiscount + totalProccess;
+
+                // Update the totalPayable element
                 $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
             }
+
 
 
             $('#requestDiscountBtn').click(function () {
