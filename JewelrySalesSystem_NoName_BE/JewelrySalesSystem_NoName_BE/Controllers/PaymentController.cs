@@ -60,6 +60,10 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         [HttpPost("create-order")]
         public async Task<IActionResult> CreateOrder([FromBody] UpdateOrderDTO orderDto)
         {
+            if (orderDto == null || orderDto.TotalPrice <= 0)
+            {
+                return BadRequest("Invalid order data.");
+            }
 
             Random rnd = new Random();
             var embed_data = new { redirecturl = redirectUrl };
@@ -70,8 +74,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             param.Add("app_id", app_id);
             param.Add("app_user", "user123");
             param.Add("app_time", Utils.GetTimeStamp().ToString());
-            param.Add("amount", "50000");
-            param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); // mã giao dich có định dạng yyMMdd_xxxx
+            param.Add("amount", orderDto.TotalPrice.ToString());
+            param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); // Order ID in the format yyMMdd_xxxx
             param.Add("embed_data", JsonConvert.SerializeObject(embed_data));
             param.Add("item", JsonConvert.SerializeObject(items));
             param.Add("description", "Lazada - Thanh toán đơn hàng #" + app_trans_id);
@@ -82,9 +86,10 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, data));
 
             var result = await HttpHelper.PostFormAsync(create_order_url, param);
-            //var order = _mapper.Map<Order>(orderDTO);
+
             return Ok(result);
         }
+
 
     }
     public class CreatePaymentRequestModel
