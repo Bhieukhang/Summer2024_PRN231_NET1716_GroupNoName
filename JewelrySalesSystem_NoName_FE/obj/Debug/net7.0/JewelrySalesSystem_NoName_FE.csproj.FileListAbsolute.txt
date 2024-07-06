@@ -303,3 +303,4 @@ D:\GitHub\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj
 D:\GitHub\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.pdb
 D:\GitHub\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\JewelrySalesSystem_NoName_FE.genruntimeconfig.cache
 D:\GitHub\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_FE\obj\Debug\net7.0\ref\JewelrySalesSystem_NoName_FE.dll
+C:\Users\ADMIN\Downloads\Supports\PRN231\RazorPages\Project1\JewelrySalesSystem_NoName_FE\bin\Debug\net7.0\BouncyCastle.Crypto.dll
