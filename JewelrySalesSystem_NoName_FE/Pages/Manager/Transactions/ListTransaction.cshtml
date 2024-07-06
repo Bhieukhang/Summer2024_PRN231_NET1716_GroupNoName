@@ -20,7 +20,7 @@
         <div class="col-sm-12 col-lg-6 mb-3">
             <h4 class="card-title">Danh sách giao dịch</h4>
         </div>
-        <form method="get" id="form-search">
+        <form method="get" id="form-search" >
             <div class="form-group">
 
                 <div class="row">
@@ -50,10 +50,11 @@
                             <thead>
                                 <tr>
                                     <th> STT </th>
-                                    <th> Order Id </th>
-                                    <th> Currency </th>
-                                    <th> TotalPrice </th>
-                                    <th></th>
+                                    <th> Mã hóa đơn </th>
+                                    <th>Ngày giao dịch</th>
+                                    <th> Tiền tệ </th>
+                                    <th> Tổng </th>
+                                    <th> Mô tả </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,24 +65,12 @@
                                         <td>
                                             @item.OrderId
                                         </td>
+                                        <td>
+                                            @item.InsDate?.ToShortDateString()
+                                        </td>
                                         <td>@item.Currency</td>
                                         <td>@(item.TotalPrice.HasValue ? string.Format(new CultureInfo("vi-VN"), "{0:N0}", item.TotalPrice.Value) : "0")</td>
-                                        <td>
-                                            <button type="button" class="btn btn-link btn-view-details text-dark" data-userid="@item.OrderId">
-                                                <i class="fa fa-eye menu-icon"></i>
-                                            </button>
-                                            <div class="col-sm-10">
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="warranty">
-                                                    <div class="modal-dialog modal-xl">
-                                                        <div class="modal-content">
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </td>
+                                        <td>@item.Description</td>
                                     </tr>
                                 }
                             </tbody>
