@@ -1,6 +1,7 @@
 ﻿using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.Responses;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,6 +21,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
+
         [BindProperty]
         public string? SearchCode { get; set; }
         public IList<DiamondDTO> diamondList { get; set; } = new List<DiamondDTO>();
@@ -39,7 +41,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
             }
 
             Page = page ?? 1;
-            Size = 12;
+            Size = 4;
             SearchCode = searchCode;
 
             var client = _httpClientFactory.CreateClient("ApiClient");
@@ -49,21 +51,45 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
             {
                 if (!string.IsNullOrEmpty(SearchCode))
                 {
-                    var searchUrl = $"{ApiPath.ProductList}/code?code={SearchCode}";
+                    var searchUrl = $"{ApiPath.DiamondList}/code?code={SearchCode}";
                     var diamondResponse = await client.GetStringAsync(searchUrl);
                     searchItem = JsonConvert.DeserializeObject<DiamondDTO>(diamondResponse);
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Vui lòng nhập mã sản phẩm để tìm kiếm.";
-                    return Page();
+                    var listUrl = $"{ApiPath.DiamondList}?page={Page}&size={Size}";
+                    var listResponse = await client.GetStringAsync(listUrl);
+                    //var diamondListResponse = JsonConvert.DeserializeObject<DiamondDTO>(listResponse);
+
+                    var paginateResult = JsonConvert.DeserializeObject<Paginate<DiamondDTO>>(listResponse);
+
+                    if (paginateResult != null)
+                    {
+                        TotalPages = paginateResult.TotalPages;
+                        diamondList = paginateResult.Items;
+                    }
+                    else
+                    {
+                        diamondList = new List<DiamondDTO>();
+                    }
                 }
+
+                // Additional Logging for Debugging
+                //if (diamondList == null || !diamondList.Any())
+                //{
+                //    TempData["ErrorMessage"] = "No diamonds found.";
+                //}
+                //else
+                //{
+                //    TempData["SuccessMessage"] = $"{diamondList.Count} diamonds found.";
+                //}
 
                 return Page();
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
+                diamondList = new List<DiamondDTO>();
                 return Page();
             }
         }
