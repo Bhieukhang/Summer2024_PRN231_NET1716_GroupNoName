@@ -89,6 +89,11 @@
                                             <td>
                                                 <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrder('@order.Id', '@order.ProductId')">Xuất</button>
                                             </td>
+                                        @*     <td>
+                                                <a asp-page-handler="CreateZaloPayOrder" asp-route-id="@order.Id" class="btn btn-link">Create ZaloPay Order</a>
+                                            </td> *@
+
+                                         
                                         </tr>
                                         <!-- Order Details Modal -->
                                         <div class="modal fade" id="orderDetailsModal-@order.Id" tabindex="-1" aria-labelledby="orderDetailsModalLabel-@order.Id" aria-hidden="true">
