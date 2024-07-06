@@ -13,6 +13,9 @@ using System.IO;
 using System.Drawing;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using Microsoft.AspNetCore.Authorization;
+using JewelrySalesSystem_NoName_FE.ZaloPay.Config;
+using JewelrySalesSystem_NoName_FE.ZaloPayHelper.Crypto;
+using JewelrySalesSystem_NoName_FE.ZaloPayHelper;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 {
@@ -21,6 +24,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
     public class ListOrderModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string app_id = "2553";
+        private readonly string key1 = "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL";
+        private readonly string create_order_url = "https://sb-openapi.zalopay.vn/v2/create";
+        private readonly string redirectUrl = "https://localhost:7170/api/Product/GetAllProducts";
+        private readonly ZaloPayConfig _zaloPayConfig;
 
         public IList<OrderDTO> OrderList { get; set; } = new List<OrderDTO>();
         public IList<OrderDetailList> OrderDetailList { get; set; } = new List<OrderDetailList>();
@@ -160,6 +168,40 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             {
                 Console.Error.WriteLine($"Error fetching phone number for customerId {customerId}: {ex.Message}");
                 return null;
+            }
+        }
+        public async Task<IActionResult> CreateZaloPayOrderAsync(OrderDTO orderDto)
+        {
+            try
+            {
+                if (orderDto == null || orderDto.TotalPrice <= 0)
+                {
+                    return BadRequest("Invalid order data.");
+                }
+
+                var param = new Dictionary<string, string>
+                {
+                    { "app_id", app_id },
+                    { "app_user", "user123" },
+                    { "app_time", Utils.GetTimeStamp().ToString() },
+                    { "amount", orderDto.TotalPrice.ToString() },
+                    { "app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + new Random().Next(1000000) },
+                    { "embed_data", JsonConvert.SerializeObject(new { redirecturl = redirectUrl }) },
+                    { "item", JsonConvert.SerializeObject(new[] { new { } }) },
+                    { "description", "Lazada - Thanh toán đơn hàng #" + new Random().Next(1000000) },
+                    { "bank_code", "zalopayapp" }
+                };
+
+                var data = $"{app_id}|{param["app_trans_id"]}|{param["app_user"]}|{param["amount"]}|{param["app_time"]}|{param["embed_data"]}|{param["item"]}";
+                param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, data));
+
+                var result = await HttpHelper.PostFormAsync(create_order_url, param);
+
+                return (IActionResult)result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating ZaloPay order: {ex.Message}");
             }
         }
     }

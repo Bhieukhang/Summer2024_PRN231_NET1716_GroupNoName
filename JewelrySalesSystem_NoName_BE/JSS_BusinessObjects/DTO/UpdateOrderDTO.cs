@@ -8,7 +8,7 @@ namespace JSS_BusinessObjects.DTO
 {
     public class UpdateOrderDTO
     {
-        public int? UserId { get; set; }
+        public int? OrderId { get; set; }
     
         public double? TotalPrice { get; set; }
       
