@@ -96,7 +96,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product/subid
         #endregion
-        [Authorize(Roles = "Admin, Manager, Staff")]
+   //     [Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductBySubIdEndpoint)]
         public async Task<IActionResult> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
