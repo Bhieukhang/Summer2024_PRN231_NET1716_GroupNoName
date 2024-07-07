@@ -27,7 +27,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
 
         [HttpGet(ApiEndPointConstant.SubProduct.SubProductsEndpoint)]
-        [ProducesResponseType(typeof(SubProductResponse), StatusCodes.Status200OK)]
+       // [ProducesResponseType(typeof(SubProductResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SubProducts>>> GetAllSubProductslsAsync()
         {
             var subPro = await _subProService.GetAllSubProductslsAsync();
