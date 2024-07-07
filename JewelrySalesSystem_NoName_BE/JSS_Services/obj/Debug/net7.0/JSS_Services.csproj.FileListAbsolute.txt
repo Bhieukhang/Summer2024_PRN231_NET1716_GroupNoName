@@ -157,9 +157,6 @@ C:\Users\ADMIN\Downloads\Supports\PRN231\RazorPages\Project1\JewelrySalesSystem_
 C:\Users\ADMIN\Downloads\Supports\PRN231\RazorPages\Project1\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\refint\JSS_Services.dll
 C:\Users\ADMIN\Downloads\Supports\PRN231\RazorPages\Project1\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.pdb
 C:\Users\ADMIN\Downloads\Supports\PRN231\RazorPages\Project1\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\ref\JSS_Services.dll
-D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.dll
-D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\refint\JSS_Services.dll
-D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.pdb
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\bin\Debug\net7.0\JSS_Services.deps.json
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\bin\Debug\net7.0\JSS_Services.dll
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\bin\Debug\net7.0\JSS_Services.pdb
@@ -176,4 +173,7 @@ D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_B
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.csproj.CoreCompileInputs.cache
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.sourcelink.json
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Serv.983535DB.Up2Date
+D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.dll
+D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\refint\JSS_Services.dll
+D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\JSS_Services.pdb
 D:\Demo\PRN231\Summer2024_PRN231_NET1716_GroupNoName\JewelrySalesSystem_NoName_BE\JSS_Services\obj\Debug\net7.0\ref\JSS_Services.dll
