@@ -1,5 +1,4 @@
-﻿using Firebase.Storage;
-using JewelrySalesSystem_NoName_FE.DTOs.Material;
+using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         [BindProperty]
         public IFormFile Image { get; set; }
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
-        public IList<MaterialDTO> MaterialList { get; set; } = new List<MaterialDTO>();
 
         public EditSubProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -37,7 +35,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -51,7 +49,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
 
@@ -60,10 +58,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 var categoryApiUrl = $"{ApiPath.CategoryList}";
                 var categoryResponse = await client.GetAsync(categoryApiUrl);
                 CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await categoryResponse.Content.ReadAsStringAsync());
-
-                var materialApiUrl = $"{ApiPath.MaterialList}";
-                var materialResponse = await client.GetAsync(materialApiUrl);
-                MaterialList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());
 
                 return Page();
             }
@@ -79,7 +73,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                TempData["ErrorMessage"] = "You need to login first.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -92,7 +86,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "Dung lượng file quá lớn !");
+                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
                     return Page();
                 }
 
@@ -125,9 +119,11 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     ProcessPrice = Product.ProcessPrice,
                     MaterialId = Product.MaterialId,
                     Code = Product.Code,
+                    Tax = Product.Tax,
                     ImgProduct = Product.ImgProduct,
+                    PeriodWarranty = Product.PeriodWarranty,
                     SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
-                    Tax = Product.Tax
+                 
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);
@@ -138,13 +134,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "Trang sức " + productRequest.Code + "được cập nhật thành công !";
+                    TempData["SuccessMessage"] = "The Jewelry is updated successfully!";
                     return RedirectToPage("./ListSubProduct");
                 }
                 else
