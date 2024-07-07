@@ -390,3 +390,4 @@ public partial class JewelrySalesSystemContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+
