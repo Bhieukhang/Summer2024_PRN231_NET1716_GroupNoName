@@ -127,7 +127,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 Product.Id = Guid.NewGuid();
                 Product.InsDate = DateTime.Now;
                 Product.Deflag = true;
-           //     Product.SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1");
+                Product.SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1");
 
                 var productRequest = new ProductRequest
                 {
@@ -145,8 +145,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     CategoryId = Product.CategoryId,
                     InsDate = Product.InsDate,
                     Deflag = Product.Deflag,
-                    SubId = Product.SubId,
-
+                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
+                PeriodWarranty = Product.PeriodWarranty,
 
                 };
                 Console.WriteLine(JsonConvert.SerializeObject(productRequest));

@@ -84,17 +84,17 @@
                             <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                         </div>
               
-                        <div class="mb-3" >
+                @*         <div class="mb-3" >
                             <label asp-for="Product.SubId" class="form-label"> SubId</label>
                             <input asp-for="Product.SubId" class="form-control"  />
                             <span asp-validation-for="Product.SubId" class="text-danger"></span>
-                        </div>
-                @*         <!-- Kích thước sản phẩm -->
+                        </div> *@
+                  
                         <div class="mb-3">
-                            <label asp-for="Product.PeriodWarranty" class="form-label">Thời Gian Bảo Hành (Tháng)</label>
+                            <label asp-for="Product.PeriodWarranty" class="form-label">Thời Lượng Bảo Hành (Tháng)</label>
                             <input asp-for="Product.PeriodWarranty" class="form-control" placeholder="Nhập Thời Gian Bảo Hành" />
                             <span asp-validation-for="Product.PeriodWarranty" class="text-danger"></span>
-                        </div> *@
+                        </div>
                         <!-- Nút thêm và hủy -->
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>

@@ -15,7 +15,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Trang sức</h4>
-                            <p><em>Chỉ gia công kim cương và giá gia công là cố định. Nếu khách hàng không gia công có thể bỏ qua mục này</em></p>
+                            <p><em style="color:lightseagreen">Chỉ gia công kim cương và giá gia công là cố định. Nếu khách hàng không gia công có thể bỏ qua mục này</em></p>
                             <div class="container">
                                 <table class="table table-bordered">
                                     <tbody id="productTableBody">
@@ -39,13 +39,40 @@
                                                         var formattedProcessPrice = processPrice != 0 ? string.Format(new System.Globalization.CultureInfo(""), "{0:N0}", processPrice) : "";
                                                     }
                                                     <input type="text" id="formattedProcessPrice" class="form-control" value="@formattedProcessPrice" readonly />
-
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="control-label" for="process-price">Gia công</label>
-                                                    <div class="form-check">
-                                                        <input type="checkbox" id="process-price" value="@order.ProcessPrice" class="form-check-input process-checkbox">
-                                                        <label class="form-check-label" for="process-price"></label>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chooseProductModal">Chọn gia công</button>
+
+                                                    <!-- Modal Proccess Product -->
+                                                    <div class="modal fade" id="chooseProductModal" tabindex="-1" role="dialog" aria-labelledby="chooseProductModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="chooseProductModalLabel">Chọn sản phẩm</h5>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="col-sm-12 autocomplete">
+                                                                        <div class="form-check">
+                                                                            <input type="checkbox" id="process-price" value="@order.ProcessPrice" class="form-check-input process-checkbox">
+                                                                            <label class="form-check-label" for="process-price">Gia công sản phẩm</label>
+                                                                        </div>
+                                                                        <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của kim cương cần tìm"
+                                                                               autocomplete="off" onkeyup="autocompleteSearch(this.value)" value="" />
+                                                                        <div id="searchResults" class="dropdown-menu" style="width: 100%; display: none;"></div>
+                                                                        <div id="autocomplete-list" class="autocomplete-items"></div>
+                                                                    </div>
+                                                                    <div id="selected-products" class="selected-products"></div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <label class="control-label">Tổng giá tiền: </label>
+                                                                    <span id="totalProccessProduct">0</span>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" id="closeModalProccess">Xác nhận</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -261,13 +288,101 @@
             var formattedProcessPrice = parseFloat(originalProcessPrice).toLocaleString();
             document.getElementById("formattedProcessPrice").value = formattedProcessPrice;
         });
+        //Choose Product Proccess
+        function autocompleteSearch(query) {
+            console.log(query);
+            if (query.length == 0) {
+                document.getElementById("autocomplete-list").innerHTML = "";
+                return;
+            }
+
+            fetch(`https://localhost:44318/api/v1/Diamond/autocomplete?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    let autocompleteList = document.getElementById("autocomplete-list");
+                    autocompleteList.innerHTML = "";
+                    console.log("Data search diamond: ", data['$values']);
+                    data['$values'].forEach(item => {
+                        let suggestionItem = document.createElement("div");
+                        suggestionItem.classList.add("autocomplete-item");
+
+                        suggestionItem.innerHTML = `
+                                 <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
+                                 <div class="diamond-details-search">
+                                      <h5 class="diamond-name-search">${item.diamondName}</h5>
+                                      <p class="diamond-code-search">Code : <strong>${item.code}</strong></p>
+                                 </div>`;
+
+                        suggestionItem.onclick = function () {
+                            console.log("Item code: ", item.code);
+                            document.getElementById("searchCode").value = item.code;
+                            addProductToList(item);
+                            autocompleteList.innerHTML = "";
+                        };
+
+                        autocompleteList.appendChild(suggestionItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching autocomplete data:', error));
+        }
+
+        let totalProccessProduct = 0;
+        function addProductToList(item) {
+            totalProccessProduct += parseFloat(item.price);
+            document.getElementById('totalProccessProduct').innerText = totalProccessProduct.toLocaleString();
+
+            let selectedProducts = document.getElementById('selected-products');
+            let selectedItem = document.createElement("div");
+            selectedItem.classList.add("selected-item");
+
+            selectedItem.innerHTML = `
+                                <div class="diamond-details">
+                                    <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
+                                    <div class="diamond-details-selected">
+                                        <h5 class="diamond-name-selected">${item.diamondName}</h5>
+                                        <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
+                                        <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
+                                    </div>
+                                    <button class="remove-item-button" onclick="removeProductFromList(this, ${item.price})">Xóa</button>
+                                </div>`;
+
+            selectedProducts.appendChild(selectedItem);
+
+            $(document).ready(function () {
+                $('#addProductButton').on('click', function () {
+                    $('#formattedProcessPrice').val(totalProccessProduct.toLocaleString());
+                    $('#chooseProductModal').modal('hide');
+                });
+            });
+        }
+
+        function removeProductFromList(button, price) {
+            button.parentElement.parentElement.remove();
+            totalProccessProduct -= parseFloat(price);
+            document.getElementById('totalProccessProduct').innerText = totalProccessProduct.toLocaleString();
+        }
+
+
         //Create discount to send Manager
         $(document).ready(function () {
+
+            $('#closeModalProccess').on('click', function () {
+                $('#chooseProductModal').modal('hide');
+                // Extract totalProccessProduct from the modal
+                var totalProccessProductStr = $('#totalProccessProduct').text().trim();
+                var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
+                console.log("Tồng tiền gia công", totalProccessProduct);
+                if (isNaN(totalProccessProduct)) {
+                    totalProccessProduct = 0;
+                }
+                updateTotalPayable(totalProccessProduct);
+            });
+
             var totalProccess = 0;
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
 
-            function updateTotalPayable() {
+            function updateTotalPayable(totalProccessProduct) {
                 var totalPriceStr = $('#totalPrice').attr('value');
                 var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
                 if (isNaN(totalPrice)) {
@@ -282,7 +397,7 @@
                     totalDiscount = 0;
                 }
 
-                var totalPayable = totalPrice - totalDiscount + totalProccess;
+                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
                 if (isNaN(totalPayable)) {
                     console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
                     totalPayable = 0;
@@ -339,8 +454,8 @@
                 }
 
                 // Calculate total payable
-                var totalPayable = totalPrice - totalDiscount + totalProccess;
-
+                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
+                console.log("totalPayable ở updateTotalPayable", totalPayable);
                 // Update the totalPayable element
                 $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
             }
@@ -409,16 +524,17 @@
                                 return;
                             }
                         } else if (data.message === 'Chưa có phản hồi từ quản lí') {
+                            console.log("Load data.message: ", data.message);
                             $('#discountContent').html('<p><strong>Chưa có phản hồi từ quản lí</strong></p>');
                             return;
                         }
 
                         // Check if the data represents an empty object
                         if (isEmptyObject(data)) {
+                            console.log("load dô isEmpty");
                             $('#discountContent').html('<p><strong>Chưa có phản hồi từ quản lí</strong></p>');
                         } else {
                             discountIdAccepted = data.Id;
-                            console.log('Data fields:', data, data.Id, data.Status, data.Note);
                             let statusMessage;
                             if (data.Status === 'Accepted') {
                                 statusMessage = 'Phần trăm chiết khấu được chấp nhận';
@@ -426,12 +542,15 @@
                                 let totalPrice = parseFloat('@Model.OrderProccess.TotalPrice');
                                 let discountPercent = parseFloat(data.PercentDiscount) / 100;
                                 let totalDiscount = totalPrice * discountPercent;
-                                let totalPayable = totalPrice - totalDiscount + totalProccess;
+                                let materialProcessPrice = parseFloat($('#totalProccess').text().replace(/[^0-9.-]+/g, ""));
+                                let totalProccessProduct = parseFloat($('#totalProccessProduct').text().replace(/[^0-9.-]+/g, ""))
+                                let totalPayable = totalPrice - totalDiscount + materialProcessPrice + totalProccessProduct;
 
 
                                 $('#totalPayable').text(totalPayable.toLocaleString() + ' Đ');
                                 $('#totalDiscount').text(totalDiscount.toLocaleString() + ' Đ');
                             } else if (data.Status === 'Rejected') {
+                                console.log("Discount reject:", data.Status);
                                 statusMessage = 'Phần trăm chiết khấu không được chấp nhận';
                             } else {
                                 statusMessage = data.Status;
@@ -441,7 +560,7 @@
                             let html = '<ul class="list-group">';
                             html += `<li class="list-group-item"><strong>ID:</strong> ${data.Id}</li>`;
                             html += `<li class="list-group-item"><strong>Trạng thái:</strong> ${statusMessage}</li>`;
-                            html += `<li class="list-group-item"><strong>Phần trăm:</strong> ${data.PercentDiscount}</li>`;
+                            html += `<li class="list-group-item"><strong>Phần trăm (%):</strong> ${data.PercentDiscount}</li>`;
                             if (data.Note) {
                                 html += `<li class="list-group-item"><strong>Note:</strong> ${data.Note}</li>`;
                             } else {
@@ -489,14 +608,16 @@
             $('#createOrderBtn').click(function () {
                 console.log("Chạy nè!!!", $('#totalDiscount').text(), $('#totalPrice'), $('#totalProccess').text());
                 var discountId = $('#totalDiscount').text().replace(/[^0-9.-]+/g, "") || null;
-                var totalPrice = parseFloat($('#totalPrice').attr('data-value').replace(/[^0-9.-]+/g, ""));
+
+                var totalPricePayable = parseFloat($('#totalPayable').text().replace(/[^0-9.-]+/g, "") || 0);
+                console.log("Tổng tiền thanh toán: ", totalPrice);
 
                 var materialProcessPrice = parseFloat($('#totalProccess').text().replace(/[^0-9.-]+/g, ""));
                 var orderId = $('#orderId').val();
-                console.log("Discount + total + proccess", discountId, totalPrice, materialProcessPrice);
+                console.log("Discount + total + proccess", discountId, totalPricePayable, materialProcessPrice);
                 var orderDetails = {
                     DiscountId: discountIdAccepted,
-                    TotalPrice: totalPrice,
+                    TotalPrice: totalPricePayable,
                     MaterialProcessPrice: materialProcessPrice,
                     OrderId: orderId
                 };
@@ -551,6 +672,100 @@
     .green-background {
         background-color: green;
         color: white !important;
-        ;
+    }
+
+    .autocomplete {
+        position: relative;
+        display: inline-block;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    .autocomplete-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+        .autocomplete-item:hover {
+            background-color: #e9e9e9;
+        }
+
+    .autocomplete .form-control {
+        width: 100%;
+    }
+
+    .autocomplete .dropdown-menu {
+        width: 100%;
+    }
+    .diamond-image-search, .diamond-image-selected {
+        max-width: 50px;
+        max-height: 50px;
+        margin-right: 10px;
+        border-radius: 5px;
+        object-fit: cover;
+    }
+
+    .diamond-details-search, .diamond-details-selected {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .diamond-name-search, .diamond-name-selected {
+        font-size: 1rem;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .diamond-code-search, .diamond-code-selected {
+        font-size: 0.875rem;
+        margin: 0;
+        color: #495057;
+    }
+
+    .diamond-price-selected {
+        font-size: 0.875rem;
+        margin: 0;
+        color: #495057;
+    }
+
+    .remove-item-button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #ff0000;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .remove-item-button:hover {
+            background-color: #cc0000;
+        }
+
+    .diamond-details {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
     }
 </style>
