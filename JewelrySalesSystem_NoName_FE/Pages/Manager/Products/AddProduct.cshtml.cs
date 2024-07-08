@@ -130,6 +130,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     Code = Product.Code,
                     ImgProduct = Product.ImgProduct,
                     Tax = Product.Tax,
+                    PeriodWarranty = Product.PeriodWarranty,
                 };
 
                 var json = JsonConvert.SerializeObject(productRequest);

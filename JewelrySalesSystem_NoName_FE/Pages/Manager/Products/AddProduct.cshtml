@@ -75,6 +75,12 @@
                             <input asp-for="Product.Quantity" class="form-control" />
                             <span asp-validation-for="Product.Quantity" class="text-danger"></span>
                         </div>
+                        <!-- Thời gian bảo hành sản phẩm -->
+                        <div class="mb-3">
+                            <label asp-for="Product.PeriodWarranty" class="form-label">Thời Gian Bảo Hành (tháng)</label>
+                            <input asp-for="Product.PeriodWarranty" class="form-control" />
+                            <span asp-validation-for="Product.PeriodWarranty" class="text-danger"></span>
+                        </div>
                         <!-- Loại sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.CategoryId" class="form-label">Loại</label>
