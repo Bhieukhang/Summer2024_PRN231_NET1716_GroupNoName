@@ -57,7 +57,7 @@
                                                                 <div class="modal-body">
                                                                     <div class="col-sm-12 autocomplete">
                                                                         <div class="form-check">
-                                                                            <input type="checkbox" id="process-price-@order.Id" value="1000" class="form-check-input process-checkbox">
+                                                                            <input type="checkbox" id="process-price-@order.Id" value="@order.ProcessPrice" class="form-check-input process-checkbox">
                                                                             <label class="form-check-label" for="process-price-@order.Id">Gia công sản phẩm</label>
                                                                         </div>
                                                                         <input type="text" id="searchCode-@order.Id" name="searchCode" class="form-control" placeholder="Nhập mã code của kim cương cần tìm"
@@ -178,7 +178,7 @@
                                         <h4 class="card-title">
                                             Tổng tiền (tạm tính): <span id="totalPrice" data-value="@Model.OrderProccess.TotalPrice">Đ</span>
                                         </h4>
-                                        <<h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount" data-value="0">0</span></h4>
+                                        <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount" data-value="0">0</span></h4>
                                         <h4 class="card-title">Giá thi công: <span id="totalProccess" data-value="0">0</span></h4>
                                         <h4 class="card-title">Sản phẩm thi công: <span id="totalProccessProduct" data-value="0">0</span></h4>
                                         <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable" data-value="0">0</span></h4>
@@ -397,30 +397,23 @@
             closeModal(orderId);
         });
 
-        // Hàm đóng modal
-        function closeModal(orderId) {
-            // Đóng modal
-            $('#chooseProductModal-' + orderId).modal('hide');
 
-            console.log("Nó chạy vào đây!!!");
-            // Lấy và xử lý tổng giá tiền từ modal
+        function closeModal(orderId) {
+            $('#chooseProductModal-' + orderId).modal('hide');
             var totalProccessProductStr = $('#totalProccessProduct-' + orderId).text().trim();
             var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
-            console.log("Tổng tiền gia công:", totalProccessProduct);
+
             if (isNaN(totalProccessProduct)) {
                 totalProccessProduct = 0;
             }
-
-            // Gọi hàm cập nhật tổng thanh toán (ví dụ: updateTotalPayable là hàm bạn tự định nghĩa)
-            updateTotalPayable(totalProccessProduct);
+            updateTotalPayable(totalProccessProduct, 0);
         }
 
-        var totalProccess = 0;
+        var totalProccessList = 0;
         var discountIdAccepted = null;
         const token = $('input[name="__RequestVerificationToken"]').val();
 
-        function updateTotalPayable(totalProccessProduct) {
-            // Lấy giá trị từ các phần tử HTML và chuyển đổi sang số
+        function updateTotalPayable(totalProccessProduct, totalProccess) {
             var totalPriceStr = $('#totalPrice').attr('data-value');
             var totalPrice = parseFloat(totalPriceStr);
             if (isNaN(totalPrice)) {
@@ -435,50 +428,29 @@
                 totalDiscount = 0;
             }
 
-            var totalProccessStr = $('#totalProccess').attr('data-value');
-            var totalProccess = parseFloat(totalProccessStr);
-            if (isNaN(totalProccess)) {
-                console.error("Invalid total proccess:", totalProccessStr);
-                totalProccess = 0;
-            }
-
-            console.log("Tổng tiền trước khi update: ", totalPrice);
-            console.log("Tổng tiền gia công trước khi update: ", totalProccess);
-
-            // Cập nhật tổng tiền gia công với giá trị mới
-            totalProccess += totalProccessProduct;
-
-            // Tính toán tổng tiền phải trả
-            var totalPayable = totalPrice - totalDiscount + totalProccess;
+            totalProccessList += totalProccessProduct;
+            console.log("Tiền: ", totalPrice, totalDiscount, totalProccess, totalProccessProduct);
+            var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
 
             if (isNaN(totalPayable)) {
                 console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
                 totalPayable = 0;
             }
 
-            // Cập nhật tổng tiền tạm tính
-            totalPrice = totalPayable;
-
-            // Hiển thị tổng tiền tạm tính đã được cập nhật
-            $('#totalPrice').text(totalPrice.toLocaleString('vi-VN') + 'Đ');
-            $('#totalPayable').text(totalPayable.toLocaleString('vi-VN') + 'Đ');
-
-            // Hiển thị tổng tiền gia công đã được cập nhật
-            $('#totalProccess').text(totalProccess.toLocaleString('vi-VN') + 'Đ');
-            $('#totalProccess').attr('data-value', totalProccess); // Cập nhật giá trị data-value cho totalProccess
+            $('#totalPrice').text(totalPayable.toLocaleString() + 'Đ');
+            $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
+            $('#totalProccessProduct').text(totalProccessList.toLocaleString() + 'Đ');
+            $('#totalProccess').attr('data-value', totalProccess); // Update the data-value attribute for totalProccess
         }
 
-        // Gọi hàm này khi giá gia công được cập nhật
-        // ví dụ: updateTotalPayable(70000000);
 
-        //Create discount to send Manager
         $(document).ready(function () {
-
-            // Update the total process price when checkboxes are toggled
+            let totalProccess = 0;
             $('.process-checkbox').change(function () {
                 var processPriceStr = $(this).val();
-                console.log("Giá thi công:", processPriceStr);
-                var processPrice = parseFloat(processPriceStr.replace(/[^0-9.-]+/g, ""));
+
+                var processPrice = parseFloat(processPriceStr);
+                console.log("Giá thi công:", processPrice);
                 if (isNaN(processPrice)) {
                     console.error("Invalid process price:", processPriceStr);
                     processPrice = 0;
@@ -489,44 +461,64 @@
                 } else {
                     totalProccess -= processPrice;
                 }
-
+                console.log("totalProccess: ", totalProccess);
                 $('#totalProccess').text(totalProccess.toLocaleString() + 'Đ');
-                updateTotalPayable();
+
+                updateTotalPayable(0, totalProccess);
             });
+        });
 
-            function updateTotalPayable() {
-                var totalPriceElem = $('#totalPrice');
-                var totalDiscountElem = $('#totalDiscount');
-                var totalProccessElem = $('#totalProccess');
 
-                // Check if all required elements exist
-                if (!totalPriceElem.length || !totalDiscountElem.length || !totalProccessElem.length) {
-                    console.error("One or more elements not found:", totalPriceElem, totalDiscountElem, totalProccessElem);
-                    return;
-                }
+        //Create discount to send Manager
+        $(document).ready(function () {
+            let totalProccess = 0;
 
-                // Get text content from elements
-                var totalPriceStr = totalPriceElem.text().trim();
-                var totalDiscountStr = totalDiscountElem.text().trim();
-                var totalProccessStr = totalProccessElem.text().trim();
+            // $('.process-checkbox').change(function () {
+            //     var processPriceStr = $(this).val();
 
-                // Convert strings to numbers
-                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
-                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
-                var totalProccess = parseFloat(totalProccessStr.replace(/[^0-9.-]+/g, ""));
+            //     var processPrice = parseFloat(processPriceStr);
+            //     console.log("Giá thi công:", processPrice);
+            //     if (isNaN(processPrice)) {
+            //         console.error("Invalid process price:", processPriceStr);
+            //         processPrice = 0;
+            //     }
 
-                // Check if conversion to numbers succeeded
-                if (isNaN(totalPrice) || isNaN(totalDiscount) || isNaN(totalProccess)) {
-                    console.error("Failed to parse numeric values.");
-                    return;
-                }
+            //     if (this.checked) {
+            //         totalProccess += processPrice;
+            //     } else {
+            //         totalProccess -= processPrice;
+            //     }
+            //     console.log("totalProccess: ", totalProccess);
+            //     $('#totalProccess').text(totalProccess.toLocaleString() + 'Đ');
 
-                // Calculate total payable
-                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
-                console.log("totalPayable ở updateTotalPayable", totalPayable);
-                // Update the totalPayable element
-                $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
-            }
+            //     // updateTotalPayableFromTotalProccess(totalProccess);
+            // });
+
+
+            // function updateTotalPayableFromTotalProccess(totalProccess) {
+            //     var totalPriceElem = $('#totalPrice');
+            //     var totalDiscountElem = $('#totalDiscount');
+
+            //     if (!totalPriceElem.length || !totalDiscountElem.length) {
+            //         console.error("One or more elements not found:", totalPriceElem, totalDiscountElem);
+            //         return;
+            //     }
+
+            //     var totalPriceStr = totalPriceElem.text().trim();
+            //     var totalDiscountStr = totalDiscountElem.text().trim();
+               
+            //     var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
+            //     var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
+
+            //     if (isNaN(totalPrice) || isNaN(totalDiscount) || isNaN(totalProccess)) {
+            //         console.error("Failed to parse numeric values.");
+            //         return;
+            //     }
+            //     console.log("Total: ", totalPrice, totalProccess);
+            //     var totalPayable = totalPrice - totalDiscount + totalProccess;
+            //     console.log("totalPayable ở updateTotalPayable", totalPayable);
+            //     $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
+            // }
 
 
 
