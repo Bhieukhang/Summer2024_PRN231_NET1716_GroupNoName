@@ -16,6 +16,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
         [BindProperty]
         public ProductDTO Product { get; set; }
+        [BindProperty]
+        public string? SearchCode { get; set; }
+        [BindProperty]
+        public string? SelectedCategory { get; set; }
+        [BindProperty]
+        public string? SelectedMaterial { get; set; }
 
         [BindProperty]
         public IFormFile Image { get; set; }
@@ -182,5 +188,33 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             return Page();
         }
+
+        public async Task<IActionResult> FilterProductsAsync(string selectedCategory, string selectedMaterial)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var filterUrl = $"{ApiPath.ProductList}/filter?categoryId={selectedCategory}&materialId={selectedMaterial}";
+                var filterResponse = await client.GetStringAsync(filterUrl);
+                var filteredProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(filterResponse);
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
+            }
+        }
+
     }
 }
