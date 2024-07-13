@@ -50,6 +50,10 @@
                                             {
                                                 <label class="badge badge-danger">@((warranty.Status.Equals("Invalid for Warranty")) ? "Không hợp lệ" : "Hết hạn")</label>
                                             }
+                                            else if (warranty.Status.Equals("Waiting"))
+                                            {
+                                                <label class="badge badge-danger">Chờ</label>
+                                            }
                                             else
                                             {
                                                 <label class="badge badge-warning">Đang bảo hành</label>
