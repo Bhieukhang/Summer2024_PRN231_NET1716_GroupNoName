@@ -42,34 +42,34 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="control-label" for="process-price">Gia công</label>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chooseProductModal">Chọn gia công</button>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chooseProductModal-@order.Id">Chọn gia công</button>
 
                                                     <!-- Modal Proccess Product -->
-                                                    <div class="modal fade" id="chooseProductModal" tabindex="-1" role="dialog" aria-labelledby="chooseProductModalLabel" aria-hidden="true">
+                                                    <div class="modal fade" id="chooseProductModal-@order.Id" tabindex="-1" role="dialog" aria-labelledby="chooseProductModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" id="chooseProductModalLabel">Chọn sản phẩm</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="col-sm-12 autocomplete">
                                                                         <div class="form-check">
-                                                                            <input type="checkbox" id="process-price" value="@order.ProcessPrice" class="form-check-input process-checkbox">
-                                                                            <label class="form-check-label" for="process-price">Gia công sản phẩm</label>
+                                                                            <input type="checkbox" id="process-price-@order.Id" value="@order.ProcessPrice" class="form-check-input process-checkbox">
+                                                                            <label class="form-check-label" for="process-price-@order.Id">Gia công sản phẩm</label>
                                                                         </div>
-                                                                        <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của kim cương cần tìm"
-                                                                               autocomplete="off" onkeyup="autocompleteSearch(this.value)" value="" />
-                                                                        <div id="searchResults" class="dropdown-menu" style="width: 100%; display: none;"></div>
-                                                                        <div id="autocomplete-list" class="autocomplete-items"></div>
+                                                                        <input type="text" id="searchCode-@order.Id" name="searchCode" class="form-control" placeholder="Nhập mã code của kim cương cần tìm"
+                                                                               autocomplete="off" onkeyup="autocompleteSearch(this.value, this, '@order.Id')" value="" />
+                                                                        <div id="autocomplete-list-@order.Id" class="autocomplete-items"></div>
                                                                     </div>
-                                                                    <div id="selected-products" class="selected-products"></div>
+                                                                    <div id="selected-products-@order.Id" class="selected-products"></div>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <label class="control-label">Tổng giá tiền: </label>
-                                                                    <span id="totalProccessProduct">0</span>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-primary" id="closeModalProccess">Xác nhận</button>
+                                                                    <span id="totalProccessProduct-@order.Id">0</span>
+                                                                    <button type="button" class="btn btn-primary confirm-button" data-order-id="@order.Id">Xác nhận</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -178,16 +178,17 @@
                                         <h4 class="card-title">
                                             Tổng tiền (tạm tính): <span id="totalPrice" data-value="@Model.OrderProccess.TotalPrice">Đ</span>
                                         </h4>
-                                        <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount">0</span></h4>
-                                        <h4 class="card-title">Giá thi công: <span id="totalProccess">0</span></h4>
-                                        <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable">0</span></h4>
+                                        <h4 class="card-title">Chiết khấu giảm: <span id="totalDiscount" data-value="0">0</span></h4>
+                                        <h4 class="card-title">Giá thi công: <span id="totalProccess" data-value="0">0</span></h4>
+                                        <h4 class="card-title">Sản phẩm thi công: <span id="totalProccessProduct" data-value="0">0</span></h4>
+                                        <h4 class="card-title">Tổng tiền cần thanh toán: <span id="totalPayable" data-value="0">0</span></h4>
                                         <div class="form-group">
                                             <h4 for="paymentMethod">Phương thức thanh toán</h4>
                                             <div class="select-wrapper">
-                                                <select class="form-control" id="paymentMethod" style="height: 2.5rem;">
-                                                    <option value="" disabled selected>Chọn phương thức thanh toán</option>
+                                                <select class="form-control" id="paymentMethod" style="height: 4.0rem;">
+                                                    <option value="" selected>Chọn</option>
                                                     <option value="transfer">Chuyển khoản</option>
-                                                    <option value="cash">Thanh toán bằng tiền mặt</option>
+                                                    <option value="cash" >Thanh toán bằng tiền mặt</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -196,7 +197,6 @@
                                                 <input type="hidden" id="requestVerificationToken" value="">
                                                 <button id="createOrderBtn" class="btn btn-success" style="white-space: nowrap;">Hoàn thành</button>
                                                 <div class="form-group"></div>
-                                                @*                                                 <button id="cancelButton" class="btn btn-gradient-secondary">Hủy</button> *@
                                             </div>
                                         </div>
                                     </div>
@@ -231,7 +231,6 @@
             </div>
         </div>
 
-
         <!-- Modal Popup Discount Exit-->
         <div class="modal fade" id="exitDiscountModal" tabindex="-1" aria-labelledby="exitDiscountModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -250,6 +249,7 @@
             </div>
         </div>
 
+        <!-- Modal Popup Order Successfully-->
         <div class="modal fade" id="successOrderModal" tabindex="-1" aria-labelledby="successOrderModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -267,6 +267,47 @@
             </div>
         </div>
 
+        <!-- Modal ZALO PAY-->
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+             data-target=".bd-example-modal-lg" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="orderFrame" src=""></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-mdb-ripple-init data-mdb-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Small Modal for Cash Payment Confirmation -->
+        <div class="modal fade" id="cashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cashPaymentModalLabel">Hoàn tất</h5>
+                    </div>
+                    <div class="modal-body">
+                        <span class="loader"></span>
+                        Chờ thanh toán . . . . . . .
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelConfirmCash" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmCashPayment">Xác nhận thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 </body>
 
 @section Scripts {
@@ -278,7 +319,7 @@
             var totalPriceElement = document.getElementById("totalPrice");
             var totalPrice = totalPriceElement.getAttribute("data-value");
             totalPrice = Number(totalPrice).toLocaleString();
-            totalPriceElement.textContent = totalPrice + ' Đ';
+            totalPriceElement.textContent = totalPrice + '  Đ';
             //Format: UserMoney
             var originalUserMoney = document.getElementById("originalUserMoney").value;
             var formattedUserMoney = parseFloat(originalUserMoney).toLocaleString();
@@ -286,131 +327,110 @@
             //Format: ProccessPrice
             var originalProcessPrice = document.getElementById("originalProcessPrice").value;
             var formattedProcessPrice = parseFloat(originalProcessPrice).toLocaleString();
+            var formattedProcessPrice = parseFloat(originalProcessPrice).toLocaleString();
             document.getElementById("formattedProcessPrice").value = formattedProcessPrice;
+            //Format: TotalPayble
+            var totalPayableElement = document.getElementById("totalPayable");
+            var totalPayable = totalPrice;
+            totalPayableElement.textContent = totalPayable.toLocaleString() + '  Đ';
         });
+
         //Choose Product Proccess
-        function autocompleteSearch(query) {
-            console.log(query);
-            if (query.length == 0) {
-                document.getElementById("autocomplete-list").innerHTML = "";
+        let selectedDiamonds = {};
+        function autocompleteSearch(query, inputElement, productId) {
+            let code = productId;
+            let autocompleteList = document.getElementById("autocomplete-list-" + code);
+
+            if (!autocompleteList) {
+                console.error("Autocomplete list element not found.");
+                return;
+            }
+
+            if (query.length === 0) {
+                autocompleteList.innerHTML = "";
                 return;
             }
 
             fetch(`https://localhost:44318/api/v1/Diamond/autocomplete?query=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    let autocompleteList = document.getElementById("autocomplete-list");
-                    autocompleteList.innerHTML = "";
-                    console.log("Data search diamond: ", data['$values']);
+                    autocompleteList.innerHTML = ""; // Xóa các item cũ trước khi thêm mới
                     data['$values'].forEach(item => {
                         let suggestionItem = document.createElement("div");
                         suggestionItem.classList.add("autocomplete-item");
 
                         suggestionItem.innerHTML = `
-                                 <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
-                                 <div class="diamond-details-search">
-                                      <h5 class="diamond-name-search">${item.diamondName}</h5>
-                                      <p class="diamond-code-search">Code : <strong>${item.code}</strong></p>
-                                 </div>`;
+                                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
+                                            <div class="diamond-details-search">
+                                                <h5 class="diamond-name-search">${item.diamondName}</h5>
+                                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
+                                            </div>`;
 
                         suggestionItem.onclick = function () {
-                            console.log("Item code: ", item.code);
-                            document.getElementById("searchCode").value = item.code;
-                            addProductToList(item);
+                            let searchCodeElement = document.getElementById("searchCode-" + code);
+                            if (searchCodeElement) {
+                                searchCodeElement.value = item.code;
+                            } else {
+                                console.error("Input element not found.");
+                            }
+                            addProductToList(item, code);
                             autocompleteList.innerHTML = "";
                         };
 
                         autocompleteList.appendChild(suggestionItem);
                     });
                 })
-                .catch(error => console.error('Error fetching autocomplete data:', error));
+                .catch(error => {
+                    console.error('Error fetching autocomplete data:', error);
+                    autocompleteList.innerHTML = ""; // Xóa các item trong trường hợp lỗi
+                });
         }
 
         let totalProccessProduct = 0;
-        function addProductToList(item) {
-            totalProccessProduct += parseFloat(item.price);
-            document.getElementById('totalProccessProduct').innerText = totalProccessProduct.toLocaleString();
+        function addProductToList(item, productId) {
+            let code = productId;
+            let totalProccessProductElement = document.getElementById('totalProccessProduct-' + code);
+            let selectedProductsElement = document.getElementById('selected-products-' + code);
 
-            let selectedProducts = document.getElementById('selected-products');
+            if (!totalProccessProductElement || !selectedProductsElement) {
+                console.error("Elements not found.");
+                return;
+            }
+
+            // Cập nhật tổng giá tiền
+            let price = parseFloat(item.price);
+            let currentTotal = parseFloat(totalProccessProductElement.innerText);
+            let newTotal = currentTotal + price;
+            totalProccessProductElement.innerText = newTotal.toLocaleString();
+
+            // Tạo phần tử sản phẩm đã chọn
             let selectedItem = document.createElement("div");
             selectedItem.classList.add("selected-item");
 
             selectedItem.innerHTML = `
-                                <div class="diamond-details">
-                                    <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
-                                    <div class="diamond-details-selected">
-                                        <h5 class="diamond-name-selected">${item.diamondName}</h5>
-                                        <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
-                                        <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
-                                    </div>
-                                    <button class="remove-item-button" onclick="removeProductFromList(this, ${item.price})">Xóa</button>
-                                </div>`;
+                            <div class="diamond-details">
+                                <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
+                                <div class="diamond-details-selected">
+                                    <h5 class="diamond-name-selected">${item.diamondName}</h5>
+                                    <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
+                                    <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
+                                </div>
+                                <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
+                            </div>`;
 
-            selectedProducts.appendChild(selectedItem);
 
-            $(document).ready(function () {
-                $('#addProductButton').on('click', function () {
-                    $('#formattedProcessPrice').val(totalProccessProduct.toLocaleString());
-                    $('#chooseProductModal').modal('hide');
-                });
-            });
+            selectedProductsElement.appendChild(selectedItem);
         }
 
-        function removeProductFromList(button, price) {
-            button.parentElement.parentElement.remove();
-            totalProccessProduct -= parseFloat(price);
-            document.getElementById('totalProccessProduct').innerText = totalProccessProduct.toLocaleString();
-        }
-
-
-        //Create discount to send Manager
+        //Calculate price
         $(document).ready(function () {
+            let totalProccess = 0;
+            let totalProccessList = 0;
 
-            $('#closeModalProccess').on('click', function () {
-                $('#chooseProductModal').modal('hide');
-                // Extract totalProccessProduct from the modal
-                var totalProccessProductStr = $('#totalProccessProduct').text().trim();
-                var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
-                console.log("Tồng tiền gia công", totalProccessProduct);
-                if (isNaN(totalProccessProduct)) {
-                    totalProccessProduct = 0;
-                }
-                updateTotalPayable(totalProccessProduct);
-            });
-
-            var totalProccess = 0;
-            var discountIdAccepted = null;
-            const token = $('input[name="__RequestVerificationToken"]').val();
-
-            function updateTotalPayable(totalProccessProduct) {
-                var totalPriceStr = $('#totalPrice').attr('value');
-                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
-                if (isNaN(totalPrice)) {
-                    console.error("Invalid total price:", totalPriceStr);
-                    totalPrice = 0;
-                }
-
-                var totalDiscountStr = $('#totalDiscount').text();
-                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
-                if (isNaN(totalDiscount)) {
-                    console.error("Invalid total discount:", totalDiscountStr);
-                    totalDiscount = 0;
-                }
-
-                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
-                if (isNaN(totalPayable)) {
-                    console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
-                    totalPayable = 0;
-                }
-
-                $('#totalPayable').text(totalPayable.toLocaleString('vi-VN') + 'Đ');
-            }
-
-            // Update the total process price when checkboxes are toggled
+            // Handle checkbox change event
             $('.process-checkbox').change(function () {
                 var processPriceStr = $(this).val();
-                console.log("Giá thi công:", processPriceStr);
-                var processPrice = parseFloat(processPriceStr.replace(/[^0-9.-]+/g, ""));
+                var processPrice = parseFloat(processPriceStr);
                 if (isNaN(processPrice)) {
                     console.error("Invalid process price:", processPriceStr);
                     processPrice = 0;
@@ -421,46 +441,152 @@
                 } else {
                     totalProccess -= processPrice;
                 }
-
-                $('#totalProccess').text(totalProccess.toLocaleString() + 'Đ');
-                updateTotalPayable();
+                $('#totalProccess').text(totalProccess.toLocaleString() + '  Đ');
+                updateTotalPayable(0, totalProccess);
             });
 
-            function updateTotalPayable() {
-                var totalPriceElem = $('#totalPrice');
-                var totalDiscountElem = $('#totalDiscount');
-                var totalProccessElem = $('#totalProccess');
+            // Handle confirm button click event
+            $('.confirm-button').on('click', function () {
+                var orderId = $(this).data('order-id');
+                closeModal(orderId);
+            });
 
-                // Check if all required elements exist
-                if (!totalPriceElem.length || !totalDiscountElem.length || !totalProccessElem.length) {
-                    console.error("One or more elements not found:", totalPriceElem, totalDiscountElem, totalProccessElem);
-                    return;
+
+            function closeModal(orderId) {
+                console.log("OrderId đóng modal, #chooseProductModal-" + orderId);
+                $('#chooseProductModal-' + orderId).modal('hide');
+
+                $('#chooseProductModal-' + orderId).on('hide.bs.modal', function (e) {
+                    console.log("Modal " + modalId + " is being hidden");
+                });
+
+                $('#chooseProductModal-' + orderId).on('hidden.bs.modal', function (e) {
+                    console.log("Modal " + modalId + " has been hidden");
+                });
+                var totalProccessProductStr = $('#totalProccessProduct-' + orderId).text().trim();
+                var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
+
+                if (isNaN(totalProccessProduct)) {
+                    totalProccessProduct = 0;
                 }
-
-                // Get text content from elements
-                var totalPriceStr = totalPriceElem.text().trim();
-                var totalDiscountStr = totalDiscountElem.text().trim();
-                var totalProccessStr = totalProccessElem.text().trim();
-
-                // Convert strings to numbers
-                var totalPrice = parseFloat(totalPriceStr.replace(/[^0-9.-]+/g, ""));
-                var totalDiscount = parseFloat(totalDiscountStr.replace(/[^0-9.-]+/g, ""));
-                var totalProccess = parseFloat(totalProccessStr.replace(/[^0-9.-]+/g, ""));
-
-                // Check if conversion to numbers succeeded
-                if (isNaN(totalPrice) || isNaN(totalDiscount) || isNaN(totalProccess)) {
-                    console.error("Failed to parse numeric values.");
-                    return;
-                }
-
-                // Calculate total payable
-                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
-                console.log("totalPayable ở updateTotalPayable", totalPayable);
-                // Update the totalPayable element
-                $('#totalPayable').text(totalPayable.toLocaleString() + 'Đ');
+                updateTotalPayable(totalProccessProduct, totalProccess);
             }
 
+            $(document).on('click', '.remove-item-button', function () {
+                let price = parseFloat($(this).data('price'));
+                let productId = $(this).data('product-id');
+                removeProductFromList(this, price, productId);
+            });
 
+            function removeProductFromList(button, price, productId) {
+                let code = productId;
+                button.parentElement.remove();
+
+                let totalProccessProductElement = document.getElementById('totalProccessProduct-' + code);
+                if (!totalProccessProductElement) {
+                    console.error("Total process product element not found.");
+                    return;
+                }
+
+                let currentTotal = parseFloat(totalProccessProductElement.innerText.replace(/,/g, ''));
+                let newTotal = currentTotal - price;
+                totalProccessProductElement.innerText = newTotal.toLocaleString();
+
+                // Update totalProccessList
+                totalProccessList -= price;
+                updateTotalPayable(0, totalProccess);
+            }
+
+            function updateTotalPayable(totalProccessProduct, totalProccess) {
+                var totalPriceStr = $('#totalPrice').attr('data-value');
+                var totalPrice = parseFloat(totalPriceStr);
+                if (isNaN(totalPrice)) {
+                    console.error("Invalid total price:", totalPriceStr);
+                    totalPrice = 0;
+                }
+
+                var totalDiscountStr = $('#totalDiscount').text();
+                var totalDiscount = parseFloat(totalDiscountStr);
+                if (isNaN(totalDiscount)) {
+                    console.error("Invalid total discount:", totalDiscountStr);
+                    totalDiscount = 0;
+                }
+
+                totalProccessList += totalProccessProduct;
+                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
+
+                if (isNaN(totalPayable)) {
+                    console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
+                    totalPayable = 0;
+                }
+
+                $('#totalPrice').text(totalPayable.toLocaleString() + '  Đ');
+                $('#totalPayable').text(totalPayable.toLocaleString() + '  Đ');
+                $('#totalProccessProduct').text(totalProccessList.toLocaleString() + '  Đ');
+                $('#totalProccess').attr('data-value', totalProccess);
+            }
+        });
+
+        //Create discount to send Manager
+        $(document).ready(function () {
+            var previousValue = $('#paymentMethod').val();
+            $('#orderModal').on('hidden.bs.modal', function () {
+                $('#createOrderBtn').click();
+            });
+
+            $('#paymentMethod').change(function () {
+                if ($(this).val() === 'cash') {
+                    $('#cashPaymentModal').modal('show');
+                }
+            });
+
+            $('#confirmCashPayment').click(function () {
+                $('#createOrderBtn').click();
+                $('#cashPaymentModal').modal('hide');
+            });
+
+            $('#cancelConfirmCash').click(function () {
+                $('#paymentMethod').val(previousValue);
+                $('#cashPaymentModal').modal('hide');
+            });
+            var discountIdAccepted = null;
+            const token = $('input[name="__RequestVerificationToken"]').val();
+            //Zalo Pay
+            $('#paymentMethod').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'transfer') {
+                    var totalPricePayable = parseFloat($('#totalPayable').text().replace(/[^0-9.-]+/g, "") || 0);
+                    var OrderId = $('#orderId').val();
+                    console.log("Total price, orderId: ", totalPricePayable, OrderId);
+                    var data = {
+                        orderId: OrderId,
+                        totalPrice: totalPricePayable,
+                        status: 0
+                    };
+
+                    $.ajax({
+                        url: 'https://localhost:44318/api/Payment/create-order',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#orderId').text('Order ID: ' + response.orderId);
+                            $('#totalPrice').text('Total Price: ' + response.totalPrice);
+                            $('#status').text('Status: ' + response.status);
+                            console.log("Link zalo pay: ", response.order_url);
+                            if (response.order_url) {
+                                $('#orderFrame').attr('src', response.order_url);
+                            }
+
+                            $('#orderModal').modal('show');
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
 
             $('#requestDiscountBtn').click(function () {
                 const orderId = $('#orderId').val();
@@ -547,8 +673,8 @@
                                 let totalPayable = totalPrice - totalDiscount + materialProcessPrice + totalProccessProduct;
 
 
-                                $('#totalPayable').text(totalPayable.toLocaleString() + ' Đ');
-                                $('#totalDiscount').text(totalDiscount.toLocaleString() + ' Đ');
+                                $('#totalPayable').text(totalPayable.toLocaleString() + '  Đ');
+                                $('#totalDiscount').text(totalDiscount.toLocaleString() + '  Đ');
                             } else if (data.Status === 'Rejected') {
                                 console.log("Discount reject:", data.Status);
                                 statusMessage = 'Phần trăm chiết khấu không được chấp nhận';
@@ -648,6 +774,7 @@
 }
 
 <style>
+
     .custom-button {
         background: rgb(23,131,240);
         background: linear-gradient(0deg, rgba(23,131,240,1) 10%, rgba(49,82,192,0.9960434857536765) 73%);
@@ -717,6 +844,7 @@
     .autocomplete .dropdown-menu {
         width: 100%;
     }
+
     .diamond-image-search, .diamond-image-selected {
         max-width: 50px;
         max-height: 50px;
@@ -768,4 +896,26 @@
         justify-content: space-between;
         width: 100%;
     }
+
+
+
+    .custom-arrow {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #000;
+        pointer-events: none;
+    }
+
+    .modal-body iframe {
+        width: 100%;
+        height: 600px; /* Adjust height as needed */
+        border: none;
+    }
+
 </style>
