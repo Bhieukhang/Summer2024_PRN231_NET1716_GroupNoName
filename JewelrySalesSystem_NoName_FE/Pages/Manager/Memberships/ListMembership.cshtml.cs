@@ -46,7 +46,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Memberships
             }
 
             Page = currentPage ?? 1;
-            Size = 3;
+            Size = 5;
             Console.WriteLine($"Page: {Page}, Size: {Size}");
             var url = $"{ApiPath.MembershipList}?page={Page}&size={Size}";
             var urlTotalActiveMembership = $"{ApiPath.MembershipActive}";
