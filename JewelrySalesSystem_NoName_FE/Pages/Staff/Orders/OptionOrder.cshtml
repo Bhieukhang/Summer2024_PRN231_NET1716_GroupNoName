@@ -186,8 +186,9 @@
                                             <h4 for="paymentMethod">Phương thức thanh toán</h4>
                                             <div class="select-wrapper">
                                                 <select class="form-control" id="paymentMethod" style="height: 4.0rem;">
+                                                    <option value="" selected>Chọn</option>
                                                     <option value="transfer">Chuyển khoản</option>
-                                                    <option value="cash" selected>Thanh toán bằng tiền mặt</option>
+                                                    <option value="cash" >Thanh toán bằng tiền mặt</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -273,20 +274,39 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body">
                         <iframe id="orderFrame" src=""></iframe>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" 
-                        data-mdb-ripple-init data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary"
+                                data-mdb-ripple-init data-mdb-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Small Modal for Cash Payment Confirmation -->
+        <div class="modal fade" id="cashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cashPaymentModalLabel">Hoàn tất</h5>
+                    </div>
+                    <div class="modal-body">
+                        <span class="loader"></span>
+                        Chờ thanh toán . . . . . . .
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelConfirmCash" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmCashPayment">Xác nhận thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 </body>
 
@@ -340,11 +360,11 @@
                         suggestionItem.classList.add("autocomplete-item");
 
                         suggestionItem.innerHTML = `
-                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
-                            <div class="diamond-details-search">
-                                <h5 class="diamond-name-search">${item.diamondName}</h5>
-                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
-                            </div>`;
+                                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
+                                            <div class="diamond-details-search">
+                                                <h5 class="diamond-name-search">${item.diamondName}</h5>
+                                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
+                                            </div>`;
 
                         suggestionItem.onclick = function () {
                             let searchCodeElement = document.getElementById("searchCode-" + code);
@@ -388,39 +408,19 @@
             selectedItem.classList.add("selected-item");
 
             selectedItem.innerHTML = `
-            <div class="diamond-details">
-                <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
-                <div class="diamond-details-selected">
-                    <h5 class="diamond-name-selected">${item.diamondName}</h5>
-                    <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
-                    <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
-                </div>
-                <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
-            </div>`;
+                            <div class="diamond-details">
+                                <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
+                                <div class="diamond-details-selected">
+                                    <h5 class="diamond-name-selected">${item.diamondName}</h5>
+                                    <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
+                                    <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
+                                </div>
+                                <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
+                            </div>`;
 
 
             selectedProductsElement.appendChild(selectedItem);
         }
-
-        // function removeProductFromList(button, price, productId) {
-        //     let code = productId;
-        //     button.parentElement.remove();
-
-        //     let totalProccessProductElement = document.getElementById('totalProccessProduct-' + code);
-        //     console.log("Xóa - totalProccessProductElement: ", totalProccessProductElement);
-        //     if (!totalProccessProductElement) {
-        //         console.error("Total process product element not found.");
-        //         return;
-        //     }
-
-        //     let currentTotal = parseFloat(totalProccessProductElement.innerText.replace(/,/g, ''));
-        //     console.log("Xóa - currentTotal: ", currentTotal);
-
-        //     let newTotal = currentTotal - price;
-        //     console.log("Xóa - newTotal: ", newTotal);
-
-        //     totalProccessProductElement.innerText = newTotal.toLocaleString();
-        // }
 
         //Calculate price
         $(document).ready(function () {
@@ -451,8 +451,18 @@
                 closeModal(orderId);
             });
 
+
             function closeModal(orderId) {
+                console.log("OrderId đóng modal, #chooseProductModal-" + orderId);
                 $('#chooseProductModal-' + orderId).modal('hide');
+
+                $('#chooseProductModal-' + orderId).on('hide.bs.modal', function (e) {
+                    console.log("Modal " + modalId + " is being hidden");
+                });
+
+                $('#chooseProductModal-' + orderId).on('hidden.bs.modal', function (e) {
+                    console.log("Modal " + modalId + " has been hidden");
+                });
                 var totalProccessProductStr = $('#totalProccessProduct-' + orderId).text().trim();
                 var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
 
@@ -517,10 +527,28 @@
             }
         });
 
-
-
         //Create discount to send Manager
         $(document).ready(function () {
+            var previousValue = $('#paymentMethod').val();
+            $('#orderModal').on('hidden.bs.modal', function () {
+                $('#createOrderBtn').click();
+            });
+
+            $('#paymentMethod').change(function () {
+                if ($(this).val() === 'cash') {
+                    $('#cashPaymentModal').modal('show');
+                }
+            });
+
+            $('#confirmCashPayment').click(function () {
+                $('#createOrderBtn').click();
+                $('#cashPaymentModal').modal('hide');
+            });
+
+            $('#cancelConfirmCash').click(function () {
+                $('#paymentMethod').val(previousValue);
+                $('#cashPaymentModal').modal('hide');
+            });
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
             //Zalo Pay
@@ -533,7 +561,7 @@
                     var data = {
                         orderId: OrderId,
                         totalPrice: totalPricePayable,
-                        status: 0 
+                        status: 0
                     };
 
                     $.ajax({
@@ -869,7 +897,7 @@
         width: 100%;
     }
 
-    
+
 
     .custom-arrow {
         position: absolute;
@@ -889,4 +917,5 @@
         height: 600px; /* Adjust height as needed */
         border: none;
     }
+
 </style>
