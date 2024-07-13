@@ -21,6 +21,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
 
         public List<GroupDTO> Groups { get; set; } = new();
 
+        [BindProperty]
+        public List<List<ProductDTO>> ProductParts { get; set; } = new();
+
+        private static List<List<T>> SplitList<T>(List<T> items, int size)
+        {
+            return items
+                .Select((item, index) => new { item, index })
+                .GroupBy(x => x.index / size)
+                .Select(g => g.Select(x => x.item).ToList())
+                .ToList();
+        }
+
         public async Task<IActionResult> OnGet(Guid promotionId)
         {
             try
@@ -35,6 +47,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                     return RedirectToPage("/Auth/Login");
                 }
                 Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
+                ProductParts = SplitList<ProductDTO>(Products, 9);
+
                 Groups = await ApiClient.GetAsync<List<GroupDTO>>($"{ApiPath.PromotionGroup}?id={promotionId}", token);
             }
             catch (Exception ex)
@@ -71,6 +85,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 Console.WriteLine(ex.ToString());
             }
             Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
+            ProductParts = SplitList<ProductDTO>(Products, 9);
+
             return Page();
         }
     }
