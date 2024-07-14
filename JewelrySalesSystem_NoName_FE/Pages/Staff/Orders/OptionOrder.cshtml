@@ -215,7 +215,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="discountModalLabel">Thông tin chi tiết Discount</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -614,9 +614,10 @@
                         'RequestVerificationToken': token
                     },
                     success: function (response) {
+                        console.log("Response discount: ", response);
                         if (response.redirectUrl) {
                             window.location.href = response.redirectUrl;
-                        } else {
+                        } else if(response.success == false) {
                             $('#exitDiscountModal').modal('show');
                         }
                     },

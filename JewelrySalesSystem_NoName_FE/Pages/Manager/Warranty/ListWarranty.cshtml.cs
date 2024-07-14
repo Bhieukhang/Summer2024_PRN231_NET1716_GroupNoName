@@ -64,5 +64,29 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
             return Page();
         }
+
+        public async Task<IActionResult> OnGetSearchAsync(string code)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
+            var url = $"{ApiPath.WarrantySearch}?code={code}";
+            try
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetStringAsync(url);
+
+                var warranty = JsonConvert.DeserializeObject<WarrantyDTO>(response);
+                return new JsonResult(warranty);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { error = "Error retrieving warranty details" }) { StatusCode = 500 };
+            }
+        }
     }
 }
