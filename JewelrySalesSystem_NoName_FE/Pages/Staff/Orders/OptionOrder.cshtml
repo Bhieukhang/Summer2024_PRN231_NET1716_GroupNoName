@@ -614,9 +614,10 @@
                         'RequestVerificationToken': token
                     },
                     success: function (response) {
+                        console.log("Response discount: ", response);
                         if (response.redirectUrl) {
                             window.location.href = response.redirectUrl;
-                        } else {
+                        } else if(response.success == false) {
                             $('#exitDiscountModal').modal('show');
                         }
                     },

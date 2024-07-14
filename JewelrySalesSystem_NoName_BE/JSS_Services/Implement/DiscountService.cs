@@ -104,7 +104,8 @@ namespace JSS_Services.Implement
                discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
                 }                
             }
-            return null;
+            return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
+               discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
 
         }
         public static class DiscountStatus
