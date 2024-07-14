@@ -1,4 +1,6 @@
-﻿namespace JewelrySalesSystem_NoName_BE.Extenstion
+﻿using System.CodeDom;
+
+namespace JewelrySalesSystem_NoName_BE.Extenstion
 {
     public static class ApiEndPointConstant
     {
@@ -26,6 +28,7 @@
             public const string WarrantyEndpointNo = ApiEndpoint + "/warrantyno";
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/{id}";
             public const string WarrantyConditionEndpoint = WarrantyEndpoint + "/{id}/conditions";
+            public const string WarrantySearch = WarrantyEndpoint + "/search";
         }
 
         public static class PurchasePrice
