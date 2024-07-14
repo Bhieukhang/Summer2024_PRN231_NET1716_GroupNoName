@@ -1,0 +1,274 @@
+﻿@page
+@model JewelrySalesSystem_NoName_FE.Pages.Staff.Orders.OrderDetailsModel
+@{
+    var orderId = Model.Order.Id;
+}
+@Html.AntiForgeryToken()
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .tab-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header ">
+                <div class="page-header">
+                    <h3 class="page-title"> Thông tin chi tiết đơn hàng </h3>
+                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Staff/Orders/ListOrder">
+                                <button type="button" class="btn btn-gradient-primary btn-fw">
+                                    <i class="mdi mdi-plus"></i>
+                                    Quay lại
+                                </button>
+                            </a>
+                            <br />
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+             
+            <div class="row">
+                <!-- Left side: Product list -->
+                <div class="col-md-4 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Chi Tiết Đơn Hàng<span class="required">*</span></h4>
+                            <div class="container">
+                                <p><strong>Mã Đơn Hàng:</strong> @Model.Order.Id</p>
+                                <p>
+                                    <strong>Mã Khách Hàng:</strong> @Model.Order.CustomerId
+                                    <span class="required">*</span>
+                                    <td>
+                                        <a class="btn btn-link customer-details" data-customer-id="@Model.Order.CustomerId" title="Xem chi tiết khách hàng">
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                    </td>
+                                </p>
+                                <p>
+                                    <strong>Hình Thức Mua:</strong>
+                                    @{
+                                        if (Model.Order.Type == "BUY")
+                                        {
+                                            @:Mua sản phẩm
+                                        }
+                                        else
+                                        {
+                                            @Model.Order.Type
+                                        }
+                                    }
+                                </p>
+                                <p><strong>Ngày Mua:</strong> @Model.Order.InsDate</p>
+                                <p><strong>Tổng giá tiền:</strong> @Model.Order.TotalPrice</p>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: Product details -->
+                <div class="col-md-8 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Thông tin chi tiết sản phẩm <span class="required">*</span></h4>
+                   @*          <button class="btn btn-link" onclick="exportPdf()" title="Xuất hóa đơn">
+                                <i class="fas fa-file-pdf"></i> Xuất PDF
+                            </button> *@
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã Sản Phẩm</th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Thời Gian Bảo Hành</th>
+                                        <th>Giảm Giá</th>
+                                        <th>Tổng Cộng </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var detail in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@detail.ProductId</td>
+                                            <td>@detail.ProductName</td>
+                                            <td>@detail.Quantity</td>
+                                            <td>@detail.PeriodWarranty</td>
+                                            <td>@detail.Discount</td>
+                                            <td>@detail.TotalPrice</td>
+                                            <td>
+                                                <a href="javascript:void(0)" onclick="showProductDetails('@detail.ProductId')" class="btn btn-link" title="Xem chi tiết sản phẩm">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- Hiện thông tin customer -->
+    <div class="modal fade" id="customerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customerDetailsModalLabel">Thông tin khách hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Mã khách hàng:</strong> <span id="customerId"></span></p>
+                    <p><strong>Tên khách hàng:</strong> <span id="customerName"></span></p>
+                    <p><strong>Số điện thoại khách hàng:</strong> <span id="customerPhone"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hiện thông tin sản phẩm -->
+    <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productDetailsModalLabel">Chi tiết sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.customer-details').click(function () {
+                var customerId = $(this).data('customer-id');
+                if (customerId) {
+                    fetchCustomerDetails(customerId);
+                }
+            });
+
+            async function fetchCustomerDetails(customerId) {
+                try {
+                    const response = await fetch(`https://localhost:44318/api/v1/Account/id?id=${customerId}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const customerData = await response.json();
+                    // Điền thông tin khách hàng vào modal popup
+                    $('#customerId').text(customerData.id);
+                    $('#customerName').text(customerData.fullName);
+                    $('#customerPhone').text(customerData.phone);
+                    // Hiển thị modal popup
+                    $('#customerDetailsModal').modal('show');
+                } catch (error) {
+                    console.error('Error fetching customer details:', error);
+                }
+            }
+        });
+
+
+        // Function to handle click on search icon
+        function showProductDetails(productId) {
+            // Gọi API để lấy thông tin chi tiết sản phẩm
+            fetch(`https://localhost:44318/api/v1/Product/id?id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Hiển thị thông tin chi tiết sản phẩm trong popup
+                    let popupContent = `
+                                        <div class="popup-content">
+                                            <p><strong>Mã sản phẩm:</strong> ${data.id}</p>
+                                            <p><strong>Mã Code :</strong> ${data.code}</p>
+                                            <p><strong>Tên sản phẩm:</strong> ${data.productName}</p>
+                                            <p><strong>Mô tả:</strong> ${data.description}</p>
+                                            <p><strong>Giá bán:</strong> ${data.sellingPrice}</p>
+                                            <p><strong>Kích thước:</strong> ${data.size}</p>
+                                            <p><strong>Giá gia công:</strong> ${data.processPrice}</p>
+                                            <p><strong>Giá thuế:</strong> ${data.tax}</p>
+                                             
+                                           <p><strong>Hình ảnh sản phẩm:</strong></p>
+                                           <img src="${data.imgProduct}" alt="${data.productName}" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
+                                            <!-- Thêm các thông tin khác của sản phẩm cần hiển thị -->
+                                        </div>
+                                    `;
+                    // Hiển thị popup
+                    showPopup(popupContent);
+                })
+                .catch(error => {
+                    console.error('Error fetching product details:', error);
+                    alert('Đã xảy ra lỗi khi lấy thông tin sản phẩm. Vui lòng thử lại sau.');
+                });
+        }
+
+        // Function để hiển thị popup
+        function showPopup(content) {
+            // Hiển thị popup tại đây, ví dụ sử dụng Bootstrap modal
+            $('#productDetailsModal .modal-body').html(content);
+            $('#productDetailsModal').modal('show');
+        }
+
+
+        // Xuất hóa dơnd
+
+        function exportPdf() {
+            // Tạo một đối tượng jsPDF
+            const doc = new jsPDF();
+
+            // Định dạng dữ liệu của bảng
+            const tableData = [];
+            const rows = document.querySelectorAll("table tbody tr");
+            rows.forEach(row => {
+                const rowData = [];
+                row.querySelectorAll("td").forEach(cell => {
+                    rowData.push(cell.innerText);
+                });
+                tableData.push(rowData);
+            });
+
+            // Thiết lập tiêu đề của bảng
+            const headers = ["Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thời Gian Bảo Hành", "Giảm Giá", "Tổng Cộng"];
+
+            // Thêm dữ liệu bảng vào PDF
+            doc.autoTable({
+                head: [headers],
+                body: tableData,
+            });
+
+            // Xuất PDF với tên file
+            doc.save('invoice.pdf');
+        }
+    </script>
+}
