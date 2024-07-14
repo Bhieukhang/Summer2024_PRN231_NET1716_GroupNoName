@@ -114,6 +114,7 @@
         public static class Dashboard
         {
             public const string DashboardEndpoint = ApiEndpoint + "/Dashboard";
+            public const string AccountDashboardEndpoint = DashboardEndpoint + "/account";
 
         }
         public static class Transaction
