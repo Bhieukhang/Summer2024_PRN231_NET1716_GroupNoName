@@ -81,9 +81,9 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin chi tiết sản phẩm <span class="required">*</span></h4>
-                   @*          <button class="btn btn-link" onclick="exportPdf()" title="Xuất hóa đơn">
-                                <i class="fas fa-file-pdf"></i> Xuất PDF
-                            </button> *@
+                            <button class="btn btn-link" onclick="exportTxt()" title="Xuất hóa đơn">
+                                <i class="fas fa-file-pdf"></i> Xuất 
+                            </button>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -241,34 +241,61 @@
         }
 
 
-        // Xuất hóa dơnd
+        function exportTxt() {
+            const orderId = '@orderId'; // Get orderId from Razor Page
+            const orderType = '@Model.Order.Type'; // Get order type from Razor Page
+            const orderDate = '@Model.Order.InsDate'; // Get order date from Razor Page
+            const totalPrice = '@Model.Order.TotalPrice'; // Get total price from Razor Page
 
-        function exportPdf() {
-            // Tạo một đối tượng jsPDF
-            const doc = new jsPDF();
+            const orderDetails = '@Html.Raw(Json.Serialize(Model.OrderDetails))';
+            console.log('Order Details:', orderDetails); // Log to check the JSON data
 
-            // Định dạng dữ liệu của bảng
-            const tableData = [];
-            const rows = document.querySelectorAll("table tbody tr");
-            rows.forEach(row => {
-                const rowData = [];
-                row.querySelectorAll("td").forEach(cell => {
-                    rowData.push(cell.innerText);
-                });
-                tableData.push(rowData);
+            const details = JSON.parse(orderDetails); // Parse JSON string to JavaScript object
+            console.log('Parsed Details:', details); // Log to check the parsed object
+
+            let content = `Thông tin chi tiết đơn hàng\n\n`;
+            content += `Mã Đơn Hàng: ${orderId}\n`;
+            content += `Hình Thức Mua: ${orderType}\n`;
+            content += `Ngày Mua: ${orderDate}\n`;
+            content += `Tổng giá tiền: ${totalPrice}\n\n`;
+
+            content += `Chi tiết sản phẩm:\n`;
+            details.forEach(detail => {
+                console.log('Detail:', detail);
+                console.log('ProductId:', detail.productId);
+                console.log('ProductName:', detail.productName);
+                console.log('Quantity:', detail.quantity);
+                console.log('PeriodWarranty:', detail.periodWarranty);
+                console.log('Discount:', detail.discount);
+                console.log('TotalPrice:', detail.totalPrice);
+
+                content += `Mã Sản Phẩm: ${detail.productId}\n`;
+                content += `Tên Sản Phẩm: ${detail.productName}\n`;
+                content += `Số Lượng: ${detail.quantity}\n`;
+                content += `Thời Gian Bảo Hành: ${detail.periodWarranty}\n`;
+                content += `Giảm Giá: ${detail.discount}\n`;
+                content += `Tổng Cộng: ${detail.totalPrice}\n\n`;
             });
 
-            // Thiết lập tiêu đề của bảng
-            const headers = ["Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Thời Gian Bảo Hành", "Giảm Giá", "Tổng Cộng"];
 
-            // Thêm dữ liệu bảng vào PDF
-            doc.autoTable({
-                head: [headers],
-                body: tableData,
-            });
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
 
-            // Xuất PDF với tên file
-            doc.save('invoice.pdf');
+            const currentDate = new Date();
+            const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+            const fileName = `${formattedDate}_${orderId}.txt`;
+
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = fileName;
+            anchor.style.display = 'none';
+
+            document.body.appendChild(anchor);
+            anchor.click();
+
+            document.body.removeChild(anchor);
+            URL.revokeObjectURL(url);
         }
+    
     </script>
 }

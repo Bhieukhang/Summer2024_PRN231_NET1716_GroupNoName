@@ -62,6 +62,12 @@
                                                     Chỉnh sửa
                                                 </a>
                                             </td>
+                                            <td>
+                                                <a asp-page="./ExportBillSubProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Xuất bill
+                                                </a>
+                                            </td>
                                         </tr>
                                         <!-- Modal -->
                                         <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
