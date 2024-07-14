@@ -45,7 +45,7 @@
                                     <th>Ngày mua hàng</th>
                                     <th>Mã Khách Hàng</th>
                                     <th>Xem chi tiết</th>
-                                    <th>Xuất đơn hàng</th>
+                           
                                 </tr>
                             </thead>
                             <tbody id="orderListBody">
@@ -59,19 +59,24 @@
                                             <td>@order.TotalPrice.ToString("N0")</td>
                                             <td>@order.InsDate</td>
                                             <td>@order.CustomerId</td>
-
+                                            <td>
+                                                <a asp-page="./OrderDetails" asp-route-id="@order.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Xem Chi Tiết
+                                                </a>
+                                            </td>
                                             
 
                           @*                   <td>@(order.Phone != null ? order.Phone.Phone : "N/A")</td> *@
                                         
-                                            <td>
+                                          @*   <td>
                                                 <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId', '@order.CustomerId')">Xem chi tiết</button>
-                                          @*       <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId', '@order.CustomerId')">Xem chi tiết</button>
-                                         *@    </td>
+                                                 <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrderDetails('@order.Id', '@order.ProductId', '@order.CustomerId')">Xem chi tiết</button>
+                                           </td> *@
 
-                                            <td>
+                                   @*          <td>
                                                 <button type="button" class="btn btn-outline-primary btn-fw" onclick="fetchOrder('@order.Id', '@order.ProductId')">Xuất</button>
-                                            </td>
+                                            </td> *@
                                         @*     <td>
                                                 <a asp-page-handler="CreateZaloPayOrder" asp-route-id="@order.Id" class="btn btn-link">Create ZaloPay Order</a>
                                             </td> *@
@@ -345,6 +350,9 @@
 
                     // Show the modal
                     $(`#orderExportModal-${orderId}`).modal('show');
+                    $(`#orderExportModal-${orderId}`).on('hidden.bs.modal', function () {
+                        location.reload();
+                    });
 
                 } else {
                     alert('Failed to fetch order or product details.');
