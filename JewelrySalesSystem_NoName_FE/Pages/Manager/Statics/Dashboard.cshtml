@@ -59,8 +59,7 @@
                         <h4 class="font-weight-normal mb-3">
                             Tổng doanh thu <i class="mdi mdi-chart-line mdi-24px float-end"></i>
                         </h4>
-                        <h2 class="mb-5">$ @Model.DashboardData?.TotalRevenue</h2>
-                        <h6 class="card-text">Tăng 60%</h6>
+                        <h2 id="totalRevenue" class="mb-5">$ @Model.DashboardData?.TotalRevenue.ToString("N0")</h2>
                     </div>
                 </div>
             </div>
@@ -72,7 +71,6 @@
                             Tổng khuyến mãi <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
                         </h4>
                         <h2 class="mb-5">@Model.DashboardData?.TotalPromotion</h2>
-                        <h6 class="card-text">Tăng 10%</h6>
                     </div>
                 </div>
             </div>
@@ -83,8 +81,8 @@
                         <h4 class="font-weight-normal mb-3">
                             Tổng đơn đặt hàng <i class="mdi mdi-diamond mdi-24px float-end"></i>
                         </h4>
-                        <h2 class="mb-5">95,5741</h2>
-                        <h6 class="card-text">Tăng 5%</h6>
+                        <h2 class="mb-5">@Model.TotalOrder</h2>
+                        <h6>Năm 2024</h6>
                     </div>
                 </div>
             </div>

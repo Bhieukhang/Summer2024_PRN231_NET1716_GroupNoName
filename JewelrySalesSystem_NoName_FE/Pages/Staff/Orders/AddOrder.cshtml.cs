@@ -55,7 +55,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
             return new JsonResult(product);
         }
 
-
         public async Task<IActionResult> OnGetHandleCustomerAsync(string phone, string fullName, string action)
         {
             if (action == "search")
@@ -100,8 +99,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Orders
 
             return new JsonResult(new { success = false, message = "Không có thay đổi" });
         }
-
-
 
         public async Task<object> SearchCustomerAsync(string phone)
         {

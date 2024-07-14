@@ -48,7 +48,24 @@ namespace JSS_Services.Implement
             return dash;
         }
 
+        public async Task<AccountDashboard> GetDashboardAccount()
+        {
+            var listAccount = await _unitOfWork.GetRepository<Account>().GetListAsync();
+            var adminCount = listAccount.Count(a => a.RoleId == Guid.Parse("0F8FAD5B-D9CB-469F-A165-70867728950E"));
+            var managerCount = listAccount.Count(a => a.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE7"));
+            var staffCount = listAccount.Count(a => a.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE8"));
+            var customerCount = listAccount.Count(a => a.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"));
+            var dashboard = new AccountDashboard
+            {
+                TotalAccount = listAccount.Count,
+                TotalAdmin = adminCount,
+                TotalManager = managerCount,
+                TotalStaff = staffCount,
+                TotalCustomer = customerCount,
+            };
 
+            return dashboard;
+        }
 
     }
 }

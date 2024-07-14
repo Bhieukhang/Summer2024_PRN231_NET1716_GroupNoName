@@ -672,7 +672,7 @@
                      var promotionId = selectedPromotions[$(this).data('product-code')] || null;
                     const productId = $(this).data('product-id');
                     const quantity = parseInt($(this).find('.quantity-input').val());
-                    const amount = parseFloat($(this).find('td').eq(2).text()) * quantity;
+                    const amount = parseFloat($(this).find('td').eq(2).data('raw-price')) * quantity;
                     productDetails.push({ productId: productId, quantity: quantity, amount: amount, promotionId: promotionId });
                 });
                 const totalPrice = parseFloat($('#totalPrice').text().replace(/\D/g, ''));
