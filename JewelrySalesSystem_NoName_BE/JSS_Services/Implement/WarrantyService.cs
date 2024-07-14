@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using FirebaseAdmin.Messaging;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Models;
@@ -169,6 +170,32 @@ namespace JSS_Services.Implement
             return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period,
                                         war.Deflag, war.Status, war.Note, war.OrderDetail.Product.ProductName,
                                         listCondition);
+        }
+
+        public async Task<WarrantyResponse> SearchByCode(string code)
+        {
+            try
+            {
+                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code);
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error search code warranty");
+            }
+        }
+
+        public async Task<WarrantyResponse> SearchByPhone(String phone)
+        {
+            try
+            {
+                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.Phone == phone);
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error search code warranty");
+            }
         }
     }
 }

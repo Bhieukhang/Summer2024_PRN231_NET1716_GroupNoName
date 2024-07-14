@@ -107,5 +107,35 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
             var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
             return Ok(result);
         }
+
+        #region SearchByCode
+        /// <summary>
+        /// Item warranty by search code warranty
+        /// </summary>
+        /// <returns>Item warranty .</returns>
+        // GET: api/warranty/search
+        #endregion
+        [Authorize(Roles = "Manager, Staff")]
+        [HttpGet(ApiEndPointConstant.Warranty.WarrantySearch)]
+        [ProducesResponseType(typeof(WarrantyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> SearchByCode(string? code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                code = null;
+            }
+
+            var warranty = await _service.SearchByCode(code);
+            if (warranty != null)
+            {
+                var result = JsonConvert.SerializeObject(warranty, Formatting.Indented);
+                return Ok(result);
+            }
+
+            return NotFound("No warranty found for the provided code or phone.");
+        }
+
+
     }
 }

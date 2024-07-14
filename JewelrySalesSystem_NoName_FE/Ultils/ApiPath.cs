@@ -84,6 +84,7 @@
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";
+        public const string WarrantySearch = Warranty + "/search";
 
         //ConditionWarranty
         public const string ConditionWarrantyList = url + "/api/v1/condition";
