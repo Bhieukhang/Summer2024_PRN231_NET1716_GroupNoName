@@ -72,6 +72,12 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
         }
 
+        public async Task<bool> HasProductsWithCategoryAsync(Guid categoryId)
+        {
+            var repository = _unitOfWork.GetRepository<Product>();
+            return await repository.AnyAsync(p => p.CategoryId == categoryId);
+        }
+
         //public async Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
         //{
         //    if (!string.IsNullOrEmpty(code))
@@ -128,6 +134,28 @@ namespace JSS_Services.Implement
             {
                 return new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
                 product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, new CategoryResponse(product.Category.Id, product.Category.Name),
+                    new MaterialResponse(product.Material.Id, product.Material.MaterialName, product.Material.InsDate), product.PeriodWarranty);
+            }
+
+            return null;
+        }
+
+        public async Task<ProductResponse> SearchProductByNameAsync(string productName)
+        {
+            if (string.IsNullOrEmpty(productName))
+            {
+                return null;
+            }
+
+            var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
+                p => p.ProductName == productName,
+                include: s => s.Include(p => p.Category).Include(c => c.Material)
+            );
+
+            if (product != null)
+            {
+                return new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
+                    product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, new CategoryResponse(product.Category.Id, product.Category.Name),
                     new MaterialResponse(product.Material.Id, product.Material.MaterialName, product.Material.InsDate), product.PeriodWarranty);
             }
 

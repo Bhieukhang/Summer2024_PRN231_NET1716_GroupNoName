@@ -1,5 +1,6 @@
 ﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -15,7 +16,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
         private readonly IConfiguration _configuration;
 
         [BindProperty]  
-        public CategoryDTO Category { get; set; }
+        public MaterialDTO Material { get; set; }
 
         public AddMaterialodel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -59,17 +60,18 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                Category.Id = Guid.NewGuid();
+                Material.Id = Guid.NewGuid();
+                Material.InsDate = DateTime.Now;
 
-                var cate = new CategoryDTO
+                var mate = new MaterialDTO
                 {
-                    Name = Category.Name,
+                    MaterialName = Material.MaterialName,
                 };
 
-                var json = JsonConvert.SerializeObject(cate);
+                var json = JsonConvert.SerializeObject(mate);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var apiUrl = $"{ApiPath.CategoryList}";
+                var apiUrl = $"{ApiPath.MaterialList}";
                 var response = await client.PostAsync(apiUrl, content);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -80,13 +82,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "Loại trang sức mới được thêm thành công !";
-                    return RedirectToPage("./ListCategories");
+                    TempData["SuccessMessage"] = "Chất liệu trang sức mới được thêm thành công !";
+                    return RedirectToPage("./ListMaterials");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while adding the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"An error occurred while adding the material. Status Code: {response.StatusCode}, Response: {responseBody}");
                 }
             }
             catch (Exception ex)

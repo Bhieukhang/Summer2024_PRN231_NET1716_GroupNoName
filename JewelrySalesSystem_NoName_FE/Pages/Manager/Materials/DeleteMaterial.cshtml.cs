@@ -1,8 +1,10 @@
-﻿using JewelrySalesSystem_NoName_FE.DTOs.Product;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Material;
+using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
 {
@@ -16,16 +18,25 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
         }
 
         [BindProperty]
-        public CategoryDTO Category { get; set; }
+        public MaterialDTO Material { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var apiUrl = $"{ApiPath.CategoryList}/id?id={id}";
-            var client = _httpClientFactory.CreateClient();
-            var response = await client.GetStringAsync(apiUrl);
-            Category = JsonConvert.DeserializeObject<CategoryDTO>(response);
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                return RedirectToPage("/Auth/Login");
+            }
 
-            if (Category == null)
+            var apiUrl = $"{ApiPath.MaterialList}/id?id={id}";
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetStringAsync(apiUrl);
+            Material = JsonConvert.DeserializeObject<MaterialDTO>(response);
+
+            if (Material == null)
             {
                 return NotFound();
             }
@@ -35,20 +46,28 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Materials
 
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
-            var apiUrl = $"{ApiPath.CategoryList}/id?id={id}";
-            var client = _httpClientFactory.CreateClient();
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "Bạn cần phải login trước.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            var apiUrl = $"{ApiPath.MaterialList}/id?id={id}";
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await client.DeleteAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "Loại trang sức được xóa thành công";
-                return RedirectToPage("./ListCategories");
+                TempData["SuccessMessage"] = "Chất liệu trang sức được xóa thành công";
+                return RedirectToPage("./ListMaterials");
             }
             else
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred while deleting the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                ModelState.AddModelError(string.Empty, $"An error occurred while deleting the material. Status Code: {response.StatusCode}, Response: {responseBody}");
             }
 
             return Page();

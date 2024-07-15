@@ -96,7 +96,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product/subid
         #endregion
-        //[Authorize(Roles = "Admin, Manager, Staff")]
+   //     [Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductBySubIdEndpoint)]
         public async Task<IActionResult> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
@@ -105,34 +105,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(pro);
         }
 
-
-        //#region SearchAndFilterProducts
-        ///// <summary>
-        ///// Search a product by its code or get products by category and material.
-        ///// </summary>
-        ///// <param name="code">The code of the product to search.</param>
-        ///// <param name="categoryId">The ID of the category to filter by.</param>
-        ///// <param name="materialId">The ID of the material to filter by.</param>
-        ///// <param name="page">Page number for pagination.</param>
-        ///// <param name="size">Page size for pagination.</param>
-        ///// <returns>List of filtered products or a single product with the specified code.</returns>
-        ///// GET : api/Product/searchAndFilter
-        //#endregion
-        //[HttpGet(ApiEndPointConstant.Product.SearchAndFilterProductEndpoint)]
-        //public async Task<ActionResult> SearchAndFilterProducts(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
-        //{
-        //    var result = await _productService.SearchAndFilterProductsAsync(code, categoryId, materialId, page, size);
-
-        //    if (!string.IsNullOrEmpty(code))
-        //    {
-        //        if (result.Items.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-        //        return Ok(result.Items.FirstOrDefault());
-        //    }
-        //    return Ok(result);
-        //}
+        #region CheckProductHasCategory
+        /// <summary>
+        /// Check Product Has Category.
+        /// </summary>
+        /// <param name="categoryId">The ID category of the product to check existed.</param>
+        /// <returns>The result of checking.</returns>
+        /// GET : api/Product/subid
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByCategoryEndpoint)]
+        public async Task<ActionResult<bool>> HasProductsWithCategory(Guid categoryId)
+        {
+            var hasProducts = await _productService.HasProductsWithCategoryAsync(categoryId);
+            return Ok(hasProducts);
+        }
 
         #region SearchProductByCode
         /// <summary>
@@ -140,12 +126,31 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// </summary>
         /// <param name="code">The code of the product to search.</param>
         /// <returns>Product with code.</returns>
-        /// GET : api/Product/searchAndFilter
+        /// GET : api/Product/searchCode
         #endregion
         [HttpGet(ApiEndPointConstant.Product.ProductByCodeEndpoint)]
         public async Task<IActionResult> SearchProductByCode(string code)
         {
             var product = await _productService.SearchProductByCodeAsync(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+        #region SearchProductByName
+        /// <summary>
+        /// Search a product by its name.
+        /// </summary>
+        /// <param name="name">The name of the product to search.</param>
+        /// <returns>Product with name.</returns>
+        /// GET : api/Product/searchName
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByNameEndpoint)]
+        public async Task<IActionResult> SearchProductByName(string name)
+        {
+            var product = await _productService.SearchProductByNameAsync(name);
             if (product == null)
             {
                 return NotFound();

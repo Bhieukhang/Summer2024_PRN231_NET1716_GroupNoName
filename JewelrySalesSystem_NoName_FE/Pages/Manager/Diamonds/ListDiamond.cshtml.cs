@@ -41,7 +41,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
             }
 
             Page = page ?? 1;
-            Size = 4;
+            Size = 12;
             SearchCode = searchCode;
 
             var client = _httpClientFactory.CreateClient("ApiClient");

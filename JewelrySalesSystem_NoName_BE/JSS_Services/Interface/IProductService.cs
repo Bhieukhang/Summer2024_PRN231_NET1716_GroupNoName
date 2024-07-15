@@ -17,6 +17,8 @@ namespace JSS_Services.Interface
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
         Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size);
         Task<ProductResponse> SearchProductByCodeAsync(string code);
+        Task<ProductResponse> SearchProductByNameAsync(string productName);
+        Task<bool> HasProductsWithCategoryAsync(Guid categoryId);
         Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size);
         //Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size);
         Task<Product> GetProductByIdAsync(Guid id);

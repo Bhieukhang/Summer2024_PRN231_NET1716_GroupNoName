@@ -13,6 +13,7 @@ namespace JSS_Services.Interface
     {
         Task<IEnumerable<Material>> GetAllMaterialsAsync();
         Task<Material> GetMaterialByIdAsync(Guid id);
+        Task<MaterialResponse> SearchMaterialByNameAsync(string materialName);
         Task<MaterialResponse> CreateMaterialAsync(MaterialRequest newData);
         Task<Material> UpdateMaterialAsync(Guid id, Material updatedData);
         Task<bool> DeleteMaterialAsync(Guid id);
