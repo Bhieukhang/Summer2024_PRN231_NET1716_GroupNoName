@@ -2,6 +2,7 @@
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,24 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(category);
         }
 
+        #region SearchCategoryByName
+        /// <summary>
+        /// Search a category by its name.
+        /// </summary>
+        /// <param name="name">The name of the category to search.</param>
+        /// <returns>Category with name.</returns>
+        /// GET : api/Category/searchName
+        #endregion
+        [HttpGet(ApiEndPointConstant.Category.CategoryByNameEndpoint)]
+        public async Task<IActionResult> SearchCategoryByName(string name)
+        {
+            var category = await _categoryService.SearchCategoryByNameAsync(name);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return Ok(category);
+        }
 
         #region CreateCategory
         /// <summary>

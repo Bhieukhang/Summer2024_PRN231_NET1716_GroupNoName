@@ -5,11 +5,6 @@ using JSS_DataAccessObjects;
 using JSS_Repositories;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
@@ -27,6 +22,25 @@ namespace JSS_Services.Implement
         public async Task<Material> GetMaterialByIdAsync(Guid id)
         {
             return await _unitOfWork.GetRepository<Material>().FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<MaterialResponse> SearchMaterialByNameAsync(string materialName)
+        {
+            if (string.IsNullOrEmpty(materialName))
+            {
+                return null;
+            }
+
+            var material = await _unitOfWork.GetRepository<Material>().FirstOrDefaultAsync(
+                p => p.MaterialName == materialName
+            );
+
+            if (material != null)
+            {
+                return new MaterialResponse(material.Id, material.MaterialName, material.InsDate);
+            }
+
+            return null;
         }
 
         public async Task<MaterialResponse> CreateMaterialAsync(MaterialRequest newData)
@@ -48,10 +62,12 @@ namespace JSS_Services.Implement
             var existingMaterial = await _unitOfWork.GetRepository<Material>().FirstOrDefaultAsync(a => a.Id == id);
             if (existingMaterial == null) return null;
 
-            _unitOfWork.GetRepository<Material>().UpdateAsync(updatedData);
+            existingMaterial.MaterialName = updatedData.MaterialName;
+
+            _unitOfWork.GetRepository<Material>().UpdateAsync(existingMaterial);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) return null;
-            return updatedData;
+            return existingMaterial;
         }
 
         public async Task<bool> DeleteMaterialAsync(Guid id)

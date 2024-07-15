@@ -137,7 +137,8 @@
                                                     <p><strong>Độ tinh khiết :</strong> @Model.searchItem.Clarity</p>
                                                     <p><strong>Chất lượng cắt :</strong> @Model.searchItem.Cut</p>
                                                     <p><strong>Số lượng :</strong> @Model.searchItem.Quantity</p>
-                                                    <p><strong>Giá Bán:</strong> @Model.searchItem.Price</p>
+                                                    <p><strong>Thời gian bảo hành :</strong> @Model.searchItem.PeriodWarranty</p>
+                                                    <p><strong>Giá Bán :</strong> @Model.searchItem.Price</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,13 +250,14 @@
                                                                     <img class="card-img-top diamond-image" src="${data.imageDiamond}" alt="Diamond image">
                                                                     <div class="card-body d-flex flex-column">
                                                                     <h5 class="card-title">${data.diamondName}</h5>
-                                                                    <p class="card-text">Code: <strong>${data.code}</strong></p>
-                                                                    <p class="card-text">Trọng lượng: <strong>${data.carat} carat</strong></p>
-                                                                    <p class="card-text">Màu sắc: <strong>${data.color}</strong></p>
-                                                                    <p class="card-text">Độ tinh khiết: <strong>${data.clarity}</strong></p>
-                                                                    <p class="card-text">Chất lượng cắt: <strong>${data.cut}</strong></p>
-                                                                    <p class="card-text">Số lượng: <strong>${data.quantity}</strong></p>
-                                                                    <p class="card-text">Giá Bán: <strong>${data.price}</strong></p>
+                                                                    <p class="card-text">Code : <strong>${data.code}</strong></p>
+                                                                    <p class="card-text">Trọng lượng : <strong>${data.carat} carat</strong></p>
+                                                                    <p class="card-text">Màu sắc : <strong>${data.color}</strong></p>
+                                                                    <p class="card-text">Độ tinh khiết : <strong>${data.clarity}</strong></p>
+                                                                    <p class="card-text">Chất lượng cắt : <strong>${data.cut}</strong></p>
+                                                                    <p class="card-text">Số lượng : <strong>${data.quantity}</strong></p>
+                                                                    <p class="card-text">Thời gian bảo hành : <strong>${data.periodWarranty}</strong></p>
+                                                                    <p class="card-text">Giá Bán : <strong>${data.price}</strong></p>
                                                                         <div class="mt-auto d-flex justify-content-between">
                                                                             <a href="/Manager/Diamonds/EditDiamond?id=${data.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
                                                                             <a data-bs-toggle="modal" data-bs-target="#diamondModal-${data.id}" class="btn btn-outline-danger btn-fw">
@@ -283,7 +285,8 @@
                                                                 <p><strong>Độ tinh khiết :</strong> ${data.clarity}</p>
                                                                 <p><strong>Chất lượng cắt :</strong> ${data.cut}</p>
                                                                 <p><strong>Số lượng :</strong> ${data.quantity}</p>
-                                                                <p><strong>Giá Bán:</strong> ${data.price}</p>
+                                                                <p><strong>Thời gian bảo hành :</strong> ${data.periodWarranty}</p>
+                                                                <p><strong>Giá Bán :</strong> ${data.price}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -331,6 +334,7 @@
                                 <p class="card-text">Độ tinh khiết: <strong>${diamond.clarity}</strong></p>
                                 <p class="card-text">Chất lượng cắt: <strong>${diamond.cut}</strong></p>
                                 <p class="card-text">Số lượng: <strong>${diamond.quantity}</strong></p>
+                                <p class="card-text">Thời gian bảo hành : <strong>${diamond.periodWarranty}</strong></p>
                                 <p class="card-text">Giá Bán: <strong>${diamond.price}</strong></p>
                                 <div class="mt-auto d-flex justify-content-between">
                                     <a href="/Manager/Diamonds/EditDiamond?id=${diamond.id}" class="btn btn-outline-secondary btn-fw me-2">Cập Nhật</a>
