@@ -29,7 +29,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         #endregion
      //   [Authorize(Roles = "Manager, Admin, Staff")]
         [HttpGet(ApiEndPointConstant.ProcessPrice.ProcessPriceEndpoint)]
-        [ProducesResponseType(typeof(ProcessPriceResponse), StatusCodes.Status200OK)]
+      
         public async Task<IActionResult> GetListProcessPriceAsync(int page, int size)
         {
             var list = await _IProcessPriceService.GetListProcessPriceAsync(page, size);

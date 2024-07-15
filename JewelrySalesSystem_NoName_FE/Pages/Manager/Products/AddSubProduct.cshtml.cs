@@ -1,4 +1,5 @@
-using Firebase.Storage;
+﻿using Firebase.Storage;
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
         [BindProperty]
         public ProductDTO Product { get; set; }
+        [BindProperty]
+        public string? SearchCode { get; set; }
+        [BindProperty]
+        public string? SelectedCategory { get; set; }
+        [BindProperty]
+        public string? SelectedMaterial { get; set; }
 
         [BindProperty]
         public IFormFile Image { get; set; }
         public IList<CategoryDTO> CategoryList { get; set; } = new List<CategoryDTO>();
+        public IList<MaterialDTO> MaterialList { get; set; } = new List<MaterialDTO>();
         public IList<SubProductsDTO> SubProductList { get; set; } = new List<SubProductsDTO>();
 
         public AddSubProductModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
@@ -44,13 +52,20 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
                 var categoryApiUrl = $"{ApiPath.CategoryList}";
                 var subProductApiUrl = $"{ApiPath.SubProductList}";
+                var materialApiUrl = $"{ApiPath.MaterialList}";
 
                 var response = await client.GetAsync(categoryApiUrl);
                 var subResponse = await client.GetAsync(subProductApiUrl);
+                var mateResponse = await client.GetAsync(materialApiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    return RedirectToPage("/Auth/Login");
+                }
+                if (mateResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                     return RedirectToPage("/Auth/Login");
                 }
                 if (subResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -58,8 +73,16 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
                     return RedirectToPage("/Auth/Login");
                 }
+
+
+
                 CategoryList = JsonConvert.DeserializeObject<List<CategoryDTO>>(await response.Content.ReadAsStringAsync());
                 SubProductList = JsonConvert.DeserializeObject<List<SubProductsDTO>>(await response.Content.ReadAsStringAsync());
+                MaterialList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await mateResponse.Content.ReadAsStringAsync());
+                Product = new ProductDTO
+                {
+                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1")
+                };
                 return Page();
             }
             catch (Exception ex)
@@ -110,26 +133,30 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 Product.Id = Guid.NewGuid();
                 Product.InsDate = DateTime.Now;
                 Product.Deflag = true;
+                Product.SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1");
 
                 var productRequest = new ProductRequest
                 {
                     ProductName = Product.ProductName,
+                    Code = Product.Code,
+                    MaterialId = Product.MaterialId,
                     Description = Product.Description,
-                    SellingPrice = Product.SellingPrice,
-                    Size = Product.Size,
+                    ImgProduct = Product.ImgProduct,
                     ImportPrice = Product.ImportPrice,
+                    Size = Product.Size,
+                    Tax = Product.Tax,
+                    ProcessPrice = Product.ProcessPrice,
+                    SellingPrice = Product.SellingPrice,
+                    Quantity = Product.Quantity,
+                    CategoryId = Product.CategoryId,
                     InsDate = Product.InsDate,
                     Deflag = Product.Deflag,
-                    CategoryId = Product.CategoryId,
-                    Quantity = Product.Quantity,
-                    ProcessPrice = Product.ProcessPrice,
-                    MaterialId = Product.MaterialId,
-                    Code = Product.Code,
-                    ImgProduct = Product.ImgProduct,
-                    Tax = Product.Tax,
-                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
-                    PeriodWarranty = Product.PeriodWarranty,
+                    SubId = Product.SubId,
+                PeriodWarranty = Product.PeriodWarranty,
+
                 };
+                Console.WriteLine(JsonConvert.SerializeObject(productRequest));
+                Console.WriteLine($"SubId: {productRequest.SubId}");
 
                 var json = JsonConvert.SerializeObject(productRequest);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
@@ -161,5 +188,33 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             return Page();
         }
+
+        public async Task<IActionResult> FilterProductsAsync(string selectedCategory, string selectedMaterial)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var filterUrl = $"{ApiPath.ProductList}/filter?categoryId={selectedCategory}&materialId={selectedMaterial}";
+                var filterResponse = await client.GetStringAsync(filterUrl);
+                var filteredProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(filterResponse);
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
+            }
+        }
+
     }
 }

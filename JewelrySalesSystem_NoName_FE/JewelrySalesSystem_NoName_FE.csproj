@@ -33,24 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\pagesForm\charts\chartjs.html" />
-    <Content Include="Pages\pagesForm\forms\basic_elements.html" />
-    <Content Include="Pages\pagesForm\icons\font-awesome.html" />
-    <Content Include="Pages\pagesForm\samples\blank-page.html" />
-    <Content Include="Pages\pagesForm\samples\error-404.html" />
-    <Content Include="Pages\pagesForm\samples\error-500.html" />
-    <Content Include="Pages\pagesForm\samples\login.html" />
-    <Content Include="Pages\pagesForm\samples\register.html" />
-    <Content Include="Pages\pagesForm\tables\basic-table.html" />
-    <Content Include="Pages\pagesForm\ui-features\buttons.html" />
-    <Content Include="Pages\pagesForm\ui-features\dropdowns.html" />
-    <Content Include="Pages\pagesForm\ui-features\typography.html" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
   </ItemGroup>
 

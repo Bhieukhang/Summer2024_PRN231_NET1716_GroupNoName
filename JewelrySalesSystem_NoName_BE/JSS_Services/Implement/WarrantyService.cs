@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using FirebaseAdmin.Messaging;
 using JSS_BusinessObjects;
 using JSS_BusinessObjects.Helper;
 using JSS_BusinessObjects.Models;
@@ -70,44 +71,54 @@ namespace JSS_Services.Implement
         public async Task<List<WarrantyCreateResponse>> CreateWarranty(List<WarrantyRequest> list, string phone)
         {
             List<WarrantyCreateResponse> listWarranty = new List<WarrantyCreateResponse>();
-            foreach (var item in list)
+            try
             {
-                var WarId = Guid.NewGuid();
-                Warranty warranty = new Warranty()
+                foreach (var item in list)
                 {
-                    Id = WarId,
-                    DateOfPurchase = item.DateOfPurchase,
-                    ExpirationDate = item.ExpirationDate,
-                    Period = item.Period,
-                    Deflag = true,
-                    OrderDetailId = (Guid)item.OrderDetailId,
-                    Phone = phone,
-                    Status = "Active",
-                    Note = item.Note,
-                    CodeWarranty = RandomCode.GenerateRandomCode(5).ToUpper()
-                };
-                await _unitOfWork.GetRepository<Warranty>().InsertAsync(warranty);
-                foreach (var map in item.ConditionMap)
-                {
-                    WarrantyMappingCondition condition = new WarrantyMappingCondition()
+                    var WarId = Guid.NewGuid();
+                    Warranty warranty = new Warranty()
                     {
-                        Id = Guid.NewGuid(),
-                        ConditionWarrantyId = map.ConditionWarrantyId,
-                        WarrantyId = warranty.Id,
-                        InsDate = DateTime.Now,
+                        Id = WarId,
+                        DateOfPurchase = item.DateOfPurchase,
+                        ExpirationDate = item.ExpirationDate,
+                        Period = item.Period,
+                        Deflag = true,
+                        OrderDetailId = (Guid)item.OrderDetailId,
+                        Phone = phone,
+                        Status = "Active",
+                        Note = item.Note,
+                        CodeWarranty = RandomCode.GenerateRandomCode(5).ToUpper()
                     };
-                    await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
+                    await _unitOfWork.GetRepository<Warranty>().InsertAsync(warranty);
+                    foreach (var map in item.ConditionMap)
+                    {
+                        WarrantyMappingCondition condition = new WarrantyMappingCondition()
+                        {
+                            Id = Guid.NewGuid(),
+                            ConditionWarrantyId = map.ConditionWarrantyId,
+                            WarrantyId = warranty.Id,
+                            InsDate = DateTime.Now,
+                        };
+                        await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
+                    }
+                    listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
                 }
-                listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
-            }
 
-            bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
-            if (!isSuccessful)
+                bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
+                if (!isSuccessful)
+                {
+                    throw new Exception("Commit failed, no rows affected.");
+                }
+            }
+            catch (Exception ex)
             {
-                throw new Exception("Commit failed, no rows affected.");
+                // Log the exception
+                Console.WriteLine($"Error: {ex.Message}");
+                throw new HttpRequestException("An error occurred while creating warranty", ex);
             }
             return listWarranty;
         }
+
 
         public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request)
         {
@@ -159,6 +170,32 @@ namespace JSS_Services.Implement
             return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period,
                                         war.Deflag, war.Status, war.Note, war.OrderDetail.Product.ProductName,
                                         listCondition);
+        }
+
+        public async Task<WarrantyResponse> SearchByCode(string code)
+        {
+            try
+            {
+                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code);
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error search code warranty");
+            }
+        }
+
+        public async Task<WarrantyResponse> SearchByPhone(String phone)
+        {
+            try
+            {
+                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.Phone == phone);
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error search code warranty");
+            }
         }
     }
 }

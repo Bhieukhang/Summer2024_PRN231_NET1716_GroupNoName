@@ -1,6 +1,8 @@
 ﻿@page
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions.AddPromotionModel
 @{
+    var partNumber = 0;
+    var maxParts = Model.ProductParts.Count;
 }
 <style>
     .form-check-input {
@@ -55,16 +57,21 @@
                         <label class="control-label fw-bold">Chọn sản phẩm để sử dụng khuyến mãi</label> <br />
                         @if (Model?.Products != null)
                         {
-                            <div class="row">
-                                @foreach (var item in Model.Products)
-                                {
-                                    <div class="col-sm-12 col-lg-4">
-                                        <input type="checkbox" name="ProductId" value="@item.Id" class="form-check-input" />
-                                        <span class="ms-2">@item.ProductName</span>
-                                    </div>
-                                }
-                                <input type="hidden" asp-for="AddPromotionRequest.ProductJson" id="product-json" />
-                            </div>
+                            @foreach (var part in Model.ProductParts)
+                            {
+                                <div id="part-@partNumber" class="row @(partNumber++ != 0 ? "d-none" : "")">
+                                    @foreach (var item in part)
+                                    {
+                                        <div class="col-sm-12 col-lg-4">
+                                            <input type="checkbox" name="ProductId" value="@item.Id" class="form-check-input" />
+                                            <span class="ms-2">@item.ProductName</span>
+                                        </div>
+                                    }
+                                    <input type="hidden" asp-for="AddPromotionRequest.ProductJson" id="product-json" />
+                                </div>
+                            }
+                            <input id="part-index" value="1" type="hidden" />
+                            <a class="mt-2" id="show-more-button" href="#part-index" onclick="showMore('@maxParts')">Hiện thị thêm</a>
                         }
                     </div>
 
@@ -111,6 +118,18 @@
             return;
         };
         document.getElementById('form-submit').submit();
+    }
+
+    function showMore(maxParts) {
+        var currentPartIndex = document.getElementById("part-index");
+        var partIndex = parseInt(currentPartIndex.value);
+        if (partIndex < parseInt(maxParts)) {
+            var part = document.getElementById("part-" + partIndex);
+            part.className = "row";
+            currentPartIndex.value = partIndex + 1;
+        } else {
+            document.getElementById("show-more-button").style.display = "none";
+        }
     }
 </script>
 

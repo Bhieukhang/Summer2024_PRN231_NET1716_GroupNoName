@@ -96,7 +96,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The product with the specified ID.</returns>
         /// GET : api/Product/subid
         #endregion
-        //[Authorize(Roles = "Admin, Manager, Staff")]
+   //     [Authorize(Roles = "Admin, Manager, Staff")]
         [HttpGet(ApiEndPointConstant.Product.ProductBySubIdEndpoint)]
         public async Task<IActionResult> GetProductBySubIdAsync(Guid subId, int page, int size)
         {
@@ -179,7 +179,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created product.</returns>
         /// POST : api/Product
         #endregion
-        [Authorize(Roles = "Admin, Manager")]
+        //[Authorize(Roles = "Admin, Manager")]
         [HttpPost(ApiEndPointConstant.Product.ProductEndpoint)]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
@@ -218,32 +218,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return StatusCode(500, "An error occurred while creating the product.");
             }
 
-            return Ok(new ProductResponse(
+            return Ok(new ProductCEResponse(
                 createdProduct.Id,
                 createdProduct.ImgProduct,
                 createdProduct.ProductName,
                 createdProduct.Description,
                 createdProduct.Size,
                 createdProduct.SellingPrice,
+                createdProduct.InsDate,
                 createdProduct.Quantity,
                 createdProduct.CategoryId,
                 createdProduct.MaterialId,
                 createdProduct.Code,
                 createdProduct.ImportPrice,
-                createdProduct.InsDate,
                 createdProduct.ProcessPrice,
                 createdProduct.Deflag,
                 createdProduct.Tax,
                 createdProduct.SubId,
-                new CategoryResponse(
-                    createdProduct.Category.Id,
-                    createdProduct.Category.Name
-                    ),
-                new MaterialResponse(
-                    createdProduct.Material.Id,
-                    createdProduct.Material.MaterialName,
-                    createdProduct.Material.InsDate
-                    ),
+                createdProduct.Category,
+                createdProduct.Material,
                 createdProduct.PeriodWarranty
             ));
         }
@@ -258,7 +251,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The updated product.</returns>
         /// PUT : api/Product/id
         #endregion
-        [Authorize(Roles = "Admin,Manager")]
+        //[Authorize(Roles = "Admin,Manager")]
         [HttpPut((ApiEndPointConstant.Product.ProductByIdEndpoint))]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductRequest productRequest)
         {
@@ -308,32 +301,25 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 return StatusCode(500, "An error occurred while updating the product.");
             }
 
-            return Ok(new ProductResponse(
+            return Ok(new ProductCEResponse(
                 updatedProduct.Id,
                 updatedProduct.ImgProduct,
                 updatedProduct.ProductName,
                 updatedProduct.Description,
                 updatedProduct.Size,
                 updatedProduct.SellingPrice,
+                updatedProduct.InsDate,
                 updatedProduct.Quantity,
                 updatedProduct.CategoryId,
                 updatedProduct.MaterialId,
                 updatedProduct.Code,
                 updatedProduct.ImportPrice,
-                updatedProduct.InsDate,
                 updatedProduct.ProcessPrice,
                 updatedProduct.Deflag,
                 updatedProduct.Tax,
                 updatedProduct.SubId,
-                new CategoryResponse(
-                    updatedProduct.Category.Id,
-                    updatedProduct.Category.Name
-                    ),
-                new MaterialResponse(
-                    updatedProduct.Material.Id,
-                    updatedProduct.Material.MaterialName,
-                    updatedProduct.Material.InsDate
-                    ),
+                updatedProduct.Category,
+                updatedProduct.Material,
                 updatedProduct.PeriodWarranty
             ));
         }

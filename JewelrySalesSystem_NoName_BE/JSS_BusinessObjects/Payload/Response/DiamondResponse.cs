@@ -10,7 +10,7 @@ namespace JSS_BusinessObjects.Payload.Response
     public class DiamondResponse
     {
         public DiamondResponse(Guid id, string? diamondName, string? code, double? carat, string? color, string? clarity
-            , string? cut, double? price, string? imageDiamond, int? quantity, DateTime? insDate) 
+            , string? cut, double? price, string? imageDiamond, int? quantity, DateTime? insDate, int? periodWarranty, bool? deflag)
         {
             Id = id;
             DiamondName = diamondName;
@@ -23,11 +23,14 @@ namespace JSS_BusinessObjects.Payload.Response
             ImageDiamond = imageDiamond;
             Quantity = quantity;
             InsDate = insDate;
+            PeriodWarranty = periodWarranty;
+            Deflag = deflag;
         }
 
         public Guid Id { get; set; }
 
         public string? DiamondName { get; set; }
+
         public string? Code { get; set; }
 
         public double? Carat { get; set; }
@@ -49,5 +52,9 @@ namespace JSS_BusinessObjects.Payload.Response
         public DateTime? InsDate { get; set; }
 
         public DateTime? UpsDate { get; set; }
+
+        public int? PeriodWarranty { get; set; }
+
+        public bool? Deflag { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace JewelrySalesSystem_NoName_BE.Extenstion
+﻿using System.CodeDom;
+
+namespace JewelrySalesSystem_NoName_BE.Extenstion
 {
     public static class ApiEndPointConstant
     {
@@ -26,6 +28,7 @@
             public const string WarrantyEndpointNo = ApiEndpoint + "/warrantyno";
             public const string WarrantyByIdEndpoint = WarrantyEndpoint + "/{id}";
             public const string WarrantyConditionEndpoint = WarrantyEndpoint + "/{id}/conditions";
+            public const string WarrantySearch = WarrantyEndpoint + "/search";
         }
 
         public static class PurchasePrice
@@ -114,6 +117,7 @@
         public static class Dashboard
         {
             public const string DashboardEndpoint = ApiEndpoint + "/Dashboard";
+            public const string AccountDashboardEndpoint = DashboardEndpoint + "/account";
 
         }
         public static class Transaction
@@ -131,6 +135,8 @@
         {
             public const string DiamondEndpoint = ApiEndpoint + "/Diamond";
             public const string DiamondByDiamondIdEndpoint = DiamondEndpoint + "/id";
+            public const string DiamondByCodeEndpoint = DiamondEndpoint + "/code";
+            public const string DiamondAutocompleteEndpoint = DiamondEndpoint + "/autocomplete";
         }
         public static class Membership
         {

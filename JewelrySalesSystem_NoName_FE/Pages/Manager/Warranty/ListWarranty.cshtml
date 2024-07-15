@@ -17,6 +17,22 @@
                 </li>
             </ul>
         </div>
+        <div class="mt-3">
+            <form id="searchForm">
+                <div class="input-group">
+                    <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của bảo hành cần tìm" />
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                    <button type="button" class="btn btn-gradient-secondary" onclick="searchWarranty()">
+                        <i class="mdi mdi-magnify"></i>
+                        Tìm Kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+        <br />
+        <div id="warrantyDetails" class="mt-3">
+            <!-- Warranty details will be populated here -->
+        </div>
         @if (totalItems > 0)
         {
             <div class="col-lg-12 grid-margin stretch-card">
@@ -49,6 +65,10 @@
                                             else if (warranty.Status.Equals("Invalid for Warranty") || warranty.Status.Equals("Expired"))
                                             {
                                                 <label class="badge badge-danger">@((warranty.Status.Equals("Invalid for Warranty")) ? "Không hợp lệ" : "Hết hạn")</label>
+                                            }
+                                            else if (warranty.Status.Equals("Waiting"))
+                                            {
+                                                <label class="badge badge-danger">Chờ</label>
                                             }
                                             else
                                             {
@@ -144,3 +164,45 @@
         }
     </div>
 </div>
+@section Scripts {
+    <script>
+        function searchWarranty() {
+            var code = document.getElementById('searchCode').value;
+
+            $.ajax({
+                url: '/Manager/Warranty/ListWarranty?handler=Search',
+                type: 'GET',
+                data: { code: code },
+                success: function (data) {
+                    console.log("Data: ", data);
+                    populateWarrantyDetails(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred:', error);
+                    // Handle error appropriately
+                    $('#warrantyDetails').html('<p class="text-danger">Error retrieving warranty details.</p>');
+                }
+            });
+        }
+
+        function populateWarrantyDetails(data) {
+            if (data) {
+                var warranty = JSON.parse(data); // Assuming the returned data is a JSON string
+
+                var detailsHtml = `
+                            <h3>Warranty Details</h3>
+                            <p><strong>ID:</strong> ${warranty.Id}</p>
+                            <p><strong>Date of Purchase:</strong> ${new Date(warranty.DateOfPurchase).toLocaleDateString()}</p>
+                            <p><strong>Expiration Date:</strong> ${new Date(warranty.ExpirationDate).toLocaleDateString()}</p>
+                            <p><strong>Period:</strong> ${warranty.Period} months</p>
+                            <p><strong>Status:</strong> ${warranty.Status}</p>
+                            <p><strong>Note:</strong> ${warranty.Note}</p>
+                        `;
+
+                $('#warrantyDetails').html(detailsHtml);
+            } else {
+                $('#warrantyDetails').html('<p class="text-warning">No warranty found for the provided code.</p>');
+            }
+        }
+    </script>
+}

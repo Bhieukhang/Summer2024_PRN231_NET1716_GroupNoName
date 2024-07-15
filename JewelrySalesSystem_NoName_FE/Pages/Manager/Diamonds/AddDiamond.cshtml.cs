@@ -51,7 +51,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
         }
 
         public async Task<IActionResult> OnPostAsync()
-        {
+    {
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
@@ -90,11 +90,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
 
                 Diamond.Id = Guid.NewGuid();
                 Diamond.InsDate = DateTime.Now;
+                Diamond.Deflag = true;
 
                 var diamond = new DiamondDTO
                 {
-                    Code = Diamond.Code,
                     DiamondName = Diamond.DiamondName,
+                    Code = Diamond.Code,
                     Carat = Diamond.Carat,
                     Color = Diamond.Color,
                     Clarity = Diamond.Clarity,
@@ -102,7 +103,9 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
                     ImageDiamond = Diamond.ImageDiamond,
                     Price = Diamond.Price,
                     Quantity = Diamond.Quantity,
-                    InsDate = Diamond.InsDate
+                    InsDate = Diamond.InsDate,
+                    PeriodWarranty = Diamond.PeriodWarranty,
+                    Deflag = Diamond.Deflag,
                 };
 
                 var json = JsonConvert.SerializeObject(diamond);

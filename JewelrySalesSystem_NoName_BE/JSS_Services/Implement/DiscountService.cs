@@ -80,7 +80,7 @@ namespace JSS_Services.Implement
                 InsDate = DateTime.Now,
                 UpsDate = DateTime.Now,
             };
-               
+
             await _unitOfWork.GetRepository<Discount>().InsertAsync(discountItem);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
@@ -90,20 +90,29 @@ namespace JSS_Services.Implement
 
         public async Task<DiscountResponse> GetDiscountAccept(Guid id)
         {
-            var discount = await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(a => a.OrderId == id 
-                                                                    && a.Status == DiscountStatus.Accepted);
+            var discount = await _unitOfWork.GetRepository<Discount>().FirstOrDefaultAsync(a => a.OrderId == id);
+                                                                    //&& a.Status == DiscountStatus.Accepted);
             if (discount == null)
             {
                 return new DiscountResponse { };
             }
+            else
+            {
+                if (discount.Status == DiscountStatus.Accepted || discount.Status == DiscountStatus.Rejected)
+                {
+                    return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
+               discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
+                }                
+            }
             return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
-                discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
+               discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
 
         }
         public static class DiscountStatus
         {
             public const string Pending = "Pending";
             public const string Accepted = "Accepted";
+            public const string Rejected = "Rejected";
         }
 
     }

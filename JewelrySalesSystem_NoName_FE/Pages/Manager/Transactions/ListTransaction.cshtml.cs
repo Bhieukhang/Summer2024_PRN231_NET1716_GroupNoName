@@ -25,8 +25,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Transactions
         public int CurrentPage { get; private set; } = 1;
         public int PageSize { get; private set; } = 5;
         public int TotalRecord { get; private set; } = 0;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public TransactionOrderDTO tran { get; set; } = new TransactionOrderDTO();
 
         public async Task OnGet(int? currentPage, int? pageSize, DateTime? startDate, DateTime? endDate)
@@ -41,7 +41,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Transactions
 
                 var token = HttpContext.Session.GetString("Token") ?? "";
                 var transactions = await ApiClient.GetAsync<List<TransactionDTO>>($"{ApiPath.Transaction}", token);
-                transactions = transactions.ToList();
+                if (startDate == null) startDate = DateTime.Now;
+                if (endDate == null) endDate = DateTime.Now;
+
+                StartDate = startDate;
+                EndDate = endDate;
+
+                transactions = transactions.Where(x => x.InsDate >= startDate && x.InsDate <= endDate).ToList();
 
                 // Calculate pages
                 TotalRecord = transactions.Count;

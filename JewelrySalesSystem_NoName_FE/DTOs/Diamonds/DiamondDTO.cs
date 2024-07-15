@@ -1,5 +1,6 @@
 ﻿using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JewelrySalesSystem_NoName_FE.DTOs.Diamonds
 {
@@ -28,5 +29,15 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Diamonds
         public DateTime? InsDate { get; set; }
 
         public DateTime? UpsDate { get; set; }
+
+        public int? PeriodWarranty { get; set; }
+
+        public bool? Deflag { get; set; }
+        [NotMapped]
+        public bool DeflagChecked
+        {
+            get => Deflag.GetValueOrDefault();
+            set => Deflag = value;
+        }
     }
 }
