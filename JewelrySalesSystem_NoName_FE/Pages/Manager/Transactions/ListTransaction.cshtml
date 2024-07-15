@@ -65,23 +65,8 @@
                                             @item.OrderId
                                         </td>
                                         <td>@item.Currency</td>
-                                        <td>@(item.TotalPrice.HasValue ? string.Format(new CultureInfo("vi-VN"), "{0:N0}", item.TotalPrice.Value) : "0")</td>
-                                        <td>
-                                            <button type="button" class="btn btn-link btn-view-details text-dark" data-userid="@item.OrderId">
-                                                <i class="fa fa-eye menu-icon"></i>
-                                            </button>
-                                            <div class="col-sm-10">
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="warranty">
-                                                    <div class="modal-dialog modal-xl">
-                                                        <div class="modal-content">
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </td>
+                                        <td>@(item.TotalPrice.HasValue ? string.Format("{0:N0}", item.TotalPrice.Value) : "0")</td>
+                                        <td>@item.Description</td>
                                     </tr>
                                 }
                             </tbody>

@@ -31,11 +31,11 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Product Name</th>
-                                    <th>Description</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Mô tả</th>
                                  @*    <th>Import Price</th> *@
-                                    <th>Selling Price</th>
-                                    <th>Ins Date</th>
+                                    <th>Giá bán</th>
+                                    <th>Ngày nhập</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -49,8 +49,8 @@
                                             <td>@item.ProductName</td>
                                             <td>@item.Description</td>
                                  @*            <td>@item.ImportPrice</td> *@
-                                            <td>@item.SellingPrice</td>
-                                            <td>@item.InsDate</td>
+                                            <td>@String.Format("{0:N0}", item.SellingPrice)</td>
+                                            <td>@(item.InsDate.HasValue ? item.InsDate.Value.ToString("dd/MM/yyyy hh:mm:ss tt") : "")</td>
                                             <td>
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal-@item.Id">
                                                     <i class="fa fa-eye menu-icon"></i>
@@ -62,10 +62,16 @@
                                                     Chỉnh sửa
                                                 </a>
                                             </td>
+                                            <td>
+                                                <a asp-page="./ExportBillSubProduct" asp-route-id="@item.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                    <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                    Xuất bill
+                                                </a>
+                                            </td>
                                         </tr>
                                         <!-- Modal -->
                                         <div class="modal fade" id="productModal-@item.Id" tabindex="-1" aria-labelledby="productModalLabel-@item.Id" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog">
+                                            <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="productModalLabel-@item.Id">Chi tiết sản phẩm</h5>
@@ -77,18 +83,19 @@
                                                                 <img src="@item.ImgProduct" alt="Product Image" class="modal-product-image" />
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <p><strong>Product Name:</strong> @item.ProductName</p>
-                                                                <p><strong>Description:</strong> @item.Description</p>
-                                                                <p><strong>Size:</strong> @item.Size</p>
-                                                                <p><strong>Quantity:</strong> @item.Quantity</p>
-                                                                <p><strong>Import Price:</strong> @item.ImportPrice</p>
-                                                                <p><strong>Selling Price:</strong> @item.SellingPrice</p>
-                                                                <p><strong>Ins Date:</strong> @item.InsDate</p>
+                                                                <p><strong>Sản phẩm:</strong> @item.ProductName</p>
+                                                                <p><strong>Mô tả:</strong> @item.Description</p>
+                                                                <p><strong>Kích thước:</strong> @item.Size</p>
+                                                                <p><strong>Số lượng:</strong> @item.Quantity</p>
+                                                                <p><strong>Giá nhập:</strong> @item.ImportPrice</p>
+                                                                <p><strong>Giá bán:</strong> @item.SellingPrice</p>
+                                                                <p><strong>Ngày nhập:</strong> @(item.InsDate.HasValue ? 
+                                                                    item.InsDate.Value.ToString("dd/MM/yyyy hh:mm:ss tt") : "")</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </div>
                                             </div>

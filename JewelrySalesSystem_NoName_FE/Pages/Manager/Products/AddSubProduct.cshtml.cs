@@ -15,6 +15,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
         [BindProperty]
         public ProductDTO Product { get; set; }
+        [BindProperty]
+        public string? SearchCode { get; set; }
+        [BindProperty]
+        public string? SelectedCategory { get; set; }
+        [BindProperty]
+        public string? SelectedMaterial { get; set; }
 
         [BindProperty]
         public IFormFile Image { get; set; }
@@ -121,7 +127,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     ImportPrice = Product.ImportPrice,
                     InsDate = Product.InsDate,
                     Deflag = Product.Deflag,
-                    SubId = Guid.Parse("b0aae9d9-96f5-43fd-b0ae-379b1fb3f7a1"),
+                    SubId = Product.SubId,
                 PeriodWarranty = Product.PeriodWarranty,
 
                 };
@@ -156,5 +162,33 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             return Page();
         }
+
+        public async Task<IActionResult> FilterProductsAsync(string selectedCategory, string selectedMaterial)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "You need to login first.";
+                return RedirectToPage("/Auth/Login");
+            }
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("ApiClient");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var filterUrl = $"{ApiPath.ProductList}/filter?categoryId={selectedCategory}&materialId={selectedMaterial}";
+                var filterResponse = await client.GetStringAsync(filterUrl);
+                var filteredProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(filterResponse);
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return Page();
+            }
+        }
+
     }
 }

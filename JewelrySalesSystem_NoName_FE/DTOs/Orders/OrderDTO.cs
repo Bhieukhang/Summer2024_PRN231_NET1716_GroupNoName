@@ -33,7 +33,9 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Orders
         public Guid Id { get; set; }
         public DateTime InsDate { get; set; }
         public Guid OrderId { get; set; }
-      
+
+        public Guid? DiscountId { get; set; }
+        public double TotalPrice { get; set; }
     }
 
     public class CheckPromotionRequest

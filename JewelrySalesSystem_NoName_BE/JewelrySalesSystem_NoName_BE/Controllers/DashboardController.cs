@@ -3,6 +3,8 @@ using JSS_BusinessObjects.Payload.Request;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JewelrySalesSystem_NoName_BE.Controllers
 {
@@ -33,7 +35,21 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(Dashboards);
         }
 
-
+        #region GetDashboardAccount
+        /// <summary>
+        /// Get static account in pie dashboards.
+        /// </summary>
+        /// <returns>Total account by role.</returns>
+        /// GET : api/Dashboard
+        #endregion
+        //[Authorize(Roles = "Admin")]
+        [HttpGet(ApiEndPointConstant.Dashboard.AccountDashboardEndpoint)]
+        public async Task<ActionResult<AccountDashboard>> GetDashboardAccount()
+        {
+            var data = await _dashboardService.GetDashboardAccount();
+            var result = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return Ok(result);
+        }
 
     }
 }
