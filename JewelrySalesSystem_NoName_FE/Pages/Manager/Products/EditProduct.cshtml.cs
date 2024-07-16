@@ -144,46 +144,46 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
-            if (Product.Code.Length > 8)
-            {
-                TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 8 kí tự.";
-                await LoadSelectLists(id, token);
-                return Page();
-            }
-            if (Product.ProductName.Length > 50)
-            {
-                TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 50 kí tự.";
-                await LoadSelectLists(id, token);
-                return Page();
-            }
+            //if (Product.Code.Length > 8)
+            //{
+            //    TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 8 kí tự.";
+            //    await LoadSelectLists(id, token);
+            //    return Page();
+            //}
+            //if (Product.ProductName.Length > 50)
+            //{
+            //    TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 50 kí tự.";
+            //    await LoadSelectLists(id, token);
+            //    return Page();
+            //}
 
-            if (Product.Quantity > 50)
-            {
-                TempData["ErrorMessage"] =  "Số lượng trang sức không vượt quá 50 cái.";
-                await LoadSelectLists(id, token);
-                return Page();
-            }
+            //if (Product.Quantity > 50)
+            //{
+            //    TempData["ErrorMessage"] =  "Số lượng trang sức không vượt quá 50 cái.";
+            //    await LoadSelectLists(id, token);
+            //    return Page();
+            //}
 
-            if (Product.PeriodWarranty > 24)
-            {
-                TempData["ErrorMessage"] =  "Thời gian bảo hành trang sức không vượt quá 2 năm.";
-                await LoadSelectLists(id,token);
-                return Page();
-            }
+            //if (Product.PeriodWarranty > 24)
+            //{
+            //    TempData["ErrorMessage"] =  "Thời gian bảo hành trang sức không vượt quá 2 năm.";
+            //    await LoadSelectLists(id,token);
+            //    return Page();
+            //}
 
-            if (await IsProductNameExistsAsync(Product.ProductName, token))
-            {
-                TempData["ErrorMessage"] = "Tên trang sức đã tồn tại.";
-                await LoadSelectLists(id, token);
-                return Page();
-            }
+            //if (await IsProductNameExistsAsync(Product.ProductName, token))
+            //{
+            //    TempData["ErrorMessage"] = "Tên trang sức đã tồn tại.";
+            //    await LoadSelectLists(id, token);
+            //    return Page();
+            //}
 
-            if (await IsProductCodeExistsAsync(Product.Code, token))
-            {
-                TempData["ErrorMessage"] = "Mã trang sức đã tồn tại.";
-                await LoadSelectLists(id, token);
-                return Page();
-            }
+            //if (await IsProductCodeExistsAsync(Product.Code, token))
+            //{
+            //    TempData["ErrorMessage"] = "Mã trang sức đã tồn tại.";
+            //    await LoadSelectLists(id, token);
+            //    return Page();
+            //}
 
             try
             {

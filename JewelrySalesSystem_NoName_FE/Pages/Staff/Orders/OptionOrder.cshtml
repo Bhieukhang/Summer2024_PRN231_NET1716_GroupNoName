@@ -188,7 +188,7 @@
                                                 <select class="form-control" id="paymentMethod" style="height: 4.0rem;">
                                                     <option value="" selected>Chọn</option>
                                                     <option value="transfer">Chuyển khoản</option>
-                                                    <option value="cash" >Thanh toán bằng tiền mặt</option>
+                                                    <option value="cash">Thanh toán bằng tiền mặt</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <h3>Đơn hàng này đã có chiết khấu</h3exitDiscountModal
+                        <h3>Đơn hàng này đã có chiết khấu</h3>
                     </div>
                     <div class="modal-footer">
                         @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
@@ -268,27 +268,25 @@
         </div>
 
         <!-- Modal ZALO PAY-->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" style="padding: 0;">
-                <iframe id="orderFrame" src="" style="width: 100%; height: 80vh; border: none;"></iframe>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+             data-target=".bd-example-modal-lg" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="orderFrame" src=""></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-mdb-ripple-init data-mdb-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
 
         <!-- Small Modal for Cash Payment Confirmation -->
         <div class="modal fade" id="cashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
@@ -362,11 +360,11 @@
                         suggestionItem.classList.add("autocomplete-item");
 
                         suggestionItem.innerHTML = `
-                                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
-                                            <div class="diamond-details-search">
-                                                <h5 class="diamond-name-search">${item.diamondName}</h5>
-                                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
-                                            </div>`;
+                                                    <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
+                                                    <div class="diamond-details-search">
+                                                        <h5 class="diamond-name-search">${item.diamondName}</h5>
+                                                        <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
+                                                    </div>`;
 
                         suggestionItem.onclick = function () {
                             let searchCodeElement = document.getElementById("searchCode-" + code);
@@ -410,15 +408,15 @@
             selectedItem.classList.add("selected-item");
 
             selectedItem.innerHTML = `
-                            <div class="diamond-details">
-                                <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
-                                <div class="diamond-details-selected">
-                                    <h5 class="diamond-name-selected">${item.diamondName}</h5>
-                                    <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
-                                    <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
-                                </div>
-                                <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
-                            </div>`;
+                                    <div class="diamond-details">
+                                        <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
+                                        <div class="diamond-details-selected">
+                                            <h5 class="diamond-name-selected">${item.diamondName}</h5>
+                                            <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
+                                            <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
+                                        </div>
+                                        <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
+                                    </div>`;
 
 
             selectedProductsElement.appendChild(selectedItem);
@@ -554,49 +552,41 @@
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
             //Zalo Pay
-           
-$(document).ready(function () {
-    $('#paymentMethod').change(function () {
-        var selectedValue = $(this).val();
-        if (selectedValue === 'transfer') {
-            var totalPricePayableStr = $('#totalPayable').text().replace(/[^0-9.-]+/g, "") || '0';
-            var totalPricePayable = parseFloat(totalPricePayableStr); // Chuyển đổi sang kiểu double
+            $('#paymentMethod').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'transfer') {
+                    var totalPricePayable = parseFloat($('#totalPayable').text().replace(/[^0-9.-]+/g, "") || 0);
+                    var OrderId = $('#orderId').val();
+                    console.log("Total price, orderId: ", totalPricePayable, OrderId);
+                    var data = {
+                        orderId: OrderId,
+                        totalPrice: totalPricePayable,
+                        status: 0
+                    };
 
-            var orderId = $('#orderId').val();
-            console.log("Total price, orderId: ", totalPricePayable, orderId);
+                    $.ajax({
+                        url: 'https://localhost:44318/api/Payment/create-order',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#orderId').text('Order ID: ' + response.orderId);
+                            $('#totalPrice').text('Total Price: ' + response.totalPrice);
+                            $('#status').text('Status: ' + response.status);
+                            console.log("Link zalo pay: ", response.order_url);
+                            if (response.order_url) {
+                                $('#orderFrame').attr('src', response.order_url);
+                            }
 
-            var data = {
-                orderId: orderId,
-                totalPrice: totalPricePayable,
-                status: 1
-            };
-
-            console.log("Data to be sent: ", data);
-
-            $.ajax({
-                url: 'https://localhost:44318/api/Payment/create-order',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                dataType: 'json',
-                success: function (response) {
-                    console.log("Response received: ", response);
-                    if (response && response.order_url) {
-                        $('#orderFrame').attr('src', response.order_url);
-                        $('#orderUrl').text('Payment URL: ' + response.order_url);
-                        $('#orderModal').modal('show');
-                    } else {
-                        console.error('order_url not found in response');
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
+                            $('#orderModal').modal('show');
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                        }
+                    });
                 }
             });
-        }
-    });
-});
-
 
             $('#requestDiscountBtn').click(function () {
                 const orderId = $('#orderId').val();
@@ -627,7 +617,7 @@ $(document).ready(function () {
                         console.log("Response discount: ", response);
                         if (response.redirectUrl) {
                             window.location.href = response.redirectUrl;
-                        } else if(response.success == false) {
+                        } else if (response.success == false) {
                             $('#exitDiscountModal').modal('show');
                         }
                     },
