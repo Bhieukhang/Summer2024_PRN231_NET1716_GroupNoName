@@ -11,7 +11,7 @@
             </div>
             <div class="row" style="height: 100%;">
                 <!-- Left side: Product list -->
-                <div class="col-md-7 grid-margin stretch-card">
+                <div class="col-md-8 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Trang sức</h4>
@@ -23,7 +23,7 @@
                                         @foreach (var order in Model.orderDetailProccesses)
                                         {
                                             <div class="form-group row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label class="control-label">Mã sản phẩm</label>
                                                     <input type="text" class="form-control" value="@order.ProductName" readonly />
                                                 </div>
@@ -32,6 +32,14 @@
                                                     <input type="text" class="form-control" value="@order.Quantity" readonly />
                                                 </div>
                                                 <div class="col-md-3">
+                                                    <label class="control-label">Giá sản phẩm</label>
+                                                    @{
+                                                        double amount = (double)order.Amount;
+                                                        var formattedAmount = amount != 0 ? string.Format(new System.Globalization.CultureInfo(""), "{0:N0}", amount) : "";
+                                                    }
+                                                    <input type="text" class="form-control" value="@formattedAmount" readonly />
+                                                </div>
+                                                <div class="col-md-2">
                                                     <label class="control-label">Giá thi công</label>
                                                     <input type="hidden" id="originalProcessPrice" value="@order.ProcessPrice">
                                                     @{
@@ -40,7 +48,7 @@
                                                     }
                                                     <input type="text" id="formattedProcessPrice" class="form-control" value="@formattedProcessPrice" readonly />
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <label class="control-label" for="process-price">Gia công</label>
                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chooseProductModal-@order.Id">Chọn gia công</button>
 
@@ -69,7 +77,7 @@
                                                                 <div class="modal-footer">
                                                                     <label class="control-label">Tổng giá tiền: </label>
                                                                     <span id="totalProccessProduct-@order.Id">0</span>
-                                                                    <button type="button" class="btn btn-primary confirm-button" data-order-id="@order.Id">Xác nhận</button>
+                                                                    <button type="button" class="btn btn-primary confirm-button" id="confirmButton" data-order-id="@order.Id">Xác nhận</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -85,7 +93,7 @@
                 </div>
 
                 <!-- Right side: Customer and Order details -->
-                <div class="col-md-5 grid-margin stretch-card" style="display: flex; flex-direction: column;">
+                <div class="col-md-4 grid-margin stretch-card" style="display: flex; flex-direction: column;">
                     <div class="card" style="flex-grow: 1;">
                         <div class="card-body">
                             <h4 class="card-title">Thông tin thành viên</h4>
@@ -185,10 +193,10 @@
                                         <div class="form-group">
                                             <h4 for="paymentMethod">Phương thức thanh toán</h4>
                                             <div class="select-wrapper">
-                                                <select class="form-control" id="paymentMethod" style="height: 4.0rem;">
-                                                    <option value="" selected>Chọn</option>
+                                                <select class="form-select" id="paymentMethod" style="height: 4.0rem;">
+                                                    <option value="" selected>Chọn phương thức thanh toán</option>
                                                     <option value="transfer">Chuyển khoản</option>
-                                                    <option value="cash" >Thanh toán bằng tiền mặt</option>
+                                                    <option value="cash">Thanh toán bằng tiền mặt</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -268,27 +276,23 @@
         </div>
 
         <!-- Modal ZALO PAY-->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" style="padding: 0;">
-                <iframe id="orderFrame" src="" style="width: 100%; height: 80vh; border: none;"></iframe>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+             data-target=".bd-example-modal-lg" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderModalLabel">Thanh toán</h5>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="orderFrame" src=""></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="continueBtn" data-bs-dismiss="modal">Tiếp tục</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
 
         <!-- Small Modal for Cash Payment Confirmation -->
         <div class="modal fade" id="cashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
@@ -339,9 +343,15 @@
 
         //Choose Product Proccess
         let selectedDiamonds = {};
-        function autocompleteSearch(query, inputElement, productId) {
-            let code = productId;
-            let autocompleteList = document.getElementById("autocomplete-list-" + code);
+        let isConfirmed = false;
+        let totalProccess = 0; 
+        let totalPayable = 0;
+        let discount = 0;
+        let totalProccessProduct = 0;
+        let totalProccessList = 0;
+
+        function autocompleteSearch(query, inputElement, orderId) {
+            let autocompleteList = document.getElementById("autocomplete-list-" + orderId);
 
             if (!autocompleteList) {
                 console.error("Autocomplete list element not found.");
@@ -356,26 +366,31 @@
             fetch(`https://localhost:44318/api/v1/Diamond/autocomplete?query=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    autocompleteList.innerHTML = ""; // Xóa các item cũ trước khi thêm mới
+                    autocompleteList.innerHTML = "";
                     data['$values'].forEach(item => {
                         let suggestionItem = document.createElement("div");
                         suggestionItem.classList.add("autocomplete-item");
 
                         suggestionItem.innerHTML = `
-                                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
-                                            <div class="diamond-details-search">
-                                                <h5 class="diamond-name-search">${item.diamondName}</h5>
-                                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
-                                            </div>`;
+                            <img class="diamond-image-search" src="${item.imageDiamond}" alt="Diamond image">
+                            <div class="diamond-details-search">
+                                <h5 class="diamond-name-search">${item.diamondName}</h5>
+                                <p class="diamond-code-search">Code: <strong>${item.code}</strong></p>
+                            </div>`;
 
                         suggestionItem.onclick = function () {
-                            let searchCodeElement = document.getElementById("searchCode-" + code);
+                            let searchCodeElement = document.getElementById("searchCode-" + orderId);
                             if (searchCodeElement) {
                                 searchCodeElement.value = item.code;
                             } else {
                                 console.error("Input element not found.");
                             }
-                            addProductToList(item, code);
+                            if (item.quantity > 0) {
+                                console.log("Item: ", item);
+                                addProductToList(item, orderId);
+                            } else {
+                                alert("This product is out of stock.");
+                            }
                             autocompleteList.innerHTML = "";
                         };
 
@@ -384,50 +399,121 @@
                 })
                 .catch(error => {
                     console.error('Error fetching autocomplete data:', error);
-                    autocompleteList.innerHTML = ""; // Xóa các item trong trường hợp lỗi
+                    autocompleteList.innerHTML = "";
                 });
         }
-
-        let totalProccessProduct = 0;
-        function addProductToList(item, productId) {
-            let code = productId;
-            let totalProccessProductElement = document.getElementById('totalProccessProduct-' + code);
-            let selectedProductsElement = document.getElementById('selected-products-' + code);
+      
+        function addProductToList(item, orderId) {
+            let totalProccessProductElement = document.getElementById('totalProccessProduct-' + orderId);
+            let selectedProductsElement = document.getElementById('selected-products-' + orderId);
 
             if (!totalProccessProductElement || !selectedProductsElement) {
                 console.error("Elements not found.");
                 return;
             }
 
-            // Cập nhật tổng giá tiền
+            // Check if a product is already selected for processing
+            if (selectedProductsElement.children.length > 0) {
+                console.log("Only one product can be selected for processing.");
+                return;
+            }
+
+            // Update total price
             let price = parseFloat(item.price);
-            let currentTotal = parseFloat(totalProccessProductElement.innerText);
+            let currentTotal = parseFloat(totalProccessProductElement.innerText.replace(/,/g, ''));
             let newTotal = currentTotal + price;
             totalProccessProductElement.innerText = newTotal.toLocaleString();
 
-            // Tạo phần tử sản phẩm đã chọn
+            // Create the selected product element
             let selectedItem = document.createElement("div");
             selectedItem.classList.add("selected-item");
 
             selectedItem.innerHTML = `
-                            <div class="diamond-details">
-                                <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
-                                <div class="diamond-details-selected">
-                                    <h5 class="diamond-name-selected">${item.diamondName}</h5>
-                                    <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
-                                    <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
-                                </div>
-                                <button class="remove-item-button" data-price="${price}" data-product-id="${code}">Xóa</button>
-                            </div>`;
-
+                <div class="diamond-details">
+                    <img class="diamond-image-selected" src="${item.imageDiamond}" alt="Diamond image">
+                    <div class="diamond-details-selected">
+                        <h5 class="diamond-name-selected">${item.diamondName}</h5>
+                        <p class="diamond-code-selected">Code: <strong>${item.code}</strong></p>
+                        <p class="diamond-price-selected">Price: <strong>${item.price}</strong></p>
+                    </div>
+                    <button class="remove-item-button" data-price="${price}" data-product-id="${item.code}">Xóa</button>
+                </div>`;
 
             selectedProductsElement.appendChild(selectedItem);
+
+            selectedItem.querySelector('.remove-item-button').addEventListener('click', function () {
+                removeProductFromList(price, orderId, item.code, selectedItem);
+            });
+
+            if (!selectedDiamonds[orderId]) {
+                selectedDiamonds[orderId] = {};
+            }
+            selectedDiamonds[orderId][item.code] = item; 
         }
 
+        function removeProductFromList(price, orderId, productCode, selectedItem) {
+            let totalProccessProductElement = document.getElementById('totalProccessProduct-' + orderId);
+            let selectedProductsElement = document.getElementById('selected-products-' + orderId);
+
+            if (!totalProccessProductElement || !selectedProductsElement) {
+                console.error("Elements not found.");
+                return;
+            }
+
+            let currentTotal = parseFloat(totalProccessProductElement.innerText.replace(/,/g, ''));
+            let newTotal = currentTotal - price;
+            totalProccessProductElement.innerText = newTotal.toLocaleString();
+
+            delete selectedDiamonds[orderId][productCode]; 
+
+            if (selectedItem && selectedItem.parentNode === selectedProductsElement) {
+                selectedProductsElement.removeChild(selectedItem);
+            } else {
+                console.error("Selected item is not a valid Node or does not belong to the selected products element.");
+            }
+
+            totalProccess -= price; 
+            totalProccessList -= price;
+            updateTotalPayable(0, totalProccess);
+
+            if (selectedProductsElement.children.length === 0) {
+                isConfirmed[orderId] = false;
+                $('.confirm-button[data-order-id="' + orderId + '"]').prop('disabled', false);
+            }
+        }
+
+        function updateTotalPayable(totalProccessProduct, totalProccess) {
+            var totalPriceStr = $('#totalPrice').attr('data-value');
+            var totalPrice = parseFloat(totalPriceStr);
+            if (isNaN(totalPrice)) {
+                console.error("Invalid total price:", totalPriceStr);
+                totalPrice = 0;
+            }
+
+            var totalDiscountStr = $('#totalDiscount').text();
+            var totalDiscount = parseFloat(totalDiscountStr);
+            if (isNaN(totalDiscount)) {
+                console.error("Invalid total discount:", totalDiscountStr);
+                totalDiscount = 0;
+            }
+
+            totalProccessList += totalProccessProduct;
+            var totalPayable = totalPrice - totalDiscount + totalProccessList;
+
+            if (isNaN(totalPayable)) {
+                console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
+                totalPayable = 0;
+            }
+            console.log("Tồng tiền: ", totalPayable, totalPriceStr);
+            $('#totalPrice').text(totalPayable.toLocaleString() + '  Đ');
+            $('#totalPayable').text(totalPayable.toLocaleString() + '  Đ');
+            $('#totalProccessProduct').text(totalProccessList.toLocaleString() + '  Đ');
+            $('#totalProccess').attr('data-value', totalProccess);
+        }
         //Calculate price
         $(document).ready(function () {
             let totalProccess = 0;
-            let totalProccessList = 0;
+
 
             // Handle checkbox change event
             $('.process-checkbox').change(function () {
@@ -447,93 +533,101 @@
                 updateTotalPayable(0, totalProccess);
             });
 
-            // Handle confirm button click event
             $('.confirm-button').on('click', function () {
                 var orderId = $(this).data('order-id');
+                console.log("OrderId: ", orderId);
+                if (isConfirmed[orderId]) {
+                    console.log("The product has already been confirmed.");
+                    return;
+                }
+
+                let selectedProductsElement = document.getElementById('selected-products-' + orderId);
+                if (selectedProductsElement.children.length !== 1) {
+                    console.log("Please select only one product for processing.");
+                    return;
+                }
+
+                // Get the selected product code for the given orderId
+                let selectedProductCodes = Object.keys(selectedDiamonds[orderId]);
+                if (selectedProductCodes.length !== 1) {
+                    console.log("No product selected for processing.");
+                    return;
+                }
+
+                let selectedProductCode = selectedProductCodes[0];
+                let selectedProduct = selectedDiamonds[orderId][selectedProductCode];
+                if (!selectedProduct) {
+                    console.log("Selected product not found.");
+                    return;
+                }
+
+                if (selectedProduct.quantity <= 0) {
+                    console.log("The selected product is out of stock.");
+                    return;
+                }
+
+                selectedProduct.quantity--;
+
+                isConfirmed[orderId] = true;
+                console.log("Product confirmed for processing.");
+                console.log("Price: ", selectedProduct.price);
                 closeModal(orderId);
+                updateTotalPayable(selectedProduct.price, totalProccess);
+
+                $(this).prop('disabled', true);
             });
 
-
             function closeModal(orderId) {
-                console.log("OrderId đóng modal, #chooseProductModal-" + orderId);
                 $('#chooseProductModal-' + orderId).modal('hide');
 
                 $('#chooseProductModal-' + orderId).on('hide.bs.modal', function (e) {
-                    console.log("Modal " + modalId + " is being hidden");
+                    console.log("Modal is being hidden");
                 });
 
                 $('#chooseProductModal-' + orderId).on('hidden.bs.modal', function (e) {
-                    console.log("Modal " + modalId + " has been hidden");
+                    console.log("Modal has been hidden");
                 });
-                var totalProccessProductStr = $('#totalProccessProduct-' + orderId).text().trim();
-                var totalProccessProduct = parseFloat(totalProccessProductStr.replace(/[^0-9.-]+/g, ""));
-
-                if (isNaN(totalProccessProduct)) {
-                    totalProccessProduct = 0;
-                }
-                updateTotalPayable(totalProccessProduct, totalProccess);
             }
 
             $(document).on('click', '.remove-item-button', function () {
                 let price = parseFloat($(this).data('price'));
-                let productId = $(this).data('product-id');
-                removeProductFromList(this, price, productId);
+                let orderId = $(this).data('order-id');
+                let productCode = $(this).data('product-code');
+                let selectedItem = $(this).closest('.product-item')[0]; // Đảm bảo selectedItem là một Node
+
+                removeProductFromList(price, orderId, productCode, selectedItem);
             });
-
-            function removeProductFromList(button, price, productId) {
-                let code = productId;
-                button.parentElement.remove();
-
-                let totalProccessProductElement = document.getElementById('totalProccessProduct-' + code);
-                if (!totalProccessProductElement) {
-                    console.error("Total process product element not found.");
-                    return;
-                }
-
-                let currentTotal = parseFloat(totalProccessProductElement.innerText.replace(/,/g, ''));
-                let newTotal = currentTotal - price;
-                totalProccessProductElement.innerText = newTotal.toLocaleString();
-
-                // Update totalProccessList
-                totalProccessList -= price;
-                updateTotalPayable(0, totalProccess);
-            }
-
-            function updateTotalPayable(totalProccessProduct, totalProccess) {
-                var totalPriceStr = $('#totalPrice').attr('data-value');
-                var totalPrice = parseFloat(totalPriceStr);
-                if (isNaN(totalPrice)) {
-                    console.error("Invalid total price:", totalPriceStr);
-                    totalPrice = 0;
-                }
-
-                var totalDiscountStr = $('#totalDiscount').text();
-                var totalDiscount = parseFloat(totalDiscountStr);
-                if (isNaN(totalDiscount)) {
-                    console.error("Invalid total discount:", totalDiscountStr);
-                    totalDiscount = 0;
-                }
-
-                totalProccessList += totalProccessProduct;
-                var totalPayable = totalPrice - totalDiscount + totalProccess + totalProccessProduct;
-
-                if (isNaN(totalPayable)) {
-                    console.error("Invalid total payable:", totalPrice, totalDiscount, totalProccess);
-                    totalPayable = 0;
-                }
-
-                $('#totalPrice').text(totalPayable.toLocaleString() + '  Đ');
-                $('#totalPayable').text(totalPayable.toLocaleString() + '  Đ');
-                $('#totalProccessProduct').text(totalProccessList.toLocaleString() + '  Đ');
-                $('#totalProccess').attr('data-value', totalProccess);
-            }
         });
+
 
         //Create discount to send Manager
         $(document).ready(function () {
             var previousValue = $('#paymentMethod').val();
+            // $('#orderModal').on('hidden.bs.modal', function () {
+            //     $('#createOrderBtn').click();
+            // });
+            let action = '';
+
+            $('#continueBtn').on('click', function () {
+                console.log('Continue button clicked');
+                action = 'continue';
+            });
+
+            $('#cancelBtn').on('click', function () {
+                console.log('Cancel button clicked');
+                action = 'cancel';
+            });
+
             $('#orderModal').on('hidden.bs.modal', function () {
-                $('#createOrderBtn').click();
+                console.log('Modal hidden');
+                if (action === 'continue') {
+                    console.log('Creating order');
+                    $('#createOrderBtn').click();
+                }
+                action = '';
+            });
+            $('#cancelBtn').on('click', function () {
+                $(this).data('action', '');
             });
 
             $('#paymentMethod').change(function () {
@@ -554,50 +648,41 @@
             var discountIdAccepted = null;
             const token = $('input[name="__RequestVerificationToken"]').val();
             //Zalo Pay
-           
-$(document).ready(function () {
-    $('#paymentMethod').change(function () {
-        var selectedValue = $(this).val();
-        if (selectedValue === 'transfer') {
-            var totalPricePayableStr = $('#totalPayable').text().replace(/[^0-9.-]+/g, "") || '0';
-            var totalPricePayable = parseFloat(totalPricePayableStr); // Chuyển đổi sang kiểu double
+            $('#paymentMethod').change(function () {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'transfer') {
+                    var totalPricePayable = parseFloat($('#totalPayable').text().replace(/[^0-9.-]+/g, "") || 0);
+                    var OrderId = $('#orderId').val();
+                    console.log("Total price, orderId: ", totalPricePayable, OrderId);
+                    var data = {
+                        orderId: OrderId,
+                        totalPrice: totalPricePayable,
+                        status: 0
+                    };
 
-            var orderId = $('#orderId').val();
-            console.log("Total price, orderId: ", totalPricePayable, orderId);
+                    $.ajax({
+                        url: 'https://localhost:44318/api/Payment/create-order',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#orderId').text('Order ID: ' + response.orderId);
+                            $('#totalPrice').text('Total Price: ' + response.totalPrice);
+                            $('#status').text('Status: ' + response.status);
+                            console.log("Link zalo pay: ", response.order_url);
+                            if (response.order_url) {
+                                $('#orderFrame').attr('src', response.order_url);
+                            }
 
-            var data = {
-                orderId: orderId,
-                totalPrice: totalPricePayable,
-                status: 1
-            };
-
-            console.log("Data to be sent: ", data);
-
-            $.ajax({
-                url: 'https://localhost:44318/api/Payment/create-order',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                dataType: 'json',
-                success: function (response) {
-                    console.log("Response received: ", response);
-                    if (response && response.order_url) {
-                        $('#orderFrame').attr('src', response.order_url);
-                        $('#orderUrl').text('Payment URL: ' + response.order_url);
-                        $('#orderModal').modal('show');
-                    } else {
-                        console.error('order_url not found in response');
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
+                            $('#orderModal').modal('show');
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                        }
+                    });
                 }
             });
-        }
-    });
-});
-
-
 
             $('#requestDiscountBtn').click(function () {
                 const orderId = $('#orderId').val();
@@ -628,7 +713,7 @@ $(document).ready(function () {
                         console.log("Response discount: ", response);
                         if (response.redirectUrl) {
                             window.location.href = response.redirectUrl;
-                        } else if(response.success == false) {
+                        } else if (response.success == false) {
                             $('#exitDiscountModal').modal('show');
                         }
                     },

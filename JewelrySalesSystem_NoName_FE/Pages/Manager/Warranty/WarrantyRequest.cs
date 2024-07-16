@@ -9,6 +9,7 @@
         public string Status { get; set; }
         public Guid ConditionWarrantyId { get; set; }
         public string? Note { get; set; }
+        public string ProductName { get; set; }
     }
 
 }
