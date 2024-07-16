@@ -130,11 +130,18 @@ namespace JSS_Services.Implement
             {
                 if (string.IsNullOrWhiteSpace(request.Note))
                 {
-                    throw new ArgumentException("Note is required when updating warranty within valid period.");
+                    throw new ArgumentException("Cần ghi chú khi cập nhật bảo hành trong thời hạn hiệu lực.");
                 }
                 warranty.Status = request.Status;
                 warranty.Note = request.Note;
             }
+
+            var oldDateOfPurchase = warranty.DateOfPurchase;
+            var oldExpirationDate = warranty.ExpirationDate;
+            var oldPeriod = warranty.Period;
+            var oldDeflag = warranty.Deflag;
+            var oldOrderDetailId = warranty.OrderDetailId;
+            var oldPhone = warranty.Phone;
 
             _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -143,9 +150,11 @@ namespace JSS_Services.Implement
                 throw new Exception("Commit failed, no rows affected.");
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate,
-                warranty.Period, warranty.Deflag, warranty.Status, warranty.Note);
+            return new WarrantyResponse(warranty.Id, oldDateOfPurchase, oldExpirationDate,
+                                        oldPeriod, oldDeflag, warranty.Status, warranty.Note,
+                                        oldOrderDetailId, oldPhone);
         }
+
 
         public async Task<WarrantyResponse> GetDetailById(Guid id)
         {
