@@ -99,6 +99,7 @@
         //Diamond
         public const string DiamondList = url + "/api/v1/Diamond";
         public const string DiamondDetails = url + "/api/v1/Diamond/id";
+        public const string DiamondTotalCount = url + "/api/v1/Diamond/totalcount";
 
         //PurchasePrice
         public const string PurchasePriceList = url + "/api/v1/PurchasePrice";

@@ -143,6 +143,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string DiamondByCodeEndpoint = DiamondEndpoint + "/code";
             public const string DiamondByNameEndpoint = DiamondEndpoint + "/diamondName";
             public const string DiamondAutocompleteEndpoint = DiamondEndpoint + "/autocomplete";
+            public const string GetTotalDiamondCountEndpoint = DiamondEndpoint + "/totalcount";
         }
         public static class Membership
         {

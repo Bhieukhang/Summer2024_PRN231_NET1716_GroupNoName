@@ -2,17 +2,17 @@
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds.ListDiamondModel
 @{
     int totalPages = Model.TotalPages;
+    int totalDiamondCount = Model.TotalDiamondCount;
 }
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="page-title display-4">DANH SÁCH KIM CƯƠNG</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="nav-item">
                             <a class="nav-link" href="~/Manager/Diamonds/AddDiamond">
-                                <span class="menu-title"></span>
                                 <button type="button" class="btn btn-gradient-primary btn-fw">
                                     <i class="mdi mdi-plus"></i>
                                     Thêm kim cương mới
@@ -21,6 +21,21 @@
                         </li>
                     </ol>
                 </nav>
+            </div>
+            <div class="col-md-4 stretch-card mb-0">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="icon icon-lg mr-3">
+                                <i class="mdi mdi-diamond mdi-48px"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title">Tổng kim cương</h4>
+                                <h2 class="card-text">@totalDiamondCount</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -503,4 +518,24 @@
             margin: 0;
             color: #495057;
         }
+
+    .card-stats {
+        background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+        color: #fff !important;
+    }
+
+        .card-stats .icon {
+            font-size: 3rem;
+        }
+
+        .card-stats .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .card-stats .card-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
     </style>

@@ -43,13 +43,13 @@
                             <a asp-page="./ListSubProduct" class="btn btn-gradient-light">Hủy</a>
                         </div>
                         <!-- Chất liệu -->
-                        <div class="mb-3">
+                        @* <div class="mb-3">
                             <label asp-for="Product.MaterialId" class="form-label">Chất Liệu</label>
                             <select asp-for="Product.MaterialId" class="form-select" asp-items="@(new SelectList(Model.MaterialList, "Id", "MaterialName"))">
                                 <option value="">Select Material</option>
                             </select>
                             <span asp-validation-for="Product.MaterialId" class="text-danger"></span>
-                        </div>
+                        </div> *@
                         <!-- Mô tả sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.Description" class="form-label">Mô Tả</label>
