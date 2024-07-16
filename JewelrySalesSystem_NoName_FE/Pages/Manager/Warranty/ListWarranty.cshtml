@@ -35,7 +35,7 @@
         </div>
         @if (totalItems > 0)
         {
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col-lg-12 grid-margin stretch-card" id="warrantyTable">
                 <div class="card">
                     <div class="card-body">
                         <table class="table table-striped">
@@ -44,7 +44,7 @@
                                     <th>Sản phẩm</th>
                                     <th> Ngày mua </th>
                                     <th> Ngày hết hạn </th>
-                                    <th> Giai đoạn </th>
+                                    <th> Thời lượng </th>
                                     <th> Trạng thái </th>
                                     <th></th>
                                 </tr>
@@ -169,13 +169,27 @@
         function searchWarranty() {
             var code = document.getElementById('searchCode').value;
 
+            // Hide the existing table before search
+            document.getElementById('warrantyTable').style.display = 'none';
+            $('#warrantyDetailsContainer').hide();
             $.ajax({
                 url: '/Manager/Warranty/ListWarranty?handler=Search',
                 type: 'GET',
                 data: { code: code },
                 success: function (data) {
                     console.log("Data: ", data);
-                    populateWarrantyDetails(data);
+                    try {
+                        // Populate the new warranty details
+                        populateWarrantyDetails(data);
+
+                        // Show the table if data is returned
+                        if (data) {
+                            document.getElementById('warrantyTable').style.display = 'block';
+                        }
+                    } catch (error) {
+                        console.error('Error processing warranty details:', error);
+                        $('#warrantyDetails').html('<p class="text-danger">Error processing warranty details.</p>');
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error('An error occurred:', error);
@@ -186,22 +200,98 @@
         }
 
         function populateWarrantyDetails(data) {
+            var tableBody = $('#warrantyDetails');
+            tableBody.empty(); // Clear previous results
+
             if (data) {
-                var warranty = JSON.parse(data); // Assuming the returned data is a JSON string
-
-                var detailsHtml = `
-                            <h3>Warranty Details</h3>
-                            <p><strong>ID:</strong> ${warranty.Id}</p>
-                            <p><strong>Date of Purchase:</strong> ${new Date(warranty.DateOfPurchase).toLocaleDateString()}</p>
-                            <p><strong>Expiration Date:</strong> ${new Date(warranty.ExpirationDate).toLocaleDateString()}</p>
-                            <p><strong>Period:</strong> ${warranty.Period} months</p>
-                            <p><strong>Status:</strong> ${warranty.Status}</p>
-                            <p><strong>Note:</strong> ${warranty.Note}</p>
-                        `;
-
-                $('#warrantyDetails').html(detailsHtml);
+                var uniqueModalId = `warranty-${data.id}`; // Ensure unique modal ID
+                var row = `
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sản phẩm</th>
+                                                    <th>Ngày mua</th>
+                                                    <th>Ngày hết hạn</th>
+                                                    <th>Giai đoạn</th>
+                                                    <th>Trạng thái</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>${data.productName ?? ''}</td>
+                                                    <td>${new Date(data.dateOfPurchase).toLocaleDateString()}</td>
+                                                    <td>${new Date(data.expirationDate).toLocaleDateString()}</td>
+                                                    <td>${data.period} months</td>
+                                                    <td>
+                                                        ${data.status === "Finish for Warranty" ? '<label class="badge badge-success">Hoàn thành bảo hành</label>' :
+                        data.status === "Invalid for Warranty" || data.status === "Expired" ? '<label class="badge badge-danger">' + (data.status === "Invalid for Warranty" ? 'Không hợp lệ' : 'Hết hạn') + '</label>' :
+                            data.status === "Waiting" ? '<label class="badge badge-danger">Chờ</label>' :
+                                '<label class="badge badge-warning">Đang bảo hành</label>'
+                    }
+                                                    </td>
+                                                    <td>
+                                                        <i class="fa fa-eye menu-icon" data-toggle="modal" data-target="#${uniqueModalId}"></i>
+                                                        <div class="modal fade" id="${uniqueModalId}" tabindex="-1" role="dialog" aria-labelledby="warrantyLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-xl" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <h4 class="card-title">Thông tin bảo hành</h4>
+                                                                            <div class="form-group row">
+                                                                                <label for="purchaseDate" class="col-sm-3 col-form-label">Ngày mua</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input type="text" class="form-control" id="purchaseDate" placeholder="Ngày mua" value="${new Date(data.dateOfPurchase).toLocaleDateString()}" readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label for="expirationDate" class="col-sm-3 col-form-label">Ngày hết hạn</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input type="text" class="form-control" id="expirationDate" placeholder="Ngày hết hạn" value="${new Date(data.expirationDate).toLocaleDateString()}" readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label for="period" class="col-sm-3 col-form-label">Giai đoạn</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input type="text" class="form-control" id="period" placeholder="Giai đoạn" value="${data.period} tháng" readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label for="status" class="col-sm-3 col-form-label">Trạng thái</label>
+                                                                                <div class="col-sm-9">
+                                                                                    ${data.status === "Active" ? '<label class="badge badge-success">' + data.status + '</label>' : '<label class="badge badge-danger">' + (data.status ?? 'N/A') + '</label>'}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row">
+                                                                                <label for="conditionWarranty" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
+                                                                                <div class="col-sm-9">
+                                                                                    <input type="text" class="form-control" id="conditionWarranty" placeholder="Điều kiện bảo hành" value="${data.conditionWarranty?.condition ?? ''}" readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <a href="./UpdateWarranty?id=${data.id}" class="btn btn-primary">Cập nhật</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>`;
+                tableBody.append(row);
             } else {
-                $('#warrantyDetails').html('<p class="text-warning">No warranty found for the provided code.</p>');
+                tableBody.append('<p class="text-warning">No warranty found for the provided code.</p>');
             }
         }
     </script>
