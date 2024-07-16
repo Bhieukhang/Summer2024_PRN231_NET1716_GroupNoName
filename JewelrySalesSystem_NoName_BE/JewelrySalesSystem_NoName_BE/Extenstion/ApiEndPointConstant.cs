@@ -98,6 +98,8 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string ProductItemByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion/item";
+            public const string GetTotalProductCountEndpoint = ProductEndpoint + "/totalcount";
+            public const string GetProductCountByCategoryEndpoint = ProductEndpoint + "/countbycategory";
 
             public const string FilterProductEndpoint = ProductEndpoint + "/filter";
             public const string ProductAutocompleteEndpoint = ProductEndpoint + "/autocomplete";

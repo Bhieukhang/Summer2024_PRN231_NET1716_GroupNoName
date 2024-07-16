@@ -1,5 +1,6 @@
 ﻿using Firebase.Storage;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
@@ -59,6 +60,37 @@ namespace JSS_Services.Implement
                 page: page,
                 size: size);
             return list;
+        }
+
+        public async Task<int> GetTotalProductCountAsync()
+        {
+            var productRepository = _unitOfWork.GetRepository<Product>();
+            return await productRepository.CountAsync();
+        }
+
+        public async Task<List<CategoryProductCountResponseDTO>> GetProductCountByCategoryAsync()
+        {
+            var productRepository = _unitOfWork.GetRepository<Product>();
+
+            var products = await productRepository.GetListAsync(
+                include: query => query.Include(p => p.Category)
+            );
+
+            var categoryProductCounts = products
+                .GroupBy(p => p.CategoryId)
+                .Select(g => new CategoryProductCountResponseDTO
+                {
+                    CategoryId = g.Key,
+                    CategoryName = g.First().Category.Name,
+                    ProductCount = g.Count(),
+                    Products = g.Select(p => new ProductDTO
+                    {
+                        ProductId = p.Id,
+                        ProductName = p.ProductName,
+                    }).ToList()
+                }).ToList();
+
+            return categoryProductCounts;
         }
 
         public async Task<IEnumerable<Product>> GetAsync()

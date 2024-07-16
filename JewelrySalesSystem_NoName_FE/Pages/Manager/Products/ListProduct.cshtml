@@ -1,10 +1,45 @@
 ﻿@page
+@using Newtonsoft.Json
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListProductModel
 @{
+    int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
+    int totalProductCount = Model.TotalProductCount;
+    var categoryProductCounts = Model.CategoryProductCounts;
 }
 <div class="main-panel">
     <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-info card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng sản phẩm <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalProductCount</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-success card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Sản phẩm theo danh mục <i class="mdi mdi-diamond mdi-24px float-end"></i>
+                        </h4>
+                        <select id="categoryStats" class="form-control mb-3" onchange="updateCategoryStats()">
+                            <option value="">Chọn danh mục</option>
+                            @foreach (var category in Model.cateList)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                        <h2 class="mb-5" id="categoryProductCount">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="page-header d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="page-title display-4">DANH SÁCH TRANG SỨC</h1>
@@ -296,6 +331,21 @@
                             })
                             .catch(error => console.error('Error fetching product data:', error));
                     }
+                }
+
+                function updateCategoryStats() {
+                    var selectedCategoryId = document.getElementById("categoryStats").value;
+                    var categoryProductCounts = @Html.Raw(JsonConvert.SerializeObject(Model.CategoryProductCounts));
+                    var productCount = 0;
+
+                    if (selectedCategoryId) {
+                        var category = categoryProductCounts.find(c => c.CategoryId === selectedCategoryId);
+                        if (category) {
+                            productCount = category.ProductCount;
+                        }
+                    }
+
+                    document.getElementById("categoryProductCount").innerText = productCount;
                 }
 
                 function updateUI(data) {

@@ -1,5 +1,6 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -57,6 +58,34 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var list = await _productService.GetAllProductsAsync(page, size);
             var products = JsonConvert.SerializeObject(list, Formatting.Indented);
             return Ok(products);
+        }
+
+        #region GetTotalProductCount
+        /// <summary>
+        /// Get total product count.
+        /// </summary>
+        /// <returns>Total number of products.</returns>
+        /// GET : api/Product/totalcount
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.GetTotalProductCountEndpoint)]
+        public async Task<ActionResult<int>> GetTotalProductCountAsync()
+        {
+            var totalCount = await _productService.GetTotalProductCountAsync();
+            return Ok(totalCount);
+        }
+
+        #region GetProductCountByCategory
+        /// <summary>
+        /// Get product count by category.
+        /// </summary>
+        /// <returns>List of product counts by category.</returns>
+        /// GET : api/Product/countbycategory
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.GetProductCountByCategoryEndpoint)]
+        public async Task<ActionResult<IEnumerable<CategoryProductCountResponseDTO>>> GetProductCountByCategoryAsync()
+        {
+            var categoryProductCounts = await _productService.GetProductCountByCategoryAsync();
+            return Ok(categoryProductCounts);
         }
 
         [HttpGet(ApiEndPointConstant.Product.AllProductEndpoint)]

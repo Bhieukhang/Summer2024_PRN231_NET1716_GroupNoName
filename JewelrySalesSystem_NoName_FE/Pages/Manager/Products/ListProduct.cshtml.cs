@@ -5,7 +5,6 @@ using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
-using System.Reflection;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 {
@@ -31,11 +30,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         public IList<ProductDTO> productList { get; set; } = new List<ProductDTO>();
         public IList<CategoryDTO> cateList { get; set; } = new List<CategoryDTO>();
         public IList<MaterialDTO> mateList { get; set; } = new List<MaterialDTO>();
+        public IList<CategoryProductCountResponseDTO> CategoryProductCounts { get; set; } = new List<CategoryProductCountResponseDTO>();
         public ProductDTO searchItem = new ProductDTO();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
+        public int TotalProductCount { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? page, string? searchCode, string? selectedCategory, string? selectedMaterial)
         {
@@ -95,6 +96,22 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                     return RedirectToPage("/Auth/Login");
                 }
                 mateList = JsonConvert.DeserializeObject<List<MaterialDTO>>(await materialResponse.Content.ReadAsStringAsync());
+
+                var totalProductCountResponse = await client.GetAsync(ApiPath.TotalProductCount);
+                if (totalProductCountResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực! Hãy login lại.";
+                    return RedirectToPage("/Auth/Login");
+                }
+                TotalProductCount = JsonConvert.DeserializeObject<int>(await totalProductCountResponse.Content.ReadAsStringAsync());
+
+                var categoryProductCountResponse = await client.GetAsync(ApiPath.ProductCountByCategory);
+                if (categoryProductCountResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    TempData["ErrorMessage"] = "Kết nối không được xác thực! Hãy login lại.";
+                    return RedirectToPage("/Auth/Login");
+                }
+                CategoryProductCounts = JsonConvert.DeserializeObject<List<CategoryProductCountResponseDTO>>(await categoryProductCountResponse.Content.ReadAsStringAsync());
 
                 ViewData["SelectedCategory"] = SelectedCategory;
                 ViewData["SelectedMaterial"] = SelectedMaterial;
