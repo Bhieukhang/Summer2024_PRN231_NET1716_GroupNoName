@@ -1,5 +1,6 @@
 ﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
+using JewelrySalesSystem_NoName_FE.DTOs.Material;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -21,6 +22,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+        }
+
+        private async Task<bool> IsCategoryNameExistsAsync(string categoryName, string token)
+        {
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var apiUrl = $"{ApiPath.CategoryList}/categoryName?name={categoryName}";
+            var response = await client.GetAsync(apiUrl);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                return false;
+            }
+
+            var category = JsonConvert.DeserializeObject<CategoryDTO>(await response.Content.ReadAsStringAsync());
+            return category != null;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -52,6 +71,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
             {
                 TempData["ErrorMessage"] = "Bạn cần phải login trước.";
                 return RedirectToPage("/Auth/Login");
+            }
+
+            if (await IsCategoryNameExistsAsync(Category.Name, token))
+            {
+                TempData["ErrorMessage"] = "Tên loại này đã tồn tại.";
+                return Page();
             }
 
             try

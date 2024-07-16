@@ -17,16 +17,16 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h2 class="card-title">Thêm Loại Mới</h2>
+                            <h2 class="card-title">Thêm Chất Liệu Mới</h2>
                             <br/>
                             <form class="forms-sample" method="post">
                                 <div class="form-group">
-                                    <label asp-for="Category.Name" class="control-label">Tên</label>
-                                    <input asp-for="Category.Name" class="form-control" placeholder="Nhập tên loại" />
-                                    <span asp-validation-for="Category.Name" class="text-danger"></span>
+                                    <label asp-for="Material.MaterialName" class="control-label">Chất Liệu</label>
+                                    <input asp-for="Material.MaterialName" class="form-control" placeholder="Nhập chất liệu" />
+                                    <span asp-validation-for="Material.MaterialName" class="text-danger"></span>
                                 </div>
                                 <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
-                                <a asp-page="./ListCategories" class="btn btn-gradient-light btn-fw">Hủy</a>
+                                <a asp-page="./ListMaterials" class="btn btn-gradient-light btn-fw">Hủy</a>
                             </form>
                         </div>
                     </div>

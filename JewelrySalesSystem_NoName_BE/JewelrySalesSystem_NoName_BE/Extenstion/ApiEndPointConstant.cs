@@ -80,6 +80,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         {
             public const string CategoryEndpoint = ApiEndpoint + "/Category";
             public const string CategoryByIdEndpoint = CategoryEndpoint + "/id";
+            public const string CategoryByNameEndpoint = CategoryEndpoint + "/categoryName";
         }
 
 
@@ -94,8 +95,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string ProductEndpoint = ApiEndpoint + "/Product";
             public const string AllProductEndpoint = ApiEndpoint + "/Product/All";
             public const string ProductByIdEndpoint = ProductEndpoint + "/id";
-            public const string ProductByCategoryEndpoint = ProductEndpoint + "/CategoryId";
+            public const string ProductByCategoryEndpoint = ProductEndpoint + "/category";
             public const string ProductByCodeEndpoint = ProductEndpoint + "/code";
+            public const string ProductByNameEndpoint = ProductEndpoint + "/productName";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string ProductItemByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion/item";
             public const string GetTotalProductCountEndpoint = ProductEndpoint + "/totalcount";
@@ -132,12 +134,14 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         {
             public const string MaterialEndpoint = ApiEndpoint + "/Material";
             public const string MaterialByIdEndpoint = MaterialEndpoint + "/id";
+            public const string MaterialByNameEndpoint = MaterialEndpoint + "/materialName";
         }
         public static class Diamond
         {
             public const string DiamondEndpoint = ApiEndpoint + "/Diamond";
             public const string DiamondByDiamondIdEndpoint = DiamondEndpoint + "/id";
             public const string DiamondByCodeEndpoint = DiamondEndpoint + "/code";
+            public const string DiamondByNameEndpoint = DiamondEndpoint + "/diamondName";
             public const string DiamondAutocompleteEndpoint = DiamondEndpoint + "/autocomplete";
         }
         public static class Membership

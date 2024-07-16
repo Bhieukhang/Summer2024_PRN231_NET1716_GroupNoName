@@ -40,21 +40,21 @@
                 </div>
             </div>
         </div>
-        <div class="page-header d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title display-4">DANH SÁCH TRANG SỨC</h1>
-            </div>
-            <div>
-                <a class="nav-link d-inline-block" href="~/Manager/Products/AddProduct">
-                    <button type="button" class="btn btn-gradient-primary btn-fw me-2">
-                        <i class="mdi mdi-plus"></i>
-                        Thêm trang sức mới
-                    </button>
+
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-center bg-light p-4 rounded shadow-sm mb-4">
+            <h1 class="page-title display-5 text-dark fw-bold mb-3 mb-md-0">Danh Sách Trang Sức</h1>
+            <div class="d-flex flex-column flex-md-row align-items-center gap-2">
+                <a href="~/Manager/Products/AddProduct" class="btn btn-gradient-primary btn-lg d-flex align-items-center mb-2 mb-md-0">
+                    <i class="mdi mdi-plus me-1"></i> Thêm Trang Sức Mới
                 </a>
-                <button type="button" class="btn btn-inverse-success btn-fw" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
-                    <i class="mdi mdi-trending-up"></i>
-                    Cập nhật giá vàng
-                </button>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-gradient-warning btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
+                        <i class="mdi mdi-trending-up me-1"></i> Cập Nhật Giá Vàng
+                    </button>
+                    <button type="button" class="btn btn-gradient-light btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
+                        <i class="mdi mdi-trending-up me-1"></i> Cập Nhật Giá Bạc
+                    </button>
+                </div>
             </div>
         </div>
          <div class="row g-3 bg-light p-4 rounded shadow-sm" id="filterForm">
@@ -94,20 +94,6 @@
             </form>
         </div>
         <br />
-        @* <div class="d-flex justify-content-between">
-        <form method="get" id="searchForm" onsubmit="searchProductByCode(); return false;">
-        <div class="input-group autocomplete">
-        <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
-        <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
-        onkeyup="autocompleteSearch(this.value)" />
-        <div id="autocomplete-list" class="autocomplete-items"></div>
-        </div>
-        <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
-        <i class="mdi mdi-magnify"></i>
-        Tìm Kiếm
-        </button>
-        </form>
-        </div> *@
         <div id="resultContainer"></div>
         <div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
         <div class="col-lg-12 grid-margin stretch-card" id="uiProduct">

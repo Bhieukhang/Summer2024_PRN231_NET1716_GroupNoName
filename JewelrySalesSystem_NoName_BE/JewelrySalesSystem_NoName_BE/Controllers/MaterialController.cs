@@ -2,6 +2,7 @@
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
+using JSS_Services.Implement;
 using JSS_Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,24 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(material);
         }
 
+        #region SearchMaterialByName
+        /// <summary>
+        /// Search a material by its name.
+        /// </summary>
+        /// <param name="name">The name of the material to search.</param>
+        /// <returns>Material with name.</returns>
+        /// GET : api/Material/searchName
+        #endregion
+        [HttpGet(ApiEndPointConstant.Material.MaterialByNameEndpoint)]
+        public async Task<IActionResult> SearchMaterialByName(string name)
+        {
+            var category = await _materialService.SearchMaterialByNameAsync(name);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return Ok(category);
+        }
 
         #region CreateMaterial
         /// <summary>
