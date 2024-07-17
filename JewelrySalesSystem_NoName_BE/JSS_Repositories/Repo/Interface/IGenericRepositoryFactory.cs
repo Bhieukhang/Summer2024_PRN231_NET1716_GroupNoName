@@ -1,4 +1,4 @@
-﻿namespace JSS_Repositories;
+﻿namespace JSS_Repositories.Repo.Interface;
 
 public interface IGenericRepositoryFactory
 {

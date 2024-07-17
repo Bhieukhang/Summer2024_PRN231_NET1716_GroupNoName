@@ -2,31 +2,36 @@
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 using System.Data.Entity;
 
 namespace JSS_Services.Implement
 {
-    public class TransactionService : BaseService<TransactionService>, ITransactionService
+    public class TransactionService : ITransactionService
     {
-        public TransactionService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
-            ILogger<TransactionService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<TransactionService> _logger;
+
+        public TransactionService(IUnitOfWork unitOfWork, ILogger<TransactionService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
         {
-            return await _unitOfWork.GetRepository<Transaction>().GetListAsync();
+            return await _unitOfWork.TransactionRepository.GetListAsync();
         }
 
         public async Task<TransactionResponse> GetDetailTransactionByOrderId(Guid orderId)
         {
-            var transaction = await _unitOfWork.GetRepository<Transaction>()
+            var transaction = await _unitOfWork.TransactionRepository
                 .FirstOrDefaultAsync(
                     predicate: t => t.OrderId == orderId
                 );
-            var orderItem = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(o => o.Id == transaction.OrderId);
+            var orderItem = await _unitOfWork.OrderRepository.FirstOrDefaultAsync(o => o.Id == transaction.OrderId);
 
             OrderResponse order = new OrderResponse()
             {

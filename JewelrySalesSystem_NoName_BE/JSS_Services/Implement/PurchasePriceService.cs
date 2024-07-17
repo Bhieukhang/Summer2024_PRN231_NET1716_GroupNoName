@@ -5,19 +5,25 @@ using JSS_Repositories;
 using Microsoft.Extensions.Logging;
 using JSS_Services.Interface;
 using JSS_BusinessObjects.Models;
+using JSS_Repositories.Repo.Interface;
 
 
 namespace JSS_Services.Implement
 {
-    public class PurchasePriceService : BaseService<PurchasePrice>, IPurchasePriceService
+    public class PurchasePriceService : IPurchasePriceService
     {
-        public PurchasePriceService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<PurchasePrice> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PurchasePriceService> _logger;
+
+        public PurchasePriceService(IUnitOfWork unitOfWork, ILogger<PurchasePriceService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IPaginate<PurchasePriceResponse>> GetListPurchasePriceAsync(int page, int size)
         {
-            IPaginate<PurchasePriceResponse> list = await _unitOfWork.GetRepository<PurchasePrice>().GetList(
+            IPaginate<PurchasePriceResponse> list = await _unitOfWork.PurchasePriceRepository.GetList(
                 selector: x => new PurchasePriceResponse(x.PurchasePriceId, x.PurchasePrice1, x.Size, x.CategoryId, x.Description, x.UpsDate, x.Status),
                 orderBy: x => x.OrderByDescending(x => x.PurchasePriceId),
                 page: page,
@@ -26,7 +32,7 @@ namespace JSS_Services.Implement
         }
         public async Task<PurchasePrice> UpdatePurchasePriceAsync(int id, PurchasePrice updatedData)
         {
-            var existingPurchasePrice = await _unitOfWork.GetRepository<PurchasePrice>().FirstOrDefaultAsync(a => a.PurchasePriceId == id);
+            var existingPurchasePrice = await _unitOfWork.PurchasePriceRepository.FirstOrDefaultAsync(a => a.PurchasePriceId == id);
             if (existingPurchasePrice == null) return null;
 
             existingPurchasePrice.PurchasePrice1 = updatedData.PurchasePrice1;
@@ -37,7 +43,7 @@ namespace JSS_Services.Implement
             existingPurchasePrice.Status = updatedData.Status;
 
 
-            _unitOfWork.GetRepository<PurchasePrice>().UpdateAsync(existingPurchasePrice);
+            _unitOfWork.PurchasePriceRepository.UpdateAsync(existingPurchasePrice);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) return null;
             return existingPurchasePrice;
@@ -46,7 +52,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var purchasePriceRepository = _unitOfWork.GetRepository<PurchasePrice>();
+                var purchasePriceRepository = _unitOfWork.PurchasePriceRepository;
                 var PurchasePrice = await purchasePriceRepository.FirstOrDefaultAsync(s => s.PurchasePriceId == id);
                 return PurchasePrice;
             }

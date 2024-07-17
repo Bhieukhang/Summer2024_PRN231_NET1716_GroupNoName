@@ -1,6 +1,6 @@
 ﻿namespace JewelrySalesSystem_NoName_FE.DTOs.GRate
 {
-    public class GoldRateDTO
+    public class SilverRateDTO
     {
         public Guid Id { get; set; }
 
