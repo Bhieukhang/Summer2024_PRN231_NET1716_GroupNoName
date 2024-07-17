@@ -2,25 +2,28 @@
 using JSS_BusinessObjects.Payload.Request;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 
 namespace JSS_Services.Implement
 {
-    public class DashboardService : BaseService<DashboardService>, IDashboardService
+    public class DashboardService : IDashboardService
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<DashboardService> _logger;
 
-        public DashboardService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
-            ILogger<DashboardService> logger) : base(unitOfWork, logger)
+        public DashboardService(IUnitOfWork unitOfWork, ILogger<DashboardService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
-
 
         public async Task<DashboardRequest> GetDashboardsAsync(int year)
         {
 
-            var promotions = await _unitOfWork.GetRepository<Promotion>().GetListAsync();
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var promotions = await _unitOfWork.PromotionRepository.GetListAsync();
+            var orders = await _unitOfWork.OrderRepository.GetListAsync();
             int totalPromotion = promotions == null ? 0 : promotions.Count;
             decimal totalRevenue = orders == null ? 0 : decimal.Parse(orders.Sum(p => p.TotalPrice).ToString() ?? "0");
 
@@ -50,7 +53,7 @@ namespace JSS_Services.Implement
 
         public async Task<AccountDashboard> GetDashboardAccount()
         {
-            var listAccount = await _unitOfWork.GetRepository<Account>().GetListAsync();
+            var listAccount = await _unitOfWork.AccountRepository.GetListAsync();
             var adminCount = listAccount.Count(a => a.RoleId == Guid.Parse("0F8FAD5B-D9CB-469F-A165-70867728950E"));
             var managerCount = listAccount.Count(a => a.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE7"));
             var staffCount = listAccount.Count(a => a.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE8"));

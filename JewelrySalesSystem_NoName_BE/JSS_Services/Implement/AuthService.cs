@@ -13,21 +13,26 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class AuthService : BaseService<Account>, IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<AccountService> _logger;
 
-        public AuthService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<Account> logger, IConfiguration configuration) : base(unitOfWork, logger)
+        public AuthService(IUnitOfWork unitOfWork, ILogger<AccountService> logger, IConfiguration configuration)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<Account> GetAccountByPhone(string phone, string password)
         {
-            var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(predicate: x =>
+            var account = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(predicate: x =>
                 x.Phone.Equals(phone) && x.Password.Equals(password), include: q => q.Include(x => x.Role));
 
             if (account == null)
@@ -39,8 +44,8 @@ namespace JSS_Services.Implement
 
         public async Task<string> LoginAsync(string phone, string password)
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
-            var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(predicate: x =>
+            var accountRepository = _unitOfWork.AccountRepository;
+            var account = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(predicate: x =>
                 x.Phone.Equals(phone) && x.Password.Equals(password), include: q => q.Include(x => x.Role));
 
             if (account == null)

@@ -8,6 +8,7 @@ using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,16 +23,20 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
-    public class WarrantyService : BaseService<WarrantyService>, IWarrantyService
+    public class WarrantyService : IWarrantyService
     {
-        public WarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
-            ILogger<WarrantyService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<WarrantyService> _logger;
+
+        public WarrantyService(IUnitOfWork unitOfWork, ILogger<WarrantyService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<WarrantyResponse> GetWarrantyDetail(Guid id)
         {
-            var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
+            var warrantyDetail = await _unitOfWork.WarrantyRepository.SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.Deflag, x.Status,
                                                     x.Note),
                     predicate:
@@ -44,7 +49,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<WarrantyResponse>> GetWarranties(int page, int size)
         {
             IPaginate<WarrantyResponse> ListWarranties =
-            await _unitOfWork.GetRepository<Warranty>().GetList(
+            await _unitOfWork.WarrantyRepository.GetList(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
                                                     x.Deflag, x.Status, x.Note, x.OrderDetail.Product.ProductName),
                 include: x => x.Include(w => w.OrderDetail)
@@ -58,7 +63,7 @@ namespace JSS_Services.Implement
         public async Task<IPaginate<WarrantyResponse>> GetWarrantiesNo(int page, int size)
         {
             IPaginate<WarrantyResponse> ListWarranties =
-            await _unitOfWork.GetRepository<Warranty>().GetList(
+            await _unitOfWork.WarrantyRepository.GetList(
                 include: x => x.Include(x => x.WarrantyMappingConditions),
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period,
                                                    x.Deflag, x.Status, x.Note),
@@ -87,7 +92,7 @@ namespace JSS_Services.Implement
                     Note = item.Note,
                     CodeWarranty = RandomCode.GenerateRandomCode(5).ToUpper()
                 };
-                await _unitOfWork.GetRepository<Warranty>().InsertAsync(warranty);
+                await _unitOfWork.WarrantyRepository.InsertAsync(warranty);
                 foreach (var map in item.ConditionMap)
                 {
                     WarrantyMappingCondition condition = new WarrantyMappingCondition()
@@ -97,7 +102,7 @@ namespace JSS_Services.Implement
                         WarrantyId = warranty.Id,
                         InsDate = DateTime.Now,
                     };
-                    await _unitOfWork.GetRepository<WarrantyMappingCondition>().InsertAsync(condition);
+                    await _unitOfWork.WarrantyMappingConditionRepository.InsertAsync(condition);
                 }
                 listWarranty.Add(new WarrantyCreateResponse { listWarrantyId = WarId });
             }
@@ -112,7 +117,7 @@ namespace JSS_Services.Implement
 
         public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request)
         {
-            var warranty = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
+            var warranty = await _unitOfWork.WarrantyRepository.SingleOrDefaultAsync(
                 predicate: x => x.Id == id
             );
 
@@ -136,7 +141,7 @@ namespace JSS_Services.Implement
                 warranty.Note = request.Note;
             }
 
-            _unitOfWork.GetRepository<Warranty>().UpdateAsync(warranty);
+            _unitOfWork.WarrantyRepository.UpdateAsync(warranty);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful)
             {
@@ -149,7 +154,7 @@ namespace JSS_Services.Implement
 
         public async Task<WarrantyResponse> GetDetailById(Guid id)
         {
-            var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.Id == id,
+            var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.Id == id,
                                 include: w => w.Include(w => w.WarrantyMappingConditions)
                                                 .ThenInclude(w => w.ConditionWarranty)
                                                 .Include(w => w.OrderDetail)
@@ -166,7 +171,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code);
+                var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.CodeWarranty == code);
                 return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
             }
             catch (Exception e)
@@ -179,7 +184,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.Phone == phone);
+                var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.Phone == phone);
                 return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
             }
             catch (Exception e)

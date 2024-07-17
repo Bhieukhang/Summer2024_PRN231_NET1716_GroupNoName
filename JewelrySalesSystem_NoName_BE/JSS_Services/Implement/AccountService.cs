@@ -11,10 +11,11 @@ using JSS_Services.Interface;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class AccountService : BaseService<AccountService>, IAccountService
+    public class AccountService : IAccountService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
         private readonly List<Guid> excludedRoleIds = new List<Guid>
@@ -22,13 +23,18 @@ namespace JSS_Services.Implement
             Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"),
             Guid.Parse("0F8FAD5B-D9CB-469F-A165-70867728950E")
         };
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<AccountService> _logger;
 
-        public AccountService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<AccountService> logger) : base(unitOfWork, logger)
+        public AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
+
         public async Task<IPaginate<AccountResponse>> GetListAccountAsync(int page, int size)
         {
-            IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+            IPaginate<AccountResponse> listAccount = await _unitOfWork.AccountRepository.GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 predicate: x => !excludedRoleIds.Contains(x.RoleId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
@@ -38,7 +44,7 @@ namespace JSS_Services.Implement
         }
         public async Task<IPaginate<AccountResponse>> GetListAccountByRoleIdAsync(Guid roleId, int page, int size)
         {
-            IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+            IPaginate<AccountResponse> listAccount = await _unitOfWork.AccountRepository.GetList(
                 selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
                 predicate: x => x.RoleId == roleId && !excludedRoleIds.Contains(x.RoleId),
                 orderBy: x => x.OrderByDescending(x => x.Id),
@@ -49,7 +55,7 @@ namespace JSS_Services.Implement
 
         public async Task<IPaginate<AccountResponse>> GetFilteredAccountsAsync(string? searchTerm, Guid? roleId, bool? deflag, int page, int size)
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accountRepository = _unitOfWork.AccountRepository;
 
             var predicate = PredicateBuilder.New<Account>(true);
 
@@ -80,12 +86,12 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalAccountCountAsync()
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accountRepository = _unitOfWork.AccountRepository;
             return await accountRepository.CountAsync(x => !excludedRoleIds.Contains(x.RoleId));
         }
         public async Task<int> GetActiveAccountCountAsync()
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accountRepository = _unitOfWork.AccountRepository;
             return await accountRepository.CountAsync(a => a.Status == "Active" && !excludedRoleIds.Contains(a.RoleId));
         }
 
@@ -93,7 +99,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var accountRepository = _unitOfWork.AccountRepository;
                 var accounts = await accountRepository.GetListAsync();
                 return accounts;
             }
@@ -108,7 +114,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var accountRepository = _unitOfWork.AccountRepository;
                 var account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
                 if (account == null)
                 {
@@ -134,7 +140,7 @@ namespace JSS_Services.Implement
                     throw new Exception("Image upload failed, URL is empty.");
                 }
 
-                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var accountRepository = _unitOfWork.AccountRepository;
                 account.Id = Guid.NewGuid();
                 account.ImgUrl = imageUrl;
                 account.InsDate = DateTime.UtcNow;
@@ -161,7 +167,7 @@ namespace JSS_Services.Implement
 
         public async Task<bool> IsPhoneExistsAsync(string phone)
         {
-            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var accountRepository = _unitOfWork.AccountRepository;
             var existingAccount = await accountRepository.FirstOrDefaultAsync(a => a.Phone == phone);
             return existingAccount != null;
         }
@@ -170,7 +176,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var accountRepository = _unitOfWork.AccountRepository;
                 var _account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
 
                 if (_account == null)
@@ -215,7 +221,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var accountRepository = _unitOfWork.GetRepository<Account>();
+                var accountRepository = _unitOfWork.AccountRepository;
                 var account = await accountRepository.FirstOrDefaultAsync(a => a.Id == id);
 
                 if (account == null)
@@ -247,7 +253,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var accountProfile = _unitOfWork.GetRepository<Account>();
+                var accountProfile = _unitOfWork.AccountRepository;
                 var account = await accountProfile.FirstOrDefaultAsync(a => a.Id == id, include: q => q.Include(x => x.Role));
 
                 if (account == null)
@@ -285,15 +291,13 @@ namespace JSS_Services.Implement
         {
             try
             {
-                //var account = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(p => p.FullName.Contains(name), include: s => s.Include(p => p.Role));
-                //return account;
                 if (string.IsNullOrEmpty(name))
                 {
-                    return await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(include: s => s.Include(p => p.Role));
+                    return await _unitOfWork.AccountRepository.FirstOrDefaultAsync(include: s => s.Include(p => p.Role));
                 }
                 else
                 {
-                    return await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(p => p.FullName.Contains(name), include: s => s.Include(p => p.Role));
+                    return await _unitOfWork.AccountRepository.FirstOrDefaultAsync(p => p.FullName.Contains(name), include: s => s.Include(p => p.Role));
                 }
             }
             catch (Exception ex)
@@ -320,7 +324,7 @@ namespace JSS_Services.Implement
         //{
         //    Guid excludedRoleId = Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9");
 
-        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.GetRepository<Account>().GetList(
+        //    IPaginate<AccountResponse> listAccount = await _unitOfWork.AccountRepository.GetList(
         //        selector: x => new AccountResponse(x.Id, x.FullName, x.Phone, x.Dob, x.Password, x.Address, x.ImgUrl, x.Status, x.Deflag, x.RoleId, x.InsDate, x.UpsDate),
         //        predicate: x => x.Deflag == false && x.RoleId != excludedRoleId,
         //        orderBy: x => x.OrderByDescending(x => x.Id),
@@ -331,7 +335,7 @@ namespace JSS_Services.Implement
 
         public async Task<SearchAccountResponse> SearchMembership(string phone)
         {
-            var mem = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == phone,
+            var mem = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(a => a.Phone == phone,
                                                                 include: a => a.Include(a => a.Role));
 
             if (mem == null)

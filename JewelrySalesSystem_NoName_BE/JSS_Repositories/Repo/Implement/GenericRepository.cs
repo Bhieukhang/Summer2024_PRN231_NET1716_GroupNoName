@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using JSS_BusinessObjects;
+using JSS_Repositories.Repo.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace JSS_Repositories;
+namespace JSS_Repositories.Repo.Implement;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {

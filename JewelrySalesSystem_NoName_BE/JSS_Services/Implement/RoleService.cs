@@ -1,6 +1,7 @@
 ﻿using JSS_BusinessObjects.Models;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,20 +12,25 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
-    public class RoleService : BaseService<RoleService>, IRoleService
+    public class RoleService : IRoleService
     {
-        public RoleService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<RoleService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<RoleService> _logger;
+
+        public RoleService(IUnitOfWork unitOfWork, ILogger<RoleService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Role>> GetAllRolesAsync()
         {
-            return await _unitOfWork.GetRepository<Role>().GetListAsync();
+            return await _unitOfWork.RoleRepository.GetListAsync();
         }
 
         public async Task<Role> GetRoleByIdAsync(Guid? id)
         {
-            return await _unitOfWork.GetRepository<Role>().FirstOrDefaultAsync(a => a.Id == id);
+            return await _unitOfWork.RoleRepository.FirstOrDefaultAsync(a => a.Id == id);
         }
     }
 }

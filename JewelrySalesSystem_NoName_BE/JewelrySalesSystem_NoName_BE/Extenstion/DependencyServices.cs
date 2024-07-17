@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using JSS_Repositories.Repo.Interface;
+using JSS_Repositories.Repo.Implement;
 
 namespace JewelrySalesSystem_NoName_BE
 {
@@ -21,7 +23,31 @@ namespace JewelrySalesSystem_NoName_BE
 
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork<JewelrySalesSystemContext>, UnitOfWork<JewelrySalesSystemContext>>();
+            services.AddLogging();
+            //services.AddScoped<IWarrantyMappingConditionRepository, WarrantyMappingConditionRepository>();
+            //services.AddScoped<IWarrantyRepository, WarrantyRepository>();
+            //services.AddScoped<ITransactionRepository, TransactionRepository>();
+            //services.AddScoped<ISubProductsRepository, SubProductsRepository>();
+            //services.AddScoped<IStallRepository, StallRepository>();
+            //services.AddScoped<ISilverRateRepository, SilverRateRepository>();
+            //services.AddScoped<IPurchasePriceRepository, PurchasePriceRepository>();
+            //services.AddScoped<IPromotionRepository, PromotionRepository>();
+            //services.AddScoped<IProductRepository, ProductRepository>();
+            //services.AddScoped<IProductConditionGroupRepository, ProductConditionGroupRepository>();
+            //services.AddScoped<IProcessPriceRepository, ProcessPriceRepository>();
+            //services.AddScoped<IOrderRepository, OrderRepository>();
+            //services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            //services.AddScoped<IMemberTypeRepository, MemberTypeRepository>();
+            //services.AddScoped<IMembershipRepository, MembershipRepository>();
+            //services.AddScoped<IMaterialRepository, MaterialRepository>();
+            //services.AddScoped<IGoldRateRepository, GoldRateRepository>();
+            //services.AddScoped<IDiscountRepository, DiscountRepository>();
+            //services.AddScoped<IDiamondRepository, DiamondRepository>();
+            //services.AddScoped<IConditionWarrantyRepository, ConditionWarrantyRepository>();
+            //services.AddScoped<ICategoryRepository, CategoryRepository>();
+            //services.AddScoped<IAccountRepository, AccountRepository>();
+            //services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 

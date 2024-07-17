@@ -10,23 +10,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class CategoryService : BaseService<CategoryService>, ICategoryService
+    public class CategoryService : ICategoryService
     {
-        public CategoryService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<CategoryService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<CategoryService> _logger;
+
+        public CategoryService(IUnitOfWork unitOfWork, ILogger<CategoryService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _unitOfWork.GetRepository<Category>().GetListAsync();
+            return await _unitOfWork.CategoryRepository.GetListAsync();
         }
 
         public async Task<Category> GetCategoryByIdAsync(Guid? id)
         {
-            return await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(a => a.Id == id);
+            return await _unitOfWork.CategoryRepository.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<CategoryResponse> SearchCategoryByNameAsync(string categoryName)
@@ -36,7 +42,7 @@ namespace JSS_Services.Implement
                 return null;
             }
 
-            var category = await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(
+            var category = await _unitOfWork.CategoryRepository.FirstOrDefaultAsync(
                 p => p.Name == categoryName
             );
 
@@ -55,7 +61,7 @@ namespace JSS_Services.Implement
                 Id = Guid.NewGuid(),
                 Name = newData.Name,
             };
-            await _unitOfWork.GetRepository<Category>().InsertAsync(cate);
+            await _unitOfWork.CategoryRepository.InsertAsync(cate);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new CategoryResponse(cate.Id, cate.Name);
@@ -63,12 +69,12 @@ namespace JSS_Services.Implement
 
         public async Task<Category> UpdateCategoryAsync(Guid id, Category updatedData)
         {
-            var existingCategory = await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(a => a.Id == id);
+            var existingCategory = await _unitOfWork.CategoryRepository.FirstOrDefaultAsync(a => a.Id == id);
             if (existingCategory == null) return null;
 
             existingCategory.Name = updatedData.Name;
 
-            _unitOfWork.GetRepository<Category>().UpdateAsync(existingCategory);
+            _unitOfWork.CategoryRepository.UpdateAsync(existingCategory);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) return null;
             return existingCategory;
@@ -76,10 +82,10 @@ namespace JSS_Services.Implement
 
         public async Task<bool> DeleteCategoryAsync(Guid id)
         {
-            var existingCategory = await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(a => a.Id == id);
+            var existingCategory = await _unitOfWork.CategoryRepository.FirstOrDefaultAsync(a => a.Id == id);
             if (existingCategory == null) return false;
 
-            _unitOfWork.GetRepository<Category>().DeleteAsync(existingCategory);
+            _unitOfWork.CategoryRepository.DeleteAsync(existingCategory);
             return await _unitOfWork.CommitAsync() > 0;
         }
     }
