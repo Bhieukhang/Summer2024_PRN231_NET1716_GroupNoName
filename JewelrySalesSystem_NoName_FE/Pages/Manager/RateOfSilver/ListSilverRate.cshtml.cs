@@ -1,26 +1,25 @@
 using JewelrySalesSystem_NoName_FE.DTOs;
-using JewelrySalesSystem_NoName_FE.DTOs.GRate;
-using JewelrySalesSystem_NoName_FE.DTOs.Product;
+using JewelrySalesSystem_NoName_FE.DTOs.SRate;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfGold
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfSilver
 {
-    public class ListGoldRateModel : PageModel
+    public class ListSilverRateModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ListGoldRateModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public ListSilverRateModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
-        public IList<SilverRateDTO> goldRateList { get; set; } = new List<SilverRateDTO>();
+        public IList<SilverRateDTO> silverRateList { get; set; } = new List<SilverRateDTO>();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
@@ -36,23 +35,23 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfGold
             Page = currentPage ?? 1;
             Size = 5;
 
-            var url = $"{ApiPath.GoldRateList}?page={Page}&size={Size}";
+            var url = $"{ApiPath.SilverRateList}?page={Page}&size={Size}";
             try
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var goldRateResponse = await client.GetStringAsync(url);
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<SilverRateDTO>>(goldRateResponse);
+                var silverRateResponse = await client.GetStringAsync(url);
+                var paginateResult = JsonConvert.DeserializeObject<Paginate<SilverRateDTO>>(silverRateResponse);
                 TotalPages = paginateResult.TotalPages;
 
-                goldRateList = paginateResult.Items;
+                silverRateList = paginateResult.Items;
                 return Page();
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
-                goldRateList = new List<SilverRateDTO>();
+                silverRateList = new List<SilverRateDTO>();
                 return Page();
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace JewelrySalesSystem_NoName_FE.DTOs.GRate
+﻿namespace JewelrySalesSystem_NoName_FE.DTOs.SRate
 {
     public class SilverRateDTO
     {

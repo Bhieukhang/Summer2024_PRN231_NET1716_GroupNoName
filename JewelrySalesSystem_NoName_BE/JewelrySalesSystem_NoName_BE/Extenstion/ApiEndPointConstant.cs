@@ -201,5 +201,9 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         {
             public const string GoldRateEndpoint = ApiEndpoint + "/GoldRate";
         }
+        public static class SilverRate
+        {
+            public const string SilverRateEndpoint = ApiEndpoint + "/SilverRate";
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfGold.ListGoldRateModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfSilver.ListSilverRateModel
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -18,7 +18,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.goldRateList)
+                            @foreach (var item in Model.silverRateList)
                             {
                                 <tr>
                                     <td>@item.Rate</td>
@@ -31,16 +31,16 @@
                     <nav aria-label="Page navigation" class="mt-4">
                         <ul class="pagination justify-content-end">
                             <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListGoldRate" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == 1)">Trước</a>
+                                <a class="page-link" asp-page="./ListSilverRate" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == 1)">Trước</a>
                             </li>
                             @for (var i = 1; i <= Model.TotalPages; i++)
                             {
                                 <li class="page-item @(Model.Page == i ? "active" : "")">
-                                    <a class="page-link" asp-page="./ListGoldRate" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
+                                    <a class="page-link" asp-page="./ListSilverRate" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
                                 </li>
                             }
                             <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                <a class="page-link" asp-page="./ListGoldRate" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Sau</a>
+                                <a class="page-link" asp-page="./ListSilverRate" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Sau</a>
                             </li>
                         </ul>
                     </nav>
