@@ -14,7 +14,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
         private readonly IConfiguration _configuration;
         private readonly string _bucket;
 
-        [BindProperty]  
+        [BindProperty]
         public ProductDTO Product { get; set; }
 
         [BindProperty]
@@ -39,7 +39,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             }
 
             await LoadSelectLists(token);
-
             return Page();
         }
 
@@ -48,12 +47,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var apiUrl = $"{ApiPath.ProductList}?productName={productName}";
+            var apiUrl = $"{ApiPath.ProductList}/productName?name={productName}";
             var response = await client.GetAsync(apiUrl);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                return false;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
                 return false;
             }
 
@@ -66,12 +70,17 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             var client = _httpClientFactory.CreateClient("ApiClient");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var apiUrl = $"{ApiPath.ProductList}?code={code}";
+            var apiUrl = $"{ApiPath.ProductList}/code?code={code}";
             var response = await client.GetAsync(apiUrl);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                return false;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
                 return false;
             }
 
@@ -95,6 +104,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
                 return;
             }
+
             if (mateResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
@@ -118,27 +128,28 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
 
             if (Product.Code.Length > 8)
             {
-                TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 8 kí tự.";
-                await LoadSelectLists(token);  
+                TempData["ErrorMessage"] = "Độ dài của mã trang sức không được quá 8 kí tự.";
+                await LoadSelectLists(token);
                 return Page();
             }
+
             if (Product.ProductName.Length > 50)
             {
-                TempData["ErrorMessage"] =  "Độ dài của mã trang sức không được quá 50 kí tự.";
+                TempData["ErrorMessage"] = "Độ dài của tên trang sức không được quá 50 kí tự.";
                 await LoadSelectLists(token);
                 return Page();
             }
 
             if (Product.Quantity > 50)
             {
-                TempData["ErrorMessage"] =  "Số lượng trang sức không vượt quá 50 cái.";
+                TempData["ErrorMessage"] = "Số lượng trang sức không vượt quá 50 cái.";
                 await LoadSelectLists(token);
                 return Page();
             }
 
             if (Product.PeriodWarranty > 24)
             {
-                TempData["ErrorMessage"] =  "Thời gian bảo hành trang sức không vượt quá 2 năm.";
+                TempData["ErrorMessage"] = "Thời gian bảo hành trang sức không vượt quá 2 năm.";
                 await LoadSelectLists(token);
                 return Page();
             }
@@ -146,7 +157,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             if (await IsProductNameExistsAsync(Product.ProductName, token))
             {
                 TempData["ErrorMessage"] = "Tên trang sức đã tồn tại.";
-                await LoadSelectLists(token); 
+                await LoadSelectLists(token);
                 return Page();
             }
 
@@ -166,7 +177,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
                     TempData["ErrorMessage"] = "Dung lượng file upload quá nặng !.";
-                    await LoadSelectLists(token); 
+                    await LoadSelectLists(token);
                     return Page();
                 }
 
@@ -237,7 +248,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
             }
 
-            await LoadSelectLists(token);  
+            await LoadSelectLists(token);
             return Page();
         }
     }
