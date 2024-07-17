@@ -33,7 +33,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="DiscountRequest.PercentDiscount" class="control-label">Phần trăm giảm giá</label>
-                        <input asp-for="DiscountRequest.PercentDiscount" type="number" max="99999" class="form-control" placeholder="Nhập % giảm giá" />
+                        <input asp-for="DiscountRequest.PercentDiscount" type="number" min="1" max="100" class="form-control" placeholder="Nhập % giảm giá" />
                         <span asp-validation-for="DiscountRequest.PercentDiscount" class="text-danger d-block mt-1"></span>
                     </div>
                     <div class="form-group">
