@@ -75,7 +75,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             param.Add("app_user", "user123");
             param.Add("app_time", Utils.GetTimeStamp().ToString());
             param.Add("amount", orderDto.TotalPrice.ToString());
-            param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); // Order ID in the format yyMMdd_xxxx
+            param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); 
             param.Add("embed_data", JsonConvert.SerializeObject(embed_data));
             param.Add("item", JsonConvert.SerializeObject(items));
             param.Add("description", "Lazada - Thanh toán đơn hàng #" + app_trans_id);
