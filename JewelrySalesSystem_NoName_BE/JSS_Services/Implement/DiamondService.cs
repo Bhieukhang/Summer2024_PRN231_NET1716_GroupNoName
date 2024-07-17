@@ -91,6 +91,7 @@ namespace JSS_Services.Implement
                 diamond.ImageDiamond = imageUrl;
                 diamond.InsDate = DateTime.Now;
                 diamond.Deflag = true;
+                diamond.Quantity = 1;
 
                 await _unitOfWork.DiamondRepository.InsertAsync(diamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;

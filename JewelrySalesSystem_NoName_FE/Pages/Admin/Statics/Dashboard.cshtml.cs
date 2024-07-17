@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
 {
@@ -26,6 +27,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
         }
         [BindProperty]
         public int TotalAccount { get; set; }
+        [BindProperty]
+        public int TotalMember { get; set; }
 
         public async Task<IActionResult> OnGetAccountDataAsync()
         {
@@ -35,13 +38,34 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
                 return RedirectToPage("/Auth/Login");
             }
             var url = $"{ApiPath.AccountDashboard}";
+
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await client.GetStringAsync(url);
-            var data = JsonConvert.DeserializeObject<AccountDashboard>(response);
+            var data = JsonConvert.DeserializeObject<MonthlyOrderCountDto>(response);
             TotalAccount = data.TotalAccount;
+
             return new JsonResult(data);
+        }
+
+        public async Task<IActionResult> OnGetMemberDataAsync()
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var urlMember = $"{ApiPath.MemberDashboard}";
+            //Dashboard member
+            var responseMember = await client.GetStringAsync(urlMember);
+            var dataMember = JsonConvert.DeserializeObject<MembershipDashboard>(responseMember);
+            TotalMember = dataMember.TotalMember;
+
+            return new JsonResult(dataMember);
         }
     }
 }

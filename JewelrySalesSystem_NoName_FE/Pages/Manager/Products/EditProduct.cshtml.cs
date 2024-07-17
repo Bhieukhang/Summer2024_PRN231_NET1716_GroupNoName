@@ -167,7 +167,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
             if (Product.PeriodWarranty > 24)
             {
                 TempData["ErrorMessage"] =  "Thời gian bảo hành trang sức không vượt quá 2 năm.";
-                await LoadSelectLists(id,token);
+                await LoadSelectLists(id, token);
                 return Page();
             }
 

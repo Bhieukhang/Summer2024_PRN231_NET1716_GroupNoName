@@ -51,9 +51,9 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/Admin/Transactions/ListTransaction">
-                    <span class="menu-title">Thanh toán</span>
-                    <i class="fa fa-money menu-icon"></i>
+                <a class="nav-link" href="~/Manager/Memberships/ListMembership">
+                    <span class="menu-title">Thành viên</span>
+                    <i class="fa fa-address-card-o menu-icon"></i>
                 </a>
             </li>
         }
@@ -87,12 +87,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Memberships/ListMembership">
-                    <span class="menu-title">Thành viên</span>
-                    <i class="fa fa-address-card-o menu-icon"></i>
-                </a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
                    aria-controls="ui-basicc">
@@ -138,11 +133,23 @@
                     <i class="fa fa-tags menu-icon"></i>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
+                    <span class="menu-title">Thanh toán</span>
+                    <i class="fa fa-money menu-icon"></i>
+                </a>
+            </li>
         }
 
         @* Staff feature *@
         @if (userRole == "Staff")
         {
+            <li class="nav-item">
+                <a class="nav-link" href="~/Staff/StaticsStaff/StaffDashboard">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="fa fa-home menu-icon"></i>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basicc" aria-expanded="false"
                    aria-controls="ui-basicc">
@@ -240,11 +247,11 @@
                     </ul>
                 </div>
             </li>
-
-            <li class="nav-item">
+            
+            <li class="nav-item"> 
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                    aria-controls="ui-basic">
-                    <span class="menu-title">Đơn hàng</span>
+                    <span class="menu-title">Quản Lí Hóa Đơn</span>
                     <i class="menu-arrow"></i>
                     <i class="fa fa-truck menu-icon"></i>
                 </a>
@@ -252,8 +259,15 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="~/Staff/Orders/AddOrder">
-                                <span class="menu-title"> Tạo đơn hàng</span>
+                                <span class="menu-title">Tạo Hóa Đơn</span>
                                 <i class="fa fa-truck menu-icon"></i>
+                            </a>
+                        </li>
+                 
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
+                                <span class="menu-title">Quản Lí Giao Dịch</span>
+                                <i class="fa fa-money menu-icon"></i>
                             </a>
                         </li>
                         <li class="nav-item">

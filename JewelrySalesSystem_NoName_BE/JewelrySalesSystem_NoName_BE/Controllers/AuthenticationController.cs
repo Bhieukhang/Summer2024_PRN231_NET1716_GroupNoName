@@ -56,7 +56,9 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         [HttpPost(ApiEndPointConstant.Logout.LogoutEndpoint)]
         public IActionResult Logout()
         {
+
             return Ok(new { message = "Logout successful" });
         }
+
     }
 }

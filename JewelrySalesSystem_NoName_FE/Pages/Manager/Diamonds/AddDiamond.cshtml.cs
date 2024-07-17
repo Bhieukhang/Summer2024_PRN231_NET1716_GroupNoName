@@ -91,6 +91,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
                 Diamond.Id = Guid.NewGuid();
                 Diamond.InsDate = DateTime.Now;
                 Diamond.Deflag = true;
+                Diamond.Quantity = 1;
 
                 var diamond = new DiamondDTO
                 {
