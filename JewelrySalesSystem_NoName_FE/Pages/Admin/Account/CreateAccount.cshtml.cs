@@ -1,4 +1,4 @@
-using Firebase.Storage;
+﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Role;
 using JewelrySalesSystem_NoName_FE.Ultils;
@@ -47,7 +47,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Truy c?p tr�i ph�p. Xin vui l�ng ??ng nh?p l?i.";
+                    TempData["ErrorMessage"] = "Truy cập trái phép. Xin vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
@@ -68,7 +68,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "B?n c?n ??ng nh?p!";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập!";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -90,7 +90,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "T?p ?� t?i l�n qu� l?n.");
+                    ModelState.AddModelError(string.Empty, "Tệp đã tải lên quá lớn.");
                     return Page();
                 }
 
@@ -139,24 +139,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Truy c?p tr�i ph�p. Xin vui l�ng ??ng nh?p l?i.";
+                    TempData["ErrorMessage"] = "Truy cập trái phép. Xin vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "T�i kho?n m?i ???c t?o th�nh c�ng!";
+                    TempData["SuccessMessage"] = "Tài khoản mới được tạo thành công!";
                     return RedirectToPage("./ListAccount");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"?� x?y ra l?i khi th�m t�i kho?n. M� tr?ng th�i: {response.StatusCode}, Ph?n h?i: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi khi thêm tài khoản. Mã trạng thái: {response.StatusCode}, Phản hồi: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, $"?� x?y ra l?i: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi: {ex.Message}");
             }
 
             return Page();

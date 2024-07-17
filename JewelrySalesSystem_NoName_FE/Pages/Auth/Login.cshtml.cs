@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.Ultils;
+﻿using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -45,13 +45,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                         var jwtToken = handler.ReadJwtToken(loginResponse.Token);
 
                         var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, jwtToken.Claims.FirstOrDefault(c => c.Type == "phone")?.Value ?? LoginRequest.Phone),
-                    new Claim("Token", loginResponse.Token),
-                    new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value ?? string.Empty),
-                    new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty),
-                    new Claim(ClaimTypes.Role, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User")
-                };
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, jwtToken.Claims.FirstOrDefault(c => c.Type == "phone")?.Value ?? LoginRequest.Phone),
+                            new Claim("Token", loginResponse.Token),
+                            new Claim("ImgUrl", jwtToken.Claims.FirstOrDefault(c => c.Type == "ImgUrl")?.Value ?? string.Empty),
+                            new Claim(ClaimTypes.Name, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty),
+                            new Claim(ClaimTypes.Role, jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User")
+                        };
 
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var authProperties = new AuthenticationProperties
@@ -77,12 +77,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                     }
                     else
                     {
-                        Message = "Sign in failed. Please try again!";
+                        Message = "Đăng nhập thất bại. Hãy thử lại!";
                     }
                 }
                 else
                 {
-                    Message = "Sign in failed. Please try again!";
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    Message = $"Đăng nhập thất bại: {errorMessage}";
                 }
             }
             catch (HttpRequestException ex)

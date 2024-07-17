@@ -37,7 +37,7 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalDiamondCountAsync()
         {
-            var diamondRepository = _unitOfWork.GetRepository<Diamond>();
+            var diamondRepository = _unitOfWork.DiamondRepository;
             return await diamondRepository.CountAsync();
         }
 

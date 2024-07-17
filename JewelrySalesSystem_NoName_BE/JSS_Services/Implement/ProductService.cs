@@ -64,13 +64,13 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalProductCountAsync()
         {
-            var productRepository = _unitOfWork.GetRepository<Product>();
+            var productRepository = _unitOfWork.ProductRepository;
             return await productRepository.CountAsync();
         }
 
         public async Task<List<CategoryProductCountResponseDTO>> GetProductCountByCategoryAsync()
         {
-            var productRepository = _unitOfWork.GetRepository<Product>();
+            var productRepository = _unitOfWork.ProductRepository;
 
             var products = await productRepository.GetListAsync(
                 include: query => query.Include(p => p.Category)
