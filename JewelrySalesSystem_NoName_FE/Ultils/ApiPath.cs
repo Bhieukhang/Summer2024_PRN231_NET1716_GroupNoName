@@ -92,8 +92,12 @@
 
         //ConditionWarranty
         public const string ConditionWarrantyList = url + "/api/v1/condition";
+
         //GoldRate
         public const string GoldRateList = url + "/api/v1/GoldRate";
+
+        //SilverRate
+        public const string SilverRateList = url + "/api/v1/ListRate";
 
         //Role
         public const string RoleList = url + "/api/v1/Role";

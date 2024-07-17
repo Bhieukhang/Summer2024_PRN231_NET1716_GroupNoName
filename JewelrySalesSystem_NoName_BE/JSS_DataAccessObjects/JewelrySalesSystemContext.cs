@@ -52,6 +52,8 @@ public partial class JewelrySalesSystemContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
+    public virtual DbSet<SilverRate> SilverRates { get; set; }
+
     public virtual DbSet<Stall> Stalls { get; set; }
 
     public virtual DbSet<SubProduct> SubProducts { get; set; }
@@ -315,6 +317,14 @@ public partial class JewelrySalesSystemContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.RoleName).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<SilverRate>(entity =>
+        {
+            entity.ToTable("SilverRate");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.UpsDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Stall>(entity =>

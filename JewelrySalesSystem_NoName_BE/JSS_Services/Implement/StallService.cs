@@ -3,6 +3,7 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,14 +18,20 @@ using System.Threading.Tasks;
 // Do Huu Thuan
 namespace JSS_Services.Implement
 {
-    public class StallService : BaseService<StallService>, IStallService
+    public class StallService : IStallService
     {
-        public StallService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<StallService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<StallService> _logger;
+
+        public StallService(IUnitOfWork unitOfWork, ILogger<StallService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
+
         public async Task<IPaginate<StallResponse>> GetListStallAsync(int page, int size)
         {
-            IPaginate<StallResponse> listStall = await _unitOfWork.GetRepository<Stall>().GetList(
+            IPaginate<StallResponse> listStall = await _unitOfWork.StallRepository.GetList(
                 selector: x => new StallResponse(x.Id, x.Name, x.Number, x.StaffId ,x.Deflag),
                 orderBy: x => x.OrderByDescending(x => x.Id),
                 page: page,
@@ -35,7 +42,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var stallRepository = _unitOfWork.GetRepository<Stall>();
+                var stallRepository = _unitOfWork.StallRepository;
                 var stalls = await stallRepository.GetListAsync();
                 return stalls;
             }
@@ -50,7 +57,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var stallRepository = _unitOfWork.GetRepository<Stall>();
+                var stallRepository = _unitOfWork.StallRepository;
                  var stall = await stallRepository.FirstOrDefaultAsync(s => s.Id == id);
                 return stall;
             }

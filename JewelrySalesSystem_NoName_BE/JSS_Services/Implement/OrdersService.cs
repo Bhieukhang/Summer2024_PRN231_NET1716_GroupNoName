@@ -4,6 +4,7 @@ using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,15 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
-    public class OrdersService : BaseService<OrdersService>, IOrderService
+    public class OrdersService : IOrderService
     {
-        public OrdersService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<OrdersService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<OrdersService> _logger;
+
+        public OrdersService(IUnitOfWork unitOfWork, ILogger<OrdersService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<OrderResponse> CreateOrder(OrderRequest newData)
@@ -34,7 +40,7 @@ namespace JSS_Services.Implement
             //Check promotion - true => TotalPrice = TotalPrice - (TotalPrice*Percentage/100)
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
-            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone == newData.CustomerPhone);
+            var customer = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(a => a.Phone == newData.CustomerPhone);
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
@@ -60,7 +66,7 @@ namespace JSS_Services.Implement
                 };
                 totalPrice += detail.TotalPrice;
                 listOrderDetail.Add(detail);
-                await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
+                await _unitOfWork.OrderDetailRepository.InsertRangeAsync(listOrderDetail);
             }
             if (isCheckPromotion)
             {
@@ -69,7 +75,7 @@ namespace JSS_Services.Implement
             }
             order.TotalPrice = totalPrice;
             //Save order
-            await _unitOfWork.GetRepository<Order>().InsertAsync(order);
+            await _unitOfWork.OrderRepository.InsertAsync(order);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
@@ -89,7 +95,7 @@ namespace JSS_Services.Implement
             List<OrderDetail> listOrderDetail = new List<OrderDetail>();
             double? totalPrice = 0;
             double totalPayable = 0;
-            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(a => a.Phone.Equals(newData.CustomerPhone));
+            var customer = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(a => a.Phone.Equals(newData.CustomerPhone));
             Order order = new Order()
             {
                 Id = Guid.NewGuid(),
@@ -116,21 +122,21 @@ namespace JSS_Services.Implement
                 };
                 //totalPrice += detail.TotalPrice;
                 listOrderDetail.Add(detail);
-                await _unitOfWork.GetRepository<OrderDetail>().InsertRangeAsync(listOrderDetail);
+                await _unitOfWork.OrderDetailRepository.InsertRangeAsync(listOrderDetail);
             }
             
             //Update quantity product in store
             foreach (var orderDetail in productList)
             {
-                var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(p => p.Id == orderDetail.ProductId);
+                var product = await _unitOfWork.ProductRepository.FirstOrDefaultAsync(p => p.Id == orderDetail.ProductId);
                 product.Quantity = product.Quantity - orderDetail.Quantity;
-                _unitOfWork.GetRepository<Product>().UpdateAsync(product);
+                _unitOfWork.ProductRepository.UpdateAsync(product);
             }
 
             //Update usermoney for membership
-            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == customer.Id);
+            var membership = await _unitOfWork.MembershipRepository.FirstOrDefaultAsync(x => x.UserId == customer.Id);
             membership.UsedMoney += order.TotalPrice;
-            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+            _unitOfWork.MembershipRepository.UpdateAsync(membership);
 
             //Transaction
             Transaction tran = new Transaction()
@@ -145,9 +151,9 @@ namespace JSS_Services.Implement
 
 
             //Save order
-            await _unitOfWork.GetRepository<Order>().InsertAsync(order);
+            await _unitOfWork.OrderRepository.InsertAsync(order);
             //Save transaction
-            await _unitOfWork.GetRepository<Transaction>().InsertAsync(tran);
+            await _unitOfWork.TransactionRepository.InsertAsync(tran);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
@@ -156,8 +162,8 @@ namespace JSS_Services.Implement
         }
         public async Task<IEnumerable<OrderResponse>> SearchOrders(Guid? id, DateTime? insDate, string? phone)
         {
-            var orderRepository = _unitOfWork.GetRepository<Order>();
-            var accountRepository = _unitOfWork.GetRepository<Account>();
+            var orderRepository = _unitOfWork.OrderRepository;
+            var accountRepository = _unitOfWork.AccountRepository;
 
             var predicate = PredicateBuilder.New<Order>(true);
 
@@ -193,7 +199,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var orderRepository = _unitOfWork.GetRepository<Order>();
+                var orderRepository = _unitOfWork.OrderRepository;
                 var order = await orderRepository.FirstOrDefaultAsync(a => a.Id == id);
 
                 if (order == null)
@@ -226,7 +232,7 @@ namespace JSS_Services.Implement
             List<ProductConditionGroup> listProductConditionGroup = new List<ProductConditionGroup>();
             int countProduct = 0;
             //Case: Expiring promotion
-            var promotion = await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(p => p.Id == PromotionId && p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now,
+            var promotion = await _unitOfWork.PromotionRepository.FirstOrDefaultAsync(p => p.Id == PromotionId && p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now,
                                                                          include: p => p.Include(p => p.ProductConditionGroups));
             if (promotion == null) return false;
             foreach (var itemProduct in listProducts)
@@ -253,7 +259,7 @@ namespace JSS_Services.Implement
 
         public async Task<double> CalculateTotalPriceByPromotion(Guid PromotionId, double price)
         {
-            var promotion = await _unitOfWork.GetRepository<Promotion>().FirstOrDefaultAsync(x => x.Id == PromotionId);
+            var promotion = await _unitOfWork.PromotionRepository.FirstOrDefaultAsync(x => x.Id == PromotionId);
 
             int p = (int)promotion.Percentage;
             double per = (double)promotion.Percentage / 100.0;
@@ -264,7 +270,7 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalOrdersByDay(DateTime date)
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var orders = await _unitOfWork.OrderRepository.GetListAsync();
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Date == date.Date);
 
             return totalOrders;
@@ -272,20 +278,20 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalOrdersByMonth(int month, int year)
         {
-            var repository = _unitOfWork.GetRepository<Order>();
+            var repository = _unitOfWork.OrderRepository;
             var totalOrders = await repository.CountAsync(o => o.InsDate.HasValue && o.InsDate.Value.Month == month && o.InsDate.Value.Year == year);
             return totalOrders;
         }
 
         public async Task<int> GetTotalOrdersByYear(int year)
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync();
+            var orders = await _unitOfWork.OrderRepository.GetListAsync();
             var totalOrders = orders.Count(o => o.InsDate.HasValue && o.InsDate.Value.Year == year);
             return totalOrders;
         }
         public async Task<IEnumerable<OrderResponse>> GetAllOrders()
         {
-            var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
+            var orders = await _unitOfWork.OrderRepository.GetListAsync(
                 orderBy: o => o.OrderByDescending(o => o.InsDate));
 
 
@@ -304,7 +310,7 @@ namespace JSS_Services.Implement
         }
         public async Task<CustomerOrderResponse?> GetListOrderByCustomerPhone(string phone)
         {
-            var customer = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(c => c.Phone == phone, include: c => c.Include(c => c.Orders));
+            var customer = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(c => c.Phone == phone, include: c => c.Include(c => c.Orders));
             if (customer != null)
             {
                 var inforCustomer = new InforCustomer(customer.Id, customer.FullName, customer.Phone, customer.Address, customer.ImgUrl);
@@ -335,7 +341,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == id, 
+                var order = await _unitOfWork.OrderRepository.FirstOrDefaultAsync(a => a.Id == id, 
                                                                          include: a => a.Include(a => a.OrderDetails)
                                                                          .ThenInclude(a => a.Product));
                 if (order == null)
@@ -378,7 +384,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var order = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(a => a.Id == orderId,
+                var order = await _unitOfWork.OrderRepository.FirstOrDefaultAsync(a => a.Id == orderId,
                                                                          include: a => a.Include(a => a.OrderDetails)
                                                                          .ThenInclude(a => a.Product));
                 if (order == null)
@@ -414,7 +420,7 @@ namespace JSS_Services.Implement
 
         public async Task<OrderResponseUpdate> UpdateOrder(Guid orderId, OrderUpdate data)
         {
-            var orderItem = await _unitOfWork.GetRepository<Order>().FirstOrDefaultAsync(o => o.Id == orderId,
+            var orderItem = await _unitOfWork.OrderRepository.FirstOrDefaultAsync(o => o.Id == orderId,
                                     include: o => o.Include(o => o.Customer));
             if (orderItem == null)
             {
@@ -427,7 +433,7 @@ namespace JSS_Services.Implement
             OrderResponseUpdate order = new OrderResponseUpdate();
             order.OrderId = orderId;
             order.Phone = orderItem.Customer.Phone;
-            _unitOfWork.GetRepository<Order>().UpdateAsync(orderItem);
+            _unitOfWork.OrderRepository.UpdateAsync(orderItem);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful) return null;
             return order;

@@ -4,28 +4,28 @@ using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
-    public class DiamondService : BaseService<DiamondService>, IDiamondService
+    public class DiamondService : IDiamondService
     {
         private readonly string _bucket = "jssimage-253a4.appspot.com";
 
-        public DiamondService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<DiamondService> logger)
-            : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<DiamondService> _logger;
+
+        public DiamondService(IUnitOfWork unitOfWork, ILogger<DiamondService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IPaginate<DiamondResponse>> GetAllDiamondsAsync(int page, int size)
         {
-            IPaginate<DiamondResponse> list = await _unitOfWork.GetRepository<Diamond>().GetList(
+            IPaginate<DiamondResponse> list = await _unitOfWork.DiamondRepository.GetList(
                 selector: x => new DiamondResponse(x.Id, x.DiamondName, x.Code, x.Carat, x.Color, x.Clarity, x.Cut,
                     x.Price, x.ImageDiamond, x.Quantity, x.InsDate, x.PeriodWarranty, x.Deflag),
                 predicate: x => x.Deflag == true,
@@ -42,7 +42,7 @@ namespace JSS_Services.Implement
                 return null;
             }
 
-            var diamond = await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(
+            var diamond = await _unitOfWork.DiamondRepository.FirstOrDefaultAsync(
                 p => p.Code == code);
 
             if (diamond != null)
@@ -56,7 +56,7 @@ namespace JSS_Services.Implement
 
         public async Task<IEnumerable<DiamondResponse>> AutocompleteDiamondsAsync(string query)
         {
-            var diamonds = await _unitOfWork.GetRepository<Diamond>().GetListAsync(
+            var diamonds = await _unitOfWork.DiamondRepository.GetListAsync(
                 selector: diamond => new DiamondResponse(diamond.Id, diamond.DiamondName, diamond.Code, diamond.Carat, diamond.Color, diamond.Clarity, diamond.Cut,
                 diamond.Price, diamond.ImageDiamond, diamond.Quantity, diamond.InsDate, diamond.PeriodWarranty, diamond.Deflag),
                 predicate: diamond => diamond.DiamondName.Contains(query) || diamond.Code.Contains(query),
@@ -68,7 +68,7 @@ namespace JSS_Services.Implement
 
         public async Task<Diamond> GetDiamondByIdAsync(Guid id)
         {
-            return await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(d => d.Id == id);
+            return await _unitOfWork.DiamondRepository.FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task<Diamond> CreateDiamondAsync(Diamond diamond, Stream imageStream, string imageName)
@@ -86,7 +86,7 @@ namespace JSS_Services.Implement
                 diamond.InsDate = DateTime.Now;
                 diamond.Deflag = true;
 
-                await _unitOfWork.GetRepository<Diamond>().InsertAsync(diamond);
+                await _unitOfWork.DiamondRepository.InsertAsync(diamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful)
                 {
@@ -106,7 +106,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var existingDiamond = await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(d => d.Id == id);
+                var existingDiamond = await _unitOfWork.DiamondRepository.FirstOrDefaultAsync(d => d.Id == id);
                 if (existingDiamond == null) return null;
 
                 existingDiamond.DiamondName = diamond.DiamondName ?? existingDiamond.DiamondName;
@@ -131,7 +131,7 @@ namespace JSS_Services.Implement
                 }
 
                 existingDiamond.UpsDate = DateTime.Now;
-                _unitOfWork.GetRepository<Diamond>().UpdateAsync(existingDiamond);
+                _unitOfWork.DiamondRepository.UpdateAsync(existingDiamond);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccessful) return null;
 
@@ -148,10 +148,10 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var existingDiamond = await _unitOfWork.GetRepository<Diamond>().FirstOrDefaultAsync(a => a.Id == id);
+                var existingDiamond = await _unitOfWork.DiamondRepository.FirstOrDefaultAsync(a => a.Id == id);
                 if (existingDiamond == null) return false;
 
-                _unitOfWork.GetRepository<Diamond>().DeleteAsync(existingDiamond);
+                _unitOfWork.DiamondRepository.DeleteAsync(existingDiamond);
                 return await _unitOfWork.CommitAsync() > 0;
             }
             catch (Exception ex)

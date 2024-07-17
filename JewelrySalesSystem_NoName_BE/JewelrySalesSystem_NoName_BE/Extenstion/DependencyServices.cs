@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using JSS_Repositories.Repo.Interface;
+using JSS_Repositories.Repo.Implement;
 
 namespace JewelrySalesSystem_NoName_BE
 {
@@ -21,7 +23,8 @@ namespace JewelrySalesSystem_NoName_BE
 
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork<JewelrySalesSystemContext>, UnitOfWork<JewelrySalesSystemContext>>();
+            services.AddLogging();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 

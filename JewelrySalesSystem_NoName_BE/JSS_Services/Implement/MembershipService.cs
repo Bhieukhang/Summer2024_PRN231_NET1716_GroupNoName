@@ -4,6 +4,7 @@ using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
 using JSS_Repositories;
+using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,16 +18,20 @@ using System.Threading.Tasks;
 
 namespace JSS_Services.Implement
 {
-    public class MembershipService : BaseService<MembershipService>, IMembershipService
+    public class MembershipService : IMembershipService
     {
-        public MembershipService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork,
-            ILogger<MembershipService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<MembershipService> _logger;
+
+        public MembershipService(IUnitOfWork unitOfWork, ILogger<MembershipService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<IPaginate<MembershipResponse>> GetListMembership(int page, int size)
         {
-            IPaginate<MembershipResponse> listMembership = await _unitOfWork.GetRepository<Membership>().GetList(
+            IPaginate<MembershipResponse> listMembership = await _unitOfWork.MembershipRepository.GetList(
                 selector: x => new MembershipResponse(x.Id, x.Name, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
                 orderBy: x => x.OrderByDescending(x => x.UsedMoney),
                 page: page,
@@ -36,7 +41,7 @@ namespace JSS_Services.Implement
 
         public async Task<IPaginate<MembershipResponse>> GetListMembershipExpired(int page, int size)
         {
-            IPaginate<MembershipResponse> listMembershipExpired = await _unitOfWork.GetRepository<Membership>().GetList(
+            IPaginate<MembershipResponse> listMembershipExpired = await _unitOfWork.MembershipRepository.GetList(
                 selector: x => new MembershipResponse(x.Id, x.Name, x.Point, x.RedeemPoint, x.UserId, x.UsedMoney, x.Deflag),
                 predicate: x => x.Deflag.Equals(false),
                 orderBy: x => x.OrderBy(x => x.UsedMoney),
@@ -47,9 +52,9 @@ namespace JSS_Services.Implement
 
         public async Task<ProfileResponse> GetProfileMembershipById(Guid id)
         {
-            var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == id);
-            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
-            var user = await _unitOfWork.GetRepository<Account>().FirstOrDefaultAsync(x => x.Id == id);
+            var member = await _unitOfWork.MembershipRepository.FirstOrDefaultAsync(x => x.UserId == id);
+            var memberType = await _unitOfWork.MemberTypeRepository.FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
+            var user = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(x => x.Id == id);
             if (member == null)
             {
                 return null;
@@ -70,7 +75,7 @@ namespace JSS_Services.Implement
 
         public async Task<MembershipResponse> GetMembershipByName(string name)
         {
-            var queryMembership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.Name.Equals(name));
+            var queryMembership = await _unitOfWork.MembershipRepository.FirstOrDefaultAsync(x => x.Name.Equals(name));
             if (queryMembership == null)
             {
                 return null;
@@ -81,12 +86,12 @@ namespace JSS_Services.Implement
 
         public async Task<MembershipResponse> UpdateUserMoney(Guid userId, double userMoney)
         {
-            var membership = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(x => x.UserId == userId);
+            var membership = await _unitOfWork.MembershipRepository.FirstOrDefaultAsync(x => x.UserId == userId);
             membership.UsedMoney += userMoney;
 
             await UpdateMemberType(membership);
 
-            _unitOfWork.GetRepository<Membership>().UpdateAsync(membership);
+            _unitOfWork.MembershipRepository.UpdateAsync(membership);
 
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
@@ -95,7 +100,7 @@ namespace JSS_Services.Implement
         }
         private async Task UpdateMemberType(Membership membership)
         {
-            var memberTypes = await _unitOfWork.GetRepository<MemberType>().GetListAsync();
+            var memberTypes = await _unitOfWork.MemberTypeRepository.GetListAsync();
 
             if (membership.UsedMoney >= 400000000)
             {
@@ -117,18 +122,18 @@ namespace JSS_Services.Implement
 
         public async Task<int> GetTotalMembershipCountAsync()
         {
-            var total = _unitOfWork.GetRepository<Membership>();
+            var total = _unitOfWork.MembershipRepository;
             return await total.CountAsync();
         }
         public async Task<int> GetActiveMembershipCountAsync()
         {
-            var activeMembership = _unitOfWork.GetRepository<Membership>();
+            var activeMembership = _unitOfWork.MembershipRepository;
             return await activeMembership.CountAsync(a => a.Deflag == true);
         }
 
         public async Task<int> GetUnavailableMembership()
         {
-            var unMembership = await _unitOfWork.GetRepository<Membership>().CountAsync(m => m.Deflag == false);
+            var unMembership = await _unitOfWork.MembershipRepository.CountAsync(m => m.Deflag == false);
             return unMembership;
         }
 
@@ -149,7 +154,7 @@ namespace JSS_Services.Implement
                 InsDate = DateTime.Now,
                 UpsDate = DateTime.Now,
             };
-            _unitOfWork.GetRepository<Account>().InsertAsync(account);
+            _unitOfWork.AccountRepository.InsertAsync(account);
             if (account != null)
             {
                 Membership member = new Membership()
@@ -163,7 +168,7 @@ namespace JSS_Services.Implement
                     Deflag = true,
                     MemberTypeId = Guid.Parse("18095960-ACB3-4FD4-BCD3-646D9DF3E6E1")
                 };
-                _unitOfWork.GetRepository<Membership>().InsertAsync(member);
+                _unitOfWork.MembershipRepository.InsertAsync(member);
 
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
                 if (isSuccessful == false) return null;
@@ -173,10 +178,10 @@ namespace JSS_Services.Implement
 
         public async Task<MembershipInfo> GetInfoMembership(string phone)
         {
-            var account = await _unitOfWork.GetRepository<Account>()
+            var account = await _unitOfWork.AccountRepository
                             .FirstOrDefaultAsync(m => m.Phone == phone);
-            var member = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(m => m.UserId == account.Id);
-            var memberType = await _unitOfWork.GetRepository<MemberType>().FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
+            var member = await _unitOfWork.MembershipRepository.FirstOrDefaultAsync(m => m.UserId == account.Id);
+            var memberType = await _unitOfWork.MemberTypeRepository.FirstOrDefaultAsync(t => t.Id == member.MemberTypeId);
             MembershipInfo mem = new MembershipInfo()
             {
                 Id = member.Id,

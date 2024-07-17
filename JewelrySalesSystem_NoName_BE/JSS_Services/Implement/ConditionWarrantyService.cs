@@ -13,13 +13,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class ConditionWarrantyService : BaseService<ConditionWarrantyService>, IConditionWarrantyServicecs
+    public class ConditionWarrantyService : IConditionWarrantyServicecs
     {
-        public ConditionWarrantyService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<ConditionWarrantyService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<ConditionWarrantyService> _logger;
+
+        public ConditionWarrantyService(IUnitOfWork unitOfWork, ILogger<ConditionWarrantyService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         public async Task<ConditionWarrantyResponse> CreateConditionWarranty(ConditionWarrantyRequest newData)
@@ -32,7 +38,7 @@ namespace JSS_Services.Implement
                 Deflag = true
             };
 
-            await _unitOfWork.GetRepository<ConditionWarranty>().InsertAsync(conditionWarranty);
+            await _unitOfWork.ConditionWarrantyRepository.InsertAsync(conditionWarranty);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (isSuccessful == false) return null;
             return new ConditionWarrantyResponse(conditionWarranty.Id, conditionWarranty.Condition, conditionWarranty.InsDate,
@@ -41,7 +47,7 @@ namespace JSS_Services.Implement
 
         public async Task<IPaginate<ConditionWarrantyResponse>> GetListConditionWarranties(int page, int size)
         {
-            IPaginate<ConditionWarrantyResponse> condition = await _unitOfWork.GetRepository<ConditionWarranty>().GetList(
+            IPaginate<ConditionWarrantyResponse> condition = await _unitOfWork.ConditionWarrantyRepository.GetList(
                 selector: x => new ConditionWarrantyResponse(x.Id, x.Condition,x.InsDate, x.Deflag),
                 predicate: x => x.Deflag.Equals(true),
                 orderBy: x => x.OrderBy(x => x.InsDate),
@@ -52,7 +58,7 @@ namespace JSS_Services.Implement
 
         public async Task<ConditionWarrantyResponse> GetConditionWarranty(Guid id)
         {
-            var condition = await _unitOfWork.GetRepository<ConditionWarranty>().FirstOrDefaultAsync(x => x.Id == id);
+            var condition = await _unitOfWork.ConditionWarrantyRepository.FirstOrDefaultAsync(x => x.Id == id);
             return new ConditionWarrantyResponse(condition.Id, condition.Condition, condition.InsDate, condition.Deflag);
         }
     }

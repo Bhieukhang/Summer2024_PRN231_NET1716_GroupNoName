@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
-namespace JewelrySalesSystem_NoName_FE.Pages.Manager.GoldRates
+namespace JewelrySalesSystem_NoName_FE.Pages.Manager.RateOfGold
 {
     public class ListGoldRateModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.GoldRates
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
         }
-        public IList<GoldRateDTO> goldRateList { get; set; } = new List<GoldRateDTO>();
+        public IList<SilverRateDTO> goldRateList { get; set; } = new List<SilverRateDTO>();
         public int Page { get; set; }
         public int Size { get; set; }
         public int TotalPages { get; set; }
@@ -43,7 +43,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.GoldRates
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var goldRateResponse = await client.GetStringAsync(url);
-                var paginateResult = JsonConvert.DeserializeObject<Paginate<GoldRateDTO>>(goldRateResponse);
+                var paginateResult = JsonConvert.DeserializeObject<Paginate<SilverRateDTO>>(goldRateResponse);
                 TotalPages = paginateResult.TotalPages;
 
                 goldRateList = paginateResult.Items;
@@ -52,7 +52,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.GoldRates
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
-                goldRateList = new List<GoldRateDTO>();
+                goldRateList = new List<SilverRateDTO>();
                 return Page();
             }
         }

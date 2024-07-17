@@ -11,26 +11,32 @@ using JSS_Repositories;
 using JSS_DataAccessObjects;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class OrderDetailService : BaseService<OrderDetailService>, IOrderDetailService
+    public class OrderDetailService : IOrderDetailService
     {
-        public OrderDetailService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<OrderDetailService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<OrderDetailService> _logger;
+
+        public OrderDetailService(IUnitOfWork unitOfWork, ILogger<OrderDetailService> logger) 
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
         // Do Huu Thuan
         public async Task<OrderDetail> GetOrderDetailByIdAsync(Guid id)
         {
-            return await _unitOfWork.GetRepository<OrderDetail>().FirstOrDefaultAsync(a => a.Id == id);
+            return await _unitOfWork.OrderDetailRepository.FirstOrDefaultAsync(a => a.Id == id);
         }
         public async Task<IEnumerable<OrderDetail>> GetAllOrderDetailsAsync()
         {
-            return await _unitOfWork.GetRepository<OrderDetail>().GetListAsync();
+            return await _unitOfWork.OrderDetailRepository.GetListAsync();
         }
         public async Task<OrderDetail> GetOrderDetailByOrderIdAsync(Guid id)
         {
-            return await _unitOfWork.GetRepository<OrderDetail>().FirstOrDefaultAsync(
+            return await _unitOfWork.OrderDetailRepository.FirstOrDefaultAsync(
                 predicate: a => a.OrderId == id,
                 include: q => q
                 .Include(od => od.Order)

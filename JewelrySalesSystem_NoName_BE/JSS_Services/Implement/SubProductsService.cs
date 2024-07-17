@@ -10,17 +10,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSS_Repositories.Repo.Interface;
 
 namespace JSS_Services.Implement
 {
-    public class SubProductsService : BaseService<SubProductsService>, ISubProductsService
+    public class SubProductsService : ISubProductsService
     {
-        public SubProductsService(IUnitOfWork<JewelrySalesSystemContext> unitOfWork, ILogger<SubProductsService> logger) : base(unitOfWork, logger)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<SubProductsService> _logger;
+
+        public SubProductsService(IUnitOfWork unitOfWork, ILogger<SubProductsService> logger)
         {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
+
         public async Task<IEnumerable<SubProducts>> GetAllSubProductslsAsync()
         {
-            return await _unitOfWork.GetRepository<SubProducts>().GetListAsync();
+            return await _unitOfWork.SubProductsRepository.GetListAsync();
         }
     }
 }

@@ -3,7 +3,7 @@ using JSS_BusinessObjects;
 using JSS_BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace JSS_Repositories;
+namespace JSS_Repositories.Repo.Interface;
 
 public interface IGenericRepository<T> : IDisposable where T : class
 {
