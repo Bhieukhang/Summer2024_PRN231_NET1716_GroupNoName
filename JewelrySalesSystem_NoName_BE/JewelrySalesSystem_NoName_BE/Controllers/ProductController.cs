@@ -1,5 +1,6 @@
 ﻿using JewelrySalesSystem_NoName_BE.Extenstion;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -59,6 +60,34 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(products);
         }
 
+        #region GetTotalProductCount
+        /// <summary>
+        /// Get total product count.
+        /// </summary>
+        /// <returns>Total number of products.</returns>
+        /// GET : api/Product/totalcount
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.GetTotalProductCountEndpoint)]
+        public async Task<ActionResult<int>> GetTotalProductCountAsync()
+        {
+            var totalCount = await _productService.GetTotalProductCountAsync();
+            return Ok(totalCount);
+        }
+
+        #region GetProductCountByCategory
+        /// <summary>
+        /// Get product count by category.
+        /// </summary>
+        /// <returns>List of product counts by category.</returns>
+        /// GET : api/Product/countbycategory
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.GetProductCountByCategoryEndpoint)]
+        public async Task<ActionResult<IEnumerable<CategoryProductCountResponseDTO>>> GetProductCountByCategoryAsync()
+        {
+            var categoryProductCounts = await _productService.GetProductCountByCategoryAsync();
+            return Ok(categoryProductCounts);
+        }
+
         [HttpGet(ApiEndPointConstant.Product.AllProductEndpoint)]
         public async Task<ActionResult<IEnumerable<Product>>> GetAsync()
         {
@@ -105,34 +134,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(pro);
         }
 
-
-        //#region SearchAndFilterProducts
-        ///// <summary>
-        ///// Search a product by its code or get products by category and material.
-        ///// </summary>
-        ///// <param name="code">The code of the product to search.</param>
-        ///// <param name="categoryId">The ID of the category to filter by.</param>
-        ///// <param name="materialId">The ID of the material to filter by.</param>
-        ///// <param name="page">Page number for pagination.</param>
-        ///// <param name="size">Page size for pagination.</param>
-        ///// <returns>List of filtered products or a single product with the specified code.</returns>
-        ///// GET : api/Product/searchAndFilter
-        //#endregion
-        //[HttpGet(ApiEndPointConstant.Product.SearchAndFilterProductEndpoint)]
-        //public async Task<ActionResult> SearchAndFilterProducts(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
-        //{
-        //    var result = await _productService.SearchAndFilterProductsAsync(code, categoryId, materialId, page, size);
-
-        //    if (!string.IsNullOrEmpty(code))
-        //    {
-        //        if (result.Items.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-        //        return Ok(result.Items.FirstOrDefault());
-        //    }
-        //    return Ok(result);
-        //}
+        #region CheckProductHasCategory
+        /// <summary>
+        /// Check Product Has Category.
+        /// </summary>
+        /// <param name="categoryId">The ID category of the product to check existed.</param>
+        /// <returns>The result of checking.</returns>
+        /// GET : api/Product/subid
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByCategoryEndpoint)]
+        public async Task<ActionResult<bool>> HasProductsWithCategory(Guid categoryId)
+        {
+            var hasProducts = await _productService.HasProductsWithCategoryAsync(categoryId);
+            return Ok(hasProducts);
+        }
 
         #region SearchProductByCode
         /// <summary>
@@ -140,12 +155,31 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// </summary>
         /// <param name="code">The code of the product to search.</param>
         /// <returns>Product with code.</returns>
-        /// GET : api/Product/searchAndFilter
+        /// GET : api/Product/searchCode
         #endregion
         [HttpGet(ApiEndPointConstant.Product.ProductByCodeEndpoint)]
         public async Task<IActionResult> SearchProductByCode(string code)
         {
             var product = await _productService.SearchProductByCodeAsync(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
+        #region SearchProductByName
+        /// <summary>
+        /// Search a product by its name.
+        /// </summary>
+        /// <param name="name">The name of the product to search.</param>
+        /// <returns>Product with name.</returns>
+        /// GET : api/Product/searchName
+        #endregion
+        [HttpGet(ApiEndPointConstant.Product.ProductByNameEndpoint)]
+        public async Task<IActionResult> SearchProductByName(string name)
+        {
+            var product = await _productService.SearchProductByNameAsync(name);
             if (product == null)
             {
                 return NotFound();

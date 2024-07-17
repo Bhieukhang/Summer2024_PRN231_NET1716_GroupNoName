@@ -34,7 +34,6 @@ public partial class ProductDTO
     public double? ProcessPrice { get; set; }
     [Required]
     public Guid? MaterialId { get; set; }
-    [Required]
     public Guid? SubId { get; set; }
     [Required]
     public string? Code { get; set; }

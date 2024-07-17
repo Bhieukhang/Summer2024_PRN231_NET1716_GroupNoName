@@ -1,4 +1,4 @@
-using Firebase.Storage;
+﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Diamonds;
 using JewelrySalesSystem_NoName_FE.DTOs.Product;
 using JewelrySalesSystem_NoName_FE.Pages.Manager.Products;
@@ -16,16 +16,40 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
         private readonly string _bucket;
 
         [BindProperty]
-        public DiamondDTO Diamond { get; set; }
-
-        [BindProperty]
-        public IFormFile Image { get; set; }
+        public CategoryDTO Cate { get; set; }
 
         public EditCategoryModel(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
-            _bucket = _configuration["Firebase:Bucket"];
+        }
+
+        private async Task<bool> IsCategoryNameExistsAsync(string categoryName, string token)
+        {
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var apiUrl = $"{ApiPath.CategoryList}/categoryName?name={categoryName}";
+            var response = await client.GetAsync(apiUrl);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                TempData["ErrorMessage"] = "Kết nối không được xác thực ! Hãy login lại .";
+                return false;
+            }
+
+            var category = JsonConvert.DeserializeObject<CategoryDTO>(await response.Content.ReadAsStringAsync());
+            return category != null;
+        }
+
+        private async Task LoadOnGet(Guid id, string token)
+        {
+            var apiUrl = $"{ApiPath.CategoryList}/id?id={id}";
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetStringAsync(apiUrl);
+            Cate = JsonConvert.DeserializeObject<CategoryDTO>(response);
         }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
@@ -42,7 +66,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
+                var apiUrl = $"{ApiPath.CategoryList}/id?id={id}";
                 var response = await client.GetAsync(apiUrl);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -51,7 +75,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
                     return RedirectToPage("/Auth/Login");
                 }
 
-                Diamond = JsonConvert.DeserializeObject<DiamondDTO>(await response.Content.ReadAsStringAsync());
+                Cate = JsonConvert.DeserializeObject<CategoryDTO>(await response.Content.ReadAsStringAsync());
 
                 return Page();
             }
@@ -62,6 +86,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
             }
         }
 
+
+
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
             var token = HttpContext.Session.GetString("Token");
@@ -71,56 +97,27 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
                 return RedirectToPage("/Auth/Login");
             }
 
-            const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
+            if (await IsCategoryNameExistsAsync(Cate.Name, token))
+            {
+                TempData["ErrorMessage"] = "Tên loại này đã tồn tại.";
+                LoadOnGet(id, token);
+                return Page();
+            }
 
             try
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
+                var cate = new CategoryDTO
                 {
-                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
-                    return Page();
-                }
-
-                if (Image != null)
-                {
-                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(Image.FileName);
-                    var storage = new FirebaseStorage(_bucket);
-                    using (var stream = new MemoryStream())
-                    {
-                        Image.CopyTo(stream);
-                        stream.Seek(0, SeekOrigin.Begin);
-                        var uploadTask = storage.Child("uploads").Child(uniqueFileName).PutAsync(stream);
-                        Diamond.ImageDiamond = await uploadTask;
-
-                        stream.Seek(0, SeekOrigin.Begin);
-                        Diamond.ImageDiamond = Convert.ToBase64String(stream.ToArray());
-                    }
-                }
-
-                Diamond.UpsDate = DateTime.Now;
-
-                var diamond = new DiamondDTO
-                {
-                    Code = Diamond.Code,
-                    DiamondName = Diamond.DiamondName,
-                    Carat = Diamond.Carat,
-                    Color = Diamond.Color,
-                    Clarity = Diamond.Clarity,
-                    Cut = Diamond.Cut,
-                    ImageDiamond = Diamond.ImageDiamond,
-                    Price = Diamond.Price,
-                    Quantity = Diamond.Quantity,
-                    InsDate = Diamond.InsDate,
-                    UpsDate = Diamond.UpsDate,
+                    Name = Cate.Name,
                 };
 
-                var json = JsonConvert.SerializeObject(diamond);
+                var json = JsonConvert.SerializeObject(cate);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var apiUrl = $"{ApiPath.DiamondList}/id?id={id}";
+                var apiUrl = $"{ApiPath.CategoryList}/id?id={id}";
                 var response = await client.PutAsync(apiUrl, content);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -131,13 +128,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Categories
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Diamond is updated successfully!";
-                    return RedirectToPage("./ListDiamond");
+                    TempData["SuccessMessage"] = "Cập nhật loại trang sức thành công !";
+                    return RedirectToPage("./ListCategories");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the diamond. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the category. Status Code: {response.StatusCode}, Response: {responseBody}");
                 }
             }
             catch (Exception ex)

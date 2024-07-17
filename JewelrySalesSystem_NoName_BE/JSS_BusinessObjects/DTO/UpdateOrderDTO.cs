@@ -11,7 +11,9 @@ namespace JSS_BusinessObjects.DTO
         public Guid? OrderId { get; set; }
     
         public double? TotalPrice { get; set; }
-      
+        public double? FinalPrice { get; set; }
+        public int? VoucherId { get; set; }
+        public int? ShippingId { get; set; }
         public int? Status { get; set; }
     }
 }

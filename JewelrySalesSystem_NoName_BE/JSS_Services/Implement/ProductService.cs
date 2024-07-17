@@ -1,5 +1,6 @@
 ﻿using Firebase.Storage;
 using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Response;
 using JSS_DataAccessObjects;
@@ -61,6 +62,37 @@ namespace JSS_Services.Implement
             return list;
         }
 
+        public async Task<int> GetTotalProductCountAsync()
+        {
+            var productRepository = _unitOfWork.GetRepository<Product>();
+            return await productRepository.CountAsync();
+        }
+
+        public async Task<List<CategoryProductCountResponseDTO>> GetProductCountByCategoryAsync()
+        {
+            var productRepository = _unitOfWork.GetRepository<Product>();
+
+            var products = await productRepository.GetListAsync(
+                include: query => query.Include(p => p.Category)
+            );
+
+            var categoryProductCounts = products
+                .GroupBy(p => p.CategoryId)
+                .Select(g => new CategoryProductCountResponseDTO
+                {
+                    CategoryId = g.Key,
+                    CategoryName = g.First().Category.Name,
+                    ProductCount = g.Count(),
+                    Products = g.Select(p => new ProductDTO
+                    {
+                        ProductId = p.Id,
+                        ProductName = p.ProductName,
+                    }).ToList()
+                }).ToList();
+
+            return categoryProductCounts;
+        }
+
         public async Task<IEnumerable<Product>> GetAsync()
         {
             var products = await _unitOfWork.GetRepository<Product>().GetListAsync();
@@ -70,6 +102,12 @@ namespace JSS_Services.Implement
         public async Task<Product> GetProductByIdAsync(Guid id)
         {
             return await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<bool> HasProductsWithCategoryAsync(Guid categoryId)
+        {
+            var repository = _unitOfWork.GetRepository<Product>();
+            return await repository.AnyAsync(p => p.CategoryId == categoryId);
         }
 
         //public async Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size)
@@ -128,6 +166,28 @@ namespace JSS_Services.Implement
             {
                 return new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
                 product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, new CategoryResponse(product.Category.Id, product.Category.Name),
+                    new MaterialResponse(product.Material.Id, product.Material.MaterialName, product.Material.InsDate), product.PeriodWarranty);
+            }
+
+            return null;
+        }
+
+        public async Task<ProductResponse> SearchProductByNameAsync(string productName)
+        {
+            if (string.IsNullOrEmpty(productName))
+            {
+                return null;
+            }
+
+            var product = await _unitOfWork.GetRepository<Product>().FirstOrDefaultAsync(
+                p => p.ProductName == productName,
+                include: s => s.Include(p => p.Category).Include(c => c.Material)
+            );
+
+            if (product != null)
+            {
+                return new ProductResponse(product.Id, product.ImgProduct, product.ProductName, product.Description, product.Size, product.SellingPrice, product.Quantity,
+                    product.CategoryId, product.MaterialId, product.Code, product.ImportPrice, product.InsDate, product.ProcessPrice, product.Deflag, product.Tax, product.SubId, new CategoryResponse(product.Category.Id, product.Category.Name),
                     new MaterialResponse(product.Material.Id, product.Material.MaterialName, product.Material.InsDate), product.PeriodWarranty);
             }
 

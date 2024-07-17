@@ -1,4 +1,5 @@
 ﻿using JSS_BusinessObjects;
+using JSS_BusinessObjects.DTO;
 using JSS_BusinessObjects.Models;
 using JSS_BusinessObjects.Payload.Request;
 using JSS_BusinessObjects.Payload.Response;
@@ -17,6 +18,8 @@ namespace JSS_Services.Interface
         public Task<IPaginate<ProductResponse>> GetProductBySubIdAsync(Guid subId, int page, int size);
         Task<IPaginate<ProductResponse>> GetAllProductsAsync(int page, int size);
         Task<ProductResponse> SearchProductByCodeAsync(string code);
+        Task<ProductResponse> SearchProductByNameAsync(string productName);
+        Task<bool> HasProductsWithCategoryAsync(Guid categoryId);
         Task<IPaginate<ProductResponse>> FilterProductsAsync(Guid? categoryId, Guid? materialId, int? page, int? size);
         //Task<IPaginate<ProductResponse>> SearchAndFilterProductsAsync(string? code, Guid? categoryId, Guid? materialId, int? page, int? size);
         Task<Product> GetProductByIdAsync(Guid id);
@@ -29,5 +32,7 @@ namespace JSS_Services.Interface
         Task<ProductMapPromotion> GetPromotionByProductCode(string productCode);
         Task<ProductMapPromotionItem> GetPromotionByCode(string productCode);
         Task<IEnumerable<ProductResponse>> AutocompleteProductsAsync(string query);
+        Task<int> GetTotalProductCountAsync();
+        Task<List<CategoryProductCountResponseDTO>> GetProductCountByCategoryAsync();
     }
 }

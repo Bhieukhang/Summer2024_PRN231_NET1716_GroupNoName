@@ -2,76 +2,34 @@
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Categories.EditCategoryModel
 @{
 }
-<div class="main-panel">
-    <div class="content-wrapper">
-        <div class="page-header">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    @*Thêm*@
-                </ol>
-            </nav>
-        </div>
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">CẬP NHẬT KIM CƯƠNG</h2>
-                        <form class="forms-sample" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label asp-for="Diamond.DiamondName" class="control-label">Tên</label>
-                                <input asp-for="Diamond.DiamondName" class="form-control" placeholder="Tên" />
-                                <span asp-validation-for="Diamond.DiamondName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Code" class="control-label"></label>
-                                <input asp-for="Diamond.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
-                                <span asp-validation-for="Diamond.Code" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Carat" class="control-label">Carat</label>
-                                <input asp-for="Diamond.Carat" class="form-control" placeholder="Nhập carat kim cương />
-                                <span asp-validation-for="Diamond.Carat" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Image" class="control-label">Hình Ảnh Kim Cương</label>
-                                @if (!string.IsNullOrEmpty(Model.Diamond.ImageDiamond))
-                                {
-                                    <div>
-                                        <img src="@Model.Diamond.ImageDiamond" alt="Diamond Image" style="max-width: 200px; max-height: 200px;" />
-                                    </div>
-                                }
-                                <input type="file" asp-for="Image" class="form-control-file" />
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Color" class="control-label">Màu</label>
-                                <input asp-for="Diamond.Color" class="form-control" placeholder="Nhập màu kim cương" />
-                                <span asp-validation-for="Diamond.Color" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Clarity" class="control-label">Độ Trong</label>
-                                <input asp-for="Diamond.Clarity" class="form-control" placeholder="Nhập độ trong kim cương" />
-                                <span asp-validation-for="Diamond.Clarity" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Cut" class="control-label">Độ cắt</label>
-                                <input asp-for="Diamond.Cut" class="form-control" placeholder="Nhập độ cắt kim cương" />
-                                <span asp-validation-for="Diamond.Cut" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Price" class="control-label">Giá</label>
-                                <input asp-for="Diamond.Price" class="form-control" placeholder="Nhập giá bán kim cương" />
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Diamond.Quantity" class="control-label">Số Lượng</label>
-                                <input asp-for="Diamond.Quantity" class="form-control" />
-                                <span asp-validation-for="Diamond.Quantity" class="text-danger"></span>
-                            </div>
-                            <button type="submit" class="btn btn-gradient-primary me-2">Cập Nhật</button>
-                            <a asp-page="./ListDiamond" class="btn btn-gradient-light btn-fw">Hủy</a>
-                        </form>
+<body>
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                    </ol>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">Cập Nhật Loại</h2>
+                            <br />
+                            <form class="forms-sample" method="post">
+                                <div class="form-group">
+                                    <label asp-for="Cate.Name" class="control-label">Tên</label>
+                                    <input asp-for="Cate.Name" class="form-control" placeholder="Nhập tên loại" />
+                                    <span asp-validation-for="Cate.Name" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-gradient-primary me-2">Thêm</button>
+                                <a asp-page="./ListCategories" class="btn btn-gradient-light btn-fw">Hủy</a>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</body>

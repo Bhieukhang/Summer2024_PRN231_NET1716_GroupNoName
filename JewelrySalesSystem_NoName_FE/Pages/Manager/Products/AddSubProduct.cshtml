@@ -27,12 +27,10 @@
       <br />
 
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Thêm Trang Sức Mới</h2>
-                </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
                 <div class="card-body">
+                    <h4 class="card-title">Thông tin sản phẩm con</h4>
                     <form class="forms-sample" method="post" enctype="multipart/form-data">
                         <!-- Tên sản phẩm -->
                         <div class="mb-3">
@@ -40,11 +38,9 @@
                             <input asp-for="Product.ProductName" id="productName" class="form-control" placeholder="Nhập tên trang sức" />
                             <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                         </div>
-                        <!-- Mã sản phẩm -->
-                        <div class="mb-3">
-                            <label asp-for="Product.Code" class="form-label">Mã sản phẩm</label>
-                            <input asp-for="Product.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
-                            <span asp-validation-for="Product.Code" class="text-danger"></span>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-gradient-primary">Thêm</button>
+                            <a asp-page="./ListSubProduct" class="btn btn-gradient-light">Hủy</a>
                         </div>
                         <!-- Chất liệu -->
                         <div class="mb-3">

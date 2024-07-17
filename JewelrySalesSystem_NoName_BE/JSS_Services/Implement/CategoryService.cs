@@ -29,6 +29,25 @@ namespace JSS_Services.Implement
             return await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(a => a.Id == id);
         }
 
+        public async Task<CategoryResponse> SearchCategoryByNameAsync(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return null;
+            }
+
+            var category = await _unitOfWork.GetRepository<Category>().FirstOrDefaultAsync(
+                p => p.Name == categoryName
+            );
+
+            if (category != null)
+            {
+                return new CategoryResponse(category.Id, category.Name);
+            }
+
+            return null;
+        }
+
         public async Task<CategoryResponse> CreateCategoryAsync(CategoryRequest newData)
         {
             Category cate = new Category()

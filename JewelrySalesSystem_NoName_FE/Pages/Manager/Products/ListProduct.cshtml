@@ -1,25 +1,60 @@
 ﻿@page
+@using Newtonsoft.Json
 @model JewelrySalesSystem_NoName_FE.Pages.Manager.Products.ListProductModel
 @{
+    int totalItems = Model.TotalItems;
     int totalPages = Model.TotalPages;
+    int totalProductCount = Model.TotalProductCount;
+    var categoryProductCounts = Model.CategoryProductCounts;
 }
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="page-title display-4">DANH SÁCH TRANG SỨC</h1>
+        <div class="row">
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-info card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.png" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Tổng sản phẩm <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+                        </h4>
+                        <h2 class="mb-5">@totalProductCount</h2>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a class="nav-link d-inline-block" href="~/Manager/Products/AddProduct">
-                    <button type="button" class="btn btn-gradient-primary btn-fw me-2">
-                        <i class="mdi mdi-plus"></i>
-                        Thêm trang sức mới
-                    </button>
+            <div class="col-md-4 stretch-card grid-margin">
+                <div class="card bg-gradient-success card-img-holder text-white">
+                    <div class="card-body">
+                        <img src="~/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                        <h4 class="font-weight-normal mb-3">
+                            Sản phẩm theo danh mục <i class="mdi mdi-diamond mdi-24px float-end"></i>
+                        </h4>
+                        <select id="categoryStats" class="form-control mb-3" onchange="updateCategoryStats()">
+                            <option value="">Chọn danh mục</option>
+                            @foreach (var category in Model.cateList)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                        <h2 class="mb-5" id="categoryProductCount">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-center bg-light p-4 rounded shadow-sm mb-4">
+            <h1 class="page-title display-5 text-dark fw-bold mb-3 mb-md-0">Danh Sách Trang Sức</h1>
+            <div class="d-flex flex-column flex-md-row align-items-center gap-2">
+                <a href="~/Manager/Products/AddProduct" class="btn btn-gradient-primary btn-lg d-flex align-items-center mb-2 mb-md-0">
+                    <i class="mdi mdi-plus me-1"></i> Thêm Trang Sức Mới
                 </a>
-                <button type="button" class="btn btn-inverse-success btn-fw" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
-                    <i class="mdi mdi-trending-up"></i>
-                    Cập nhật giá vàng
-                </button>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-gradient-warning btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
+                        <i class="mdi mdi-trending-up me-1"></i> Cập Nhật Giá Vàng
+                    </button>
+                    <button type="button" class="btn btn-gradient-light btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#updateGoldRateModal">
+                        <i class="mdi mdi-trending-up me-1"></i> Cập Nhật Giá Bạc
+                    </button>
+                </div>
             </div>
         </div>
          <div class="row g-3 bg-light p-4 rounded shadow-sm" id="filterForm">
@@ -59,20 +94,6 @@
             </form>
         </div>
         <br />
-        @* <div class="d-flex justify-content-between">
-        <form method="get" id="searchForm" onsubmit="searchProductByCode(); return false;">
-        <div class="input-group autocomplete">
-        <label for="searchCode" class="form-label">Nhập mã code của trang sức cần tìm</label>
-        <input type="text" id="searchCode" name="searchCode" class="form-control" placeholder="Nhập mã code của trang sức cần tìm" autocomplete="off"
-        onkeyup="autocompleteSearch(this.value)" />
-        <div id="autocomplete-list" class="autocomplete-items"></div>
-        </div>
-        <button type="submit" class="btn btn-gradient-secondary btn-fw mt-3">
-        <i class="mdi mdi-magnify"></i>
-        Tìm Kiếm
-        </button>
-        </form>
-        </div> *@
         <div id="resultContainer"></div>
         <div id="autocomplete-list" class="col-lg-12 grid-margin stretch-card"></div>
         <div class="col-lg-12 grid-margin stretch-card" id="uiProduct">
@@ -296,6 +317,21 @@
                             })
                             .catch(error => console.error('Error fetching product data:', error));
                     }
+                }
+
+                function updateCategoryStats() {
+                    var selectedCategoryId = document.getElementById("categoryStats").value;
+                    var categoryProductCounts = @Html.Raw(JsonConvert.SerializeObject(Model.CategoryProductCounts));
+                    var productCount = 0;
+
+                    if (selectedCategoryId) {
+                        var category = categoryProductCounts.find(c => c.CategoryId === selectedCategoryId);
+                        if (category) {
+                            productCount = category.ProductCount;
+                        }
+                    }
+
+                    document.getElementById("categoryProductCount").innerText = productCount;
                 }
 
                 function updateUI(data) {

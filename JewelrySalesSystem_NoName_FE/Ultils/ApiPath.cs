@@ -53,6 +53,8 @@
 
         public const string SubProductList = url + "/api/v1/Product/subid";
         public const string TotalSubProductList = url + "/api/v1/Product/PurchasePrice";
+        public const string TotalProductCount = url + "/api/v1/Product/totalcount";
+        public const string ProductCountByCategory = url + "/api/v1/Product/countbycategory";
 
         //Account
         public const string AccountList = url + "/api/v1/Account";
