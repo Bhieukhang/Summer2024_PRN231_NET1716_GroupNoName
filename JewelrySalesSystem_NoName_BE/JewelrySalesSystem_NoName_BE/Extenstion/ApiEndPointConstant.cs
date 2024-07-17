@@ -122,7 +122,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
         {
             public const string DashboardEndpoint = ApiEndpoint + "/Dashboard";
             public const string AccountDashboardEndpoint = DashboardEndpoint + "/account";
-
+            public const string MemberDashboardEndpoint = DashboardEndpoint + "/member";
         }
         public static class Transaction
         {

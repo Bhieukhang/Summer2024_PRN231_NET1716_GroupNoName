@@ -67,5 +67,22 @@ namespace JSS_Services.Implement
             return dashboard;
         }
 
+        public async Task<MembershipDashboard> GetMemberDashboard()
+        {
+            var staticMember = await _unitOfWork.GetRepository<Membership>().GetListAsync();
+            var newMemberCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("18095960-ACB3-4FD4-BCD3-646D9DF3E6E1"));
+            var goldCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("CAC7BD96-530A-4184-989E-71218B2AAA0D"));
+            var bronzeCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("BBC11F4D-06F4-4A43-976E-99BBD01ADAB4"));
+            var silverCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("37FB42FF-F7D7-4952-8C3F-B10E72445A67"));
+            var dashboard = new MembershipDashboard
+            {
+                TotalMember = staticMember.Count,
+                Bronze = bronzeCount,
+                Silver = silverCount,
+                Gold = goldCount,
+                NewMember = newMemberCount,
+            };
+            return dashboard;
+        }
     }
 }

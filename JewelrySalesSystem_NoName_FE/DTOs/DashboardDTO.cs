@@ -24,4 +24,13 @@
         public int TotalStaff { get; set; }
         public int TotalCustomer { get; set; }
     }
+
+    public class MembershipDashboard
+    {
+        public int TotalMember { get; set; }
+        public int NewMember { get; set; }
+        public int Gold { get; set; }
+        public int Bronze { get; set; }
+        public int Silver { get; set; }
+    }
 }

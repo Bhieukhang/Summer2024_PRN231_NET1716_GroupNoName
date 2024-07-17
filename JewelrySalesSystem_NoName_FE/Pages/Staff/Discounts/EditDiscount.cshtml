@@ -42,11 +42,11 @@
                         <span asp-validation-for="DiscountRequest.Description" class="text-danger d-block mt-1"></span>
                     </div>
 
-                    <div class="form-group">
+                    @* <div class="form-group">
                         <label asp-for="DiscountRequest.ConditionDiscount" class="control-label">Điều kiện giảm giá</label>
                         <input asp-for="DiscountRequest.ConditionDiscount" type="number" max="100" class="form-control" placeholder="Nhập điều kiện giảm giá" />
                         <span asp-validation-for="DiscountRequest.ConditionDiscount" class="text-danger d-block mt-1"></span>
-                    </div>
+                    </div> *@
 
                     @if (userRole == "Manager")
                     {

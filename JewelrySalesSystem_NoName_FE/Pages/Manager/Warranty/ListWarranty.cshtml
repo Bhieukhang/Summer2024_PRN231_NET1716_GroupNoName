@@ -68,7 +68,7 @@
                                             }
                                             else if (warranty.Status.Equals("Waiting"))
                                             {
-                                                <label class="badge badge-danger">Chờ</label>
+                                                <label class="badge badge-info">Chờ</label>
                                             }
                                             else
                                             {
@@ -105,22 +105,30 @@
                                                                 <div class="form-group row">
                                                                     <label for="status" class="col-sm-3 col-form-label">Trạng thái</label>
                                                                     <div class="col-sm-9">
-                                                                        @if (warranty?.Status?.Equals("Active") == true)
+                                                                        @if (warranty.Status.Equals("Finish for Warranty"))
                                                                         {
-                                                                            <label class="badge badge-success">@warranty.Status</label>
+                                                                            <label class="badge badge-success">Hoàn thành bảo hành</label>
+                                                                        }
+                                                                        else if (warranty.Status.Equals("Invalid for Warranty") || warranty.Status.Equals("Expired"))
+                                                                        {
+                                                                            <label class="badge badge-danger">@((warranty.Status.Equals("Invalid for Warranty")) ? "Không hợp lệ" : "Hết hạn")</label>
+                                                                        }
+                                                                        else if (warranty.Status.Equals("Waiting"))
+                                                                        {
+                                                                            <label class="badge badge-info">Chờ</label>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <label class="badge badge-danger">@warranty?.Status ?? "N/A"</label>
+                                                                            <label class="badge badge-warning">Đang bảo hành</label>
                                                                         }
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group row">
+                                                               @*  <div class="form-group row">
                                                                     <label for="conditionWarranty" class="col-sm-3 col-form-label">Điều kiện bảo hành</label>
                                                                     <div class="col-sm-9">
                                                                         <input type="text" class="form-control" id="conditionWarranty" placeholder="Điều kiện bảo hành" value="@warranty?.ConditionWarranty?.Condition" readonly>
                                                                     </div>
-                                                                </div>
+                                                                </div> *@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -225,13 +233,14 @@
                                                     <td>${data.productName ?? ''}</td>
                                                     <td>${new Date(data.dateOfPurchase).toLocaleDateString()}</td>
                                                     <td>${new Date(data.expirationDate).toLocaleDateString()}</td>
-                                                    <td>${data.period} months</td>
-                                                    <td>
-                                                        ${data.status === "Finish for Warranty" ? '<label class="badge badge-success">Hoàn thành bảo hành</label>' :
-                        data.status === "Invalid for Warranty" || data.status === "Expired" ? '<label class="badge badge-danger">' + (data.status === "Invalid for Warranty" ? 'Không hợp lệ' : 'Hết hạn') + '</label>' :
-                            data.status === "Waiting" ? '<label class="badge badge-danger">Chờ</label>' :
-                                '<label class="badge badge-warning">Đang bảo hành</label>'
-                    }
+                                                    <td>${data.period} tháng</td>
+                                                                         <td>
+            ${data.status === "Finish for Warranty" ? '<label class="badge badge-success">Hoàn thành bảo hành</label>' :
+                        data.status === "Invalid for Warranty" ? '<label class="badge badge-danger">Không hợp lệ</label>' :
+                            data.status === "Expired" ? '<label class="badge badge-danger">Hết hạn</label>' :
+                                data.status === "Waiting" ? 'Chờ' : ''}
+        </td>
+
                                                     </td>
                                                     <td>
                                                         <i class="fa fa-eye menu-icon" data-toggle="modal" data-target="#${uniqueModalId}"></i>

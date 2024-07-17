@@ -38,6 +38,7 @@
         //Dashboard
         public const string Dashboard = url + "/api/v1/Dashboard";
         public const string AccountDashboard = url + "/api/v1/Dashboard/account";
+        public const string MemberDashboard = url + "/api/v1/Dashboard/member";
 
         //Category
         public const string CategoryList = url + "/api/v1/Category";
@@ -83,6 +84,7 @@
         public const string OrderOption = OrderCreate + "/option";
         public const string OrderUpdate = OrderCreate + "/update";
         public const string OrderTotal = url + "/api/v1/static/year";
+        public const string OrderTotalInDay = url + "/api/v1/static";
 
         //Warranty
         public const string Warranty = url + "/api/v1/warranty";
