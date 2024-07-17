@@ -14,8 +14,8 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
         public string? Phone { get; set; } = null!;
 
-        //[Required(ErrorMessage = "Yêu cầu nhập ngày sinh.")]
-        //[DataType(DataType.Date)]
+        [Required(ErrorMessage = "Yêu cầu nhập ngày sinh.")]
+        [MinAge(18, ErrorMessage = "Phải đủ 18 tuổi trở lên.")]
         public DateTime? Dob { get; set; }
 
         [Required(ErrorMessage = "Yêu cầu nhập mật khẩu.")]

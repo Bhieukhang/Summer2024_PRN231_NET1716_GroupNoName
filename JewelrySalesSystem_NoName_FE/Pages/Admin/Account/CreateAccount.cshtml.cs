@@ -33,27 +33,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "B?n c?n ??ng nh?p!.";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập!.";
                 return RedirectToPage("/Auth/Login");
             }
 
             try
             {
-                var client = _httpClientFactory.CreateClient("ApiClient");
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var roleApiUrl = $"{ApiPath.RoleList}";
-                var response = await client.GetAsync(roleApiUrl);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    TempData["ErrorMessage"] = "Truy cập trái phép. Xin vui lòng đăng nhập lại.";
-                    return RedirectToPage("/Auth/Login");
-                }
-
-                RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await response.Content.ReadAsStringAsync());
-                RoleList = RoleList.Where(r => !AccountDAO.ExcludedRoleIds.Contains(r.Id)).ToList();
-
+                await LoadRoleListAsync(token);
                 return Page();
             }
             catch (Exception ex)
@@ -72,6 +58,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 return RedirectToPage("/Auth/Login");
             }
 
+            //if (!ModelState.IsValid)
+            //{
+            //    await LoadRoleListAsync(token);
+            //    return Page();
+            //}
+
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
             try
@@ -85,12 +77,14 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 {
                     var responseBody = await phoneCheckResponse.Content.ReadAsStringAsync();
                     ModelState.AddModelError("Account.Phone", responseBody);
+                    await LoadRoleListAsync(token);
                     return Page();
                 }
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
                     ModelState.AddModelError(string.Empty, "Tệp đã tải lên quá lớn.");
+                    await LoadRoleListAsync(token);
                     return Page();
                 }
 
@@ -159,7 +153,27 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi: {ex.Message}");
             }
 
+            await LoadRoleListAsync(token);
             return Page();
         }
+
+        private async Task LoadRoleListAsync(string token)
+        {
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var roleApiUrl = $"{ApiPath.RoleList}";
+            var response = await client.GetAsync(roleApiUrl);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                TempData["ErrorMessage"] = "Truy cập trái phép. Xin vui lòng đăng nhập lại.";
+                throw new UnauthorizedAccessException();
+            }
+
+            RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await response.Content.ReadAsStringAsync());
+            RoleList = RoleList.Where(r => !AccountDAO.ExcludedRoleIds.Contains(r.Id)).ToList();
+        }
+
     }
 }
