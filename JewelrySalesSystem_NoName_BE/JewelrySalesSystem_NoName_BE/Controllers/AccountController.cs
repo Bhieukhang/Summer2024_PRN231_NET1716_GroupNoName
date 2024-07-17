@@ -159,7 +159,8 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 ImgUrl = accountRequest.ImgUrl,
                 Deflag = accountRequest.Deflag,
                 RoleId = accountRequest.RoleId,
-                InsDate = accountRequest.InsDate
+                InsDate = accountRequest.InsDate,
+                Status = accountRequest.Status,
             };
 
             var updatedAccount = await _accountService.UpdateAccountAsync(id, account, stream, "uploadedFileName");

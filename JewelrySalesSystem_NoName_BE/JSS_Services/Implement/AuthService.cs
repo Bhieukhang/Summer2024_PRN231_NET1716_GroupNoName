@@ -47,7 +47,7 @@ namespace JSS_Services.Implement
 
             if (account.Deflag == false)
             {
-                throw new UnauthorizedAccessException("Tài khoản không hoạt động.");
+                throw new UnauthorizedAccessException("Tài khoản bị ban.");
             }
 
             if (!account.Password.Equals(password))

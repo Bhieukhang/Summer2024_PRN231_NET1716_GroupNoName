@@ -1,4 +1,4 @@
-using Firebase.Storage;
+﻿using Firebase.Storage;
 using JewelrySalesSystem_NoName_FE.DTOs.Account;
 using JewelrySalesSystem_NoName_FE.DTOs.Role;
 using JewelrySalesSystem_NoName_FE.Pages.Admin.Account;
@@ -34,7 +34,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -48,21 +48,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy cập không hợp lệ. Vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 Account = JsonConvert.DeserializeObject<AccountDAO>(await response.Content.ReadAsStringAsync());
 
-                var roleApiUrl = $"{ApiPath.RoleList}";
-                var roleResponse = await client.GetAsync(roleApiUrl);
-                RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
+                await LoadRoleListAsync(client);
 
                 return Page();
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                TempData["ErrorMessage"] = $"Đã xảy ra lỗi: {ex.Message}";
                 return Page();
             }
         }
@@ -72,7 +70,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -85,7 +83,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (Image != null && Image.Length > MAX_ALLOWED_SIZE)
                 {
-                    ModelState.AddModelError(string.Empty, "The uploaded file is too large.");
+                    ModelState.AddModelError(string.Empty, "Tệp tải lên quá lớn.");
+                    await LoadRoleListAsync(client);
                     return Page();
                 }
 
@@ -115,6 +114,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                     ImgUrl = Account.ImgUrl,
                     Deflag = Account.Deflag,
                     RoleId = Account.RoleId,
+                    Status = Account.Status,
                 };
 
                 var json = JsonConvert.SerializeObject(accountRequest);
@@ -125,27 +125,38 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy cập không hợp lệ. Vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Account is edited successfully!";
+                    TempData["SuccessMessage"] = "Tài khoản đã được chỉnh sửa thành công!";
                     return RedirectToPage("./ListAccount");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the product. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi khi cập nhật tài khoản. Mã trạng thái: {response.StatusCode}, Phản hồi: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi: {ex.Message}");
             }
 
+            var clientForRoles = _httpClientFactory.CreateClient("ApiClient");
+            clientForRoles.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            await LoadRoleListAsync(clientForRoles);
+
             return Page();
+        }
+
+        private async Task LoadRoleListAsync(HttpClient client)
+        {
+            var roleApiUrl = $"{ApiPath.RoleList}";
+            var roleResponse = await client.GetAsync(roleApiUrl);
+            RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await roleResponse.Content.ReadAsStringAsync());
         }
     }
 }
