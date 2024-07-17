@@ -137,7 +137,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var existingAccount = await _accountService.GetAccountByIdAsync(id);
             if (existingAccount == null)
             {
-                return NotFound("Account not found.");
+                return NotFound("Không tìm thấy tài khoản.");
             }
 
             if (accountRequest.RoleId != Guid.Empty && accountRequest.RoleId != accountRequest.RoleId)
@@ -165,7 +165,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var updatedAccount = await _accountService.UpdateAccountAsync(id, account, stream, "uploadedFileName");
             if (updatedAccount == null)
             {
-                return StatusCode(500, "An error occurred while updating the account.");
+                return StatusCode(500, "Đã có lỗi xảy ra khi cập nhật tài khoản.");
             }
 
             return Ok(new AccountResponse(
@@ -192,19 +192,27 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>The created account object.</returns>
         // POST: api/Account
         #endregion
-        //[HttpPost]
         [Authorize(Roles = "Manager, Admin")]
         [HttpPost(ApiEndPointConstant.Account.AccountEndpoint)]
         public async Task<ActionResult> CreateAccountAsync([FromBody] AccountRequest accountRequest)
         {
             if (string.IsNullOrEmpty(accountRequest.ImgUrl))
-                return BadRequest("No image uploaded.");
+                return BadRequest("Không có hình ảnh nào được tải lên.");
 
             var stream = new MemoryStream(Convert.FromBase64String(accountRequest.ImgUrl));
             var role = await _roleService.GetRoleByIdAsync(accountRequest.RoleId);
             if (role == null)
             {
-                return NotFound("Role not found.");
+                return NotFound("Không tìm thấy chức vụ.");
+            }
+
+            // Kiểm tra tuổi
+            var today = DateTime.UtcNow;
+            var age = today.Year - accountRequest.Dob.Value.Year;
+            if (accountRequest.Dob > today.AddYears(-age)) age--;
+            if (age < 18)
+            {
+                return BadRequest("Người dùng phải đủ 18 tuổi trở lên.");
             }
 
             var account = new Account
@@ -225,7 +233,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
                 var createdAccount = await _accountService.CreateAccountAsync(account, stream, "uploadedFileName");
                 if (createdAccount == null)
                 {
-                    return StatusCode(500, "An error occurred while creating the account.");
+                    return StatusCode(500, "Có lỗi xảy ra trong khi tạo tài khoản.");
                 }
 
                 return Ok(new AccountResponse(
@@ -245,10 +253,6 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
             catch (Exception ex)
             {
-                //if (ex.Message.Contains("Số điện thoại đã tồn tại"))
-                //{
-                //    return BadRequest("Số điện thoại đã tồn tại. Vui lòng sử dụng số điện thoại khác.");
-                //}
                 return StatusCode(500, "An error occurred while creating the account.");
             }
         }

@@ -94,18 +94,33 @@ namespace JewelrySalesSysmte_NoName_BE.Controllers
 
         #region UpdateWarranty
         /// <summary>
-        /// Update existing warranty.
+        /// Cập nhật bảo hành hiện có.
         /// </summary>
-        /// <returns>Updated warranty item</returns>
+        /// <returns>Mục bảo hành đã được cập nhật</returns>
         // PUT: api/v1/warranty/{id}
         #endregion
         [Authorize(Roles = "Manager, Staff")]
         [HttpPut(ApiEndPointConstant.Warranty.WarrantyByIdEndpoint)]
         public async Task<ActionResult> UpdateWarranty(Guid id, [FromBody] WarrantyUpdateRequest request)
         {
-            var updatedWarranty = await _service.UpdateWarranty(id, request);
-            var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
-            return Ok(result);
+            try
+            {
+                var updatedWarranty = await _service.UpdateWarranty(id, request);
+                var result = JsonConvert.SerializeObject(updatedWarranty, Formatting.Indented);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi khi cập nhật bảo hành.");
+            }
         }
 
         #region SearchByCode

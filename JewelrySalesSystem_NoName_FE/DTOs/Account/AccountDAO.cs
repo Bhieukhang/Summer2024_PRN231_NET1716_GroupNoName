@@ -14,8 +14,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
         public string? Phone { get; set; } = null!;
 
-        [Required(ErrorMessage = "Yêu cầu nhập ngày sinh.")]
-        [MinAge(18, ErrorMessage = "Phải đủ 18 tuổi trở lên.")]
+        [Required(ErrorMessage = "Yêu cầu nhập ngày tháng năm sinh.")]
         public DateTime? Dob { get; set; }
 
         [Required(ErrorMessage = "Yêu cầu nhập mật khẩu.")]
@@ -25,6 +24,7 @@ namespace JewelrySalesSystem_NoName_FE.DTOs.Account
         [Required(ErrorMessage = "Yêu cầu nhập địa chỉ.")]
         public string? Address { get; set; }
 
+        [Required(ErrorMessage = "Yêu cầu chọn hình ảnh.")]
         public string? ImgUrl { get; set; }
 
         public string? Status { get; set; }

@@ -119,12 +119,12 @@ namespace JSS_Services.Implement
         public async Task<WarrantyResponse> UpdateWarranty(Guid id, WarrantyUpdateRequest request)
         {
             var warranty = await _unitOfWork.WarrantyRepository.SingleOrDefaultAsync(
-                predicate: x => x.Id == id
-            );
+        predicate: x => x.Id == id
+    );
 
             if (warranty == null)
             {
-                throw new KeyNotFoundException("Warranty not found.");
+                throw new KeyNotFoundException("Không tìm thấy bảo hành.");
             }
 
             if (DateTime.Now > warranty.ExpirationDate)
@@ -149,11 +149,18 @@ namespace JSS_Services.Implement
             var oldOrderDetailId = warranty.OrderDetailId;
             var oldPhone = warranty.Phone;
 
+            warranty.DateOfPurchase = request.DateOfPurchase ?? warranty.DateOfPurchase;
+            warranty.ExpirationDate = request.ExpirationDate ?? warranty.ExpirationDate;
+            warranty.Period = request.Period ?? warranty.Period;
+            warranty.Deflag = request.Deflag;
+            warranty.OrderDetailId = request.OrderDetailId ?? warranty.OrderDetailId;
+            warranty.Phone = request.Phone ?? warranty.Phone;
+
             _unitOfWork.WarrantyRepository.UpdateAsync(warranty);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccessful)
             {
-                throw new Exception("Commit failed, no rows affected.");
+                throw new Exception("Lưu dữ liệu thất bại, không có hàng nào được thay đổi.");
             }
 
             return new WarrantyResponse(warranty.Id, oldDateOfPurchase, oldExpirationDate,

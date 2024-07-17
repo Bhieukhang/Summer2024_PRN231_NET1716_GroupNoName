@@ -131,13 +131,20 @@ namespace JSS_Services.Implement
 
         public async Task<Account> CreateAccountAsync(Account account, Stream imageStream, string imageName)
         {
-            //Guid DefaultRoleId = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7");
             try
             {
                 var imageUrl = await UploadImageToFirebase(imageStream, imageName);
                 if (string.IsNullOrEmpty(imageUrl))
                 {
-                    throw new Exception("Image upload failed, URL is empty.");
+                    throw new Exception("Tải hình ảnh thất bại, URL trống.");
+                }
+
+                var today = DateTime.UtcNow;
+                var age = today.Year - account.Dob.Value.Year;
+                if (account.Dob > today.AddYears(-age)) age--;
+                if (age < 18)
+                {
+                    throw new Exception("Người dùng phải đủ 18 tuổi để tạo tài khoản.");
                 }
 
                 var accountRepository = _unitOfWork.AccountRepository;
@@ -146,8 +153,6 @@ namespace JSS_Services.Implement
                 account.InsDate = DateTime.UtcNow;
                 account.Status = "Active";
                 account.UpsDate = DateTime.UtcNow;
-                //account.RoleId = DefaultRoleId;
-
                 account.Deflag = true;
                 await accountRepository.InsertAsync(account);
                 bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -212,7 +217,7 @@ namespace JSS_Services.Implement
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating account");
+                _logger.LogError(ex, "Xảy ra lỗi khi cập nhật tài khoản.");
                 throw;
             }
         }
