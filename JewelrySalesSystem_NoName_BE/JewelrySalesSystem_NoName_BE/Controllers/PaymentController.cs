@@ -69,7 +69,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             var embed_data = new { redirecturl = redirectUrl };
             var items = new[] { new { } };
             var param = new Dictionary<string, string>();
-            var app_trans_id = rnd.Next(1000000); // Generate a random order's ID.
+            var app_trans_id = rnd.Next(1000000); 
 
             param.Add("app_id", app_id);
             param.Add("app_user", "user123");
