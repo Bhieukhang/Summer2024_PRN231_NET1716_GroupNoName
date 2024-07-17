@@ -27,6 +27,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
         }
         [BindProperty]
         public int TotalAccount { get; set; }
+        [BindProperty]
         public int TotalMember { get; set; }
 
         public async Task<IActionResult> OnGetAccountDataAsync()
@@ -42,7 +43,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Statics
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await client.GetStringAsync(url);
-            var data = JsonConvert.DeserializeObject<AccountDashboard>(response);
+            var data = JsonConvert.DeserializeObject<MonthlyOrderCountDto>(response);
             TotalAccount = data.TotalAccount;
 
             return new JsonResult(data);

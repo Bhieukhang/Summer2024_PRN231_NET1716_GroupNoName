@@ -1,3 +1,4 @@
+using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,7 +24,33 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.StaticsStaff
         public int TotalProductCount { get; set; }
         public int TotalOrderInDay { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetOrderDashboardAsync()
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+
+            //var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            //var url = $"{ApiPath.OrderTotalInDay}?time={currentDate}";
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            //var totalProductCountResponse = await client.GetAsync(ApiPath.TotalProductCount);
+            //TotalProductCount = JsonConvert.DeserializeObject<int>(await totalProductCountResponse.Content.ReadAsStringAsync());
+
+            //var totalOrderInDayResponse = await client.GetAsync(url);
+            //TotalOrderInDay = JsonConvert.DeserializeObject<int>(await totalOrderInDayResponse.Content.ReadAsStringAsync());
+
+            var response = await client.GetAsync(ApiPath.OrderDashboard);
+            var jsonData = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<List<StaticOrderCountDto>>(jsonData);
+            return new JsonResult(data);
+
+        }
+
+        public async Task<IActionResult> OnGetDashboardAsync()
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
@@ -41,8 +68,31 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.StaticsStaff
 
             var totalOrderInDayResponse = await client.GetAsync(url);
             TotalOrderInDay = JsonConvert.DeserializeObject<int>(await totalOrderInDayResponse.Content.ReadAsStringAsync());
+            var dashboardData = new DashboardData
+            {
+                TotalOrderInDay = TotalOrderInDay,
+                TotalProductCount = TotalProductCount
+            };
 
-            return Page();
+            return new JsonResult(dashboardData);
+        }
+
+        public async Task<IActionResult> OnGetCategoryDataAsync()
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToPage("/Auth/Login");
+            }
+            var url = $"{ApiPath.CategoryDashboard}";
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetStringAsync(url);
+            var data = JsonConvert.DeserializeObject<CategoryDashboard>(response);
+
+            return new JsonResult(data);
         }
     }
 }

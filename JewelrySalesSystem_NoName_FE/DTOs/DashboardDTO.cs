@@ -16,7 +16,7 @@
         public double Value { get; set; }
     }
 
-    public class AccountDashboard
+    public class MonthlyOrderCountDto
     {
         public int TotalAccount { get; set; }
         public int TotalAdmin { get; set; }
@@ -32,5 +32,27 @@
         public int Gold { get; set; }
         public int Bronze { get; set; }
         public int Silver { get; set; }
+    }
+
+    public class CategoryDashboard
+    {
+        public int TotalCategory { get; set; }
+        public int TotalRing { get; set; }
+        public int TotalBracelet { get; set; }
+        public int TotalNecklace { get; set; }
+        public int TotalEarring { get; set; }
+    }
+
+    public class StaticOrderCountDto
+    {
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int OrderCount { get; set; }
+    }
+
+    public class DashboardData
+    {
+        public int TotalOrderInDay { get; set; }
+        public int TotalProductCount { get; set; }
     }
 }

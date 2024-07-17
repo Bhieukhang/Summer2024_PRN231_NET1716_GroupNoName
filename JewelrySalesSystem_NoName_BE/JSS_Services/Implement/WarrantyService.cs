@@ -172,7 +172,7 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code,
+                var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.CodeWarranty == code,
                        include: w => w.Include(w => w.WarrantyMappingConditions)
                                                 .ThenInclude(w => w.ConditionWarranty)
                                                 .Include(w => w.OrderDetail)

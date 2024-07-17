@@ -39,6 +39,8 @@
         public const string Dashboard = url + "/api/v1/Dashboard";
         public const string AccountDashboard = url + "/api/v1/Dashboard/account";
         public const string MemberDashboard = url + "/api/v1/Dashboard/member";
+        public const string CategoryDashboard = url + "/api/v1/Dashboard/category";
+        public const string OrderDashboard = url + "/api/v1/Dashboard/order";
 
         //Category
         public const string CategoryList = url + "/api/v1/Category";
