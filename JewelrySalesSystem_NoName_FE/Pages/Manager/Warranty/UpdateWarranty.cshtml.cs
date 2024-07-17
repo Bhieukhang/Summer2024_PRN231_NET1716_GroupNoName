@@ -33,7 +33,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -46,7 +46,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy cập trái phép. Vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
@@ -59,7 +59,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                TempData["ErrorMessage"] = $"Đã xảy ra lỗi: {ex.Message}";
                 return Page();
             }
         }
@@ -69,7 +69,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
             var token = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "You need to login first.";
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập trước.";
                 return RedirectToPage("/Auth/Login");
             }
 
@@ -95,24 +95,24 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    TempData["ErrorMessage"] = "Unauthorized access. Please login again.";
+                    TempData["ErrorMessage"] = "Truy cập trái phép. Vui lòng đăng nhập lại.";
                     return RedirectToPage("/Auth/Login");
                 }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    TempData["SuccessMessage"] = "The Warranty is updated successfully!";
+                    TempData["SuccessMessage"] = "Bảo hành đã được cập nhật thành công!";
                     return RedirectToPage("./ListWarranty");
                 }
                 else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, $"An error occurred while updating the warranty. Status Code: {response.StatusCode}, Response: {responseBody}");
+                    ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi khi cập nhật bảo hành. Mã trạng thái: {response.StatusCode}, Phản hồi: {responseBody}");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                ModelState.AddModelError(string.Empty, $"Đã xảy ra lỗi: {ex.Message}");
             }
 
             return Page();

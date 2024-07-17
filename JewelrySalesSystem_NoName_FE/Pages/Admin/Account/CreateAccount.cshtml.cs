@@ -58,18 +58,23 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 return RedirectToPage("/Auth/Login");
             }
 
-            //if (!ModelState.IsValid)
-            //{
-            //    await LoadRoleListAsync(token);
-            //    return Page();
-            //}
-
             const long MAX_ALLOWED_SIZE = 1024 * 1024 * 100;
 
             try
             {
                 var client = _httpClientFactory.CreateClient("ApiClient");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                // Kiểm tra tuổi
+                var today = DateTime.UtcNow;
+                var age = today.Year - Account.Dob.Value.Year;
+                if (Account.Dob > today.AddYears(-age)) age--;
+                if (age < 18)
+                {
+                    ModelState.AddModelError("Account.Dob", "Người dùng phải đủ 18 tuổi trở lên.");
+                    await LoadRoleListAsync(token);
+                    return Page();
+                }
 
                 var checkPhoneUrl = $"{ApiPath.AccountList}/CheckPhone/{Account.Phone}";
                 var phoneCheckResponse = await client.GetAsync(checkPhoneUrl);
@@ -174,6 +179,5 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             RoleList = JsonConvert.DeserializeObject<List<RoleDAO>>(await response.Content.ReadAsStringAsync());
             RoleList = RoleList.Where(r => !AccountDAO.ExcludedRoleIds.Contains(r.Id)).ToList();
         }
-
     }
 }
