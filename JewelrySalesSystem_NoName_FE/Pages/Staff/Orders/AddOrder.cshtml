@@ -113,7 +113,7 @@
         </div>
     </div>
 
-     <!-- Modal Popup -->
+     <!-- Modal Popup  -->
     <div class="modal fade" id="duplicateProductModal" tabindex="-1" aria-labelledby="duplicateProductModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -132,7 +132,8 @@
         </div>
     </div
 
-    <!-- Modal Popup -->
+    
+    <!-- Modal Popup Product Valid  -->
     <div class="modal fade" id="outOfStockModal" tabindex="-1" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -370,6 +371,13 @@
                                 if ($('#productTableBody tr').length > 0) {
                                         $('#productTableHead').show();
                                 }
+
+                                if (data.promotions && data.promotions.length > 0) {
+                                    $('.promotion-btn[data-product-code="' + data.product.code + '"]').show();
+                                } else {
+                                    $('.promotion-btn[data-product-code="' + data.product.code + '"]').hide();
+                                }
+
                                 // Thêm sự kiện kiểm tra số lượng nhập vào
                                 $('.quantity-input').on('change', function () {
                                     var maxQuantity = parseInt($(this).attr('max'));
@@ -567,6 +575,8 @@
                         if (data && data.promotions) {
                             if (data.promotions <= 1) {
                                 // Hiển thị modal popup
+                                // 
+                                $('.promotion-btn[data-product-code="' + productCode + '"]').hide();
                                 $('#noPromotionModal').modal('show');
                             } else {
                                 console.log("Data success: ", data.promotions[0].id);

@@ -7,5 +7,8 @@ namespace JSS_Services.Interface
     {
         Task<DashboardRequest> GetDashboardsAsync(int year);
         Task<AccountDashboard> GetDashboardAccount();
+        Task<MembershipDashboard> GetMemberDashboard();
+        Task<CategoryDashboard> GetCategoriesDashboard();
+        Task<List<MonthlyOrderCountDto>> GetMonthlyOrderCountsAsync();
     }
 }

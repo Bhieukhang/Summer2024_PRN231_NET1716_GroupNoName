@@ -5,6 +5,7 @@ using JSS_Repositories;
 using JSS_Repositories.Repo.Interface;
 using JSS_Services.Interface;
 using Microsoft.Extensions.Logging;
+using System.Data.Entity;
 
 namespace JSS_Services.Implement
 {
@@ -70,5 +71,60 @@ namespace JSS_Services.Implement
             return dashboard;
         }
 
+        public async Task<MembershipDashboard> GetMemberDashboard()
+        {
+            var staticMember = await _unitOfWork.MembershipRepository.GetListAsync();
+            var newMemberCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("18095960-ACB3-4FD4-BCD3-646D9DF3E6E1"));
+            var goldCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("CAC7BD96-530A-4184-989E-71218B2AAA0D"));
+            var bronzeCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("BBC11F4D-06F4-4A43-976E-99BBD01ADAB4"));
+            var silverCount = staticMember.Count(a => a.MemberTypeId == Guid.Parse("37FB42FF-F7D7-4952-8C3F-B10E72445A67"));
+            var dashboard = new MembershipDashboard
+            {
+                TotalMember = staticMember.Count,
+                Bronze = bronzeCount,
+                Silver = silverCount,
+                Gold = goldCount,
+                NewMember = newMemberCount,
+            };
+            return dashboard;
+        }
+
+        public async Task<CategoryDashboard> GetCategoriesDashboard()
+        {
+            var staticCategory = await _unitOfWork.CategoryRepository.GetListAsync();
+            var staticProduct = await _unitOfWork.ProductRepository.GetListAsync();
+            var ringCount = staticProduct.Count(a => a.CategoryId == Guid.Parse("B2C3D4E5-6789-1011-1213-141516171819"));
+            var braceletCount = staticProduct.Count(a => a.CategoryId == Guid.Parse("C3D4E5F6-7890-1011-1213-141516171819"));
+            var necklaceCount = staticProduct.Count(a => a.CategoryId == Guid.Parse("A1B2C3D4-5678-9101-1121-314151617181"));
+            var earringCount = staticProduct.Count(a => a.CategoryId == Guid.Parse("B31FB460-A2E2-4FDC-9413-4AD6FCBD2FEB"));
+            var dashboard = new CategoryDashboard
+            {
+                TotalCategory = staticCategory.Count,
+                TotalRing = ringCount,
+                TotalBracelet = braceletCount,
+                TotalNecklace = necklaceCount,
+                TotalEarring = earringCount,
+            };
+            return dashboard;
+        }
+
+        public async Task<List<MonthlyOrderCountDto>> GetMonthlyOrderCountsAsync()
+        {
+            var orders = await _unitOfWork.OrderRepository.GetListAsync();
+            var monthlyOrderCounts = orders
+                   .Where(o => o.InsDate.HasValue)
+                   .GroupBy(o => new { Year = o.InsDate.Value.Year, Month = o.InsDate.Value.Month })
+                   .Select(g => new MonthlyOrderCountDto
+                   {
+                       Year = g.Key.Year,
+                       Month = g.Key.Month,
+                       OrderCount = g.Count()
+                   })
+                   .OrderBy(m => m.Year).ThenBy(m => m.Month)
+                   .ToList();
+
+
+            return monthlyOrderCounts;
+        }
     }
 }

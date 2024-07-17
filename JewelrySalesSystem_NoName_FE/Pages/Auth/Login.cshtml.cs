@@ -72,7 +72,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Auth
                         }
                         else if (await GetRoleAsync() == "Staff")
                         {
-                            return RedirectToPage("/Manager/Products/ListProduct");
+                            return RedirectToPage("/Staff/StaticsStaff/StaffDashboard");
                         }
                     }
                     else

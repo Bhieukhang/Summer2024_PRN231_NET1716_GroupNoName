@@ -181,8 +181,13 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.CodeWarranty == code);
-                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+                var war = await _unitOfWork.WarrantyRepository.FirstOrDefaultAsync(w => w.CodeWarranty == code,
+                       include: w => w.Include(w => w.WarrantyMappingConditions)
+                                                .ThenInclude(w => w.ConditionWarranty)
+                                                .Include(w => w.OrderDetail)
+                                                .ThenInclude(w => w.Product));
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, 
+                                            war.Deflag, war.Status, war.Note, war.OrderDetail.Product.ProductName);
             }
             catch (Exception e)
             {

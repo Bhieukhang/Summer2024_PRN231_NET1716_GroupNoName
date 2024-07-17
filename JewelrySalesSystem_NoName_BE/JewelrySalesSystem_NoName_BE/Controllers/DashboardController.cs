@@ -51,5 +51,53 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(result);
         }
 
+
+        #region GetDashboardMembership
+        /// <summary>
+        /// Get static membership in pie dashboards.
+        /// </summary>
+        /// <returns>Total membership by role.</returns>
+        /// GET : api/Dashboard/member
+        #endregion
+        //[Authorize(Roles = "Admin")]
+        [HttpGet(ApiEndPointConstant.Dashboard.MemberDashboardEndpoint)]
+        public async Task<ActionResult<MembershipDashboard>> GetDashboardMembership()
+        {
+            var data = await _dashboardService.GetMemberDashboard();
+            var result = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region GetDashboardCategory
+        /// <summary>
+        /// Get static category in pie dashboards.
+        /// </summary>
+        /// <returns>Total category by role.</returns>
+        /// GET : api/Dashboard/category
+        #endregion
+        //[Authorize(Roles = "Admin")]
+        [HttpGet(ApiEndPointConstant.Dashboard.CategoryDashboardEndpoint)]
+        public async Task<ActionResult<CategoryDashboard>> GetDashboardCategory()
+        {
+            var data = await _dashboardService.GetCategoriesDashboard();
+            var result = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return Ok(result);
+        }
+
+        #region GetDashboardOrder
+        /// <summary>
+        /// Get static category in pie dashboards.
+        /// </summary>
+        /// <returns>Total category by role.</returns>
+        /// GET : api/Dashboard/order
+        #endregion
+        //[Authorize(Roles = "Admin")]
+        [HttpGet(ApiEndPointConstant.Dashboard.OrderDashboardEndpoint)]
+        public async Task<ActionResult<MonthlyOrderCountDto>> GetDashboardOrder()
+        {
+            var data = await _dashboardService.GetMonthlyOrderCountsAsync();
+            var result = JsonConvert.SerializeObject(data, Formatting.Indented);
+            return Ok(result);
+        }
     }
 }
