@@ -11,6 +11,7 @@
         public string? Note { get; set; }
         public string? Phone { get; set; }
         public Guid? OrderDetailId { get; set; }
+        public string ProductName { get; set; }
     }
 
 }

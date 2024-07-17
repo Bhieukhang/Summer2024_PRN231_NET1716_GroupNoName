@@ -81,6 +81,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var response = await client.GetStringAsync(url);
 
                 var warranty = JsonConvert.DeserializeObject<WarrantyDTO>(response);
+                List<WarrantyDTO> listWarranty = new List<WarrantyDTO>();
+                //WarrantyList = listWarranty.Add
                 return new JsonResult(warranty);
             }
             catch (Exception ex)

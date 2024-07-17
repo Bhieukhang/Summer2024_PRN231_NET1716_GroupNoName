@@ -33,7 +33,7 @@ namespace JSS_Services.Implement
         {
             var warrantyDetail = await _unitOfWork.GetRepository<Warranty>().SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.Deflag, x.Status,
-                                                    x.Note),
+                                                    x.Note, x.OrderDetail.Product.ProductName),
                     predicate:
                     Guid.Empty.Equals(id)
                         ? x => true
@@ -49,6 +49,7 @@ namespace JSS_Services.Implement
                                                     x.Deflag, x.Status, x.Note, x.OrderDetail.Product.ProductName),
                 include: x => x.Include(w => w.OrderDetail)
                                 .ThenInclude(w => w.Product),
+                orderBy: x => x.OrderBy(w => w.ExpirationDate),
                 page: page,
                 size: size
                 );
@@ -175,8 +176,13 @@ namespace JSS_Services.Implement
         {
             try
             {
-                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code);
-                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, war.Status, war.Note);
+                var war = await _unitOfWork.GetRepository<Warranty>().FirstOrDefaultAsync(w => w.CodeWarranty == code,
+                       include: w => w.Include(w => w.WarrantyMappingConditions)
+                                                .ThenInclude(w => w.ConditionWarranty)
+                                                .Include(w => w.OrderDetail)
+                                                .ThenInclude(w => w.Product));
+                return new WarrantyResponse(war.Id, war.DateOfPurchase, war.ExpirationDate, war.Period, 
+                                            war.Deflag, war.Status, war.Note, war.OrderDetail.Product.ProductName);
             }
             catch (Exception e)
             {

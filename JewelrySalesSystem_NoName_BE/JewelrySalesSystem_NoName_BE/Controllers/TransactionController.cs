@@ -30,7 +30,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         /// <returns>List of Transactions.</returns>
         /// GET : api/Transaction
         #endregion
-        [Authorize(Roles = "Manager, Staff")]
+        [Authorize(Roles = "Admin")]
         [HttpGet(ApiEndPointConstant.Transaction.TransactionEndpoint)]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetAllTransactionsAsync()
         {

@@ -23,7 +23,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Transactions
         public List<TransactionDTO> Transactions { get; private set; } = new();
         public int TotalPages { get; private set; } = 0;
         public int CurrentPage { get; private set; } = 1;
-        public int PageSize { get; private set; } = 5;
+        public int PageSize { get; private set; } = 10;
         public int TotalRecord { get; private set; } = 0;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -34,7 +34,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Transactions
             try
             {
                 CurrentPage = currentPage ?? 1;
-                PageSize = pageSize ?? 5;
+                PageSize = pageSize ?? 10;
                 StartDate = startDate.HasValue ? startDate.Value : DateTime.Now.AddYears(-1);
                 EndDate = endDate.HasValue ? endDate.Value : DateTime.Now;
 
