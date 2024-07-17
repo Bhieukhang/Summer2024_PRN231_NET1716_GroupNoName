@@ -50,6 +50,12 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Admin/Transactions/ListTransaction">
+                    <span class="menu-title">Thanh toán</span>
+                    <i class="fa fa-money menu-icon"></i>
+                </a>
+            </li>
         }
 
         @* Manager feature *@
@@ -62,18 +68,29 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Account/ListAccount">Danh Sách Nhân Viên</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="~/Manager/Stall/ListStall">
-                    <span class="menu-title">Nhân viên tại quầy</span>
-                    <i class="mdi mdi-home menu-icon"></i>
+                <a class="nav-link" data-bs-toggle="collapse" href="#employee" aria-expanded="false"
+                   aria-controls="employee">
+                    <span class="menu-title">Quản lí nhân viên</span>
+                    <i class="menu-arrow"></i>
+                    <i class="fa fa-users menu-icon"></i>
                 </a>
+                <div class="collapse" id="employee">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Account/ListAccount">Danh Sách Nhân Viên</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Manager/Stall/ListStall">
+                                <span class="menu-title">Nhân viên tại quầy</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="~/Manager/Memberships/ListMembership">
                     <span class="menu-title">Thành viên</span>
-                    <i class="fa fa-users menu-icon"></i>
+                    <i class="fa fa-address-card-o menu-icon"></i>
                 </a>
             </li>
             <li class="nav-item">
@@ -109,8 +126,18 @@
                     </ul>
                 </div>
             </li>
-          
-          
+            <li class="nav-item">
+                <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
+                    <span class="menu-title">Khuyến mãi</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/Staff/Discounts/ListDiscount">
+                    <span class="menu-title">Chíết khấu</span>
+                    <i class="fa fa-tags menu-icon"></i>
+                </a>
+            </li>
         }
 
         @* Staff feature *@
@@ -213,39 +240,20 @@
                     </ul>
                 </div>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                    aria-controls="ui-basic">
-                    <span class="menu-title">Hóa Đơn</span>
+                    <span class="menu-title">Đơn hàng</span>
                     <i class="menu-arrow"></i>
-                    <i class="fa fa-money menu-icon"></i>
+                    <i class="fa fa-truck menu-icon"></i>
                 </a>
                 <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
-                                <span class="menu-title">Khuyến mãi</span>
-                                <i class="fa fa-tags menu-icon"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/Staff/Discounts/ListDiscount">
-                                <span class="menu-title">Chíết khấu</span>
-                                <i class="fa fa-tags menu-icon"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="~/Staff/Orders/AddOrder">
-                                <span class="menu-title">Đơn hàng</span>
+                                <span class="menu-title"> Tạo đơn hàng</span>
                                 <i class="fa fa-truck menu-icon"></i>
-                            </a>
-                        </li>
-                 
-                        <li class="nav-item">
-                            <a class="nav-link" href="~/Manager/Transactions/ListTransaction">
-                                <span class="menu-title">Thanh toán</span>
-                                <i class="fa fa-money menu-icon"></i>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -291,23 +299,23 @@
         </ul>
         </div>
         </li>*@
-@*         <li class="nav-item">
-            <a class="nav-link" href="~/Staff/Orders/AddOrder">
-                <span class="menu-title">Đơn hàng</span>
-                <i class="fa fa-truck menu-icon"></i>
-            </a>
+        @*         <li class="nav-item">
+        <a class="nav-link" href="~/Staff/Orders/AddOrder">
+        <span class="menu-title">Đơn hàng</span>
+        <i class="fa fa-truck menu-icon"></i>
+        </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
-                <span class="menu-title">Khuyến mãi</span>
-                <i class="fa fa-tags menu-icon"></i>
-            </a>
+        <a class="nav-link" href="~/Manager/Promotions/ListPromotion">
+        <span class="menu-title">Khuyến mãi</span>
+        <i class="fa fa-tags menu-icon"></i>
+        </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="~/Staff/Discounts/ListDiscount">
-                <span class="menu-title">Chíết khấu</span>
-                <i class="fa fa-tags menu-icon"></i>
-            </a>
+        <a class="nav-link" href="~/Staff/Discounts/ListDiscount">
+        <span class="menu-title">Chíết khấu</span>
+        <i class="fa fa-tags menu-icon"></i>
+        </a>
         </li> *@
 
 

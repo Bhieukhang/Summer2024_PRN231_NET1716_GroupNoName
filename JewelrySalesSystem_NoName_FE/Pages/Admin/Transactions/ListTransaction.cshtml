@@ -25,15 +25,15 @@
 
                 <div class="row">
                     <div class="col-sm-12 col-lg-5">
-                        <label asp-for="StartDate" class="control-label">Start Date</label>
+                        <label asp-for="StartDate" class="control-label">Ngày bắt đầu</label>
                         <input id="input-search" asp-for="StartDate" type="date" class="form-control" />
                     </div>
                     <div class="col-sm-12 col-lg-5">
-                        <label asp-for="EndDate" class="control-label">End Date</label>
+                        <label asp-for="EndDate" class="control-label">Ngày kết thúc</label>
                         <input id="input-search" asp-for="EndDate" type="date" class="form-control" />
                     </div>
                     <div class="col-sm-12 col-lg-2 text-end mt-2 mt-lg-0">
-                        <button class="btn btn-secondary mt-4" type="submit">Search</button>
+                        <button class="btn btn-secondary mt-4" type="submit">Tìm kiếm</button>
                     </div>
                 </div>
             </div>
@@ -50,9 +50,9 @@
                             <thead>
                                 <tr>
                                     <th> STT </th>
-                                    <th> Order Id </th>
-                                    <th> Currency </th>
-                                    <th> TotalPrice </th>
+                                    <th> Đơn hàng </th>
+                                    <th> Đơn giá </th>
+                                    <th> Tổng tiền </th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="row d-flex justify-content-center align-content-center mt-3">
                         <div class="col">
-                            <span>Hiện thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> giao dịch</span>
+                            <span>Hiển thị <strong>@startIndex - @endIndex</strong> trên tổng số <strong> @totalRecord</strong> giao dịch</span>
                         </div>
 
                         @if (totalPages > 1)
