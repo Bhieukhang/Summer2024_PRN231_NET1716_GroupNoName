@@ -37,7 +37,7 @@ namespace JSS_Services.Implement
                 , x.CategoryId, x.MaterialId, x.Code, x.ImportPrice, x.InsDate, x.ProcessPrice, x.Deflag, x.Tax, x.SubId, new CategoryResponse(x.Category.Id, x.Category.Name),
                     new MaterialResponse(x.Material.Id, x.Material.MaterialName, x.Material.InsDate), x.PeriodWarranty),
                 predicate: x => x.SubId == subId,
-                orderBy: x => x.OrderByDescending(x => x.Id),
+                orderBy: x => x.OrderByDescending(x => x.InsDate),
                 page: page,
                 size: size);
             return list;
