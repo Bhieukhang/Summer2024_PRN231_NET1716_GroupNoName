@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Membership;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Membership;
 using JewelrySalesSystem_NoName_FE.DTOs;
 using JewelrySalesSystem_NoName_FE.Ultils;
 using Microsoft.AspNetCore.Mvc;
@@ -108,7 +108,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
             }
             catch (Exception ex)
             {
-                // Handle error appropriately
+                // Xử lý lỗi một cách phù hợp
                 ListAccount = new List<AccountDAO>();
                 TotalAccountCount = 0;
                 ActiveAccountCount = 0;
@@ -139,12 +139,12 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Admin.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Failed to deactivate account.");
+                    ModelState.AddModelError(string.Empty, "Không thể hủy kích hoạt tài khoản.");
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An error occurred while deactivating the account.");
+                ModelState.AddModelError(string.Empty, "Đã xảy ra lỗi khi hủy kích hoạt tài khoản.");
             }
 
             //return await OnGetAsync(Page, SearchTerm, FilterRoleId, FilterDeflag);

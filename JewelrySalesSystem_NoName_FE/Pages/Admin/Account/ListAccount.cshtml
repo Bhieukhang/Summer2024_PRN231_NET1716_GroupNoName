@@ -83,7 +83,7 @@
                                 <select class="form-control" id="filterDeflag">
                                     <option value="">Lọc theo trạng thái</option>
                                     <option value="true" selected="@(Model.FilterDeflag == true ? "selected" : null)">Đang hoạt động</option>
-                                    <option value="false" selected="@(Model.FilterDeflag == false ? "selected" : null)">Ngừng hoạt động</option>
+                                    <option value="false" selected="@(Model.FilterDeflag == false ? "selected" : null)">Bị ban</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -152,7 +152,17 @@
                                                                     <p><strong>Số điện thoại:</strong> @account.Phone</p>
                                                                     <p><strong>Ngày sinh:</strong> @(account.Dob.HasValue ? account.Dob.Value.ToString("dd-MM-yyyy") : "N/A")</p>
                                                                     <p><strong>Địa chỉ:</strong> @account.Address</p>
-                                                                    <p><strong>Trạng thái:</strong> @(account.Deflag.HasValue && account.Deflag.Value ? "Đang hoạt động" : "Ngừng hoạt động")</p>
+                                                                    <p>
+                                                                        <strong>Tình trạng hoạt động:</strong>
+                                                                        @if (account.Deflag.HasValue && account.Deflag.Value)
+                                                                        {
+                                                                            <label class="badge badge-success">Bình thường</label>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <label class="badge badge-danger">Bị ban</label>
+                                                                        }
+                                                                    </p>
                                                                     <p><strong>Chức vụ:</strong> @account.RoleName</p>
                                                                     <p><strong>Ngày cập nhật:</strong> @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("dd-MM-yyyy") : "N/A")</p>
                                                                     <p>
@@ -163,7 +173,7 @@
                                                                         }
                                                                         else if (account.Status.Equals("UnActive"))
                                                                         {
-                                                                            <label class="badge badge-danger">Không hoạt động</label>
+                                                                            <label class="badge badge-info">Không hoạt động</label>
                                                                         }
                                                                         else
                                                                         {
@@ -186,6 +196,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                         }
                                     }
                                     else
