@@ -33,12 +33,28 @@ namespace JSS_Services.Implement
         public async Task<Account> GetAccountByPhone(string phone, string password)
         {
             var account = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(predicate: x =>
-                x.Phone.Equals(phone) && x.Password.Equals(password), include: q => q.Include(x => x.Role));
+                x.Phone.Equals(phone), include: q => q.Include(x => x.Role));
 
             if (account == null)
             {
-                throw new UnauthorizedAccessException("Invalid phone or password.");
+                throw new UnauthorizedAccessException("Số điện thoại chưa được đăng ký trong hệ thống.");
             }
+
+            if (account.RoleId == Guid.Parse("7C9E6679-7425-40DE-944B-E07FC1F90AE9"))
+            {
+                throw new UnauthorizedAccessException("Không có quyền truy cập.");
+            }
+
+            if (account.Deflag == false)
+            {
+                throw new UnauthorizedAccessException("Tài khoản không hoạt động.");
+            }
+
+            if (!account.Password.Equals(password))
+            {
+                throw new UnauthorizedAccessException("Số điện thoại hoặc mật khẩu bị sai. Hãy thử lại!");
+            }
+
             return account;
         }
 
@@ -50,7 +66,7 @@ namespace JSS_Services.Implement
 
             if (account == null)
             {
-                throw new UnauthorizedAccessException("Invalid credentials or account not found.");
+                throw new UnauthorizedAccessException("Không tìm thấy thông tin xác thực hoặc tài khoản không hợp lệ.");
             }
 
             return GenerateJwtToken(account);
@@ -60,7 +76,7 @@ namespace JSS_Services.Implement
         {
             if (account == null)
             {
-                throw new ArgumentNullException(nameof(account), "Account cannot be null");
+                throw new ArgumentNullException(nameof(account), "Tài khoản không được để trống.");
             }
 
             var claims = new List<Claim>

@@ -18,5 +18,6 @@ namespace JSS_Services.Interface
         Task<Diamond> CreateDiamondAsync(Diamond diamond, Stream imageStream, string imageName);
         Task<Diamond> UpdateDiamondAsync(Guid id, Diamond diamond, Stream imageStream, string imageName);
         Task<bool> DeleteDiamondAsync(Guid id);
+        Task<int> GetTotalDiamondCountAsync();
     }
 }

@@ -60,6 +60,21 @@ namespace JSS_BusinessObjects.Payload.Response
             List = list;
         }
 
+        public WarrantyResponse(Guid id, DateTime? dateOfPurchase, DateTime? expirationDate, int? period,
+                            bool? deflag, string? status, string? note, Guid orderDetailId,
+                            string? phone)
+        {
+            Id = id;
+            DateOfPurchase = dateOfPurchase;
+            ExpirationDate = expirationDate;
+            Period = period;
+            Deflag = deflag;
+            Status = status;
+            Note = note;
+            OrderDetailId = orderDetailId;
+            Phone = phone;
+        }
+
         public Guid Id { get; set; }
 
         public DateTime? DateOfPurchase { get; set; }
@@ -75,6 +90,8 @@ namespace JSS_BusinessObjects.Payload.Response
 
         public string? Status { get; set; }
         public string? Note { get; set; }
+        public Guid OrderDetailId { get; set; }
+        public string? Phone { get; set; }
         public List<ConditionWarrantiesList> List {  get; set; }
     }
 

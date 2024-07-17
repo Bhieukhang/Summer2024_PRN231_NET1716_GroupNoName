@@ -1,5 +1,5 @@
 ﻿@page
-@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.EditModel
+@model JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty.UpdateWarrantyModel
 @{
 }
 
@@ -14,6 +14,11 @@
                     <div class="card-body">
                         <form method="post">
                             <div class="form-group">
+                                <label asp-for="Warranty.ProductName" class="control-label">Sản phẩm</label>
+                                <input asp-for="Warranty.ProductName" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.ProductName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
                                 <label asp-for="Warranty.DateOfPurchase" class="control-label">Ngày mua hàng</label>
                                 <input asp-for="Warranty.DateOfPurchase" class="form-control" readonly />
                                 <span asp-validation-for="Warranty.DateOfPurchase" class="text-danger"></span>
@@ -22,6 +27,21 @@
                                 <label asp-for="Warranty.ExpirationDate" class="control-label">Hạn bảo hành</label>
                                 <input asp-for="Warranty.ExpirationDate" class="form-control" readonly />
                                 <span asp-validation-for="Warranty.ExpirationDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Warranty.Period" class="control-label">Thời gian bảo hành</label>
+                                <input asp-for="Warranty.Period" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.Period" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Warranty.Phone" class="control-label">Số điện thoại</label>
+                                <input asp-for="Warranty.Phone" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.Phone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Warranty.OrderDetailId" class="control-label">Mã chi tiết đơn hàng</label>
+                                <input asp-for="Warranty.OrderDetailId" class="form-control" readonly />
+                                <span asp-validation-for="Warranty.OrderDetailId" class="text-danger"></span>
                             </div>
                             @if (Model.IsExpired)
                             {

@@ -53,6 +53,8 @@
 
         public const string SubProductList = url + "/api/v1/Product/subid";
         public const string TotalSubProductList = url + "/api/v1/Product/PurchasePrice";
+        public const string TotalProductCount = url + "/api/v1/Product/totalcount";
+        public const string ProductCountByCategory = url + "/api/v1/Product/countbycategory";
 
         //Account
         public const string AccountList = url + "/api/v1/Account";
@@ -101,6 +103,7 @@
         //Diamond
         public const string DiamondList = url + "/api/v1/Diamond";
         public const string DiamondDetails = url + "/api/v1/Diamond/id";
+        public const string DiamondTotalCount = url + "/api/v1/Diamond/totalcount";
 
         //PurchasePrice
         public const string PurchasePriceList = url + "/api/v1/PurchasePrice";

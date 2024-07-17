@@ -54,6 +54,20 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             return Ok(diamonds);
         }
 
+        #region GetTotalDiamondCount
+        /// <summary>
+        /// Get total diamond count.
+        /// </summary>
+        /// <returns>Total number of diamonds.</returns>
+        /// GET : api/Diamond/totalcount
+        #endregion
+        [HttpGet(ApiEndPointConstant.Diamond.GetTotalDiamondCountEndpoint)]
+        public async Task<ActionResult<int>> GetTotalDiamondCountAsync()
+        {
+            var totalCount = await _diamondService.GetTotalDiamondCountAsync();
+            return Ok(totalCount);
+        }
+
         #region GetDiamondById
         /// <summary>
         /// Get a diamond by its ID.

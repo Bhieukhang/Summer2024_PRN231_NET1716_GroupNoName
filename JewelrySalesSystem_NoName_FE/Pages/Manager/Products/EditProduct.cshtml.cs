@@ -171,19 +171,19 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Products
                 return Page();
             }
 
-            //if (await IsProductNameExistsAsync(Product.ProductName, token))
-            //{
-            //    TempData["ErrorMessage"] = "Tên trang sức đã tồn tại.";
-            //    await LoadSelectLists(id, token);
-            //    return Page();
-            //}
+            if (await IsProductNameExistsAsync(Product.ProductName, token))
+            {
+                TempData["ErrorMessage"] = "Tên trang sức đã tồn tại.";
+                await LoadSelectLists(id, token);
+                return Page();
+            }
 
-            //if (await IsProductCodeExistsAsync(Product.Code, token))
-            //{
-            //    TempData["ErrorMessage"] = "Mã trang sức đã tồn tại.";
-            //    await LoadSelectLists(id, token);
-            //    return Page();
-            //}
+            if (await IsProductCodeExistsAsync(Product.Code, token))
+            {
+                TempData["ErrorMessage"] = "Mã trang sức đã tồn tại.";
+                await LoadSelectLists(id, token);
+                return Page();
+            }
 
             try
             {

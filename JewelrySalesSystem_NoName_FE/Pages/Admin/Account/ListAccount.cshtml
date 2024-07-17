@@ -107,83 +107,92 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var account in Model.ListAccount)
+                                    @if (Model.ListAccount != null && Model.ListAccount.Count > 0)
                                     {
-                                        <tr>
-                                            <td>
-                                                <img src="@account.ImgUrl" alt="" />
-                                            </td>
-                                            <td> @account.FullName </td>
-                                            <td> @account.Phone </td>
-                                            <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
-                                            <td> @account.RoleName </td>
+                                        @foreach (var account in Model.ListAccount)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <img src="@account.ImgUrl" alt="" />
+                                                </td>
+                                                <td> @account.FullName </td>
+                                                <td> @account.Phone </td>
+                                                <td> @account.Dob?.ToString("yyyy-MM-dd") </td>
+                                                <td> @account.RoleName </td>
 
-                                            @* <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
-                                            <td>
-                                                <a data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id" style="padding: 8px">
-                                                    <i class="fa fa-eye menu-icon"></i>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                @if (account.Deflag != false)
-                                                {
-                                                    <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
-                                                        <i class="mdi mdi-file-check btn-icon-append"></i>
-                                                        Chỉnh sửa
+                                                @* <td><a asp-page="./DetailsAccount" asp-route-id="@account.Id"><i class="fa fa-eye menu-icon"></i></a></td> *@
+                                                <td>
+                                                    <a data-bs-toggle="modal" data-bs-target="#employeeModal-@account.Id" style="padding: 8px">
+                                                        <i class="fa fa-eye menu-icon"></i>
                                                     </a>
-                                                }
-                                            </td>
+                                                </td>
+                                                <td>
+                                                    @if (account.Deflag != false)
+                                                    {
+                                                        <a asp-page="./EditAccount" asp-route-id="@account.Id" class="btn btn-gradient-danger btn-icon-text">
+                                                            <i class="mdi mdi-file-check btn-icon-append"></i>
+                                                            Chỉnh sửa
+                                                        </a>
+                                                    }
+                                                </td>
 
-                                        </tr>
-                                        <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="employeeModalLabel-@account.Id">Thông tin thành viên</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="account-details">
-                                                            <img src="@account.ImgUrl" alt="Account Image" class="account-image" />
-                                                            <div class="account-info">
-                                                                <p><strong>Tên tài khoản:</strong> @account.FullName</p>
-                                                                <p><strong>Số điện thoại:</strong> @account.Phone</p>
-                                                                <p><strong>Ngày sinh:</strong> @(account.Dob.HasValue ? account.Dob.Value.ToString("dd-MM-yyyy") : "N/A")</p>
-                                                                <p><strong>Địa chỉ:</strong> @account.Address</p>
-                                                                <p><strong>Trạng thái:</strong> @(account.Deflag.HasValue && account.Deflag.Value ? "Đang hoạt động" : "Ngừng hoạt động")</p>
-                                                                <p><strong>Chức vụ:</strong> @account.RoleName</p>
-                                                                <p><strong>Ngày cập nhật:</strong> @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("dd-MM-yyyy") : "N/A")</p>
-                                                                <p>
-                                                                    <strong>Trạng thái:</strong>
-                                                                    @if (account.Status.Equals("Active"))
-                                                                    {
-                                                                        <label class="badge badge-success">Hoạt động</label>
-                                                                                                                    }
-                                                                    else if (account.Status.Equals("Inactive"))
-                                                                    {
-                                                                        <label class="badge badge-danger">Không hoạt động</label>
-                                                                                                                    }
-                                                                    else
-                                                                    {
-                                                                        @account.Status
-                                                                    }
-                                                                </p>
+                                            </tr>
+                                            <div class="modal fade" id="employeeModal-@account.Id" tabindex="-1" aria-labelledby="employeeModalLabel-@account.Id" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="employeeModalLabel-@account.Id">Thông tin thành viên</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="account-details">
+                                                                <img src="@account.ImgUrl" alt="Account Image" class="account-image" />
+                                                                <div class="account-info">
+                                                                    <p><strong>Tên tài khoản:</strong> @account.FullName</p>
+                                                                    <p><strong>Số điện thoại:</strong> @account.Phone</p>
+                                                                    <p><strong>Ngày sinh:</strong> @(account.Dob.HasValue ? account.Dob.Value.ToString("dd-MM-yyyy") : "N/A")</p>
+                                                                    <p><strong>Địa chỉ:</strong> @account.Address</p>
+                                                                    <p><strong>Trạng thái:</strong> @(account.Deflag.HasValue && account.Deflag.Value ? "Đang hoạt động" : "Ngừng hoạt động")</p>
+                                                                    <p><strong>Chức vụ:</strong> @account.RoleName</p>
+                                                                    <p><strong>Ngày cập nhật:</strong> @(account.UpsDate.HasValue ? account.UpsDate.Value.ToString("dd-MM-yyyy") : "N/A")</p>
+                                                                    <p>
+                                                                        <strong>Trạng thái:</strong>
+                                                                        @if (account.Status.Equals("Active"))
+                                                                        {
+                                                                            <label class="badge badge-success">Hoạt động</label>
+                                                                        }
+                                                                        else if (account.Status.Equals("UnActive"))
+                                                                        {
+                                                                            <label class="badge badge-danger">Không hoạt động</label>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @account.Status
+                                                                        }
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        @if (account.Deflag != false)
-                                                        {
-                                                            <form method="post" asp-page-handler="DeactivateAccount" class="deactivate-form">
-                                                                <input type="hidden" name="accountId" value="@account.Id" />
-                                                                <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Ngưng hoạt động</button>
-                                                            </form>
-                                                        }
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                        <div class="modal-footer">
+                                                            @if (account.Deflag != false)
+                                                            {
+                                                                <form method="post" asp-page-handler="DeactivateAccount" class="deactivate-form">
+                                                                    <input type="hidden" name="accountId" value="@account.Id" />
+                                                                    <button type="button" class="btn btn-danger" onclick="confirmDeactivate(this.form)">Ngưng hoạt động</button>
+                                                                </form>
+                                                            }
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center">Không có trong danh sách</td>
+                                        </tr>
                                     }
 
                                 </tbody>
@@ -192,16 +201,16 @@
                             <nav aria-label="Page navigation example" style="padding-top:50px">
                                 <ul class="pagination justify-content-end">
                                     <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page - 1)" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
+                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page - 1)" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterRoleId="@Model.FilterRoleId" asp-route-filterDeflag="@Model.FilterDeflag" asp-route-size="@Model.Size" tabindex="-1" aria-disabled="@(Model.Page == 1)">Previous</a>
                                     </li>
                                     @for (var i = 1; i <= Model.TotalPages; i++)
                                     {
                                         <li class="page-item @(Model.Page == i ? "active" : "")">
-                                            <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@i" asp-route-size="@Model.Size">@i</a>
+                                            <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterRoleId="@Model.FilterRoleId" asp-route-filterDeflag="@Model.FilterDeflag" asp-route-size="@Model.Size">@i</a>
                                         </li>
                                     }
                                     <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page + 1)" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
+                                        <a class="page-link" asp-page="./ListAccount" asp-route-currentPage="@(Model.Page + 1)" asp-route-searchTerm="@Model.SearchTerm" asp-route-filterRoleId="@Model.FilterRoleId" asp-route-filterDeflag="@Model.FilterDeflag" asp-route-size="@Model.Size" aria-disabled="@(Model.Page == Model.TotalPages)">Next</a>
                                     </li>
                                 </ul>
                             </nav>

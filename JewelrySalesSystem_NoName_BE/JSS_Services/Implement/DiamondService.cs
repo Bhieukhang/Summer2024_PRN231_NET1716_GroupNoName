@@ -35,6 +35,12 @@ namespace JSS_Services.Implement
             return list;
         }
 
+        public async Task<int> GetTotalDiamondCountAsync()
+        {
+            var diamondRepository = _unitOfWork.DiamondRepository;
+            return await diamondRepository.CountAsync();
+        }
+
         public async Task<DiamondResponse> SearchDiamondByCodeAsync(string code)
         {
             if (string.IsNullOrEmpty(code) || code.Length < 8)

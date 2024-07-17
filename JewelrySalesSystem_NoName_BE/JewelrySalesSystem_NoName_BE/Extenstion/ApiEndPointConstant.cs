@@ -100,6 +100,8 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string ProductByNameEndpoint = ProductEndpoint + "/productName";
             public const string ProductByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion";
             public const string ProductItemByCodePromotionEndpoint = ProductByCodeEndpoint + "/promotion/item";
+            public const string GetTotalProductCountEndpoint = ProductEndpoint + "/totalcount";
+            public const string GetProductCountByCategoryEndpoint = ProductEndpoint + "/countbycategory";
 
             public const string FilterProductEndpoint = ProductEndpoint + "/filter";
             public const string ProductAutocompleteEndpoint = ProductEndpoint + "/autocomplete";
@@ -141,6 +143,7 @@ namespace JewelrySalesSystem_NoName_BE.Extenstion
             public const string DiamondByCodeEndpoint = DiamondEndpoint + "/code";
             public const string DiamondByNameEndpoint = DiamondEndpoint + "/diamondName";
             public const string DiamondAutocompleteEndpoint = DiamondEndpoint + "/autocomplete";
+            public const string GetTotalDiamondCountEndpoint = DiamondEndpoint + "/totalcount";
         }
         public static class Membership
         {

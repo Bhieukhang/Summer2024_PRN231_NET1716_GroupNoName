@@ -1,4 +1,4 @@
-using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
+﻿using JewelrySalesSystem_NoName_FE.DTOs.Warranty;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +14,11 @@ using System;
 namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
 {
     [Authorize(Roles = "Manager, Staff")]
-    public class EditModel : PageModel
+    public class UpdateWarrantyModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public EditModel(IHttpClientFactory httpClientFactory)
+        public UpdateWarrantyModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
@@ -81,18 +81,13 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Warranty
                 var currentDate = DateTime.UtcNow;
                 IsExpired = currentDate > Warranty.ExpirationDate;
 
-                var warranty = new WarrantyRequest
+                var warrantyUpdateRequest = new WarrantyRequest
                 {
-                    DateOfPurchase = Warranty.DateOfPurchase,
-                    ExpirationDate = Warranty.ExpirationDate,
-                    Period = Warranty.Period,
-                    Deflag = Warranty.Deflag,
                     Status = Warranty.Status,
-                    ConditionWarrantyId = Warranty.ConditionWarrantyId,
                     Note = Warranty.Note
                 };
 
-                var jsonContent = JsonConvert.SerializeObject(warranty);
+                var jsonContent = JsonConvert.SerializeObject(warrantyUpdateRequest);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
                 var url = $"{ApiPath.Warranty}/{id}";

@@ -38,7 +38,7 @@ namespace JSS_Services.Implement
         {
             var warrantyDetail = await _unitOfWork.WarrantyRepository.SingleOrDefaultAsync(
                 selector: x => new WarrantyResponse(x.Id, x.DateOfPurchase, x.ExpirationDate, x.Period, x.Deflag, x.Status,
-                                                    x.Note),
+                                                    x.Note, x.OrderDetail.Product.ProductName),
                     predicate:
                     Guid.Empty.Equals(id)
                         ? x => true
@@ -54,6 +54,7 @@ namespace JSS_Services.Implement
                                                     x.Deflag, x.Status, x.Note, x.OrderDetail.Product.ProductName),
                 include: x => x.Include(w => w.OrderDetail)
                                 .ThenInclude(w => w.Product),
+                orderBy: x => x.OrderBy(w => w.ExpirationDate),
                 page: page,
                 size: size
                 );
@@ -135,11 +136,18 @@ namespace JSS_Services.Implement
             {
                 if (string.IsNullOrWhiteSpace(request.Note))
                 {
-                    throw new ArgumentException("Note is required when updating warranty within valid period.");
+                    throw new ArgumentException("Cần ghi chú khi cập nhật bảo hành trong thời hạn hiệu lực.");
                 }
                 warranty.Status = request.Status;
                 warranty.Note = request.Note;
             }
+
+            var oldDateOfPurchase = warranty.DateOfPurchase;
+            var oldExpirationDate = warranty.ExpirationDate;
+            var oldPeriod = warranty.Period;
+            var oldDeflag = warranty.Deflag;
+            var oldOrderDetailId = warranty.OrderDetailId;
+            var oldPhone = warranty.Phone;
 
             _unitOfWork.WarrantyRepository.UpdateAsync(warranty);
             bool isSuccessful = await _unitOfWork.CommitAsync() > 0;
@@ -148,9 +156,11 @@ namespace JSS_Services.Implement
                 throw new Exception("Commit failed, no rows affected.");
             }
 
-            return new WarrantyResponse(warranty.Id, warranty.DateOfPurchase, warranty.ExpirationDate,
-                warranty.Period, warranty.Deflag, warranty.Status, warranty.Note);
+            return new WarrantyResponse(warranty.Id, oldDateOfPurchase, oldExpirationDate,
+                                        oldPeriod, oldDeflag, warranty.Status, warranty.Note,
+                                        oldOrderDetailId, oldPhone);
         }
+
 
         public async Task<WarrantyResponse> GetDetailById(Guid id)
         {

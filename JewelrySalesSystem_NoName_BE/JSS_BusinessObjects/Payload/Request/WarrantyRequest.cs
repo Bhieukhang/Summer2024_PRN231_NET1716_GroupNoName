@@ -37,5 +37,6 @@ namespace JSS_BusinessObjects.Payload.Request
 
         public Guid? OrderDetailId { get; set; }
         public string? Note { get; set; }
+        public string? Phone { get; set; }
     }
 }

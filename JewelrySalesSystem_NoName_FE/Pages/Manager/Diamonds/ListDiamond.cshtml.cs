@@ -30,6 +30,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
         public int TotalPages { get; set; }
         public int TotalItems { get; set; }
         public DiamondDTO searchItem = new DiamondDTO();
+        public int TotalDiamondCount { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? page, string? searchCode)
         {
@@ -74,15 +75,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Diamonds
                     }
                 }
 
-                // Additional Logging for Debugging
-                //if (diamondList == null || !diamondList.Any())
-                //{
-                //    TempData["ErrorMessage"] = "No diamonds found.";
-                //}
-                //else
-                //{
-                //    TempData["SuccessMessage"] = $"{diamondList.Count} diamonds found.";
-                //}
+                var totalDiamondCountResponse = await client.GetStringAsync($"{ApiPath.DiamondTotalCount}");
+                TotalDiamondCount = JsonConvert.DeserializeObject<int>(totalDiamondCountResponse);
 
                 return Page();
             }
