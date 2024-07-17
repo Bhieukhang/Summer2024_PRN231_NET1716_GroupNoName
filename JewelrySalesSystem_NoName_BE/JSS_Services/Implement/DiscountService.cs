@@ -97,7 +97,7 @@ namespace JSS_Services.Implement
         public async Task<DiscountResponse> GetDiscountAccept(Guid id)
         {
             var discount = await _unitOfWork.DiscountRepository.FirstOrDefaultAsync(a => a.OrderId == id);
-                                                                    //&& a.Status == DiscountStatus.Accepted);
+            //&& a.Status == DiscountStatus.Accepted);
             if (discount == null)
             {
                 return new DiscountResponse { };
@@ -108,7 +108,7 @@ namespace JSS_Services.Implement
                 {
                     return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
                discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);
-                }                
+                }
             }
             return new DiscountResponse(discount.Id, discount.OrderId, discount.ManagerId, discount.PercentDiscount,
                discount.Description, discount.ConditionDiscount, discount.Status, discount.Note);

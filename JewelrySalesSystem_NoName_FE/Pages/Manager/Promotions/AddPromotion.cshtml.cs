@@ -44,7 +44,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 ProductParts = SplitList<ProductDTO>(Products, 9);
 
                 ErrorMessage = string.Empty;
-               
+
             }
             catch (Exception ex)
             {
@@ -57,8 +57,8 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
         {
             var token = HttpContext.Session.GetString("Token") ?? "";
             try
-            { 
-                if(ModelState.IsValid)
+            {
+                if (ModelState.IsValid)
                 {
                     if (AddPromotionRequest == null) throw new Exception("Promotion data is invalid.");
 
@@ -86,7 +86,7 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Manager.Promotions
                 Console.WriteLine(ex.ToString());
                 ErrorMessage = ex.Message;
             }
-          
+
             Products = await ApiClient.GetAsync<List<ProductDTO>>($"{ApiPath.AllProductEndpoint}", token);
             ProductParts = SplitList<ProductDTO>(Products, 9);
 

@@ -33,12 +33,10 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
         {
             try
             {
-                if (ModelState.IsValid)
-                {
                     if (DiscountRequest == null) throw new Exception("Discount data is invalid.");
                     var token = HttpContext.Session.GetString("Token") ?? "";
 
-                    if(DiscountRequest.Status == "Accepted")
+                    if (DiscountRequest.Status == "Accepted")
                     {
                         DiscountRequest.Note = "Chấp nhận chiết khấu";
                     }
@@ -47,7 +45,6 @@ namespace JewelrySalesSystem_NoName_FE.Pages.Staff.Discounts
                     if (!response.Success) throw new Exception(response.Message);
 
                     return RedirectToPage("ListDiscount");
-                }
             }
             catch (Exception ex)
             {

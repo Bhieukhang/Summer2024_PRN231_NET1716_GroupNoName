@@ -116,7 +116,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             }
 
             await _productService.DeleteProductConditionGroup(promotion.Id);
-            foreach(var item in promotionRequest.ProductIds ?? new())
+            foreach (var item in promotionRequest.ProductIds ?? new())
             {
                 await _productService.AddProductConditionGroup(item, promotion.Id);
             }
@@ -176,4 +176,4 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
         }
 
     }
-}
+}   

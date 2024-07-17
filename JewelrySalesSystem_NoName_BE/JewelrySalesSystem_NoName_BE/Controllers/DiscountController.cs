@@ -139,14 +139,15 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             {
                 var result = await _discountService.GetDiscountAccept(id);
                 if (result.Id == Guid.Parse("00000000-0000-0000-0000-000000000000") || result.Status == "Pending")
-                { 
-                    if(result.Status == "Pending")
-                    return Ok(new { message = "Chưa có phản hồi từ quản lí" });
-                } 
+                {
+                    if (result.Status == "Pending")
+                        return Ok(new { message = "Chưa có phản hồi từ quản lí" });
+                }
                 var response = JsonConvert.SerializeObject(result, Formatting.Indented);
                 await _hubContext.Clients.All.SendAsync("DiscountAccpetNotification", response);
                 return Ok(response);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

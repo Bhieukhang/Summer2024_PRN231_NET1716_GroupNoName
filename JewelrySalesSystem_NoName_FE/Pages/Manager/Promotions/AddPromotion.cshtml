@@ -22,9 +22,8 @@
                         <span asp-validation-for="AddPromotionRequest.PromotionName" class="text-danger d-block mt-1"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="AddPromotionRequest.Type" class="control-label">Loại</label>
-                        <select asp-for="AddPromotionRequest.Type" class="form-select" placeholder="Chọn loại khuyến mãi">
-                            <option value="Product">Product</option>
+                        <select asp-for="AddPromotionRequest.Type" class="form-select" placeholder="Chọn loại khuyến mãi" hidden>
+                            <option value="Product">Sản Phẩm</option>
                         </select>
                         <span asp-validation-for="AddPromotionRequest.Type" class="text-danger d-block mt-1"></span>
                     </div>
