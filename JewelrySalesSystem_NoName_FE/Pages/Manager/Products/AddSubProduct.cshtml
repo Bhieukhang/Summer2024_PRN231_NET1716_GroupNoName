@@ -43,13 +43,13 @@
                         <!-- Mã sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.Code" class="form-label">Mã sản phẩm</label>
-                            <input asp-for="Product.Code" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
+                            <input asp-for="Product.Code" id="searchCode" class="form-control" placeholder="Theo mẫu (XXXX0000)" />
                             <span asp-validation-for="Product.Code" class="text-danger"></span>
                         </div>
                         <!-- Chất liệu -->
                         <div class="mb-3">
                             <label asp-for="Product.MaterialId" class="form-label">Chất Liệu</label>
-                            <select asp-for="Product.MaterialId" class="form-select" asp-items="@(new SelectList(Model.MaterialList, "Id", "MaterialName"))">
+                            <select asp-for="Product.MaterialId" id="productMaterialId" class="form-select" asp-items="@(new SelectList(Model.MaterialList, "Id", "MaterialName"))">
                                 <option value="">Select Material</option>
                             </select>
                             <span asp-validation-for="Product.MaterialId" class="text-danger"></span>
@@ -57,52 +57,52 @@
                         <!-- Mô tả sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.Description" class="form-label">Mô Tả</label>
-                            <textarea asp-for="Product.Description" class="form-control" placeholder="Nhập mô tả, thông tin trang sức"></textarea>
+                            <textarea asp-for="Product.Description" id="productDescription" class="form-control" placeholder="Nhập mô tả, thông tin trang sức"></textarea>
                             <span asp-validation-for="Product.Description" class="text-danger"></span>
                         </div>
                         <!-- Hình ảnh sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Image" class="form-label">Hình Ảnh Trang Sức</label>
-                            <input type="file" asp-for="Image" class="form-control" />
+                            <input type="file" asp-for="Image" id="productImage" class="form-control" />
                             <span asp-validation-for="Image" class="text-danger"></span>
                         </div>
                         <!-- Giá nhập vào -->
                         <div class="mb-3">
                             <label asp-for="Product.ImportPrice" class="form-label">Giá Nhập Vào</label>
-                            <input asp-for="Product.ImportPrice" class="form-control" placeholder="Nhập giá nhập vào" />
+                            <input asp-for="Product.ImportPrice" id="productImportPrice" class="form-control" placeholder="Nhập giá nhập vào" />
                             <span asp-validation-for="Product.ImportPrice" class="text-danger"></span>
                         </div>
                         <!-- Kích thước sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.Size" class="form-label">Kích Thước (mm)</label>
-                            <input asp-for="Product.Size" class="form-control" placeholder="Nhập kích thước trang sức (cm)" />
+                            <input asp-for="Product.Size" id="productSize" class="form-control" placeholder="Nhập kích thước trang sức (cm)" />
                             <span asp-validation-for="Product.Size" class="text-danger"></span>
                         </div>
                         <!-- Thuế -->
                         <div class="mb-3">
                             <label asp-for="Product.Tax" class="form-label">Thuế</label>
-                            <input asp-for="Product.Tax" class="form-control" placeholder="Thuế mặc định bằng 10% giá nhập vào" readonly />
+                            <input asp-for="Product.Tax" id="productTax" class="form-control" placeholder="Thuế mặc định bằng 10% giá nhập vào" readonly />
                         </div>
                         <!-- Giá gia công -->
                         <div class="mb-3">
                             <label asp-for="Product.ProcessPrice" class="form-label">Giá Gia Công</label>
-                            <input asp-for="Product.ProcessPrice" class="form-control" placeholder="Nhập Giá Gia Công (Nếu Có)" />
+                            <input asp-for="Product.ProcessPrice" id="productProcessPrice" class="form-control" placeholder="Nhập Giá Gia Công (Nếu Có)" />
                         </div>
                         <!-- Giá bán -->
                         <div class="mb-3">
                             <label asp-for="Product.SellingPrice" class="form-label">Giá Bán</label>
-                            <input asp-for="Product.SellingPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + Thuế)" readonly />
+                            <input asp-for="Product.SellingPrice" id="productSellingPrice" class="form-control" placeholder="Nhập Giá Bán (Giá Bán = Giá nhập + Giá gia công + Thuế)" readonly />
                         </div>
                         <!-- Số lượng sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.Quantity" class="form-label">Số Lượng</label>
-                            <input asp-for="Product.Quantity" class="form-control" />
+                            <input asp-for="Product.Quantity" id="productQuantity" class="form-control" />
                             <span asp-validation-for="Product.Quantity" class="text-danger"></span>
                         </div>
                         <!-- Loại sản phẩm -->
                         <div class="mb-3">
                             <label asp-for="Product.CategoryId" class="form-label">Loại</label>
-                            <select asp-for="Product.CategoryId" class="form-select" asp-items="@(new SelectList(Model.CategoryList, "Id", "Name"))">
+                            <select asp-for="Product.CategoryId" id="productCategoryId" class="form-select" asp-items="@(new SelectList(Model.CategoryList, "Id", "Name"))">
                                 <option value="">Select Category</option>
                             </select>
                             <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
@@ -110,7 +110,7 @@
                         <!-- Thời lượng bảo hành -->
                         <div class="mb-3">
                             <label asp-for="Product.PeriodWarranty" class="form-label">Thời Lượng Bảo Hành (Tháng)</label>
-                            <input asp-for="Product.PeriodWarranty" class="form-control" placeholder="Nhập Thời Gian Bảo Hành" />
+                            <input asp-for="Product.PeriodWarranty" id="productPeriodWarranty" class="form-control" placeholder="Nhập Thời Gian Bảo Hành" />
                             <span asp-validation-for="Product.PeriodWarranty" class="text-danger"></span>
                         </div>
                         <!-- Nút thêm và hủy -->
@@ -131,6 +131,21 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
     <script>
+        function autoFillForm(item) {
+            document.getElementById("searchCode").value = item.code;
+            document.getElementById("productName").value = item.productName;
+            document.getElementById("productMaterialId").value = item.materialId;
+            document.getElementById("productDescription").value = item.description;
+            document.getElementById("productImage").src = item.imgProduct;
+            document.getElementById("productImportPrice").value = item.importPrice;
+            document.getElementById("productSize").value = item.size;
+            document.getElementById("productProcessPrice").value = item.processPrice;
+            document.getElementById("productSellingPrice").value = item.sellingPrice;
+            document.getElementById("productQuantity").value = item.quantity;
+            document.getElementById("productCategoryId").value = item.categoryId;
+            document.getElementById("productPeriodWarranty").value = item.periodWarranty;
+        }
+
         function autocompleteSearch(query) {
             console.log(query);
             if (query.length == 0) {
@@ -172,11 +187,24 @@
         `;
 
                         suggestionItem.onclick = function () {
+                            autoFillForm(item);
                             document.getElementById("searchCode").value = item.code;
-                            document.getElementById("searchCode").value = item.productName;
+                            document.getElementById("productName").value = item.productName;
                             document.getElementById("autocomplete-list").innerHTML = "";
                             document.getElementById("selectedProductId").value = item.id;
+                            document.getElementById('productImg').value = item.imgProduct;
+                            document.getElementById('productDescription').value = item.description;
+                            document.getElementById('productImportPrice').value = item.importPrice;
+                            document.getElementById('productSize').value = item.size;
+                            document.getElementById('productProcessPrice').value = item.processPrice;
+                            document.getElementById('productSellingPrice').value = item.sellingPrice;
+                            document.getElementById('productQuantity').value = item.quantity;
+                            document.getElementById('productCategoryId').value = item.categoryId;
+                            document.getElementById('productMaterialId').value = item.materialId;
+                            document.getElementById('productPeriodWarranty').value = item.periodWarranty;
                             autocompleteList.innerHTML = "";
+                      
+
                         };
 
                         autocompleteList.appendChild(suggestionItem);
