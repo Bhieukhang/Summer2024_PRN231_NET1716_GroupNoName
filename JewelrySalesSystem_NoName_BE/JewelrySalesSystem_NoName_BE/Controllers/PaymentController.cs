@@ -70,7 +70,7 @@ namespace JewelrySalesSystem_NoName_BE.Controllers
             param.Add("app_id", app_id);
             param.Add("app_user", "user123");
             param.Add("app_time", Utils.GetTimeStamp().ToString());
-            param.Add("amount", "50000");
+            param.Add("amount", orderDto.TotalPrice.ToString());
             param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); // mã giao dich có định dạng yyMMdd_xxxx
             param.Add("embed_data", JsonConvert.SerializeObject(embed_data));
             param.Add("item", JsonConvert.SerializeObject(items));

@@ -113,7 +113,7 @@
         </div>
     </div>
 
-     <!-- Modal Popup  -->
+     <!-- Modal Popup -->
     <div class="modal fade" id="duplicateProductModal" tabindex="-1" aria-labelledby="duplicateProductModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -132,8 +132,7 @@
         </div>
     </div
 
-    
-    <!-- Modal Popup Product Valid  -->
+    <!-- Modal Popup -->
     <div class="modal fade" id="outOfStockModal" tabindex="-1" aria-labelledby="outOfStockModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -371,13 +370,6 @@
                                 if ($('#productTableBody tr').length > 0) {
                                         $('#productTableHead').show();
                                 }
-
-                                if (data.promotions && data.promotions.length > 0) {
-                                    $('.promotion-btn[data-product-code="' + data.product.code + '"]').show();
-                                } else {
-                                    $('.promotion-btn[data-product-code="' + data.product.code + '"]').hide();
-                                }
-
                                 // Thêm sự kiện kiểm tra số lượng nhập vào
                                 $('.quantity-input').on('change', function () {
                                     var maxQuantity = parseInt($(this).attr('max'));
@@ -441,108 +433,86 @@
 
             //Khuyến mãi
             function applyPromotion(promotionId, productCode) {
-                console.log("applyPromotion: ", promotionId);
+    console.log("applyPromotion: ", promotionId);
 
-                if (promotionId === null || promotionId === undefined) {
-                    console.log('Khuyến mãi được bỏ chọn');
-        
-                // Find the product item with the matching product code
-                    var productItem = $('#productTableBody .product-item').filter(function () {
-                        return $(this).data('product-code') === productCode;
-                    });
+    if (promotionId === null || promotionId === undefined) {
+        console.log('Khuyến mãi được bỏ chọn');
 
-                    if (productItem.length > 0) {
-                        var oldDiscountAmount = productItem.data('promotion-amount') || 0;
-                        var initialPrice = parseFloat(productItem.find('td:eq(2)').text().trim()); // Store initial price
+        var productItem = $('#productTableBody .product-item').filter(function () {
+            return $(this).data('product-code') === productCode;
+        });
 
-                        // Remove promotion info
-                        productItem.find('.promotion-info').hide();
-                        productItem.data('promotion-amount', null);
+        if (productItem.length > 0) {
+            var oldDiscountAmount = productItem.data('promotion-amount') || 0;
+            var initialPrice = parseFloat(productItem.find('td:eq(2)').text().trim());
 
-                        // Restore initial price for the product
-                        productItem.find('.product-price').text(initialPrice.toLocaleString() + ' đ');
+            productItem.find('.promotion-info').hide();
+            productItem.data('promotion-amount', null);
+            productItem.find('.product-price').text(initialPrice.toLocaleString() + ' đ');
 
-                        // Calculate total discount without this product
-                        var totalDiscount = 0;
-                        $('#productTableBody .product-item').each(function () {
-                            var discount = $(this).data('promotion-amount') || 0;
-                            if ($(this).data('product-code') !== productCode) {
-                                totalDiscount += discount;
-                            }
-                        });
+            var totalDiscount = 0;
+            $('#productTableBody .product-item').each(function () {
+                var discount = $(this).data('promotion-amount') || 0;
+                if ($(this).data('product-code') !== productCode) {
+                    totalDiscount += discount;
+                }
+            });
 
-                        // Update total discount and total price
-                        $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
-                        updateTotalPrice();
-                        } else {
-                            console.log('Không tìm thấy sản phẩm với mã: ', productCode);
-                        }
-                    return;
-                 }
+            $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
+            updateTotalPrice();
+        } else {
+            console.log('Không tìm thấy sản phẩm với mã: ', productCode);
+        }
+        return;
+    }
 
-                selectedPromotions[productCode] = promotionId;
-                var promotion = listPromotions.find(function (promo) {
-                    return promo.id === promotionId;
+            selectedPromotions[productCode] = promotionId;
+            var promotion = listPromotions.find(function (promo) {
+                return promo.id === promotionId;
+            });
+
+            if (promotion) {
+                console.log("Promotion found: ", promotion);
+
+                var productItem = $('#productTableBody .product-item').filter(function () {
+                return $(this).data('product-code') === productCode;
+            });
+
+            console.log("Product Item: ", productItem);
+
+            if (productItem.length > 0) {
+                var price = parseFloat(productItem.find('td:eq(2)').data('raw-price'));
+                var quantity = parseInt(productItem.find('.quantity-input').val());
+                var discountAmount = price * quantity * (promotion.percentage / 100);
+
+                productItem.find('.promotion-info').show().find('.promotion-amount').text(discountAmount.toLocaleString() + "đ");
+                productItem.data('promotion-amount', discountAmount);
+
+                var totalDiscount = 0;
+                $('#productTableBody .product-item').each(function () {
+                    var discount = $(this).data('promotion-amount') || 0;
+                    totalDiscount += discount;
                 });
 
-                if (promotion) {
-                    console.log("Promotion found: ", promotion);
-
-                    // Verify the structure of the product item and log details
-                    $('#productTableBody .product-item').each(function () {
-                        var code = $(this).data('product-code');
-                        console.log('Product item data-product-code:', code);
-
-                        // Check if the attribute is present
-                        if (!code) {
-                            console.warn('Missing data-product-code on product item:', this);
-                        }
-                    });
-
-                    // Find the product item with the matching product code
-                    var productItem = $('#productTableBody .product-item').filter(function () {
-                        return $(this).data('product-code') === productCode;
-                    });
-
-                    console.log("Product Item: ", productItem);
-
-                    if (productItem.length > 0) {
-                        // Correctly retrieve price and quantity
-                       var price = parseFloat(productItem.find('td:eq(2)').data('raw-price'));
-                        var quantity = parseInt(productItem.find('.quantity-input').val());
-                        var discountAmount = price * quantity * (promotion.percentage / 100);  // Correcting discount calculation
-
-                        // Update promotion info for the product
-                        productItem.find('.promotion-info').show().find('.promotion-amount').text(discountAmount.toLocaleString() + "đ");
-                        productItem.data('promotion-amount', discountAmount);
-
-                        // Calculate total discount
-                        var totalDiscount = 0;
-                        $('#productTableBody .product-item').each(function () {
-                            var discount = $(this).data('promotion-amount') || 0;
-                            totalDiscount += discount;
-                        });
-
-                        // Update total discount and total price
-                        $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
-                        updateTotalPrice();
-                    } else {
-                        console.log('Không tìm thấy sản phẩm với mã: ', productCode);
-                    }
-                } else {
-                    console.log('Khuyến mãi không tồn tại');
-                }
+                $('#totalDiscount').text(totalDiscount.toLocaleString() + ' đ');
+                updateTotalPrice();
+            } else {
+                console.log('Không tìm thấy sản phẩm với mã: ', productCode);
             }
+        } else {
+            console.log('Khuyến mãi không tồn tại');
+        }
+    }
 
             // Sự kiện khi chọn khuyến mãi
-            $('#promotionForm').on('change', 'input[name="promotion"]', function () {
-                var selectedPromotionId = $(this).val();
-                var productCode = $(this).closest('.product-item').data('product-code');
+           $(document).on('change', '#promotionForm input[name="promotion"]', function () {
+                let selectedPromotionId = $(this).val();
+                let productCode = $(this).closest('.promotion-item').data('product-code');
                 if (selectedPromotionId && productCode) {
                     applyPromotion(selectedPromotionId, productCode);
                 } else {
-                    console.log("Không có khuyến mãi nào được chọn.", selectedPromotionId);
-                }
+                console.log("Không có khuyến mãi nào được chọn.", selectedPromotionId);
+            }
             });
 
             function formatDate(dateString) {
@@ -572,45 +542,45 @@
                     type: 'GET',
                     data: { productCode: productCode },
                     success: function (data) {
-                        if (data && data.promotions) {
-                            if (data.promotions <= 1) {
-                                // Hiển thị modal popup
-                                // 
-                                $('.promotion-btn[data-product-code="' + productCode + '"]').hide();
-                                $('#noPromotionModal').modal('show');
-                            } else {
-                                console.log("Data success: ", data.promotions[0].id);
-                                var promotionsHtml = '';
-                                data.promotions.forEach(function (promotion) {
-                                    var isChecked = selectedPromotions[productCode] === promotion.id ? 'checked' : '';
-                                    promotionsHtml += `
-                                                    <div class="product-item card shadow-sm mb-3" data-product-code="${productCode}">
-                                                        <div class="card-body row">
-                                                            <div class="col-md-2">
-                                                                <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}" ${isChecked}>
-                                                            </div>
-                                                            <div class="col-md-10">
-                                                                <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
-                                                                <label class="form-check-label">Bắt đầu: ${formatDate(promotion.startDate)}</label>
-                                                                <br>
-                                                                <label class="form-check-label">Kết thúc: ${formatDate(promotion.endDate)}</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `;
-                                });
-                                $('#promotionForm').html(promotionsHtml);
-                                $('#promotionModal').modal('show');
-                            }
-                        } else {
-                            $('#promotionForm').html('<p>Không có khuyến mãi nào.</p>');
-                        }
-                    },
-                    error: function () {
-                        alert('Không thể tải khuyến mãi');
-                    }
-                });
+            if (data && data.promotions) {
+                if (data.promotions <= 1) {
+                    // Hiển thị modal popup
+                    $('#noPromotionModal').modal('show');
+                } else {
+                    console.log("Data success: ", data.promotions[0].id);
+                    var promotionsHtml = '';
+                    data.promotions.forEach(function (promotion) {
+                        var isChecked = selectedPromotions[productCode] === promotion.id ? 'checked' : '';
+                        promotionsHtml += `
+                            <div class="promotion-item card shadow-sm mb-3" data-product-code="${productCode}">
+                                <div class="card-body row">
+                                    <div class="col-md-2">
+                                        <input class="form-check-input form-check-input-lg" type="radio" name="promotion" value="${promotion.id}" ${isChecked}>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <label class="form-check-label ms-2"><h4>${promotion.promotionName}</h4></label>
+                                        <label class="form-check-label">Bắt đầu: ${formatDate(promotion.startDate)}</label>
+                                        <br>
+                                        <label class="form-check-label">Kết thúc: ${formatDate(promotion.endDate)}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('#promotionForm').html(promotionsHtml);
+                    $('#promotionModal').data('product-code', productCode); // Lưu product code vào modal
+                    $('#promotionModal').modal('show');
+                }
+            } else {
+                $('#promotionForm').html('<p>Không có khuyến mãi nào.</p>');
             }
+        },
+        error: function () {
+            alert('Không thể tải khuyến mãi');
+        }
+    });
+}
+
 
             // Sự kiện khi nhấn nút "Chọn khuyến mãi"
             $('#productTableBody').on('click', '.promotion-btn', function () {
@@ -631,41 +601,33 @@
             });
 
             // //Event handler for clear selection button click
-           $('#clearPromotionBtn').click(function () {
-                // Loop through each product item in #productTableBody
-                $('#productTableBody .product-item').each(function () {
-                    var productCode = $(this).data('product-code');
-                    console.log("Bỏ chọn sản phẩm: ", productCode);
+          $('#clearPromotionBtn').click(function () {
+    $('#productTableBody .product-item').each(function () {
+        var productCode = $(this).data('product-code');
+        console.log("Bỏ chọn sản phẩm: ", productCode);
 
-                // Check if productCode is valid
-                if (productCode) {
-                // Uncheck all radio buttons (if applicable)
-                    $('input[name="promotion"]').prop('checked', false);
-
-                // Remove selected promotion
-                    delete selectedPromotions[productCode];
-
-                // Apply promotion with null promotionId
-                    applyPromotion(null, productCode);
-                } else {
-                    console.log('Không có mã sản phẩm để bỏ chọn khuyến mãi');
-                }
-             });
-         });
+        if (productCode) {
+            $('input[name="promotion"]').prop('checked', false);
+            delete selectedPromotions[productCode];
+            applyPromotion(null, productCode);
+        } else {
+            console.log('Không có mã sản phẩm để bỏ chọn khuyến mãi');
+        }
+    });
+});
 
             // // Xác nhận khuyến mãi
             $('#confirmPromotionBtn').click(function () {
-                // Lấy ID của promotion được chọn
-                var selectedPromotionId = $('input[name="promotion"]:checked').val();
-                var productCode = $('input[name="promotion"]:checked').closest('.product-item').data('product-code');
-                // Xử lý ID theo nhu cầu của bạn, ví dụ:
-                console.log("ID của promotion được chọn:", selectedPromotionId, "Product Code:", productCode);
-                if (selectedPromotionId && productCode) {
-                    applyPromotion(selectedPromotionId, productCode);
-                }
-                // Sau khi xử lý xong, đóng modal
-                $('#promotionModal').modal('hide');
-            });
+    var selectedPromotionId = $('#promotionForm input[name="promotion"]:checked').val();
+    var productCode = $('#promotionModal').data('product-code');
+
+    if (selectedPromotionId && productCode) {
+        applyPromotion(selectedPromotionId, productCode);
+        $('#promotionModal').modal('hide');
+    } else {
+        alert("Vui lòng chọn một khuyến mãi.");
+    }
+});
 
             // Lấy promotionId từ promotionForm
             function getPromotionId() {
