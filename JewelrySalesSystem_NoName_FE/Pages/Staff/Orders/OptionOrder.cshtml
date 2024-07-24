@@ -153,7 +153,7 @@
                                         <div class="form-group">
                                             <labl>Chiết khấu đề xuất(%)</labl>
                                             <input type="text" id="percentDiscount" name="percentDiscount" class="form-control"
-                                                   value="@(Model.member.PercentDiscount * 100)">
+                                                   value="@(Model.member.PercentDiscount * 100)" oninput="validateDiscount(this)">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -248,7 +248,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <h3>Đơn hàng này đã có triết khấu</h3>
+                        <h3>Đơn hàng này đã có chiết khấu</h3>
                     </div>
                     <div class="modal-footer">
                         @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button> *@
@@ -593,12 +593,22 @@
                 let price = parseFloat($(this).data('price'));
                 let orderId = $(this).data('order-id');
                 let productCode = $(this).data('product-code');
-                let selectedItem = $(this).closest('.product-item')[0]; // Đảm bảo selectedItem là một Node
+                let selectedItem = $(this).closest('.product-item')[0]; 
 
                 removeProductFromList(price, orderId, productCode, selectedItem);
             });
         });
 
+        function validateDiscount(input) {
+            let value = parseFloat(input.value);
+
+            // Kiểm tra nếu giá trị không phải là số hoặc nhỏ hơn 0 hoặc lớn hơn 100
+            if (isNaN(value) || value < 0) {
+                input.value = 0;
+            } else if (value > 100) {
+                input.value = 100;
+            }
+        }
 
         //Create discount to send Manager
         $(document).ready(function () {
