@@ -1,6 +1,6 @@
-# 💎 Jewelry Sales System
 
 <div align="center">
+# 💎 Jewelry Sales System
 
 ![.NET](https://img.shields.io/badge/.NET-7.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
@@ -399,4 +399,5 @@ This project is developed for educational purposes as part of a university cours
 
 ⭐ Star this repo if you find it helpful!
 
+[⬆ Back to Top](#-learning-support-system-lss-frontend)
 </div>
